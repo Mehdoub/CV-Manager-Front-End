@@ -59,6 +59,7 @@ import 'src/iconify-bundle/icons-bundle-react'
 
 // ** Global css styles
 import '../../styles/globals.css'
+import { Icon } from '@iconify/react'
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {
@@ -129,10 +130,47 @@ const App = (props: ExtendedAppProps) => {
     window.addEventListener('online', handleConnStateChange)
     window.addEventListener('offline', handleConnStateChange)
 
+    toast.dismiss()
     if (isOnline && !wasOnline) {
-      toast.success('You Are Connected!', { duration: 5000 })
+      toast(() => (
+        <div>
+          <div>
+            <strong>You Back To Online!</strong>
+          </div>
+          <div>
+            <span style={{color: '#fff'}} >You Are Connected</span>
+          </div>
+        </div>
+      ), {
+        icon: <Icon fontSize={'30px'} icon='mdi:access-point-check' />,
+        duration: 5000,
+        position: "bottom-left",
+        style: {
+          borderRadius: '10px',
+          background: '#787EFF',
+          color: '#fff',
+        }
+      })
     } else if (!isOnline) {
-      toast.error('You Are Offline!', { duration: 60000 })
+      toast(() => (
+        <div>
+          <div>
+            <strong>It Seems That You Are Offline!</strong>
+          </div>
+          <div>
+            <span style={{color: 'rgb(106 106 106 / 87%)'}} >Please Check Your Connection</span>
+          </div>
+        </div>
+      ), {
+        icon: <Icon fontSize={'30px'} icon='mdi:access-point-remove' />,
+        duration: 60000,
+        position: "bottom-left",
+        style: {
+          borderRadius: '10px',
+          background: '#fff',
+          color: 'rgba(76, 78, 100, 0.87)',
+        }
+      })
     }
 
     return () => {
