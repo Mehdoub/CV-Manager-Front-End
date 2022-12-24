@@ -186,9 +186,9 @@ const App = (props: ExtendedAppProps) => {
         <title>{`${themeConfig.templateName} - Resumes Management System`}</title>
         <meta
           name='description'
-          content={`${themeConfig.templateName} – Material Design React Admin Dashboard Template – is the most developer friendly & highly customizable Admin Dashboard Template based on MUI v5.`}
+          content={`${themeConfig.templateName} – A System Form Manage Resumes And positions.`}
         />
-        <meta name='keywords' content='Material Design, MUI, Admin Template, React Admin Template' />
+        <meta name='keywords' content='CV-manager, CV, Resume' />
         <meta name='viewport' content='initial-scale=1, width=device-width' />
       </Head>
 
