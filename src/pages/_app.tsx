@@ -59,6 +59,8 @@ import 'src/iconify-bundle/icons-bundle-react'
 
 // ** Global css styles
 import '../../styles/globals.css'
+import { Provider } from 'react-redux'
+import { store } from 'src/store'
 import { Icon } from '@iconify/react'
 
 // ** Extend App Props with Emotion
@@ -132,45 +134,51 @@ const App = (props: ExtendedAppProps) => {
 
     toast.dismiss()
     if (isOnline && !wasOnline) {
-      toast(() => (
-        <div>
+      toast(
+        () => (
           <div>
-            <strong>You Back To Online!</strong>
+            <div>
+              <strong>You Back To Online!</strong>
+            </div>
+            <div>
+              <span style={{ color: '#fff' }}>You Are Connected</span>
+            </div>
           </div>
-          <div>
-            <span style={{color: '#fff'}} >You Are Connected</span>
-          </div>
-        </div>
-      ), {
-        icon: <Icon fontSize={'30px'} icon='mdi:access-point-check' />,
-        duration: 5000,
-        position: "bottom-left",
-        style: {
-          borderRadius: '10px',
-          background: '#787EFF',
-          color: '#fff',
+        ),
+        {
+          icon: <Icon fontSize={'30px'} icon='mdi:access-point-check' />,
+          duration: 5000,
+          position: 'bottom-left',
+          style: {
+            borderRadius: '10px',
+            background: '#787EFF',
+            color: '#fff'
+          }
         }
-      })
+      )
     } else if (!isOnline) {
-      toast(() => (
-        <div>
+      toast(
+        () => (
           <div>
-            <strong>It Seems That You Are Offline!</strong>
+            <div>
+              <strong>It Seems That You Are Offline!</strong>
+            </div>
+            <div>
+              <span style={{ color: 'rgb(106 106 106 / 87%)' }}>Please Check Your Connection</span>
+            </div>
           </div>
-          <div>
-            <span style={{color: 'rgb(106 106 106 / 87%)'}} >Please Check Your Connection</span>
-          </div>
-        </div>
-      ), {
-        icon: <Icon fontSize={'30px'} icon='mdi:access-point-remove' />,
-        duration: 60000,
-        position: "bottom-left",
-        style: {
-          borderRadius: '10px',
-          background: '#fff',
-          color: 'rgba(76, 78, 100, 0.87)',
+        ),
+        {
+          icon: <Icon fontSize={'30px'} icon='mdi:access-point-remove' />,
+          duration: 60000,
+          position: 'bottom-left',
+          style: {
+            borderRadius: '10px',
+            background: '#fff',
+            color: 'rgba(76, 78, 100, 0.87)'
+          }
         }
-      })
+      )
     }
 
     return () => {
@@ -181,40 +189,42 @@ const App = (props: ExtendedAppProps) => {
   }, [isOnline])
 
   return (
-    <CacheProvider value={emotionCache}>
-      <Head>
-        <title>{`${themeConfig.templateName} - Resumes Management System`}</title>
-        <meta
-          name='description'
-          content={`${themeConfig.templateName} – A System Form Manage Resumes And positions.`}
-        />
-        <meta name='keywords' content='CV-manager, CV, Resume' />
-        <meta name='viewport' content='initial-scale=1, width=device-width' />
-      </Head>
+    <Provider store={store}>
+      <CacheProvider value={emotionCache}>
+        <Head>
+          <title>{`${themeConfig.templateName} - Resumes Management System`}</title>
+          <meta
+            name='description'
+            content={`${themeConfig.templateName} – A System Form Manage Resumes And positions.`}
+          />
+          <meta name='keywords' content='CV-manager, CV, Resume' />
+          <meta name='viewport' content='initial-scale=1, width=device-width' />
+        </Head>
 
-      <AuthProvider>
-        <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
-          <SettingsConsumer>
-            {({ settings }) => {
-              return (
-                <ThemeComponent settings={settings}>
-                  <WindowWrapper>
-                    <Guard authGuard={authGuard} guestGuard={guestGuard}>
-                      <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
-                        {getLayout(<Component {...pageProps} />)}
-                      </AclGuard>
-                    </Guard>
-                  </WindowWrapper>
-                  <ReactHotToast>
-                    <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
-                  </ReactHotToast>
-                </ThemeComponent>
-              )
-            }}
-          </SettingsConsumer>
-        </SettingsProvider>
-      </AuthProvider>
-    </CacheProvider>
+        <AuthProvider>
+          <SettingsProvider {...(setConfig ? { pageSettings: setConfig() } : {})}>
+            <SettingsConsumer>
+              {({ settings }) => {
+                return (
+                  <ThemeComponent settings={settings}>
+                    <WindowWrapper>
+                      <Guard authGuard={authGuard} guestGuard={guestGuard}>
+                        <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
+                          {getLayout(<Component {...pageProps} />)}
+                        </AclGuard>
+                      </Guard>
+                    </WindowWrapper>
+                    <ReactHotToast>
+                      <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
+                    </ReactHotToast>
+                  </ThemeComponent>
+                )
+              }}
+            </SettingsConsumer>
+          </SettingsProvider>
+        </AuthProvider>
+      </CacheProvider>
+    </Provider>
   )
 }
 
