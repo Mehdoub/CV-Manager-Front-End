@@ -22,3 +22,7 @@ code:not([class*='language-']):after {
 code[class*='language-'] {
   padding: 0;
 }
+
+.layout-vertical-nav {
+  z-index: 1199;
+}
