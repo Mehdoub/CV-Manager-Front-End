@@ -44,14 +44,13 @@ const AuthProvider = ({ children }: Props) => {
       if (storedToken) {
         setLoading(true)
         await axios
-          .get(authConfig.meEndpoint, {
-            headers: {
-              Authorization: storedToken
-            }
-          })
+          .get('http://127.0.0.1:3080/api/v1/users/getMe', {headers: {
+            Authorization: `Bearer ${storedToken}`
+          }})
           .then(async response => {
+            console.log(response)
             setLoading(false)
-            setUser({ ...response.data.userData })
+            setUser({id:1,role:"admin",fullName:"John Doe",username:"johndoe",email:"admin@materialize.com", password: '12345678'})
           })
           .catch(() => {
             localStorage.removeItem('userData')
@@ -74,15 +73,15 @@ const AuthProvider = ({ children }: Props) => {
 
   const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
     axios
-      .post(authConfig.loginEndpoint, params)
+      .post('http://127.0.0.1:3080/api/v1/auth/login', params)
       .then(async response => {
         params.rememberMe
-          ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.accessToken)
+          ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.data[0].access_token)
           : null
         const returnUrl = router.query.returnUrl
 
-        setUser({ ...response.data.userData })
-        params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify(response.data.userData)) : null
+        setUser({id:1,role:"admin",fullName:"John Doe",username:"johndoe",email:"admin@materialize.com", password: '12345678'})
+        params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify({"id":1,"role":"admin","fullName":"John Doe","username":"johndoe","email":"admin@materialize.com"})) : null
 
         const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
 
@@ -108,7 +107,7 @@ const AuthProvider = ({ children }: Props) => {
         if (res.data.error) {
           if (errorCallback) errorCallback(res.data.error)
         } else {
-          handleLogin({ email: params.email, password: params.password })
+          handleLogin({ mobile: 989332226623, password: params.password })
         }
       })
       .catch((err: { [key: string]: string }) => (errorCallback ? errorCallback(err) : null))
