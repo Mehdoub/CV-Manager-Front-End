@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
+import authConfig from 'src/configs/auth'
 
 interface requestConfig {
   header: {
@@ -28,22 +29,15 @@ export default class ApiRequest {
     return new ApiRequest()
   }
 
-  public auth(): ApiRequest {
-    this.defaultConf.header.authorization = this.accessToken
-
-    return this
-  }
-
-  private async responseHandler(requestMethod: () => Promise<AxiosResponse>): Promise<AxiosResponse> {
+  private async responseHandler(requestMethod: any): Promise<AxiosResponse> {
     try {
       return await requestMethod()
     } catch (err: any) {
       if (err?.response?.status == 401) {
-        await this.refreshJwtToken()
+        const response = await this.refreshJwtToken()
 
-        return await requestMethod()
+        return await requestMethod(response.data.data[0].access_token)
       }
-
       throw err
     }
   }
@@ -58,8 +52,8 @@ export default class ApiRequest {
 
       this.accessToken = response.data.data[0].access_token
       this.refreshToken = response.data.data[0].refresh_token
-      localStorage.setItem('accessToken', this.accessToken)
-      localStorage.setItem('refreshToken', this.refreshToken)
+      localStorage.setItem(authConfig.storageTokenKeyName, this.accessToken)
+      localStorage.setItem(authConfig.refreshTokenKeyName, this.refreshToken)
 
       return response
     } catch (err: any) {
@@ -67,14 +61,17 @@ export default class ApiRequest {
     }
   }
 
-  public async request(method = 'get', url: string, data = {}) {
-    const requestMethod = () =>
+  public async request(method: string, url: string, data = {}) {
+    const requestMethod = (accessToken = '') =>
       axios.request({
         method,
         url,
         data,
         baseURL: this.baseUrl,
-        headers: this.defaultConf.header
+        headers: {
+            'Content-Type': 'application/json',
+            authorization: accessToken ? `Bearer ${accessToken}` : `Bearer ${this.accessToken}`,
+        }
       })
     const response = await this.responseHandler(requestMethod)
 

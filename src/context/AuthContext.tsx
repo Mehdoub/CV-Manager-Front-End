@@ -12,6 +12,7 @@ import authConfig from 'src/configs/auth'
 
 // ** Types
 import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType } from './types'
+import ApiRequest from 'src/helpers/ApiRequest'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -38,65 +39,59 @@ const AuthProvider = ({ children }: Props) => {
   // ** Hooks
   const router = useRouter()
 
+  const getUserData = async () => {
+    try {
+      setLoading(false)
+      const result = await ApiRequest.builder().request('get', 'users/getMe')
+
+      const userData = { ...result.data.data[0], role: 'admin' }
+      setUser(userData)
+      localStorage.setItem('userData', JSON.stringify(userData))
+    } catch (err) {
+      setLoading(false)
+
+      localStorage.removeItem('userData')
+      localStorage.removeItem('refreshToken')
+      localStorage.removeItem('accessToken')
+
+      setUser(null)
+      router.replace('/login')
+    }
+  }
+
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
-      const storedToken = window.localStorage.getItem(authConfig.storageTokenKeyName)!
-      if (storedToken) {
-        setLoading(true)
-        await axios
-          .get('http://127.0.0.1:3080/api/v1/users/getMe', {headers: {
-            Authorization: `Bearer ${storedToken}`
-          }})
-          .then(async response => {
-            console.log(response)
-            setLoading(false)
-            setUser({id:1,role:"admin",fullName:"John Doe",username:"johndoe",email:"admin@materialize.com", password: '12345678'})
-          })
-          .catch(() => {
-            localStorage.removeItem('userData')
-            localStorage.removeItem('refreshToken')
-            localStorage.removeItem('accessToken')
-            setUser(null)
-            setLoading(false)
-            if (authConfig.onTokenExpiration === 'logout' && !router.pathname.includes('login')) {
-              router.replace('/login')
-            }
-          })
-      } else {
-        setLoading(false)
-      }
+      setLoading(true)
+      getUserData()
     }
 
     initAuth()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const handleLogin = (params: LoginParams, errorCallback?: ErrCallbackType) => {
-    axios
-      .post('http://127.0.0.1:3080/api/v1/auth/login', params)
-      .then(async response => {
-        params.rememberMe
-          ? window.localStorage.setItem(authConfig.storageTokenKeyName, response.data.data[0].access_token)
-          : null
-        const returnUrl = router.query.returnUrl
+  const handleLogin = async (params: LoginParams, errorCallback?: ErrCallbackType) => {
+    try {
+      const response = await ApiRequest.builder().request('post', 'auth/login', params)
+      localStorage.setItem(authConfig.storageTokenKeyName, response.data.data[0].access_token)
+      localStorage.setItem(authConfig.refreshTokenKeyName, response.data.data[0].refresh_token)
 
-        setUser({id:1,role:"admin",fullName:"John Doe",username:"johndoe",email:"admin@materialize.com", password: '12345678'})
-        params.rememberMe ? window.localStorage.setItem('userData', JSON.stringify({"id":1,"role":"admin","fullName":"John Doe","username":"johndoe","email":"admin@materialize.com"})) : null
+      const returnUrl = router.query.returnUrl
+      getUserData()
 
-        const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+      const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
 
-        router.replace(redirectURL as string)
-      })
-
-      .catch(err => {
-        if (errorCallback) errorCallback(err)
-      })
+      router.replace(redirectURL as string)
+    } catch (err: any) {
+      if (errorCallback) errorCallback(err)
+    }
   }
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    await ApiRequest.builder().request('post', 'auth/logout')
     setUser(null)
     window.localStorage.removeItem('userData')
     window.localStorage.removeItem(authConfig.storageTokenKeyName)
+    window.localStorage.removeItem(authConfig.refreshTokenKeyName)
     router.push('/login')
   }
 
