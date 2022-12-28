@@ -69,8 +69,12 @@ export default class ApiRequest {
         data,
         baseURL: this.baseUrl,
         headers: {
-            'Content-Type': 'application/json',
-            authorization: accessToken ? `Bearer ${accessToken}` : `Bearer ${this.accessToken}`,
+          ...this.defaultConf.header,
+          authorization: accessToken
+            ? `Bearer ${accessToken}`
+            : this.accessToken
+            ? `Bearer ${this.accessToken}`
+            : undefined
         }
       })
     const response = await this.responseHandler(requestMethod)
