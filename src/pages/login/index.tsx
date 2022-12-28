@@ -101,7 +101,6 @@ interface FormData {
 }
 
 const LoginPage = () => {
-  const [rememberMe, setRememberMe] = useState<boolean>(true)
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [disabled, setDisabled] = useState<boolean>(false)
 
@@ -126,7 +125,7 @@ const LoginPage = () => {
   const onSubmit = (data: FormData) => {
     const { mobile, password } = data
     setDisabled(true)
-    auth.login({ mobile, password, rememberMe }, () => {
+    auth.login({ mobile, password }, () => {
       setError('mobile', {
         type: 'manual',
         message: 'Mobile and password does not match!'
@@ -318,15 +317,11 @@ const LoginPage = () => {
               <Box
                 sx={{ mb: 4, display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'space-between' }}
               >
-                <FormControlLabel
-                  label='Remember Me'
-                  control={<Checkbox checked={rememberMe} onChange={e => setRememberMe(e.target.checked)} />}
-                />
                 <Typography
                   variant='body2'
                   component={Link}
                   href='/forgot-password'
-                  sx={{ color: 'primary.main', textDecoration: 'none' }}
+                  sx={{ color: 'primary.main', textDecoration: 'none', marginTop: '15px' }}
                 >
                   Forgot Password?
                 </Typography>

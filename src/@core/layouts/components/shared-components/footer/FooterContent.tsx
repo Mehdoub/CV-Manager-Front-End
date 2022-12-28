@@ -2,6 +2,7 @@
 import Box from '@mui/material/Box'
 import Link from '@mui/material/Link'
 import Typography from '@mui/material/Typography'
+import { MouseEvent } from 'react'
 
 const FooterContent = () => {
 
@@ -13,7 +14,7 @@ const FooterContent = () => {
           ❤️
         </Box>
         {` by `}
-        <Link target='_blank' href='/'>
+        <Link href='/' onClick={(e: MouseEvent<HTMLElement>) => e.preventDefault()}>
           BPM Technical Team
         </Link>
       </Typography>
