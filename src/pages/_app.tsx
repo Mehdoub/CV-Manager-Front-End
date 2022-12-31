@@ -18,6 +18,7 @@ import type { EmotionCache } from '@emotion/cache'
 
 import { defaultACLObj } from 'src/configs/acl'
 import themeConfig from 'src/configs/themeConfig'
+import 'src/configs/i18n'
 
 // ** Fake-DB Import
 import 'src/@fake-db'
@@ -62,6 +63,7 @@ import '../../styles/globals.css'
 import { Provider } from 'react-redux'
 import { store } from 'src/store'
 import { Icon } from '@iconify/react'
+import Language from 'src/helpers/Language'
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {
@@ -122,6 +124,12 @@ const App = (props: ExtendedAppProps) => {
   }
   const [isOnline, setIsOnline] = useState(navigatorIsOnline)
   const [wasOnline, setWasOnline] = useState(navigatorIsOnline)
+
+  useEffect(() => {
+    const language = Language.builder().getLanguage()
+    Language.builder().changeDirection(language)
+  }, [])
+
   useEffect(() => {
     const handleConnStateChange = () => {
       if (isOnline !== window.navigator.onLine) {

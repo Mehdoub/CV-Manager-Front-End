@@ -9,6 +9,7 @@ import OptionsMenu from 'src/@core/components/option-menu'
 
 // ** Type Import
 import { Settings } from 'src/@core/context/settingsContext'
+import Language from 'src/helpers/Language'
 
 interface Props {
   settings: Settings
@@ -22,8 +23,10 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
   // ** Vars
   const { layout } = settings
 
-  const handleLangItemClick = (lang: 'en' | 'fr' | 'ar') => {
+  const handleLangItemClick = (lang: 'en' | 'fa') => {
     i18n.changeLanguage(lang)
+    Language.builder().setLanguageToLocal(lang)
+    Language.builder().changeDirection(lang)
   }
 
   return (
@@ -44,27 +47,16 @@ const LanguageDropdown = ({ settings, saveSettings }: Props) => {
           }
         },
         {
-          text: 'French',
+          text: 'Farsi',
           menuItemProps: {
             sx: { py: 2 },
-            selected: i18n.language === 'fr',
+            selected: i18n.language === 'fa',
             onClick: () => {
-              handleLangItemClick('fr')
-              saveSettings({ ...settings, direction: 'ltr' })
-            }
-          }
-        },
-        {
-          text: 'Arabic',
-          menuItemProps: {
-            sx: { py: 2 },
-            selected: i18n.language === 'ar',
-            onClick: () => {
-              handleLangItemClick('ar')
+              handleLangItemClick('fa')
               saveSettings({ ...settings, direction: 'rtl' })
             }
           }
-        }
+        },
       ]}
     />
   )
