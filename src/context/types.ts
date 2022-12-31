@@ -7,9 +7,11 @@ export type LoginParams = {
 }
 
 export type RegisterParams = {
-  email: string
-  username: string
-  password: string
+  firstname: string,
+  lastname: string,
+  mobile: number,
+  password: string,
+  repeatpassword: string,
 }
 
 export type UserDataType = {

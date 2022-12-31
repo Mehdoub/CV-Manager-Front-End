@@ -1,13 +1,11 @@
 // ** React Imports
-import { ReactNode, useState, Fragment, MouseEvent } from 'react'
+import { ReactNode, useState } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
 
 // ** MUI Components
 import Button from '@mui/material/Button'
-import Divider from '@mui/material/Divider'
-import Checkbox from '@mui/material/Checkbox'
 import TextField from '@mui/material/TextField'
 import InputLabel from '@mui/material/InputLabel'
 import IconButton from '@mui/material/IconButton'
@@ -19,7 +17,6 @@ import { styled, useTheme } from '@mui/material/styles'
 import FormHelperText from '@mui/material/FormHelperText'
 import InputAdornment from '@mui/material/InputAdornment'
 import Typography, { TypographyProps } from '@mui/material/Typography'
-import MuiFormControlLabel, { FormControlLabelProps } from '@mui/material/FormControlLabel'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -42,17 +39,19 @@ import { useSettings } from 'src/@core/hooks/useSettings'
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 
-const defaultValues = {
-  email: '',
-  username: '',
-  password: '',
-  terms: false
-}
+// const defaultValues = {
+//   firstname: '',
+//   lastname: '',
+//   mobile: '',
+//   password: '',
+//   repeatpassword: '',
+// }
 interface FormData {
-  email: string
-  terms: boolean
-  username: string
+  firstname: string
+  lastname: string
+  mobile: number
   password: string
+  repeatpassword: string
 }
 
 // ** Styled Components
@@ -98,16 +97,10 @@ const TypographyStyled = styled(Typography)<TypographyProps>(({ theme }) => ({
   [theme.breakpoints.down('md')]: { marginTop: theme.spacing(8) }
 }))
 
-const FormControlLabel = styled(MuiFormControlLabel)<FormControlLabelProps>(({ theme }) => ({
-  marginBottom: theme.spacing(4),
-  '& .MuiFormControlLabel-label': {
-    fontSize: '0.875rem',
-    color: theme.palette.text.secondary
-  }
-}))
 const Register = () => {
   // ** States
   const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [showRepeatPassword, setShowRepeatPassword] = useState<boolean>(false)
 
   // ** Hooks
   const theme = useTheme()
@@ -118,10 +111,17 @@ const Register = () => {
   // ** Vars
   const { skin } = settings
   const schema = yup.object().shape({
-    password: yup.string().min(5).required(),
-    username: yup.string().min(3).required(),
-    email: yup.string().email().required(),
-    terms: yup.bool().oneOf([true], 'You must accept the privacy policy & terms')
+    firstname: yup.string().label('First name').min(3).required(),
+    lastname: yup.string().label('Last name').min(3).required(),
+    mobile: yup
+      .string()
+      .label('Mobile')
+      .matches(/^989[\d]{9}$/, 'Mobile Is Not Valid (example: 989123456789)')
+      .required(),
+    password: yup.string().label('Password').min(8).max(12).required(),
+    repeatpassword: yup.string().label('Repeat assword').min(8).max(12).required()
+
+    // terms: yup.bool().oneOf([true], 'You must accept the privacy policy & terms')
   })
 
   const {
@@ -130,27 +130,26 @@ const Register = () => {
     handleSubmit,
     formState: { errors }
   } = useForm({
-    defaultValues,
     mode: 'onBlur',
     resolver: yupResolver(schema)
   })
 
   const onSubmit = (data: FormData) => {
-    const { email, username, password } = data
-    register({ email, username, password }, err => {
-      if (err.email) {
-        setError('email', {
+    const { firstname, lastname, mobile, password, repeatpassword } = data
+    if (password !== repeatpassword) {
+      setError('repeatpassword', {
+        type: 'manual',
+        message: 'Password and repeat password should be the same'
+      })
+    } else {
+      register({ firstname, lastname, mobile, password, repeatpassword }, err => {
+        setError('firstname', {
           type: 'manual',
-          message: err.email
+          message: 'Something went wrong!'
         })
-      }
-      if (err.username) {
-        setError('username', {
-          type: 'manual',
-          message: err.username
-        })
-      }
-    })
+        console.log(err)
+      })
+    }
   }
 
   const imageSource = skin === 'bordered' ? 'auth-v2-register-illustration-bordered' : 'auth-v2-register-illustration'
@@ -271,7 +270,7 @@ const Register = () => {
             <form noValidate autoComplete='off' onSubmit={handleSubmit(onSubmit)}>
               <FormControl fullWidth sx={{ mb: 4 }}>
                 <Controller
-                  name='username'
+                  name='firstname'
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
@@ -279,48 +278,76 @@ const Register = () => {
                       autoFocus
                       value={value}
                       onBlur={onBlur}
-                      label='Username'
+                      label='First Name'
                       onChange={onChange}
-                      placeholder='johndoe'
-                      error={Boolean(errors.username)}
+                      placeholder='John'
+                      error={Boolean(errors.firstname)}
                     />
                   )}
                 />
-                {errors.username && (
-                  <FormHelperText sx={{ color: 'error.main' }}>{errors.username.message}</FormHelperText>
+                {errors.firstname && (
+                  <FormHelperText sx={{ color: 'error.main' }}>{errors.firstname.message}</FormHelperText>
                 )}
               </FormControl>
               <FormControl fullWidth sx={{ mb: 4 }}>
                 <Controller
-                  name='email'
+                  name='lastname'
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <TextField
                       value={value}
-                      label='Email'
+                      label='Last Name'
                       onBlur={onBlur}
                       onChange={onChange}
-                      error={Boolean(errors.email)}
-                      placeholder='user@email.com'
+                      error={Boolean(errors.lastname)}
+                      placeholder='Doe'
                     />
                   )}
                 />
-                {errors.email && <FormHelperText sx={{ color: 'error.main' }}>{errors.email.message}</FormHelperText>}
+                {errors.lastname && (
+                  <FormHelperText sx={{ color: 'error.main' }}>{errors.lastname.message}</FormHelperText>
+                )}
               </FormControl>
-              <FormControl fullWidth>
+              <FormControl fullWidth sx={{ mb: 4 }}>
+                <Controller
+                  name='mobile'
+                  control={control}
+                  rules={{
+                    required: true,
+                    minLength: { value: 12, message: 'Mobile is not valid' },
+                    maxLength: { value: 12, message: 'Mobile is not valid' }
+                  }}
+                  render={({ field: { value, onChange, onBlur } }) => (
+                    <TextField
+                      label='Mobile'
+                      value={value}
+                      onBlur={onBlur}
+                      onChange={onChange}
+                      error={Boolean(errors.mobile)}
+                      placeholder='989123456789'
+                    />
+                  )}
+                />
+                {errors.mobile && <FormHelperText sx={{ color: 'error.main' }}>{errors.mobile.message}</FormHelperText>}
+              </FormControl>
+              <FormControl fullWidth sx={{ mb: 4 }}>
                 <InputLabel htmlFor='auth-login-v2-password' error={Boolean(errors.password)}>
                   Password
                 </InputLabel>
                 <Controller
                   name='password'
                   control={control}
-                  rules={{ required: true }}
+                  rules={{
+                    required: 'Password cannot be empty',
+                    minLength: { value: 8, message: 'Password should at least has 8 characters' },
+                    maxLength: { value: 16, message: 'Password maximum can be 16 characters' }
+                  }}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <OutlinedInput
                       value={value}
-                      label='Password'
                       onBlur={onBlur}
+                      label='Password'
                       onChange={onChange}
                       id='auth-login-v2-password'
                       error={Boolean(errors.password)}
@@ -340,11 +367,48 @@ const Register = () => {
                   )}
                 />
                 {errors.password && (
-                  <FormHelperText sx={{ color: 'error.main' }}>{errors.password.message}</FormHelperText>
+                  <FormHelperText sx={{ color: 'error.main' }} id=''>
+                    {errors.password.message}
+                  </FormHelperText>
+                )}
+              </FormControl>
+              <FormControl fullWidth sx={{mb: 8}}>
+                <InputLabel htmlFor='auth-login-v2-repeatpassword' error={Boolean(errors.repeatpassword)}>
+                  Repeat Password
+                </InputLabel>
+                <Controller
+                  name='repeatpassword'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange, onBlur } }) => (
+                    <OutlinedInput
+                      value={value}
+                      label='Repeat Password'
+                      onBlur={onBlur}
+                      onChange={onChange}
+                      id='auth-login-v2-repeatpassword'
+                      error={Boolean(errors.repeatpassword)}
+                      type={showRepeatPassword ? 'text' : 'password'}
+                      endAdornment={
+                        <InputAdornment position='end'>
+                          <IconButton
+                            edge='end'
+                            onMouseDown={e => e.preventDefault()}
+                            onClick={() => setShowRepeatPassword(!showRepeatPassword)}
+                          >
+                            <Icon icon={showRepeatPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
+                          </IconButton>
+                        </InputAdornment>
+                      }
+                    />
+                  )}
+                />
+                {errors.repeatpassword && (
+                  <FormHelperText sx={{ color: 'error.main' }}>{errors.repeatpassword.message}</FormHelperText>
                 )}
               </FormControl>
 
-              <FormControl sx={{ my: 0 }} error={Boolean(errors.terms)}>
+              {/* <FormControl sx={{ my: 0 }} error={Boolean(errors.terms)}>
                 <Controller
                   name='terms'
                   control={control}
@@ -390,7 +454,7 @@ const Register = () => {
                 {errors.terms && (
                   <FormHelperText sx={{ mb: 3, mt: 0, color: 'error.main' }}>{errors.terms.message}</FormHelperText>
                 )}
-              </FormControl>
+              </FormControl> */}
               <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }}>
                 Sign up
               </Button>

@@ -141,7 +141,7 @@ const App = (props: ExtendedAppProps) => {
               <strong>You Back To Online!</strong>
             </div>
             <div>
-              <span style={{ color: '#fff' }}>You Are Connected</span>
+              <span style={{ color: '#fff' }}>You Can Make Changes Now</span>
             </div>
           </div>
         ),
@@ -161,16 +161,16 @@ const App = (props: ExtendedAppProps) => {
         () => (
           <div>
             <div>
-              <strong>It Seems That You Are Offline!</strong>
+              <strong>You Are Offline!</strong>
             </div>
             <div>
-              <span style={{ color: 'rgb(106 106 106 / 87%)' }}>Please Check Your Connection</span>
+              <span style={{ color: 'rgb(106 106 106 / 87%)' }}>Your Changes Will Not Be Saved</span>
             </div>
           </div>
         ),
         {
           icon: <Icon fontSize={'30px'} icon='mdi:access-point-remove' />,
-          duration: 60000,
+          duration: 18600000,
           position: 'bottom-left',
           style: {
             borderRadius: '10px',

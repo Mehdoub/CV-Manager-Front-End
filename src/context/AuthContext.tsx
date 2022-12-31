@@ -95,17 +95,23 @@ const AuthProvider = ({ children }: Props) => {
     router.push('/login')
   }
 
-  const handleRegister = (params: RegisterParams, errorCallback?: ErrCallbackType) => {
-    axios
-      .post(authConfig.registerEndpoint, params)
-      .then(res => {
-        if (res.data.error) {
-          if (errorCallback) errorCallback(res.data.error)
-        } else {
-          handleLogin({ mobile: 989332226623, password: params.password })
-        }
-      })
-      .catch((err: { [key: string]: string }) => (errorCallback ? errorCallback(err) : null))
+  const handleRegister = async (params: RegisterParams, errorCallback?: ErrCallbackType) => {
+    try {
+      const response = await ApiRequest.builder().request('post', 'auth/signup', params)
+      if (response.data.data[0].access_token) {
+        localStorage.setItem(authConfig.storageTokenKeyName, response.data.data[0].access_token)
+        localStorage.setItem(authConfig.refreshTokenKeyName, response.data.data[0].refresh_token)
+
+        const returnUrl = router.query.returnUrl
+        getUserData()
+
+        const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+
+        router.replace(redirectURL as string)
+      }
+    } catch (err: any) {
+      if (errorCallback) errorCallback(err)
+    }
   }
 
   const values = {
