@@ -4,6 +4,7 @@ import Grid from '@mui/material/Grid'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
+import Translations from 'src/layouts/components/Translations'
 
 const Home = () => {
   return (
@@ -12,7 +13,9 @@ const Home = () => {
         <Card>
           <CardHeader title='Kick start your project 🚀'></CardHeader>
           <CardContent>
-            <Typography sx={{ mb: 2 }}>All the best for your new project.</Typography>
+            <Typography sx={{ mb: 2 }}>
+              <Translations text='home' />
+            </Typography>
             <Typography>
               Please make sure to read our Template Documentation to understand where to go from here and how to use our
               template.
