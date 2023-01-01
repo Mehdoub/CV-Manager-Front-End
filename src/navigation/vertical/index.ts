@@ -19,7 +19,12 @@ const navigation = (): VerticalNavItemsType => {
       subject: 'acl-page',
       title: 'Access Control',
       icon: 'mdi:shield-outline',
-    }
+    },
+    {
+      title: 'Projects',
+      path: '/projects',
+      icon: 'mdi:email-outline',
+    },
   ]
 }
 

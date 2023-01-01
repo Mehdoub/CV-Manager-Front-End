@@ -1,37 +1,18 @@
-import { configureStore, createSlice } from '@reduxjs/toolkit'
+// ** Toolkit imports
+import { configureStore } from '@reduxjs/toolkit'
 
-const initialState = {
-  userLogin: {
-    status: false,
-    message: '',
-    loading: false,
-    userInfo: {},
-    error: null,
-    isAuthorized: false,
-    loadingVerify: true
-  }
-}
+// ** Reducers
+import user from 'src/store/apps/user'
 
-const userLoginSlice = createSlice({
-  name: 'userLogin',
-  initialState: {
-    status: false,
-    message: '',
-    loading: false,
-    userInfo: {},
-    error: null,
-    isAuthorized: false,
-    loadingVerify: true
-  },
-  reducers: {}
-})
 export const store = configureStore({
   reducer: {
-    userLogin: userLoginSlice.reducer
+    user,
   },
-  preloadedState: initialState,
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: false
     })
 })
+
+export type AppDispatch = typeof store.dispatch
+export type RootState = ReturnType<typeof store.getState>
