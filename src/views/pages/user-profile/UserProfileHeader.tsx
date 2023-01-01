@@ -16,6 +16,8 @@ import CardContent from '@mui/material/CardContent'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+import { useEffect, useState } from 'react'
+import { UserDataType } from 'src/context/types'
 
 // ** Types
 // import { ProfileHeaderType } from 'src/@fake-db/types'
@@ -32,17 +34,15 @@ const ProfilePicture = styled('img')(({ theme }) => ({
 
 const UserProfileHeader = () => {
   // ** State
-  // const [data, setData] = useState<ProfileHeaderType | null>(null)
+  const [data, setData] = useState<UserDataType | null>(null)
 
-  // useEffect(() => {
-  //   axios.get('/pages/profile-header').then(response => {
-  //     setData(response.data)
-  //   })
-  // }, [])
+  useEffect(() => {
+    setData(JSON.parse(localStorage.getItem('userData') as string))
+  }, [])
 
   const designationIcon = 'mdi:briefcase-outline'
 
-  return  (
+  return (
     <Card>
       <CardMedia
         component='img'
@@ -75,7 +75,7 @@ const UserProfileHeader = () => {
         >
           <Box sx={{ mb: [6, 0], display: 'flex', flexDirection: 'column', alignItems: ['center', 'flex-start'] }}>
             <Typography variant='h5' sx={{ mb: 4, fontSize: '1.375rem' }}>
-              Mahdi 2020
+              {`${data?.firstname} ${data?.lastname}`}
             </Typography>
             <Box
               sx={{
@@ -94,7 +94,7 @@ const UserProfileHeader = () => {
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}>
                 <Icon icon='mdi:calendar-blank-outline' />
-                <Typography sx={{ color: 'text.secondary', fontWeight: 600 }}>Joined At Dec 22</Typography>
+                <Typography sx={{ color: 'text.secondary', fontWeight: 600 }}>Joined At {new Date(data?.createdAt as string).toDateString()}</Typography>
               </Box>
             </Box>
           </Box>

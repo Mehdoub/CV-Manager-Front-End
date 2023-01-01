@@ -96,12 +96,12 @@ const AboutOverivew = (props: Props) => {
               </Typography>
               {renderList(contacts)}
             </Box>
-            <div>
+            {/* <div>
               <Typography variant='body2' sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}>
                 Teams
               </Typography>
               {renderTeams(teams)}
-            </div>
+            </div> */}
           </CardContent>
         </Card>
       </Grid>

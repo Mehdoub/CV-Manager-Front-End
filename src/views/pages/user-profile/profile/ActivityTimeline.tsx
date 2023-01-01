@@ -35,7 +35,7 @@ const ActivityTimeline = () => {
   return (
     <Card>
       <CardHeader
-        title='Activity Timeline'
+        title='Activity History (Comming Soon ... )'
         sx={{ '& .MuiCardHeader-avatar': { mr: 2.5 } }}
         avatar={<Icon icon='mdi:format-list-bulleted' />}
         titleTypographyProps={{ sx: { color: 'text.primary' } }}
@@ -46,7 +46,7 @@ const ActivityTimeline = () => {
           />
         }
       />
-      <CardContent>
+      <CardContent style={{filter: 'blur(3px)'}}>
         <Timeline sx={{ my: 0, py: 0 }}>
           <TimelineItem>
             <TimelineSeparator>

@@ -8,14 +8,15 @@ import Link from 'next/link'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
-import Button from '@mui/material/Button'
+
+// import Button from '@mui/material/Button'
 import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 
 // ** Icon Imports
-import Icon from 'src/@core/components/icon'
+// import Icon from 'src/@core/components/icon'
 
 // ** Custom Components Imports
 import CustomChip from 'src/@core/components/mui/chip'
@@ -29,10 +30,13 @@ interface Props {
   connections: ProfileConnectionsType[]
 }
 
-const ConnectionsTeams = ({ connections, teams }: Props) => {
+const ConnectionsTeams = ({
+  // connections,
+  teams
+}: Props) => {
   return (
     <>
-      <Grid item md={6} xs={12}>
+      {/* <Grid item md={6} xs={12}>
         <Card>
           <CardHeader
             title='Connections'
@@ -88,11 +92,11 @@ const ConnectionsTeams = ({ connections, teams }: Props) => {
             </Box>
           </CardContent>
         </Card>
-      </Grid>
-      <Grid item md={6} xs={12}>
+      </Grid> */}
+      <Grid item md={12} xs={12}>
         <Card>
           <CardHeader
-            title='Teams'
+            title='Companies (Comming Soon ... )'
             action={
               <OptionsMenu
                 iconButtonProps={{ size: 'small' }}
@@ -100,7 +104,7 @@ const ConnectionsTeams = ({ connections, teams }: Props) => {
               />
             }
           />
-          <CardContent>
+          <CardContent style={{ filter: 'blur(3px)' }}>
             {teams &&
               teams.map((team: ProfileTeamsTechType, index) => {
                 return (
