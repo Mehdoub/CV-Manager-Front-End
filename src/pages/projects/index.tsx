@@ -271,7 +271,9 @@ const columns = [
     renderCell: ({ row }: any) => {
       return (
         <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-          {row.username}
+          <StyledLink href={`/users/${row.username}`} onClick={e => e.preventDefault()}>
+            {row.username}
+          </StyledLink>
         </Typography>
       )
     }
@@ -458,7 +460,7 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
             autoHeight
             rows={store.data}
             columns={columns}
-            
+
             // checkboxSelection
             pageSize={pageSize}
             disableSelectionOnClick
