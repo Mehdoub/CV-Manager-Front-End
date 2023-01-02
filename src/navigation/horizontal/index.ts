@@ -21,8 +21,13 @@ const navigation = (): HorizontalNavItemsType => [
   },
   {
     title: 'Projects',
-    path: '/projects/',
-    icon: 'mdi:email-outline',
+    path: '/projects',
+    icon: 'pajamas:project',
+  },
+  {
+    title: 'Companies',
+    path: '/companies',
+    icon: 'carbon:location-company',
   },
 ]
 

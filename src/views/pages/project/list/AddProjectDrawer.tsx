@@ -64,7 +64,7 @@ const HeadingTypography = styled(Typography)<TypographyProps>(({ theme }) => ({
   }
 }))
 
-interface SidebarAddUserType {
+interface SidebarAddProjectType {
   open: boolean
   toggle: () => void
 }
@@ -78,15 +78,15 @@ interface SidebarAddUserType {
 //   username: string
 // }
 
-const showErrors = (field: string, valueLen: number, min: number) => {
-  if (valueLen === 0) {
-    return `${field} field is required`
-  } else if (valueLen > 0 && valueLen < min) {
-    return `${field} must be at least ${min} characters`
-  } else {
-    return ''
-  }
-}
+// const showErrors = (field: string, valueLen: number, min: number) => {
+//   if (valueLen === 0) {
+//     return `${field} field is required`
+//   } else if (valueLen > 0 && valueLen < min) {
+//     return `${field} must be at least ${min} characters`
+//   } else {
+//     return ''
+//   }
+// }
 
 const Header = styled(Box)<BoxProps>(({ theme }) => ({
   display: 'flex',
@@ -98,33 +98,20 @@ const Header = styled(Box)<BoxProps>(({ theme }) => ({
 
 const schema = yup.object().shape({
   company: yup.string().required(),
-  country: yup.string().required(),
-  email: yup.string().email().required(),
-  contact: yup
-    .number()
-    .typeError('Contact Number field is required')
-    .min(10, obj => showErrors('Contact Number', obj.value.length, obj.min))
-    .required(),
-  fullName: yup
-    .string()
-    .min(3, obj => showErrors('First Name', obj.value.length, obj.min))
-    .required(),
-  username: yup
-    .string()
-    .min(3, obj => showErrors('Username', obj.value.length, obj.min))
-    .required()
+  name: yup.string().required(),
+  description: yup.string().required(),
 })
 
-const defaultValues = {
-  email: '',
-  company: '',
-  country: '',
-  fullName: '',
-  username: '',
-  contact: Number('')
-}
+// const defaultValues = {
+//   email: '',
+//   company: '',
+//   country: '',
+//   fullName: '',
+//   username: '',
+//   contact: Number('')
+// }
 
-const SidebarAddUser = (props: SidebarAddUserType) => {
+const SidebarAddProject = (props: SidebarAddProjectType) => {
   // ** Props
   const { open, toggle } = props
 
@@ -141,7 +128,7 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
     handleSubmit,
     formState: { errors }
   } = useForm({
-    defaultValues,
+    // defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema)
   })
@@ -283,7 +270,7 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
           </Fragment>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
-              name='fullName'
+              name='name'
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
@@ -317,7 +304,7 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
           </FormControl>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
-              name='username'
+              name='description'
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
@@ -348,4 +335,4 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
   )
 }
 
-export default SidebarAddUser
+export default SidebarAddProject

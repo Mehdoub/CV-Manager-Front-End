@@ -18,7 +18,7 @@ interface Redux {
 }
 
 // ** Fetch Users
-export const fetchData = createAsyncThunk('appUsers/fetchData', async (params: DataParams) => {
+export const fetchData = createAsyncThunk('appUsers/fetchData', async () => {
   // const response = await axios.get('/apps/users/list', {
   //   params
   // })
@@ -34,6 +34,12 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async (params: D
         contact: '(479) 232-9151',
         email: 'gslixby0@abc.net.au',
         time_created: '21 Dec 2022',
+        logoGroup: [
+          '/images/logos/asana.png',
+          '/images/logos/chrome.png',
+          '/images/logos/dribbble.png',
+          '/images/logos/reddit.png'
+        ],
         avatarGroup: [
           '/images/avatars/1.png',
           '/images/avatars/2.png',
@@ -43,7 +49,8 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async (params: D
         currentPlan: 'enterprise',
         status: 'inactive',
         avatar: '',
-        avatarColor: 'primary'
+        avatarColor: 'primary',
+        logo: '/images/logos/twitter.png',
       },
       {
         id: 2,
@@ -55,10 +62,17 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async (params: D
         contact: '(472) 607-9137',
         email: 'hredmore1@imgur.com',
         time_created: '30 Nov 2021',
+        logoGroup: [
+          '/images/logos/asana.png',
+          '/images/logos/chrome.png',
+          '/images/logos/dribbble.png',
+          '/images/logos/reddit.png'
+        ],
         avatarGroup: [],
         currentPlan: 'team',
         status: 'pending',
-        avatar: '/images/avatars/3.png'
+        avatar: '/images/avatars/3.png',
+        logo: '/images/logos/slack.png',
       },
       {
         id: 3,
@@ -70,6 +84,12 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async (params: D
         contact: '(321) 264-4599',
         email: 'msicely2@who.int',
         time_created: '10 Jun 2020',
+        logoGroup: [
+          '/images/logos/asana.png',
+          '/images/logos/chrome.png',
+          '/images/logos/dribbble.png',
+          '/images/logos/reddit.png'
+        ],
         avatarGroup: [
           '/images/avatars/1.png',
           '/images/avatars/2.png',
@@ -84,7 +104,8 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async (params: D
         ],
         currentPlan: 'enterprise',
         status: 'active',
-        avatar: '/images/avatars/1.png'
+        avatar: '/images/avatars/1.png',
+        logo: '/images/logos/facebook-round.png',
       },
       {
         id: 4,
@@ -96,6 +117,12 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async (params: D
         contact: '(923) 690-6806',
         email: 'crisby3@wordpress.com',
         time_created: '05 Oct 2023',
+        logoGroup: [
+          '/images/logos/asana.png',
+          '/images/logos/chrome.png',
+          '/images/logos/dribbble.png',
+          '/images/logos/reddit.png'
+        ],
         avatarGroup: [
           '/images/avatars/1.png',
           '/images/avatars/2.png',
@@ -104,7 +131,8 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async (params: D
         ],
         currentPlan: 'team',
         status: 'inactive',
-        avatar: '/images/avatars/3.png'
+        avatar: '/images/avatars/3.png',
+        logo: '/images/logos/asana.png',
       },
       {
         id: 5,
@@ -116,6 +144,14 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async (params: D
         contact: '(669) 914-1078',
         email: 'mhurran4@yahoo.co.jp',
         time_created: '21 Dec 2022',
+        logoGroup: [
+          '/images/logos/asana.png',
+          '/images/logos/chrome.png',
+          '/images/logos/dribbble.png',
+          '/images/logos/dribbble.png',
+          '/images/logos/reddit.png',
+          '/images/logos/reddit.png',
+        ],
         avatarGroup: [
           '/images/avatars/1.png',
           '/images/avatars/2.png',
@@ -124,7 +160,8 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async (params: D
         ],
         currentPlan: 'enterprise',
         status: 'pending',
-        avatar: '/images/avatars/1.png'
+        avatar: '/images/avatars/1.png',
+        logo: '/images/logos/google.png',
       }
     ]
   }

@@ -23,7 +23,12 @@ const navigation = (): VerticalNavItemsType => {
     {
       title: 'Projects',
       path: '/projects',
-      icon: 'mdi:email-outline',
+      icon: 'pajamas:project',
+    },
+    {
+      title: 'Companies',
+      path: '/companies',
+      icon: 'carbon:location-company',
     },
   ]
 }
