@@ -18,16 +18,16 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, Controller } from 'react-hook-form'
 
 // ** Store Imports
-import { useDispatch } from 'react-redux'
+// import { useDispatch } from 'react-redux'
 
 // ** Actions Imports
-import { addUser } from 'src/store/apps/user'
+// import { addUser } from 'src/store/apps/user'
 
 // ** Types Imports
-import { AppDispatch } from 'src/store'
+// import { AppDispatch } from 'src/store'
 
-import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
+// import List from '@mui/material/List'
+// import ListItem from '@mui/material/ListItem'
 import { TypographyProps } from '@mui/material/Typography'
 
 // ** Icon Imports
@@ -69,14 +69,14 @@ interface SidebarAddUserType {
   toggle: () => void
 }
 
-interface UserData {
-  email: string
-  company: string
-  country: string
-  contact: number
-  fullName: string
-  username: string
-}
+// interface UserData {
+//   email: string
+//   company: string
+//   country: string
+//   contact: number
+//   fullName: string
+//   username: string
+// }
 
 const showErrors = (field: string, valueLen: number, min: number) => {
   if (valueLen === 0) {
@@ -129,11 +129,11 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
   const { open, toggle } = props
 
   // ** State
-  const [plan, setPlan] = useState<string>('basic')
-  const [role, setRole] = useState<string>('subscriber')
+  // const [plan, setPlan] = useState<string>('basic')
+  // const [role, setRole] = useState<string>('subscriber')
 
-  // ** Hooks
-  const dispatch = useDispatch<AppDispatch>()
+  // // ** Hooks
+  // const dispatch = useDispatch()
   const {
     reset,
     control,
@@ -146,16 +146,16 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
     resolver: yupResolver(schema)
   })
 
-  const onSubmit = (data: UserData) => {
-    dispatch(addUser({ ...data, role, currentPlan: plan }))
+  const onSubmit = () => {
     toggle()
     reset()
   }
 
   const handleClose = () => {
-    setPlan('basic')
-    setRole('subscriber')
+    // setPlan('basic')
+    // setRole('subscriber')
     setValue('contact', Number(''))
+    setFiles([])
     toggle()
     reset()
   }
@@ -165,7 +165,7 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
 
   // ** Hooks
   const { getRootProps, getInputProps } = useDropzone({
-    maxFiles: 2,
+    maxFiles: 1,
     maxSize: 2000000,
     accept: {
       'image/*': ['.png', '.jpg', '.jpeg', '.gif']
@@ -174,7 +174,7 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
       setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
     },
     onDropRejected: () => {
-      toast.error('You can only upload 2 files & maximum size of 2 MB.', {
+      toast.error('You can only upload maximum size of 2 MB.', {
         duration: 2000
       })
     }
@@ -182,40 +182,46 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
 
   const renderFilePreview = (file: FileProp) => {
     if (file.type.startsWith('image')) {
-      return <img width={38} height={38} alt={file.name} src={URL.createObjectURL(file as any)} />
+      return (
+        <img
+          style={{ borderRadius: '50%', width: '150px', height: '150px' }}
+          alt={file.name}
+          src={URL.createObjectURL(file as any)}
+        />
+      )
     } else {
       return <Icon icon='mdi:file-document-outline' />
     }
   }
 
-  const handleRemoveFile = (file: FileProp) => {
-    const uploadedFiles = files
-    const filtered = uploadedFiles.filter((i: FileProp) => i.name !== file.name)
-    setFiles([...filtered])
-  }
+  // const handleRemoveFile = (file: FileProp) => {
+  //   const uploadedFiles = files
+  //   const filtered = uploadedFiles.filter((i: FileProp) => i.name !== file.name)
+  //   setFiles([...filtered])
+  // }
 
-  const fileList = files.map((file: FileProp) => (
-    <ListItem key={file.name}>
-      <div className='file-details'>
-        <div className='file-preview'>{renderFilePreview(file)}</div>
-        <div>
-          <Typography className='file-name'>{file.name}</Typography>
-          <Typography className='file-size' variant='body2'>
-            {Math.round(file.size / 100) / 10 > 1000
-              ? `${(Math.round(file.size / 100) / 10000).toFixed(1)} mb`
-              : `${(Math.round(file.size / 100) / 10).toFixed(1)} kb`}
-          </Typography>
-        </div>
-      </div>
-      <IconButton onClick={() => handleRemoveFile(file)}>
-        <Icon icon='mdi:close' fontSize={20} />
-      </IconButton>
-    </ListItem>
-  ))
+  // const fileList = files.map((file: FileProp) => (
+  //   <ListItem key={file.name}>
+  //     <div className='file-details'>
+  //       <div className='file-preview'>{renderFilePreview(file)}</div>
+  //       <div>
+  //         <Typography className='file-name'>{file.name}</Typography>
+  //         <Typography className='file-size' variant='body2'>
+  //           {Math.round(file.size / 100) / 10 > 1000
+  //             ? `${(Math.round(file.size / 100) / 10000).toFixed(1)} mb`
+  //             : `${(Math.round(file.size / 100) / 10).toFixed(1)} kb`}
+  //         </Typography>
+  //       </div>
+  //     </div>
+  //     <IconButton onClick={() => handleRemoveFile(file)}>
+  //       <Icon icon='mdi:close' fontSize={20} />
+  //     </IconButton>
+  //   </ListItem>
+  // ))
 
-  const handleRemoveAllFiles = () => {
-    setFiles([])
-  }
+  // const handleRemoveAllFiles = () => {
+  //   setFiles([])
+  // }
 
   return (
     <Drawer
@@ -234,35 +240,47 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
       </Header>
       <Box sx={{ p: 5 }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          {/* <Fragment> */}
+          <Fragment>
             <div {...getRootProps({ className: 'dropzone' })}>
               <input {...getInputProps()} />
-              <Box sx={{ textAlign: 'center', marginRight: '0 !important' }}>
-                <HeadingTypography sx={{marginBottom: '10px'}} variant='h6'>Drop logo here or click to upload</HeadingTypography>
-                <Img
-                  width={150}
-                  alt='Upload img'
-                  src='/images/avatars/1.png'
-                  sx={{borderRadius: '50%'}}
-                />
-                <Box sx={{ display: 'flex', flexDirection: 'column', textAlign: ['center', 'center', 'inherit'], margin: '10px 0' }}>
-                  <Typography sx={{fontSize: '12px'}} color='textSecondary'>Allowed *.jpeg, *.jpg, *.png, *.gif</Typography>
-                  <Typography sx={{fontSize: '12px'}} color='textSecondary'>Max 2 files and max size of 2 MB</Typography>
+              <Box sx={{ textAlign: 'center' }}>
+                <HeadingTypography sx={{ marginBottom: '10px' }} variant='h6'>
+                  Drop logo here or click to upload
+                </HeadingTypography>
+                {files[0] ? (
+                  renderFilePreview(files[0])
+                ) : (
+                  <Img width={150} alt='Upload img' src='/images/avatars/1.png' sx={{ borderRadius: '50%' }} />
+                )}
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    textAlign: ['center', 'center', 'inherit'],
+                    margin: '10px 0'
+                  }}
+                >
+                  <Typography sx={{ fontSize: '12px' }} color='textSecondary'>
+                    Allowed *.jpeg, *.jpg, *.png, *.gif
+                  </Typography>
+                  <Typography sx={{ fontSize: '12px' }} color='textSecondary'>
+                    Max size of 2 MB
+                  </Typography>
                 </Box>
               </Box>
             </div>
-            {files.length ? (
+            {/* {files.length ? (
               <Fragment>
                 <List>{fileList}</List>
-                {/* <div className='buttons' style={{marginBottom: '20px'}}>
+                <div className='buttons' style={{marginBottom: '20px'}}>
                   <Button color='error' variant='outlined' onClick={handleRemoveAllFiles}>
                     Remove All
                   </Button>
                   <Button variant='contained'>Upload Files</Button>
-                </div> */}
+                </div>
               </Fragment>
-            ) : null}
-          {/* </Fragment> */}
+            ) : null} */}
+          </Fragment>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
               name='fullName'
