@@ -5,12 +5,12 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 // ** Axios Imports
 import axios from 'axios'
 
-interface DataParams {
-  q: string
-  role: string
-  status: string
-  currentPlan: string
-}
+// interface DataParams {
+//   q: string
+//   role: string
+//   status: string
+//   currentPlan: string
+// }
 
 interface Redux {
   getState: any
