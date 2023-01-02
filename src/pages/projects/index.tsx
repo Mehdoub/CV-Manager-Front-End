@@ -1,5 +1,11 @@
 // ** React Imports
-import { useState, useEffect, MouseEvent, useCallback } from 'react'
+import {
+  useState,
+  useEffect,
+
+  //  MouseEvent,
+  useCallback
+} from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
@@ -8,14 +14,16 @@ import { GetStaticProps, InferGetStaticPropsType } from 'next/types'
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
-import Menu from '@mui/material/Menu'
+
+// import Menu from '@mui/material/Menu'
 import Grid from '@mui/material/Grid'
 
 // import Divider from '@mui/material/Divider'
 import { DataGrid } from '@mui/x-data-grid'
 import { styled } from '@mui/material/styles'
-import MenuItem from '@mui/material/MenuItem'
-import IconButton from '@mui/material/IconButton'
+
+// import MenuItem from '@mui/material/MenuItem'
+// import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 
 // import CardHeader from '@mui/material/CardHeader'
@@ -42,7 +50,7 @@ import CardStatisticsHorizontal from 'src/@core/components/card-statistics/card-
 import { getInitials } from 'src/@core/utils/get-initials'
 
 // ** Actions Imports
-import { fetchData, deleteUser } from 'src/store/apps/user'
+import { fetchData } from 'src/store/apps/project'
 
 // ** Third Party Components
 // import axios from 'axios'
@@ -100,7 +108,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }))
 
 // ** renders client column
-const renderClient = (row:any) => {
+const renderClient = (row: any) => {
   if (row.avatar.length) {
     return <CustomAvatar src={row.avatar} sx={{ mr: 3, width: 34, height: 34 }} />
   } else {
@@ -116,71 +124,70 @@ const renderClient = (row:any) => {
   }
 }
 
-const RowOptions = ({ id }: { id: number | string }) => {
-  // ** Hooks
-  const dispatch = useDispatch<any>()
+// const RowOptions = ({ id }: { id: number | string }) => {
+//   // ** Hooks
+//   const dispatch = useDispatch<any>()
 
-  // ** State
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+//   // ** State
+//   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
-  const rowOptionsOpen = Boolean(anchorEl)
+//   const rowOptionsOpen = Boolean(anchorEl)
 
-  const handleRowOptionsClick = (event: MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
-  const handleRowOptionsClose = (e?: any) => {
-    if (e) {
-      e.preventDefault()
-    }
-    setAnchorEl(null)
-  }
+//   const handleRowOptionsClick = (event: MouseEvent<HTMLElement>) => {
+//     setAnchorEl(event.currentTarget)
+//   }
+//   const handleRowOptionsClose = (e?: any) => {
+//     if (e) {
+//       e.preventDefault()
+//     }
+//     setAnchorEl(null)
+//   }
 
-  const handleDelete = () => {
-    dispatch(deleteUser(id))
-    handleRowOptionsClose()
-  }
+//   const handleDelete = () => {
+//     handleRowOptionsClose()
+//   }
 
-  return (
-    <>
-      <IconButton size='small' onClick={handleRowOptionsClick}>
-        <Icon icon='mdi:dots-vertical' />
-      </IconButton>
-      <Menu
-        keepMounted
-        anchorEl={anchorEl}
-        open={rowOptionsOpen}
-        onClose={handleRowOptionsClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right'
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right'
-        }}
-        PaperProps={{ style: { minWidth: '8rem' } }}
-      >
-        <MenuItem
-          component={Link}
-          sx={{ '& svg': { mr: 2 } }}
-          onClick={handleRowOptionsClose}
-          href='/apps/user/view/overview/'
-        >
-          <Icon icon='mdi:eye-outline' fontSize={20} />
-          View
-        </MenuItem>
-        <MenuItem onClick={handleRowOptionsClose} sx={{ '& svg': { mr: 2 } }}>
-          <Icon icon='mdi:pencil-outline' fontSize={20} />
-          Edit
-        </MenuItem>
-        <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
-          <Icon icon='mdi:delete-outline' fontSize={20} />
-          Delete
-        </MenuItem>
-      </Menu>
-    </>
-  )
-}
+//   return (
+//     <>
+//       <IconButton size='small' onClick={handleRowOptionsClick}>
+//         <Icon icon='mdi:dots-vertical' />
+//       </IconButton>
+//       <Menu
+//         keepMounted
+//         anchorEl={anchorEl}
+//         open={rowOptionsOpen}
+//         onClose={handleRowOptionsClose}
+//         anchorOrigin={{
+//           vertical: 'bottom',
+//           horizontal: 'right'
+//         }}
+//         transformOrigin={{
+//           vertical: 'top',
+//           horizontal: 'right'
+//         }}
+//         PaperProps={{ style: { minWidth: '8rem' } }}
+//       >
+//         <MenuItem
+//           component={Link}
+//           sx={{ '& svg': { mr: 2 } }}
+//           onClick={handleRowOptionsClose}
+//           href='/apps/user/view/overview/'
+//         >
+//           <Icon icon='mdi:eye-outline' fontSize={20} />
+//           View
+//         </MenuItem>
+//         <MenuItem onClick={handleRowOptionsClose} sx={{ '& svg': { mr: 2 } }}>
+//           <Icon icon='mdi:pencil-outline' fontSize={20} />
+//           Edit
+//         </MenuItem>
+//         <MenuItem onClick={handleDelete} sx={{ '& svg': { mr: 2 } }}>
+//           <Icon icon='mdi:delete-outline' fontSize={20} />
+//           Delete
+//         </MenuItem>
+//       </Menu>
+//     </>
+//   )
+// }
 
 const columns = [
   {
@@ -229,8 +236,8 @@ const columns = [
     renderCell: ({ row }: any) =>
       row?.avatarGroup.length > 0 ? (
         <AvatarGroup className='pull-up'>
-          {row?.avatarGroup?.map((src:any, index:any) => (
-            <BootstrapTooltip key={index} title="Manager Name" placement="top">
+          {row?.avatarGroup?.map((src: any, index: any) => (
+            <BootstrapTooltip key={index} title='Manager Name' placement='top'>
               <CustomAvatar src={src} sx={{ height: 26, width: 26 }} />
             </BootstrapTooltip>
           ))}
@@ -339,7 +346,7 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
 
   // ** Hooks
   const dispatch = useDispatch<any>()
-  const store = useSelector((state:any) => state.user)
+  const store = useSelector((state: any) => state.user)
 
   useEffect(() => {
     dispatch(fetchData())
@@ -451,7 +458,7 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
             autoHeight
             rows={store.data}
             columns={columns}
-
+            
             // checkboxSelection
             pageSize={pageSize}
             disableSelectionOnClick
