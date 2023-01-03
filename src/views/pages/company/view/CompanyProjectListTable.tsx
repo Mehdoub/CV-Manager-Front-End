@@ -12,13 +12,7 @@ import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 
-// import LinearProgress from '@mui/material/LinearProgress'
-
-// ** Third Party Imports
-// import axios from 'axios'
-
 // ** Type Imports
-import { ProjectListDataType } from 'src/types/apps/userTypes'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { fetchData } from 'src/store/apps/project'
@@ -26,16 +20,6 @@ import { renderClient } from 'src/pages/projects'
 import Link from 'next/link'
 import { AvatarGroup } from '@mui/material'
 import { BootstrapTooltip } from 'src/pages/companies'
-
-interface CellType {
-  row: ProjectListDataType
-}
-const Img = styled('img')(({ theme }) => ({
-  width: 32,
-  height: 32,
-  borderRadius: '50%',
-  marginRight: theme.spacing(3)
-}))
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -120,11 +104,10 @@ const columns = [
   },
 ]
 
-const InvoiceListTable = () => {
+const CompanyProjectListTable = () => {
   // ** State
   const [value, setValue] = useState<string>('')
   const [pageSize, setPageSize] = useState<number>(7)
-  const [data, setData] = useState<ProjectListDataType[]>([])
 
   const dispatch = useDispatch<any>()
   const store = useSelector((state: any) => state.user)
@@ -157,4 +140,4 @@ const InvoiceListTable = () => {
   )
 }
 
-export default InvoiceListTable
+export default CompanyProjectListTable

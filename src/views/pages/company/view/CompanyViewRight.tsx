@@ -18,11 +18,9 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Icon from 'src/@core/components/icon'
 
 // ** Demo Components Imports
-import UserViewBilling from 'src/views/pages/company/view/CompanyViewBilling'
+import CompanyViewManagers from 'src/views/pages/company/view/CompanyViewManagers'
 import UserViewOverview from 'src/views/pages/company/view/CompanyViewOverview'
-import UserViewSecurity from 'src/views/pages/company/view/CompanyViewSecurity'
-import UserViewConnection from 'src/views/pages/company/view/CompanyViewConnection'
-import UserViewNotification from 'src/views/pages/company/view/CompanyViewNotification'
+import CompanyViewResumes from 'src/views/pages/company/view/CompanyViewResumes'
 
 // ** Types
 // import { InvoiceType } from 'src/types/apps/invoiceTypes'
@@ -83,9 +81,9 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
         aria-label='forced scroll tabs example'
         sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
       >
-        <Tab value='overview' label='Projects' icon={<Icon icon='pajamas:project' />} />
-        <Tab value='security' label='Resumes' icon={<Icon icon='mdi:lock-outline' />} />
-        <Tab value='billing-plan' label='Managers' icon={<Icon icon='mdi:bookmark-outline' />} />
+        <Tab value='project' label='Projects' icon={<Icon icon='pajamas:project' />} />
+        <Tab value='resume' label='Resumes' icon={<Icon icon='pepicons-pop:cv' />} />
+        <Tab value='manager' label='Managers' icon={<Icon icon='grommet-icons:user-manager' />} />
         {/* <Tab value='notification' label='Notification' icon={<Icon icon='mdi:bell-outline' />} />
         <Tab value='connection' label='Connection' icon={<Icon icon='mdi:link-variant' />} /> */}
       </TabList>
@@ -97,20 +95,14 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
           </Box>
         ) : (
           <>
-            <TabPanel sx={{ p: 0 }} value='overview'>
+            <TabPanel sx={{ p: 0 }} value='project'>
               <UserViewOverview invoiceData={invoiceData} />
             </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='security'>
-              <UserViewSecurity />
+            <TabPanel sx={{ p: 0 }} value='resume'>
+              <CompanyViewResumes />
             </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='billing-plan'>
-              <UserViewBilling />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='notification'>
-              <UserViewNotification />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='connection'>
-              <UserViewConnection />
+            <TabPanel sx={{ p: 0 }} value='manager'>
+              <CompanyViewManagers />
             </TabPanel>
           </>
         )}

@@ -214,7 +214,7 @@ const columns = [
           {renderClient(row)}
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
             <StyledLink
-              href={`/companies/view/${row.id}/overview`}
+              href={`/companies/view/${row.id}/project`}
 
               // onClick={e => e.preventDefault()}
             >

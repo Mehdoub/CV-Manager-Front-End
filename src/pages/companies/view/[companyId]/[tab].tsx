@@ -19,11 +19,9 @@ export const getStaticPaths: GetStaticPaths = () => {
   let paths: any = []
   const companyIds = ['1', '2', '3', '4', '5']
   companyIds.map(item => {
-    paths.push({ params: { companyId: item, tab: 'overview' } })
-    paths.push({ params: { companyId: item, tab: 'security' } })
-    paths.push({ params: { companyId: item, tab: 'billing-plan' } })
-    paths.push({ params: { companyId: item, tab: 'notification' } })
-    paths.push({ params: { companyId: item, tab: 'connection' } })
+    paths.push({ params: { companyId: item, tab: 'project' } })
+    paths.push({ params: { companyId: item, tab: 'resume' } })
+    paths.push({ params: { companyId: item, tab: 'manager' } })
   })
 
   return {

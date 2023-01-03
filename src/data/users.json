@@ -6,7 +6,7 @@
     "avatar": "/images/logos/asana.png",
     "position_id": "Front-End",
     "firstname": "Mahdi",
-    "lastname": "Mehrjoo",
+    "lastname": "Amereh",
     "gender": "men",
     "marital_status": "married",
     "education": "masters",
@@ -21,7 +21,7 @@
     "min_salary": "150000000",
     "max_salary": "200000000",
     "work_experience": "2019",
-    "created_by": "Mani Mohammadi",
+    "created_by": "Ali Fallah",
     "created_at": "21 Dec 2022"
   },
   {
@@ -30,8 +30,8 @@
     "project_id": "Google",
     "avatar": "/images/logos/google.png",
     "position_id": "Back-End",
-    "firstname": "Saeed Esfehani",
-    "lastname": "Mehrjoo",
+    "firstname": "Emad",
+    "lastname": "Rahnama",
     "gender": "men",
     "marital_status": "married",
     "education": "masters",
@@ -46,7 +46,7 @@
     "min_salary": "150000000",
     "max_salary": "200000000",
     "work_experience": "2019",
-    "created_by": "Mahdi Amereh",
+    "created_by": "Ali Fallah",
     "created_at": "09 Oct 2020"
   }
 ]
