@@ -21,14 +21,14 @@ const navigation = (): VerticalNavItemsType => {
       icon: 'mdi:shield-outline',
     },
     {
-      title: 'Projects',
-      path: '/projects',
-      icon: 'pajamas:project',
-    },
-    {
       title: 'Companies',
       path: '/companies',
       icon: 'carbon:location-company',
+    },
+    {
+      title: 'Projects',
+      path: '/projects',
+      icon: 'pajamas:project',
     },
   ]
 }

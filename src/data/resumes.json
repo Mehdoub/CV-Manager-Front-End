@@ -1,0 +1,23 @@
+{
+  "id": "1",
+  "company_id": "Favin",
+  "project_id": "BPM",
+  "position_id": "Front-End",
+  "firstname": "Mahdi",
+  "lastname": "Mehrjoo",
+  "gender": "men",
+  "marital_status": "married",
+  "education": "masters",
+  "military_status": "exemption-edu",
+  "email": "mahdi2020@gmail.com",
+  "birth_year": "1998",
+  "status": "pending",
+  "mobile": "989332226623",
+  "residence_city": "Tehran",
+  "work_city": "Tehran",
+  "phone": "02156986532",
+  "min_salary": "150000000",
+  "max_salary": "200000000",
+  "work_experience": "2019",
+  "created_by": "Ali Mohammadi"
+}

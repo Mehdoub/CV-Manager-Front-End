@@ -213,7 +213,11 @@ const columns = [
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {renderClient(row)}
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-            <StyledLink href='/user/view/overview/' onClick={e => e.preventDefault()}>
+            <StyledLink
+              href={`/companies/view/${row.id}/overview`}
+
+              // onClick={e => e.preventDefault()}
+            >
               {company}
             </StyledLink>
             {/* <Typography noWrap variant='caption'>
@@ -490,7 +494,6 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
             autoHeight
             rows={store.data}
             columns={columns}
-            
             // checkboxSelection
             pageSize={pageSize}
             disableSelectionOnClick
