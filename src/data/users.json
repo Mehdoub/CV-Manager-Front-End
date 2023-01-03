@@ -4,6 +4,7 @@
     "company_id": "Favin",
     "project_id": "BPM",
     "avatar": "/images/logos/asana.png",
+    "userImg": "/images/avatars/1.png",
     "position_id": "Front-End",
     "firstname": "Mahdi",
     "lastname": "Amereh",
@@ -21,6 +22,7 @@
     "min_salary": "150000000",
     "max_salary": "200000000",
     "work_experience": "2019",
+    "type": "owner",
     "created_by": "Ali Fallah",
     "created_at": "21 Dec 2022"
   },
@@ -29,6 +31,7 @@
     "company_id": "Favin",
     "project_id": "Google",
     "avatar": "/images/logos/google.png",
+    "userImg": "/images/avatars/2.png",
     "position_id": "Back-End",
     "firstname": "Emad",
     "lastname": "Rahnama",
@@ -46,6 +49,7 @@
     "min_salary": "150000000",
     "max_salary": "200000000",
     "work_experience": "2019",
+    "type": "manager",
     "created_by": "Ali Fallah",
     "created_at": "09 Oct 2020"
   }

@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -43,10 +43,31 @@ import { UsersType } from 'src/types/apps/userTypes'
 import { getInitials } from 'src/@core/utils/get-initials'
 import { Controller } from 'react-hook-form'
 import { FormHelperText } from '@mui/material'
+import { useDropzone } from 'react-dropzone'
+import { toast } from 'react-hot-toast'
 
 interface ColorsType {
   [key: string]: ThemeColor
 }
+
+const HeadingTypography = styled(Typography)<TypographyProps>(({ theme }) => ({
+  marginBottom: theme.spacing(5),
+  [theme.breakpoints.down('sm')]: {
+    marginBottom: theme.spacing(4)
+  }
+}))
+
+const Img = styled('img')(({ theme }) => ({
+  // [theme.breakpoints.up('md')]: {
+  //   marginRight: theme.spacing(10)
+  // },
+  [theme.breakpoints.down('md')]: {
+    marginBottom: theme.spacing(4)
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: 250
+  }
+}))
 
 const data: any = {
   id: 1,
@@ -101,14 +122,41 @@ const UserViewLeft = () => {
   const [openPlans, setOpenPlans] = useState<boolean>(false)
   const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState<boolean>(false)
+  const [files, setFiles] = useState<File[]>([])
 
   // Handle Edit dialog
   const handleEditClickOpen = () => setOpenEdit(true)
   const handleEditClose = () => setOpenEdit(false)
 
-  // Handle Upgrade Plan dialog
-  const handlePlansClickOpen = () => setOpenPlans(true)
-  const handlePlansClose = () => setOpenPlans(false)
+  const { getRootProps, getInputProps } = useDropzone({
+    maxFiles: 1,
+    maxSize: 2000000,
+    accept: {
+      'image/*': ['.png', '.jpg', '.jpeg', '.gif']
+    },
+    onDrop: (acceptedFiles: File[]) => {
+      setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
+    },
+    onDropRejected: () => {
+      toast.error('You can only upload maximum size of 2 MB.', {
+        duration: 2000
+      })
+    }
+  })
+
+  const renderFilePreview = (file: FileProp) => {
+    if (file.type.startsWith('image')) {
+      return (
+        <img
+          style={{ borderRadius: '50%', width: '150px', height: '150px' }}
+          alt={file.name}
+          src={URL.createObjectURL(file as any)}
+        />
+      )
+    } else {
+      return <Icon icon='mdi:file-document-outline' />
+    }
+  }
 
   if (data) {
     return (
@@ -152,7 +200,7 @@ const UserViewLeft = () => {
               />
             </CardContent>
 
-            <CardContent sx={{ my: 1 }}>
+            {/* <CardContent sx={{ my: 1 }}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 <Box sx={{ mr: 8, display: 'flex', alignItems: 'center' }}>
                   <CustomAvatar skin='light' variant='rounded' sx={{ mr: 3 }}>
@@ -177,7 +225,7 @@ const UserViewLeft = () => {
                   </div>
                 </Box>
               </Box>
-            </CardContent>
+            </CardContent> */}
 
             <CardContent>
               <Typography variant='h6'>Details</Typography>
@@ -256,6 +304,23 @@ const UserViewLeft = () => {
                   Updating company details will receive a privacy audit.
                 </DialogContentText>
                 <form>
+                    <Fragment>
+                      <div {...getRootProps({ className: 'dropzone' })}>
+                        <input {...getInputProps()} />
+                        <Box sx={{ textAlign: 'center' }}>
+                          {files[0] ? (
+                            renderFilePreview(files[0])
+                          ) : (
+                            <Img
+                              width={140}
+                              alt='Upload img'
+                              src='/images/logos/facebook-round.png'
+                              sx={{ borderRadius: '50%', marginBottom: '25px' }}
+                            />
+                          )}
+                        </Box>
+                      </div>
+                    </Fragment>
                   <Grid container spacing={6}>
                     <Grid item xs={12} sm={6}>
                       <TextField fullWidth label='Name' defaultValue={data.fullName} />

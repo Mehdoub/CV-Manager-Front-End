@@ -256,17 +256,6 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
                 </Box>
               </Box>
             </div>
-            {/* {files.length ? (
-              <Fragment>
-                <List>{fileList}</List>
-                <div className='buttons' style={{marginBottom: '20px'}}>
-                  <Button color='error' variant='outlined' onClick={handleRemoveAllFiles}>
-                    Remove All
-                  </Button>
-                  <Button variant='contained'>Upload Files</Button>
-                </div>
-              </Fragment>
-            ) : null} */}
           </Fragment>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller

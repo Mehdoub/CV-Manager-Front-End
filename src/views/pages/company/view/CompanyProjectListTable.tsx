@@ -18,7 +18,7 @@ import { useSelector } from 'react-redux'
 import { fetchData } from 'src/store/apps/project'
 import { renderClient } from 'src/pages/projects'
 import Link from 'next/link'
-import { AvatarGroup } from '@mui/material'
+import { AvatarGroup, Button } from '@mui/material'
 import { BootstrapTooltip } from 'src/pages/companies'
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -118,14 +118,14 @@ const CompanyProjectListTable = () => {
 
   return (
     <Card>
-      <CardHeader title="Company's Projects List" />
+      <CardHeader title="Latest Projects" />
       <CardContent>
-        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-          <Typography variant='body2' sx={{ mr: 2 }}>
-            Search:
-          </Typography>
-          <TextField size='small' placeholder='Search Project' value={value} onChange={e => setValue(e.target.value)} />
-        </Box>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'flex-end' }}>
+            <TextField size='small' value={value} sx={{ mr: 6, mb: 2 }} placeholder='Search Project' />
+            <Button sx={{ mb: 2 }} variant='contained'>
+              Add Project
+            </Button>
+          </Box>
       </CardContent>
       <DataGrid
         autoHeight
