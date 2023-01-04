@@ -10,10 +10,9 @@ import CompanyViewRight from 'src/views/pages/company/view/CompanyViewRight'
 import CardStatisticsVertical from 'src/@core/components/card-statistics/card-stats-vertical'
 import CrmTotalGrowth from 'src/views/statistics/CrmTotalGrowth'
 import CrmTotalProfit from 'src/views/statistics/CrmTotalProfit'
-import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
-import CardStatisticsHorizontal from 'src/@core/components/card-statistics/card-stats-horizontal'
-
 import Icon from 'src/@core/components/icon'
+import CrmAward from 'src/views/statistics/CrmAward'
+import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 
 type Props = {
   tab: string
@@ -26,32 +25,7 @@ const CompanyView = ({ tab, invoiceData }: Props) => {
       <Grid container spacing={6}>
         <Grid item container spacing={6}>
           <Grid item xs={6} sm={3} md={4}>
-            {/* <Grid item md={12}>
-              <CardStatisticsHorizontal
-                {...{
-                  color: 'info',
-                  stats: '2,450k',
-                  trend: 'negative',
-                  icon: 'mdi:trending-up',
-                  trendNumber: '24.6%',
-                  title: 'New Transactions'
-                }}
-                icon={<Icon icon='mdi:trending-up' />}
-              />
-            </Grid>
-            <Grid item md={12} sx={{marginTop: '40px'}}>
-              <CardStatisticsHorizontal
-                {...{
-                  color: 'info',
-                  stats: '2,450k',
-                  trend: 'negative',
-                  icon: 'mdi:trending-up',
-                  trendNumber: '24.6%',
-                  title: 'New Transactions'
-                }}
-                icon={<Icon icon='mdi:trending-up' />}
-              />
-            </Grid> */}
+            <CrmAward />
           </Grid>
           <Grid item xs={6} sm={3} md={2}>
             <CardStatisticsVertical

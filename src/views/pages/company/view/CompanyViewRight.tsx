@@ -19,8 +19,9 @@ import Icon from 'src/@core/components/icon'
 
 // ** Demo Components Imports
 import CompanyViewManagers from 'src/views/pages/company/view/CompanyViewManagers'
-import UserViewOverview from 'src/views/pages/company/view/CompanyViewOverview'
+import CompanyViewOverview from 'src/views/pages/company/view/CompanyViewOverview'
 import CompanyViewResumes from 'src/views/pages/company/view/CompanyViewResumes'
+import CompanyViewProjects from 'src/views/pages/company/view/CompanyViewProjects'
 
 // ** Types
 // import { InvoiceType } from 'src/types/apps/invoiceTypes'
@@ -81,11 +82,10 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
         aria-label='forced scroll tabs example'
         sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
       >
+        <Tab value='overview' label='Overview' icon={<Icon icon='mdi:account-outline' />} />
         <Tab value='project' label='Projects' icon={<Icon icon='pajamas:project' />} />
         <Tab value='resume' label='Resumes' icon={<Icon icon='pepicons-pop:cv' />} />
         <Tab value='manager' label='Managers' icon={<Icon icon='grommet-icons:user-manager' />} />
-        {/* <Tab value='notification' label='Notification' icon={<Icon icon='mdi:bell-outline' />} />
-        <Tab value='connection' label='Connection' icon={<Icon icon='mdi:link-variant' />} /> */}
       </TabList>
       <Box sx={{ mt: 6 }}>
         {isLoading ? (
@@ -95,8 +95,11 @@ const UserViewRight = ({ tab, invoiceData }: Props) => {
           </Box>
         ) : (
           <>
+            <TabPanel sx={{ p: 0 }} value='overview'>
+              <CompanyViewOverview />
+            </TabPanel>
             <TabPanel sx={{ p: 0 }} value='project'>
-              <UserViewOverview invoiceData={invoiceData} />
+              <CompanyViewProjects />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value='resume'>
               <CompanyViewResumes />

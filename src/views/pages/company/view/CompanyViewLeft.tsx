@@ -84,7 +84,7 @@ const data: any = {
   address: 'Tehran, Abbas Abad, Sarafraz Street',
   fullName: 'Favin',
   email: 'favin@abc.net.ir',
-  avatar: '/images/logos/facebook-round.png'
+  avatar: '/images/logos/sample-logo.jpeg',
 }
 
 const roleColors: ColorsType = {
@@ -169,14 +169,14 @@ const UserViewLeft = () => {
                   src={data.avatar}
                   variant='rounded'
                   alt={data.fullName}
-                  sx={{ width: 120, height: 120, fontWeight: 600, mb: 4, fontSize: '3rem' }}
+                  sx={{ width: 150, height: 150, fontWeight: 600, mb: 4, fontSize: '3rem', borderRadius: '50%' }}
                 />
               ) : (
                 <CustomAvatar
                   skin='light'
                   variant='rounded'
                   color={data.avatarColor as ThemeColor}
-                  sx={{ width: 120, height: 120, fontWeight: 600, mb: 4, fontSize: '3rem' }}
+                  sx={{ width: 150, height: 150, fontWeight: 600, mb: 4, fontSize: '3rem', borderRadius: '50%' }}
                 >
                   {getInitials(data.fullName)}
                 </CustomAvatar>

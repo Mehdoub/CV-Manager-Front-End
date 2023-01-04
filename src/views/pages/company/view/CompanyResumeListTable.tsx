@@ -212,7 +212,7 @@ const CompanyResumeListTable = () => {
   return (
     <Grid>
       <Card>
-        <CardHeader title="Company's Hiered Resumes List" />
+        <CardHeader title="Hiered Resumes" />
         <CardContent>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
             <Typography variant='body2' sx={{ mr: 2 }}>
@@ -237,7 +237,7 @@ const CompanyResumeListTable = () => {
         />
       </Card>
       <Card sx={{marginTop: '20px'}}>
-        <CardHeader title="Company's Latest Resumes List" />
+        <CardHeader title="Latest Resumes" />
         <CardContent>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
             <Typography variant='body2' sx={{ mr: 2 }}>
