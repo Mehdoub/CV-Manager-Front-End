@@ -41,7 +41,7 @@ import { CardStatsHorizontalProps } from 'src/@core/components/card-statistics/t
 
 // ** Custom Table Components Imports
 import TableHeader from 'src/views/pages/company/list/TableHeader'
-import AddUserDrawer from 'src/views/pages/company/list/AddCompanyDrawer'
+import AddCompanyDrawer from 'src/views/pages/company/list/AddCompanyDrawer'
 import { AvatarGroup, Tooltip, TooltipProps, tooltipClasses } from '@mui/material'
 import { Stack } from '@mui/system'
 
@@ -85,121 +85,7 @@ const renderClient = (row: any) => {
   }
 }
 
-const columns = [
-  {
-    flex: 0.2,
-    minWidth: 230,
-    field: 'company',
-    headerName: 'Company',
-    renderCell: ({ row }: any) => {
-      const { company } = row
 
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {renderClient(row)}
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-            <StyledLink href={`/companies/view/${row.id}/overview`}>
-              {company}
-            </StyledLink>
-            {/* <Typography noWrap variant='caption'>
-              {`@${username}`}
-            </Typography> */}
-          </Box>
-        </Box>
-      )
-    }
-  },
-  {
-    flex: 0.1,
-    field: 'team',
-    minWidth: 120,
-    headerName: 'Managers',
-    renderCell: ({ row }: any) =>
-      row?.avatarGroup.length > 0 ? (
-        <AvatarGroup className='pull-up'>
-          {row?.avatarGroup?.map((src: any, index: any) => (
-            <BootstrapTooltip key={index} title='Manager Name' placement='top'>
-              <CustomAvatar src={src} sx={{ height: 26, width: 26 }} />
-            </BootstrapTooltip>
-          ))}
-        </AvatarGroup>
-      ) : (
-        '---'
-      )
-  },
-  {
-    flex: 0.1,
-    field: 'projects',
-    minWidth: 120,
-    headerName: 'Projects',
-    renderCell: ({ row }: any) =>
-      row?.logoGroup.length > 0 ? (
-        <AvatarGroup className='pull-up'>
-          {row?.logoGroup?.map((src: any, index: any) => (
-            <BootstrapTooltip key={index} title='Project Name' placement='top'>
-              <CustomAvatar src={src} sx={{ height: 26, width: 26 }} />
-            </BootstrapTooltip>
-          ))}
-        </AvatarGroup>
-      ) : (
-        '---'
-      )
-  },
-  {
-    flex: 0.15,
-    minWidth: 120,
-    headerName: 'User Create',
-    field: 'username',
-    renderCell: ({ row }: any) => {
-      return (
-        <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-          <StyledLink href={`/users/${row.username}`} onClick={e => e.preventDefault()}>
-            {row.username}
-          </StyledLink>
-        </Typography>
-      )
-    }
-  },
-  {
-    flex: 0.15,
-    minWidth: 120,
-    headerName: 'Time Create',
-    field: 'time_created',
-    renderCell: ({ row }: any) => {
-      return (
-        <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-          {row.time_created}
-        </Typography>
-      )
-    }
-  },
-  {
-    flex: 0.1,
-    minWidth: 90,
-    sortable: false,
-    field: 'actions',
-    headerName: 'Actions',
-    renderCell: ({ row }: any) => (
-      <Stack direction='row' spacing={2}>
-        <BootstrapTooltip title='view' placement='top'>
-          <StyledLink href={`/companies/${row.company}`} onClick={e => e.preventDefault()}>
-            <Icon icon='mdi:eye-outline' fontSize={20} />
-          </StyledLink>
-        </BootstrapTooltip>
-        <BootstrapTooltip title='edit' placement='top'>
-          <StyledLink href={`/companies/edit`} onClick={e => e.preventDefault()}>
-            <Icon icon='mdi:pencil-outline' fontSize={20} />
-          </StyledLink>
-        </BootstrapTooltip>
-        <BootstrapTooltip title='delete' placement='top'>
-          <StyledLink href={`/companies/delete`} onClick={e => e.preventDefault()}>
-            <Icon icon='mdi:delete-outline' fontSize={20} />
-          </StyledLink>
-        </BootstrapTooltip>
-      </Stack>
-    )
-  }
-]
 
 const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) => {
   // ** State
@@ -219,7 +105,123 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
     setValue(val)
   }, [])
 
-  const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen)
+  const toggleAddCompanyDrawer = () => setAddUserOpen(!addUserOpen)
+
+  const columns = [
+    {
+      flex: 0.2,
+      minWidth: 230,
+      field: 'company',
+      headerName: 'Company',
+      renderCell: ({ row }: any) => {
+        const { company } = row
+
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {renderClient(row)}
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+              <StyledLink href={`/companies/view/${row.id}/overview`}>
+                {company}
+              </StyledLink>
+              {/* <Typography noWrap variant='caption'>
+                {`@${username}`}
+              </Typography> */}
+            </Box>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.1,
+      field: 'team',
+      minWidth: 120,
+      headerName: 'Managers',
+      renderCell: ({ row }: any) =>
+        row?.avatarGroup.length > 0 ? (
+          <AvatarGroup className='pull-up'>
+            {row?.avatarGroup?.map((src: any, index: any) => (
+              <BootstrapTooltip key={index} title='Manager Name' placement='top'>
+                <CustomAvatar src={src} sx={{ height: 26, width: 26 }} />
+              </BootstrapTooltip>
+            ))}
+          </AvatarGroup>
+        ) : (
+          '---'
+        )
+    },
+    {
+      flex: 0.1,
+      field: 'projects',
+      minWidth: 120,
+      headerName: 'Projects',
+      renderCell: ({ row }: any) =>
+        row?.logoGroup.length > 0 ? (
+          <AvatarGroup className='pull-up'>
+            {row?.logoGroup?.map((src: any, index: any) => (
+              <BootstrapTooltip key={index} title='Project Name' placement='top'>
+                <CustomAvatar src={src} sx={{ height: 26, width: 26 }} />
+              </BootstrapTooltip>
+            ))}
+          </AvatarGroup>
+        ) : (
+          '---'
+        )
+    },
+    {
+      flex: 0.15,
+      minWidth: 120,
+      headerName: 'User Create',
+      field: 'username',
+      renderCell: ({ row }: any) => {
+        return (
+          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            <StyledLink href={`/users/${row.username}`} onClick={e => e.preventDefault()}>
+              {row.username}
+            </StyledLink>
+          </Typography>
+        )
+      }
+    },
+    {
+      flex: 0.15,
+      minWidth: 120,
+      headerName: 'Time Create',
+      field: 'time_created',
+      renderCell: ({ row }: any) => {
+        return (
+          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            {row.time_created}
+          </Typography>
+        )
+      }
+    },
+    {
+      flex: 0.1,
+      minWidth: 90,
+      sortable: false,
+      field: 'actions',
+      headerName: 'Actions',
+      renderCell: ({ row }: any) => (
+        <Stack direction='row' spacing={2}>
+          <BootstrapTooltip title='view' placement='top'>
+            <StyledLink href={`/companies/view/${row.id}/overview`}>
+              <Icon icon='mdi:eye-outline' fontSize={20} />
+            </StyledLink>
+          </BootstrapTooltip>
+          <BootstrapTooltip title='edit' placement='top'>
+            <div style={{cursor: 'pointer'}}  onClick={toggleAddCompanyDrawer}>
+              <Icon icon='mdi:pencil-outline' fontSize={20} />
+            </div>
+          </BootstrapTooltip>
+          {/* <BootstrapTooltip title='delete' placement='top'>
+            <StyledLink href={`/companies/delete`} onClick={e => e.preventDefault()}>
+              <Icon icon='mdi:delete-outline' fontSize={20} />
+            </StyledLink>
+          </BootstrapTooltip> */}
+        </Stack>
+      )
+    }
+  ]
 
   return (
     <Grid container spacing={6}>
@@ -238,7 +240,7 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <TableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+          <TableHeader value={value} handleFilter={handleFilter} toggle={toggleAddCompanyDrawer} />
           <DataGrid
             autoHeight
             rows={store.data}
@@ -252,7 +254,7 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
         </Card>
       </Grid>
 
-      <AddUserDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      <AddCompanyDrawer open={addUserOpen} toggle={toggleAddCompanyDrawer} />
     </Grid>
   )
 }

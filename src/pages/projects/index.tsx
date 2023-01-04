@@ -65,7 +65,7 @@ import { CardStatsHorizontalProps } from 'src/@core/components/card-statistics/t
 
 // ** Custom Table Components Imports
 import TableHeader from 'src/views/pages/project/list/TableHeader'
-import AddUserDrawer from 'src/views/pages/project/list/AddProjectDrawer'
+import AddProjectDrawer from 'src/views/pages/project/list/AddProjectDrawer'
 import { AvatarGroup, Stack } from '@mui/material'
 import { BootstrapTooltip } from '../companies'
 
@@ -370,7 +370,7 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
   //   setStatus(e.target.value)
   // }, [])
 
-  const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen)
+  const toggleAddProjectDrawer = () => setAddUserOpen(!addUserOpen)
 
   return (
     <Grid container spacing={6}>
@@ -455,7 +455,7 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
             </Grid>
           </CardContent>
           <Divider /> */}
-          <TableHeader value={value} handleFilter={handleFilter} toggle={toggleAddUserDrawer} />
+          <TableHeader value={value} handleFilter={handleFilter} toggle={toggleAddProjectDrawer} />
           <DataGrid
             autoHeight
             rows={store.data}
@@ -471,7 +471,7 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
         </Card>
       </Grid>
 
-      <AddUserDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      <AddProjectDrawer open={addUserOpen} toggle={toggleAddProjectDrawer} />
     </Grid>
   )
 }

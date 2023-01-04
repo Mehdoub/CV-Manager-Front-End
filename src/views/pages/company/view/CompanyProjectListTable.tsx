@@ -11,6 +11,7 @@ import CardHeader from '@mui/material/CardHeader'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import CustomAvatar from 'src/@core/components/mui/avatar'
+import AddProjectDrawer from 'src/views/pages/project/list/AddProjectDrawer'
 
 // ** Type Imports
 import { useDispatch } from 'react-redux'
@@ -18,7 +19,7 @@ import { useSelector } from 'react-redux'
 import { fetchData } from 'src/store/apps/project'
 import { renderClient } from 'src/pages/projects'
 import Link from 'next/link'
-import { AvatarGroup, Button } from '@mui/material'
+import { AvatarGroup, Button, Grid } from '@mui/material'
 import { BootstrapTooltip } from 'src/pages/companies'
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -101,12 +102,11 @@ const columns = [
         </Typography>
       )
     }
-  },
+  }
 ]
 
 const CompanyProjectListTable = () => {
   // ** State
-  const [value, setValue] = useState<string>('')
   const [pageSize, setPageSize] = useState<number>(7)
 
   const dispatch = useDispatch<any>()
@@ -116,27 +116,32 @@ const CompanyProjectListTable = () => {
     dispatch(fetchData())
   }, [dispatch])
 
+  const [addProjectOpen, setAddProjectOpen] = useState<boolean>(false)
+  const toggleAddProjectDrawer = () => setAddProjectOpen(!addProjectOpen)
+
   return (
-    <Card>
-      <CardHeader title="Latest Projects" />
-      <CardContent>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'flex-end' }}>
-            <TextField size='small' value={value} sx={{ mr: 6, mb: 2 }} placeholder='Search Project' />
-            <Button sx={{ mb: 2 }} variant='contained'>
-              Add Project
-            </Button>
-          </Box>
-      </CardContent>
-      <DataGrid
-        autoHeight
-        rows={store.data}
-        columns={columns}
-        pageSize={pageSize}
-        disableSelectionOnClick
-        rowsPerPageOptions={[7, 10, 25, 50]}
-        onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-      />
-    </Card>
+    <Grid>
+      <Card>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+          <CardHeader title='Latest Projects' />
+          {/* <TextField size='small' value={value} sx={{ mr: 6, mb: 2 }} placeholder='Search Project' /> */}
+          <Button sx={{ mt: 2, mr: 5 }} variant='contained' onClick={toggleAddProjectDrawer}>
+            Add Project
+          </Button>
+        </Box>
+        <CardContent></CardContent>
+        <DataGrid
+          autoHeight
+          rows={store.data}
+          columns={columns}
+          pageSize={pageSize}
+          disableSelectionOnClick
+          rowsPerPageOptions={[7, 10, 25, 50]}
+          onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+        />
+      </Card>
+      <AddProjectDrawer open={addProjectOpen} toggle={toggleAddProjectDrawer} />
+    </Grid>
   )
 }
 

@@ -127,51 +127,16 @@ const columns = [
       )
     }
   },
-  {
-    flex: 0.1,
-    minWidth: 90,
-    sortable: false,
-    field: 'actions',
-    headerName: ' ',
-    renderCell: ({ row }: any) => (
-      <Stack direction='row' spacing={2}>
-        {/* <BootstrapTooltip title='view' placement='top'>
-          <StyledLink href={`/projects/${row.project_id}`} onClick={e => e.preventDefault()}>
-            <Icon icon='mdi:eye-outline' fontSize={20} />
-          </StyledLink>
-        </BootstrapTooltip>
-        <BootstrapTooltip title='edit' placement='top'>
-          <StyledLink href={`/projects/edit`} onClick={e => e.preventDefault()}>
-            <Icon icon='mdi:pencil-outline' fontSize={20} />
-          </StyledLink>
-        </BootstrapTooltip> */}
-        <BootstrapTooltip title='delete' placement='top'>
-          <StyledLink href={`/projects/delete`} onClick={e => e.preventDefault()}>
-            <Icon icon='mdi:delete-outline' fontSize={20} />
-          </StyledLink>
-        </BootstrapTooltip>
-      </Stack>
-    )
-  }
 ]
 
 const CompanyManagerListTable = () => {
   // ** State
-  const [value, setValue] = useState<string>('')
+  // const [value, setValue] = useState<string>('')
   const [pageSize, setPageSize] = useState<number>(7)
 
   return (
     <Grid>
       <Card>
-        <CardContent>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'flex-end' }}>
-            <TextField size='small' value={value} sx={{ mr: 6, mb: 2 }} placeholder='Search Manager' />
-
-            <Button sx={{ mb: 2 }} variant='contained'>
-              Add Manager
-            </Button>
-          </Box>
-        </CardContent>
         <DataGrid
           autoHeight
           rows={users}
