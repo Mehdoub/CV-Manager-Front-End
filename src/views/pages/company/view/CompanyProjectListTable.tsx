@@ -105,6 +105,84 @@ const columns = [
   }
 ]
 
+const resumeColumns = [
+  {
+    flex: 0.2,
+    minWidth: 230,
+    field: 'project_id',
+    headerName: 'Project',
+    renderCell: ({ row }: any) => {
+      const { project_id, username } = row
+
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          {renderClient(row)}
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+            <StyledLink href='/user/view/overview/' onClick={e => e.preventDefault()}>
+              {project_id}
+            </StyledLink>
+            <Typography noWrap variant='caption'>
+              {`${username}`}
+            </Typography>
+          </Box>
+        </Box>
+      )
+    }
+  },
+  {
+    flex: 0.15,
+    minWidth: 120,
+    headerName: 'Resumes Number',
+    field: 'resumesNumber',
+    renderCell: ({ row }: any) => {
+      return (
+        <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+          {row.resumesNumber}
+        </Typography>
+      )
+    }
+  }
+]
+
+const positionColumns = [
+  {
+    flex: 0.2,
+    minWidth: 230,
+    field: 'project_id',
+    headerName: 'Project',
+    renderCell: ({ row }: any) => {
+      const { project_id, username } = row
+
+      return (
+        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+          {renderClient(row)}
+          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+            <StyledLink href='/user/view/overview/' onClick={e => e.preventDefault()}>
+              {project_id}
+            </StyledLink>
+            <Typography noWrap variant='caption'>
+              {`${username}`}
+            </Typography>
+          </Box>
+        </Box>
+      )
+    }
+  },
+  {
+    flex: 0.15,
+    minWidth: 120,
+    headerName: 'Positions Number',
+    field: 'resumesNumber',
+    renderCell: ({ row }: any) => {
+      return (
+        <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+          {row.resumesNumber}
+        </Typography>
+      )
+    }
+  }
+]
+
 const CompanyProjectListTable = () => {
   // ** State
   const [pageSize, setPageSize] = useState<number>(7)
@@ -120,26 +198,59 @@ const CompanyProjectListTable = () => {
   const toggleAddProjectDrawer = () => setAddProjectOpen(!addProjectOpen)
 
   return (
-    <Grid>
-      <Card>
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-          <CardHeader title='Latest Projects' />
-          {/* <TextField size='small' value={value} sx={{ mr: 6, mb: 2 }} placeholder='Search Project' /> */}
-          <Button sx={{ mt: 2, mr: 5 }} variant='contained' onClick={toggleAddProjectDrawer}>
-            Add Project
-          </Button>
-        </Box>
-        <CardContent></CardContent>
-        <DataGrid
-          autoHeight
-          rows={store.data}
-          columns={columns}
-          pageSize={pageSize}
-          disableSelectionOnClick
-          rowsPerPageOptions={[7, 10, 25, 50]}
-          onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-        />
-      </Card>
+    <Grid container spacing={6}>
+      <Grid item xs={6}>
+        <Card>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+            <CardHeader title='Most Resumes' />
+          </Box>
+          <DataGrid
+            autoHeight
+            rows={store.data}
+            columns={resumeColumns}
+            pageSize={pageSize}
+            disableSelectionOnClick
+            rowsPerPageOptions={[7, 10, 25, 50]}
+            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+          />
+        </Card>
+      </Grid>
+      <Grid item xs={6}>
+        <Card>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+            <CardHeader title='Most Positions' />
+          </Box>
+          <DataGrid
+            autoHeight
+            rows={store.data}
+            columns={positionColumns}
+            pageSize={pageSize}
+            disableSelectionOnClick
+            rowsPerPageOptions={[7, 10, 25, 50]}
+            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+          />
+        </Card>
+      </Grid>
+      <Grid item xs={12}>
+        <Card>
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+            <CardHeader title='Latest Projects' />
+            {/* <TextField size='small' value={value} sx={{ mr: 6, mb: 2 }} placeholder='Search Project' /> */}
+            <Button sx={{ mt: 2, mr: 5 }} variant='contained' onClick={toggleAddProjectDrawer}>
+              Add Project
+            </Button>
+          </Box>
+          <DataGrid
+            autoHeight
+            rows={store.data}
+            columns={columns}
+            pageSize={pageSize}
+            disableSelectionOnClick
+            rowsPerPageOptions={[7, 10, 25, 50]}
+            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+          />
+        </Card>
+      </Grid>
       <AddProjectDrawer open={addProjectOpen} toggle={toggleAddProjectDrawer} />
     </Grid>
   )

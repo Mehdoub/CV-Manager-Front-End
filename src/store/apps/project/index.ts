@@ -50,6 +50,7 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async () => {
         status: 'inactive',
         avatar: '',
         avatarColor: 'primary',
+        resumesNumber: 20,
         logo: '/images/logos/twitter.png',
       },
       {
@@ -72,6 +73,7 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async () => {
         currentPlan: 'team',
         status: 'pending',
         avatar: '/images/avatars/3.png',
+        resumesNumber: 15,
         logo: '/images/logos/slack.png',
       },
       {
@@ -105,6 +107,7 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async () => {
         currentPlan: 'enterprise',
         status: 'active',
         avatar: '/images/avatars/1.png',
+        resumesNumber: 14,
         logo: '/images/logos/facebook-round.png',
       },
       {
@@ -132,6 +135,7 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async () => {
         currentPlan: 'team',
         status: 'inactive',
         avatar: '/images/avatars/3.png',
+        resumesNumber: 12,
         logo: '/images/logos/asana.png',
       },
       {
@@ -161,6 +165,7 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async () => {
         currentPlan: 'enterprise',
         status: 'pending',
         avatar: '/images/avatars/1.png',
+        resumesNumber: 10,
         logo: '/images/logos/google.png',
       }
     ]

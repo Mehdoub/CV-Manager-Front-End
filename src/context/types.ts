@@ -9,6 +9,7 @@ export type LoginParams = {
 export type RegisterParams = {
   firstname: string,
   lastname: string,
+  username: string,
   mobile: number,
   password: string,
   repeatpassword: string,

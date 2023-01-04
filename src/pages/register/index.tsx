@@ -49,6 +49,7 @@ import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 interface FormData {
   firstname: string
   lastname: string
+  username: string
   mobile: number
   password: string
   repeatpassword: string
@@ -113,6 +114,7 @@ const Register = () => {
   const schema = yup.object().shape({
     firstname: yup.string().label('First name').min(3).required(),
     lastname: yup.string().label('Last name').min(3).required(),
+    username: yup.string().label('Username').min(3).required(),
     mobile: yup
       .string()
       .label('Mobile')
@@ -135,19 +137,18 @@ const Register = () => {
   })
 
   const onSubmit = (data: FormData) => {
-    const { firstname, lastname, mobile, password, repeatpassword } = data
+    const { firstname, lastname, mobile, password, repeatpassword, username } = data
     if (password !== repeatpassword) {
       setError('repeatpassword', {
         type: 'manual',
         message: 'Password and repeat password should be the same'
       })
     } else {
-      register({ firstname, lastname, mobile, password, repeatpassword }, err => {
+      register({ firstname, lastname, mobile, password, repeatpassword, username }, err => {
         setError('firstname', {
           type: 'manual',
           message: 'Something went wrong!'
         })
-        console.log(err)
       })
     }
   }
@@ -307,6 +308,26 @@ const Register = () => {
                 />
                 {errors.lastname && (
                   <FormHelperText sx={{ color: 'error.main' }}>{errors.lastname.message}</FormHelperText>
+                )}
+              </FormControl>
+              <FormControl fullWidth sx={{ mb: 4 }}>
+                <Controller
+                  name='username'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange, onBlur } }) => (
+                    <TextField
+                      value={value}
+                      label='Username'
+                      onBlur={onBlur}
+                      onChange={onChange}
+                      error={Boolean(errors.username)}
+                      placeholder='john23'
+                    />
+                  )}
+                />
+                {errors.username && (
+                  <FormHelperText sx={{ color: 'error.main' }}>{errors.username.message}</FormHelperText>
                 )}
               </FormControl>
               <FormControl fullWidth sx={{ mb: 4 }}>

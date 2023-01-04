@@ -225,7 +225,6 @@ const CompanyResumeListTable = () => {
   const [pageSize, setPageSize] = useState<number>(7)
 
   const dispatch = useDispatch<any>()
-  const store = useSelector((state: any) => state.user)
 
   useEffect(() => {
     dispatch(fetchData())
