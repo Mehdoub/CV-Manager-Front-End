@@ -23,7 +23,7 @@ import users from 'src/data/users.json'
 
 const statusColors: any = {
   manager: 'success',
-  owner: 'warning'
+  owner: 'error'
 }
 
 const renderClient = (row: any) => {
