@@ -21,7 +21,7 @@ const series = [
   }
 ]
 
-const AnalyticsSalesCountry = ({title, categories}) => {
+const AnalyticsSalesCountry = ({ title, categories }: { title: string; categories: string[] }) => {
   // ** Hook
   const theme = useTheme()
 
