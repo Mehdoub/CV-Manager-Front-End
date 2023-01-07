@@ -8,9 +8,9 @@ import mock from 'src/@fake-db/mock'
 import defaultAuthConfig from 'src/configs/auth'
 
 // ** Types
-import { UserDataType } from 'src/context/types'
+// import { UserDataType } from 'src/context/types'
 
-const users: UserDataType[] = [
+const users: any[] = [
   {
     id: 1,
     role: 'admin',
@@ -155,7 +155,7 @@ mock.onGet('/auth/me').reply(config => {
       const userId = decoded.id
 
       // ** Get user that matches id in token
-      const userData = JSON.parse(JSON.stringify(users.find((u: UserDataType) => u.id === userId)))
+      const userData = JSON.parse(JSON.stringify(users.find((u: any) => u.id === userId)))
 
       delete userData.password
 
