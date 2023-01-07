@@ -20,8 +20,9 @@ export const getStaticPaths: GetStaticPaths = () => {
   const userIds = ['1', '2', '3', '4', '5']
   userIds.map(item => {
     paths.push({ params: { userId: item, tab: 'overview' } })
+    paths.push({ params: { userId: item, tab: 'project' } })
+    paths.push({ params: { userId: item, tab: 'company' } })
     paths.push({ params: { userId: item, tab: 'security' } })
-    paths.push({ params: { userId: item, tab: 'notification' } })
   })
   return {
     paths,

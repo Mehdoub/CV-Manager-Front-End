@@ -19,8 +19,12 @@ import Icon from 'src/@core/components/icon'
 
 // ** Demo Components Imports
 import UserViewOverview from 'src/views/pages/user/view/UserViewOverview'
+import AddCompanyDrawer from 'src/views/pages/company/list/AddCompanyDrawer'
 import UserViewSecurity from 'src/views/pages/user/view/UserViewSecurity'
-import UserViewNotification from 'src/views/pages/user/view/UserViewNotification'
+import UserViewProject from 'src/views/pages/user/view/UserViewProject'
+import UserViewCompany from './UserViewCompany'
+import AddProjectDrawer from '../../project/list/AddProjectDrawer'
+import { Button } from '@mui/material'
 
 // ** Types
 // import { InvoiceType } from 'src/types/apps/invoiceTypes'
@@ -44,6 +48,11 @@ const UserViewRight = ({ tab, invoiceData }: any) => {
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [addCompanyOpen, setAddCompanyOpen] = useState<boolean>(false)
+  const [addProjectOpen, setAddProjectOpen] = useState<boolean>(false)
+
+  const toggleAddProjectDrawer = () => setAddProjectOpen(!addProjectOpen)
+  const toggleAddCompanyDrawer = () => setAddCompanyOpen(!addCompanyOpen)
 
   // ** Hooks
   const router = useRouter()
@@ -73,39 +82,56 @@ const UserViewRight = ({ tab, invoiceData }: any) => {
   }, [invoiceData])
 
   return (
-    <TabContext value={activeTab}>
-      <TabList
-        variant='scrollable'
-        scrollButtons='auto'
-        onChange={handleChange}
-        aria-label='forced scroll tabs example'
-        sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
-      >
-        <Tab value='overview' label='Overview' icon={<Icon icon='mdi:account-outline' />} />
-        <Tab value='security' label='Security' icon={<Icon icon='mdi:lock-outline' />} />
-        <Tab value='notification' label='Notification' icon={<Icon icon='mdi:bell-outline' />} />
-      </TabList>
-      <Box sx={{ mt: 6 }}>
-        {isLoading ? (
-          <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            <CircularProgress sx={{ mb: 4 }} />
-            <Typography>Loading...</Typography>
-          </Box>
-        ) : (
-          <>
-            <TabPanel sx={{ p: 0 }} value='overview'>
-              <UserViewOverview invoiceData={invoiceData} />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='security'>
-              <UserViewSecurity />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='notification'>
-              <UserViewNotification />
-            </TabPanel>
-          </>
-        )}
-      </Box>
-    </TabContext>
+    <>
+      <TabContext value={activeTab}>
+        <TabList
+          variant='scrollable'
+          scrollButtons='auto'
+          onChange={handleChange}
+          aria-label='forced scroll tabs example'
+          sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}`, position: 'relative' }}
+        >
+          <Tab value='overview' label='Overview' icon={<Icon icon='mdi:account-outline' />} />
+          <Tab value='project' label='Projects' icon={<Icon icon='pajamas:project' />} />
+          <Tab value='company' label='Companies' icon={<Icon icon='carbon:location-company' />} />
+          <Tab value='security' label='Security' icon={<Icon icon='mdi:lock-outline' />} />
+          {activeTab == 'company' ? (
+              <Button sx={{ mb: 2, position: 'absolute', right: '0', top: '5px' }} onClick={toggleAddCompanyDrawer} variant='contained'>
+                Add Company
+              </Button>
+          ) : activeTab == 'project' ? (
+            <Button sx={{ mb: 2, position: 'absolute', right: '0', top: '5px' }} onClick={toggleAddProjectDrawer} variant='contained'>
+                Add Project
+              </Button>
+          ) : ''}
+        </TabList>
+        <Box sx={{ mt: 6 }}>
+          {isLoading ? (
+            <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+              <CircularProgress sx={{ mb: 4 }} />
+              <Typography>Loading...</Typography>
+            </Box>
+          ) : (
+            <>
+              <TabPanel sx={{ p: 0 }} value='overview'>
+                <UserViewOverview invoiceData={invoiceData} />
+              </TabPanel>
+              <TabPanel sx={{ p: 0 }} value='project'>
+                <UserViewProject />
+              </TabPanel>
+              <TabPanel sx={{ p: 0 }} value='company'>
+                <UserViewCompany />
+              </TabPanel>
+              <TabPanel sx={{ p: 0 }} value='security'>
+                <UserViewSecurity />
+              </TabPanel>
+            </>
+          )}
+        </Box>
+      </TabContext>
+      <AddCompanyDrawer open={addCompanyOpen} toggle={toggleAddCompanyDrawer} />
+      <AddProjectDrawer open={addProjectOpen} toggle={toggleAddProjectDrawer} />
+    </>
   )
 }
 

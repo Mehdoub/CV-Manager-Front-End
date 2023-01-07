@@ -31,6 +31,7 @@ import TableContainer from '@mui/material/TableContainer'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+import UserRemoveSessionDialog from './UserRemoveSessionDialog'
 
 interface State {
   newPassword: string
@@ -78,6 +79,7 @@ const UserViewSecurity = () => {
   const [defaultValues, setDefaultValues] = useState<any>({ mobile: '+1(968) 819-2547' })
   const [mobileNumber, setMobileNumber] = useState<string>(defaultValues.mobile)
   const [openEditMobileNumber, setOpenEditMobileNumber] = useState<boolean>(false)
+  const [removeSessionDialogOpen, setRemoveSessionDialogOpen] = useState<boolean>(false)
   const [values, setValues] = useState<State>({
     newPassword: '',
     showNewPassword: false,
@@ -196,89 +198,14 @@ const UserViewSecurity = () => {
           </CardContent>
         </Card>
       </Grid>
-
       <Grid item xs={12}>
         <Card>
-          <CardHeader
-            title='Two-step verification'
-            titleTypographyProps={{ sx: { mb: 1 } }}
-            subheader='Keep your account secure with authentication step.'
-          />
-          <CardContent>
-            <Typography sx={{ fontWeight: 500, fontSize: '0.875rem' }}>SMS</Typography>
-
-            <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-              <Typography variant='body2'>{mobileNumber}</Typography>
-              <div>
-                <IconButton
-                  aria-label='edit'
-                  sx={{ color: 'text.secondary' }}
-                  onClick={handleEditMobileNumberClickOpen}
-                >
-                  <Icon icon='mdi:square-edit-outline' fontSize='1.25rem' />
-                </IconButton>
-                <IconButton aria-label='delete' sx={{ color: 'text.secondary' }}>
-                  <Icon icon='mdi:delete-outline' fontSize='1.25rem' />
-                </IconButton>
-              </div>
-            </Box>
-
-            <Divider sx={{ mt: '0 !important', mb: theme => `${theme.spacing(4)} !important` }} />
-
-            <Typography variant='body2'>
-              Two-factor authentication adds an additional layer of security to your account by requiring more than just
-              a password to log in.{' '}
-              <Link href='/' onClick={(e: SyntheticEvent) => e.preventDefault()}>
-                Learn more
-              </Link>
-              .
-            </Typography>
-          </CardContent>
-
-          <Dialog
-            open={openEditMobileNumber}
-            onClose={handleCancelClick}
-            aria-labelledby='user-view-security-edit-mobile-number'
-            sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 650, p: [2, 10] } }}
-            aria-describedby='user-view-security-edit-mobile-number-description'
-          >
-            <DialogTitle
-              id='user-view-security-edit-mobile-number'
-              sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}
-            >
-              Enable One Time Password
-            </DialogTitle>
-
-            <DialogContent>
-              <Typography variant='h6'>Verify Your Mobile Number for SMS</Typography>
-              <Typography variant='body2' sx={{ mt: 2, mb: 5 }}>
-                Enter your mobile phone number with country code and we will send you a verification code.
-              </Typography>
-              <form onSubmit={e => e.preventDefault()}>
-                <TextField
-                  autoFocus
-                  fullWidth
-                  value={mobileNumber}
-                  label='Mobile number with country code'
-                  onChange={e => setMobileNumber(e.target.value)}
-                />
-                <Box sx={{ mt: 6.5, display: 'flex', justifyContent: 'flex-end' }}>
-                  <Button type='reset' color='secondary' variant='outlined' onClick={handleCancelClick}>
-                    Cancel
-                  </Button>
-                  <Button type='submit' sx={{ ml: 3 }} variant='contained' onClick={handleSubmitClick}>
-                    Send
-                  </Button>
-                </Box>
-              </form>
-            </DialogContent>
-          </Dialog>
-        </Card>
-      </Grid>
-
-      <Grid item xs={12}>
-        <Card>
-          <CardHeader title='Recent devices' />
+          <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+            <CardHeader title='Recent Devices' />
+            <Button sx={{ mt: 2, mr: 5 }} variant='contained' color='error' onClick={() => setRemoveSessionDialogOpen(true)}>
+              Remove All Other Sessions
+            </Button>
+          </Box>
 
           <Divider sx={{ m: '0 !important' }} />
 
@@ -314,6 +241,7 @@ const UserViewSecurity = () => {
           </TableContainer>
         </Card>
       </Grid>
+      <UserRemoveSessionDialog open={removeSessionDialogOpen} setOpen={setRemoveSessionDialogOpen} />
     </Grid>
   )
 }

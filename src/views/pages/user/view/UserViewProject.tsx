@@ -6,24 +6,17 @@ import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import { DataGrid } from '@mui/x-data-grid'
 import { styled } from '@mui/material/styles'
-import CardHeader from '@mui/material/CardHeader'
 import Typography from '@mui/material/Typography'
+import Icon from 'src/@core/components/icon'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 
-import { AvatarGroup, Grid } from '@mui/material'
+import { AvatarGroup, Button, Grid } from '@mui/material'
 import { BootstrapTooltip } from 'src/pages/companies'
 import Link from 'next/link'
 import { renderClient } from 'src/pages/projects'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { fetchData } from 'src/store/apps/project'
-
-const Img = styled('img')(({ theme }) => ({
-  width: 32,
-  height: 32,
-  borderRadius: '50%',
-  marginRight: theme.spacing(3)
-}))
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -108,7 +101,7 @@ const columns = [
   }
 ]
 
-const UserProjectsList = () => {
+const UserViewProject = () => {
   // ** State
   const [pageSize, setPageSize] = useState<number>(7)
 
@@ -121,22 +114,38 @@ const UserProjectsList = () => {
 
   return (
     <Grid item xs={12}>
-        <Card>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-            <CardHeader title="User's Projects List" />
-          </Box>
-          <DataGrid
-            autoHeight
-            rows={store.data}
-            columns={columns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[7, 10, 25, 50]}
-            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          />
-        </Card>
-      </Grid>
+      <Card>
+        <Box
+          sx={{
+            p: 5,
+            pb: 3,
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between'
+          }}
+        >
+          <Button
+            sx={{ mr: 4, mb: 2 }}
+            color='secondary'
+            variant='outlined'
+            startIcon={<Icon icon='mdi:export-variant' fontSize={20} />}
+          >
+            Export
+          </Button>
+        </Box>
+        <DataGrid
+          autoHeight
+          rows={store.data}
+          columns={columns}
+          pageSize={pageSize}
+          disableSelectionOnClick
+          rowsPerPageOptions={[7, 10, 25, 50]}
+          onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+        />
+      </Card>
+    </Grid>
   )
 }
 
-export default UserProjectsList
+export default UserViewProject

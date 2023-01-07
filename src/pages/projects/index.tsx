@@ -233,7 +233,6 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
             autoHeight
             rows={store.data}
             columns={columns}
-            // checkboxSelection
             pageSize={pageSize}
             disableSelectionOnClick
             rowsPerPageOptions={[10, 25, 50]}
@@ -249,7 +248,6 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  // const res = await axios.get('/cards/statistics')
   const apiData = {
     statsHorizontal: [
       {

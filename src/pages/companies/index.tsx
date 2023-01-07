@@ -213,11 +213,6 @@ const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
               <Icon icon='mdi:pencil-outline' fontSize={20} />
             </div>
           </BootstrapTooltip>
-          {/* <BootstrapTooltip title='delete' placement='top'>
-            <StyledLink href={`/companies/delete`} onClick={e => e.preventDefault()}>
-              <Icon icon='mdi:delete-outline' fontSize={20} />
-            </StyledLink>
-          </BootstrapTooltip> */}
         </Stack>
       )
     }

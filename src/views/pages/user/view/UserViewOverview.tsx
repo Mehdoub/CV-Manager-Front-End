@@ -18,7 +18,6 @@ import MuiTimeline, { TimelineProps } from '@mui/lab/Timeline'
 // import { InvoiceType } from 'src/types/apps/invoiceTypes'
 
 // ** Demo Component Imports
-import UsersProjectListTable from 'src/views/pages/user/view/UsersProjectListTable'
 
 interface Props {
   invoiceData: any[]
@@ -42,9 +41,6 @@ const Timeline = styled(MuiTimeline)<TimelineProps>(({ theme }) => ({
 const UserViewOverview = ({ invoiceData }: Props) => {
   return (
     <Grid container spacing={6}>
-      <Grid item xs={12}>
-        <UsersProjectListTable />
-      </Grid>
       <Grid item xs={12}>
         <Card>
           <CardHeader title='User Activity Timeline' />
