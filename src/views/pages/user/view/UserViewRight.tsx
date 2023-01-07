@@ -26,14 +26,6 @@ import UserViewCompany from './UserViewCompany'
 import AddProjectDrawer from '../../project/list/AddProjectDrawer'
 import { Button } from '@mui/material'
 
-// ** Types
-// import { InvoiceType } from 'src/types/apps/invoiceTypes'
-
-// interface Props {
-//   tab: string
-//   invoiceData: any[]
-// }
-
 // ** Styled Tab component
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   minHeight: 48,
@@ -96,11 +88,11 @@ const UserViewRight = ({ tab, invoiceData }: any) => {
           <Tab value='company' label='Companies' icon={<Icon icon='carbon:location-company' />} />
           <Tab value='security' label='Security' icon={<Icon icon='mdi:lock-outline' />} />
           {activeTab == 'company' ? (
-              <Button sx={{ mb: 2, position: 'absolute', right: '0', top: '5px' }} onClick={toggleAddCompanyDrawer} variant='contained'>
+              <Button sx={{ mb: 2, position: 'absolute', right: '5px', top: '5px' }} onClick={toggleAddCompanyDrawer} variant='outlined'>
                 Add Company
               </Button>
           ) : activeTab == 'project' ? (
-            <Button sx={{ mb: 2, position: 'absolute', right: '0', top: '5px' }} onClick={toggleAddProjectDrawer} variant='contained'>
+            <Button sx={{ mb: 2, position: 'absolute', right: '5px', top: '5px' }} onClick={toggleAddProjectDrawer} variant='outlined'>
                 Add Project
               </Button>
           ) : ''}
