@@ -21,7 +21,7 @@ const series = [
   }
 ]
 
-const AnalyticsSalesCountry = () => {
+const AnalyticsSalesCountry = ({title, categories}) => {
   // ** Hook
   const theme = useTheme()
 
@@ -81,7 +81,7 @@ const AnalyticsSalesCountry = () => {
     xaxis: {
       axisTicks: { show: false },
       axisBorder: { show: false },
-      categories: ['BPM', 'PSP', 'Google', 'DigiKala', 'Pelazio'],
+      categories: categories,
       labels: {
         formatter: val => `${Number(val)}`,
         style: {
@@ -105,7 +105,7 @@ const AnalyticsSalesCountry = () => {
   return (
     <Card>
       <CardHeader
-        title= "Projects' Resumes Number"
+        title={title}
         subheader='Total 452 Resumes'
         subheaderTypographyProps={{ sx: { lineHeight: 1.429 } }}
         titleTypographyProps={{ sx: { letterSpacing: '0.15px' } }}

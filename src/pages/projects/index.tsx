@@ -86,7 +86,6 @@ export const renderClient = (row: any) => {
   }
 }
 
-
 const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) => {
   // ** State
   const [value, setValue] = useState<string>('')
@@ -120,7 +119,7 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href='/user/view/overview/' onClick={e => e.preventDefault()}>
+              <StyledLink href={`/projects/view/${row.id}/overview/`}>
                 {project_id}
               </StyledLink>
             </Box>
@@ -203,7 +202,7 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
             </StyledLink>
           </BootstrapTooltip>
           <BootstrapTooltip title='edit' placement='top'>
-            <div style={{cursor: 'pointer'}} onClick={toggleAddProjectDrawer}>
+            <div style={{ cursor: 'pointer' }} onClick={toggleAddProjectDrawer}>
               <Icon icon='mdi:pencil-outline' fontSize={20} />
             </div>
           </BootstrapTooltip>
@@ -234,7 +233,6 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
             autoHeight
             rows={store.data}
             columns={columns}
-
             // checkboxSelection
             pageSize={pageSize}
             disableSelectionOnClick
@@ -283,7 +281,7 @@ export const getStaticProps: GetStaticProps = async () => {
         trendNumber: '22.5%',
         title: 'Total Revenue'
       }
-    ],
+    ]
   }
 
   return {

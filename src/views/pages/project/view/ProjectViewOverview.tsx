@@ -8,11 +8,11 @@ import AnalyticsSessions from 'src/views/statistics/AnalyticsSessions'
 import CrmMeetingSchedule from 'src/views/statistics/CrmMeetingSchedule'
 import CrmMonthlyBudget from 'src/views/statistics/CrmMonthlyBudget'
 
-const CompanyViewOverview = () => {
+const ProjectViewOverview = () => {
   return (
     <Grid container spacing={6}>
         <Grid item xs={12} sm={6} md={6}>
-          <AnalyticsSalesCountry categories={['BPM', 'PSP', 'Google', 'DigiKala', 'Pelazio']} title="Projects' Resumes Number" />
+          <AnalyticsSalesCountry categories={['Front-end', 'Back-End', 'UI Design', 'Scrum Master', 'Dev-Ops']} title="Positions' Resumes Number"/>
         </Grid>
         <Grid item xs={12} sm={6} md={6}>
           <Grid container spacing={6}>
@@ -47,4 +47,4 @@ const CompanyViewOverview = () => {
   )
 }
 
-export default CompanyViewOverview
+export default ProjectViewOverview

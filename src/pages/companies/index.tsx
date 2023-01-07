@@ -87,7 +87,7 @@ const renderClient = (row: any) => {
 
 
 
-const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) => {
   // ** State
   const [value, setValue] = useState<string>('')
   const [pageSize, setPageSize] = useState<number>(10)
@@ -301,4 +301,4 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 }
 
-export default UserList
+export default CompanyList

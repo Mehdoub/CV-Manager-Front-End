@@ -18,10 +18,10 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Icon from 'src/@core/components/icon'
 
 // ** Demo Components Imports
-import CompanyViewManagers from 'src/views/pages/company/view/CompanyViewManagers'
-import CompanyViewOverview from 'src/views/pages/company/view/CompanyViewOverview'
-import CompanyViewResumes from 'src/views/pages/company/view/CompanyViewResumes'
-import CompanyViewProjects from 'src/views/pages/company/view/CompanyViewProjects'
+import ProjectViewManagers from 'src/views/pages/project/view/ProjectViewManagers'
+import ProjectViewOverview from 'src/views/pages/project/view/ProjectViewOverview'
+import ProjectViewResumes from 'src/views/pages/project/view/ProjectViewResumes'
+import ProjectViewPositions from 'src/views/pages/project/view/ProjectViewPositions'
 
 // ** Types
 // import { InvoiceType } from 'src/types/apps/invoiceTypes'
@@ -41,7 +41,7 @@ const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   }
 }))
 
-const CompanyViewRight = ({ tab, invoiceData }: Props) => {
+const ProjectViewRight = ({ tab, invoiceData }: Props) => {
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -54,7 +54,7 @@ const CompanyViewRight = ({ tab, invoiceData }: Props) => {
     setActiveTab(value)
     router
       .push({
-        pathname: `/companies/view/${invoiceData.id}/${value.toLowerCase()}`
+        pathname: `/projects/view/${invoiceData.id}/${value.toLowerCase()}`
       })
       .then(() => setIsLoading(false))
   }
@@ -83,7 +83,7 @@ const CompanyViewRight = ({ tab, invoiceData }: Props) => {
         sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
       >
         <Tab value='overview' label='Overview' icon={<Icon icon='mdi:account-outline' />} />
-        <Tab value='project' label='Projects' icon={<Icon icon='pajamas:project' />} />
+        <Tab value='position' label='Positions' icon={<Icon icon='ic:baseline-work-outline' />} />
         <Tab value='resume' label='Resumes' icon={<Icon icon='pepicons-pop:cv' />} />
         <Tab value='manager' label='Managers' icon={<Icon icon='grommet-icons:user-manager' />} />
       </TabList>
@@ -96,16 +96,16 @@ const CompanyViewRight = ({ tab, invoiceData }: Props) => {
         ) : (
           <>
             <TabPanel sx={{ p: 0 }} value='overview'>
-              <CompanyViewOverview />
+              <ProjectViewOverview />
             </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='project'>
-              <CompanyViewProjects />
+            <TabPanel sx={{ p: 0 }} value='position'>
+              <ProjectViewPositions />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value='resume'>
-              <CompanyViewResumes />
+              <ProjectViewResumes />
             </TabPanel>
             <TabPanel sx={{ p: 0 }} value='manager'>
-              <CompanyViewManagers />
+              <ProjectViewManagers />
             </TabPanel>
           </>
         )}
@@ -114,4 +114,4 @@ const CompanyViewRight = ({ tab, invoiceData }: Props) => {
   )
 }
 
-export default CompanyViewRight
+export default ProjectViewRight

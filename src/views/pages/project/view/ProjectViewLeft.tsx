@@ -24,7 +24,7 @@ import Icon from 'src/@core/components/icon'
 // ** Custom Components
 import CustomChip from 'src/@core/components/mui/chip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
-import UserSuspendDialog from 'src/views/pages/company/view/CompanySuspendDialog'
+import ProjectSuspendDialog from 'src/views/pages/project/view/ProjectSuspendDialog'
 
 // ** Types
 import { ThemeColor } from 'src/@core/layouts/types'
@@ -52,20 +52,20 @@ const Img = styled('img')(({ theme }) => ({
 
 const data: any = {
   id: 1,
-  role: 'admin',
-  managers: 'Ali Fallah',
+  role: 'owner',
+  managers: 'Emad Rahnama, Mahdi Amereh',
   status: 'active',
-  username: 'fatertejarat',
+  username: 'bpm-psp',
   avatarColor: 'primary',
   country: 'El Salvador',
-  company: 'Yotz PVT LTD',
+  company: 'Favin',
   contact: '(21) 232-9151',
   currentPlan: 'enterprise',
   description: 'Hello, We Are A Company That ...',
   address: 'Tehran, Abbas Abad, Sarafraz Street',
-  fullName: 'Favin',
+  fullName: 'BPM',
   email: 'favin@abc.net.ir',
-  avatar: '/images/logos/sample-logo.jpeg'
+  avatar: '/images/logos/github.png'
 }
 
 const roleColors: ColorsType = {
@@ -82,7 +82,7 @@ const statusColors: ColorsType = {
   inactive: 'secondary'
 }
 
-const CompanyViewLeft = () => {
+const ProjectViewLeft = () => {
   // ** States
   const [openEdit, setOpenEdit] = useState<boolean>(false)
   const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
@@ -166,6 +166,10 @@ const CompanyViewLeft = () => {
             <CardContent>
               <Typography variant='h6'>Details</Typography>
               <Divider sx={{ mt: theme => `${theme.spacing(4)} !important` }} />
+              <Box sx={{ display: 'flex', mb: 2.7 }}>
+                <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Company:</Typography>
+                <Typography variant='body2'>{data.company}</Typography>
+              </Box>
               <Box sx={{ pt: 2, pb: 1 }}>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
                   <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
@@ -196,10 +200,6 @@ const CompanyViewLeft = () => {
                   <Typography variant='body2'>+98 {data.contact}</Typography>
                 </Box>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Address:</Typography>
-                  <Typography variant='body2'>{data.address}</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', mb: 2.7 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Description:</Typography>
                   <Typography variant='body2'>{data.description}</Typography>
                 </Box>
@@ -223,11 +223,11 @@ const CompanyViewLeft = () => {
               aria-describedby='user-view-edit-description'
             >
               <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-                Edit Company Information
+                Edit Project Information
               </DialogTitle>
               <DialogContent>
                 <DialogContentText variant='body2' id='user-view-edit-description' sx={{ textAlign: 'center', mb: 7 }}>
-                  Updating company details will receive a privacy audit.
+                  Updating project details will receive a privacy audit.
                 </DialogContentText>
                 <form>
                   <Fragment>
@@ -254,15 +254,8 @@ const CompanyViewLeft = () => {
                     <Grid item xs={12} sm={6}>
                       <TextField fullWidth label='Phone' defaultValue={`+98 ${data.contact}`} />
                     </Grid>
-                    <Grid item xs={12} sm={12} md={12}>
-                      <TextField
-                        fullWidth
-                        defaultValue={`${data.address}`}
-                        multiline
-                        rows={4}
-                        label='Address'
-                        placeholder='Company Address Shuould Be Here ...'
-                      />
+                    <Grid item xs={12} sm={6}>
+                      <TextField fullWidth label='Company' defaultValue={data.company} />
                     </Grid>
                     <Grid item xs={12} sm={12} md={12}>
                       <TextField
@@ -271,7 +264,7 @@ const CompanyViewLeft = () => {
                         multiline
                         rows={4}
                         label='Description'
-                        placeholder='Company Description Shuould Be Here ...'
+                        placeholder='Project Description Shuould Be Here ...'
                       />
                     </Grid>
                   </Grid>
@@ -287,7 +280,7 @@ const CompanyViewLeft = () => {
               </DialogActions>
             </Dialog>
 
-            <UserSuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
+            <ProjectSuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
           </Card>
         </Grid>
       </Grid>
@@ -297,4 +290,4 @@ const CompanyViewLeft = () => {
   }
 }
 
-export default CompanyViewLeft
+export default ProjectViewLeft

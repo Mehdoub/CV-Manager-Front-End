@@ -27,6 +27,7 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async () => {
       {
         id: 1,
         project_id: 'Galen Slixby',
+        position: 'Front-End',
         company: 'Yotz PVT LTD',
         role: 'editor',
         username: 'gslixby0',
@@ -51,11 +52,12 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async () => {
         avatar: '',
         avatarColor: 'primary',
         resumesNumber: 20,
-        logo: '/images/logos/twitter.png',
+        logo: '/images/logos/twitter.png'
       },
       {
         id: 2,
         project_id: 'Halsey Redmore',
+        position: 'Back-End',
         company: 'Skinder PVT LTD',
         role: 'author',
         username: 'hredmore1',
@@ -74,11 +76,12 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async () => {
         status: 'pending',
         avatar: '/images/avatars/3.png',
         resumesNumber: 15,
-        logo: '/images/logos/slack.png',
+        logo: '/images/logos/slack.png'
       },
       {
         id: 3,
         project_id: 'Marjory Sicely',
+        position: 'UI-Design',
         company: 'Oozz PVT LTD',
         role: 'maintainer',
         username: 'msicely2',
@@ -108,11 +111,12 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async () => {
         status: 'active',
         avatar: '/images/avatars/1.png',
         resumesNumber: 14,
-        logo: '/images/logos/facebook-round.png',
+        logo: '/images/logos/facebook-round.png'
       },
       {
         id: 4,
         project_id: 'Cyrill Risby',
+        position: 'Scrum-Master',
         company: 'Oozz PVT LTD',
         role: 'maintainer',
         username: 'crisby3',
@@ -136,11 +140,12 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async () => {
         status: 'inactive',
         avatar: '/images/avatars/3.png',
         resumesNumber: 12,
-        logo: '/images/logos/asana.png',
+        logo: '/images/logos/asana.png'
       },
       {
         id: 5,
         project_id: 'Maggy Hurran',
+        position: 'Dev-Ops',
         company: 'Aimbo PVT LTD',
         role: 'subscriber',
         username: 'mhurran4',
@@ -154,7 +159,7 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async () => {
           '/images/logos/dribbble.png',
           '/images/logos/dribbble.png',
           '/images/logos/reddit.png',
-          '/images/logos/reddit.png',
+          '/images/logos/reddit.png'
         ],
         avatarGroup: [
           '/images/avatars/1.png',
@@ -166,7 +171,7 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async () => {
         status: 'pending',
         avatar: '/images/avatars/1.png',
         resumesNumber: 10,
-        logo: '/images/logos/google.png',
+        logo: '/images/logos/google.png'
       }
     ]
   }
