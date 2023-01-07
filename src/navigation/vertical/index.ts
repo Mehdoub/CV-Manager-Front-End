@@ -21,6 +21,11 @@ const navigation = (): VerticalNavItemsType => {
       icon: 'mdi:shield-outline',
     },
     {
+      title: 'Users',
+      path: '/users',
+      icon: 'mdi:users-outline',
+    },
+    {
       title: 'Companies',
       path: '/companies',
       icon: 'carbon:location-company',

@@ -27,6 +27,7 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async () => {
       {
         id: 1,
         project_id: 'Galen Slixby',
+        fullName: 'Galen Slixby',
         position: 'Front-End',
         company: 'Yotz PVT LTD',
         role: 'editor',
@@ -57,6 +58,7 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async () => {
       {
         id: 2,
         project_id: 'Halsey Redmore',
+        fullName: 'Halsey Redmore',
         position: 'Back-End',
         company: 'Skinder PVT LTD',
         role: 'author',
@@ -81,6 +83,7 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async () => {
       {
         id: 3,
         project_id: 'Marjory Sicely',
+        fullName: 'Marjory Sicely',
         position: 'UI-Design',
         company: 'Oozz PVT LTD',
         role: 'maintainer',
@@ -116,6 +119,7 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async () => {
       {
         id: 4,
         project_id: 'Cyrill Risby',
+        fullName: 'Cyrill Risby',
         position: 'Scrum-Master',
         company: 'Oozz PVT LTD',
         role: 'maintainer',
@@ -145,6 +149,7 @@ export const fetchData = createAsyncThunk('appUsers/fetchData', async () => {
       {
         id: 5,
         project_id: 'Maggy Hurran',
+        fullName: 'Maggy Hurran',
         position: 'Dev-Ops',
         company: 'Aimbo PVT LTD',
         role: 'subscriber',

@@ -2,10 +2,12 @@
 import { configureStore } from '@reduxjs/toolkit'
 
 // ** Reducers
-import user from 'src/store/apps/project'
+import project from 'src/store/apps/project'
+import user from 'src/store/apps/user'
 
 export const store = configureStore({
   reducer: {
+    project,
     user,
   },
   middleware: getDefaultMiddleware =>

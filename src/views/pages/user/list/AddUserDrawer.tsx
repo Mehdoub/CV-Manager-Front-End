@@ -3,10 +3,13 @@ import { Fragment, useState } from 'react'
 
 // ** MUI Imports
 import Drawer from '@mui/material/Drawer'
+import Select from '@mui/material/Select'
 import Button from '@mui/material/Button'
+import MenuItem from '@mui/material/MenuItem'
 import { styled } from '@mui/material/styles'
 import TextField from '@mui/material/TextField'
 import IconButton from '@mui/material/IconButton'
+import InputLabel from '@mui/material/InputLabel'
 import Typography from '@mui/material/Typography'
 import Box, { BoxProps } from '@mui/material/Box'
 import FormControl from '@mui/material/FormControl'
@@ -17,33 +20,92 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, Controller } from 'react-hook-form'
 
-// ** Store Imports
-// import { useDispatch } from 'react-redux'
-
-// ** Actions Imports
-// import { addUser } from 'src/store/apps/user'
-
-// ** Types Imports
-// import { AppDispatch } from 'src/store'
-
-// import List from '@mui/material/List'
-// import ListItem from '@mui/material/ListItem'
-import { TypographyProps } from '@mui/material/Typography'
-
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 
-// ** Third Party Components
-import toast from 'react-hot-toast'
-import { useDropzone } from 'react-dropzone'
+// ** Store Imports
+import { useDispatch } from 'react-redux'
 
-interface FileProp {
-  name: string
-  type: string
-  size: number
+// ** Actions Imports
+import { addUser } from 'src/store/apps/user'
+
+// ** Types Imports
+import { AppDispatch } from 'src/store'
+import { useDropzone } from 'react-dropzone'
+import { toast } from 'react-hot-toast'
+import { AnyAaaaRecord } from 'dns'
+
+interface SidebarAddUserType {
+  open: boolean
+  toggle: () => void
 }
 
-// Styled component for the upload image inside the dropzone area
+interface UserData {
+  email: string
+  company: string
+  country: string
+  firstname: string
+  lastname: string
+  username: string
+  mobile: number
+}
+
+const showErrors = (field: string, valueLen: number, min: number) => {
+  if (valueLen === 0) {
+    return `${field} field is required`
+  } else if (valueLen > 0 && valueLen < min) {
+    return `${field} must be at least ${min} characters`
+  } else {
+    return ''
+  }
+}
+
+const HeadingTypography = styled(Typography)<any>(({ theme }) => ({
+  marginBottom: theme.spacing(5),
+  [theme.breakpoints.down('sm')]: {
+    marginBottom: theme.spacing(4)
+  }
+}))
+
+const Header = styled(Box)<BoxProps>(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: theme.spacing(3, 4),
+  justifyContent: 'space-between',
+  backgroundColor: theme.palette.background.default
+}))
+
+const schema = yup.object().shape({
+  company: yup.string().required(),
+  country: yup.string().required(),
+  email: yup.string().email().required(),
+  firstname: yup
+    .string()
+    .min(3)
+    .required(),
+  lastname: yup
+    .string()
+    .min(3)
+    .required(),
+  username: yup
+    .string()
+    .min(3)
+    .required(),
+  mobile: yup
+    .string()
+    .label('Mobile')
+    .matches(/^989[\d]{9}$/, 'Mobile Is Not Valid (example: 989123456789)')
+    .required()
+})
+
+// const defaultValues = {
+//   email: '',
+//   company: '',
+//   country: '',
+//   fullName: '',
+//   username: '',
+//   contact: Number('')
+// }
 const Img = styled('img')(({ theme }) => ({
   // [theme.breakpoints.up('md')]: {
   //   marginRight: theme.spacing(10)
@@ -56,98 +118,13 @@ const Img = styled('img')(({ theme }) => ({
   }
 }))
 
-// Styled component for the heading inside the dropzone area
-const HeadingTypography = styled(Typography)<TypographyProps>(({ theme }) => ({
-  marginBottom: theme.spacing(5),
-  [theme.breakpoints.down('sm')]: {
-    marginBottom: theme.spacing(4)
-  }
-}))
-
-interface SidebarAddProjectType {
-  open: boolean
-  toggle: () => void
-}
-
-// interface UserData {
-//   email: string
-//   company: string
-//   country: string
-//   contact: number
-//   fullName: string
-//   username: string
-// }
-
-// const showErrors = (field: string, valueLen: number, min: number) => {
-//   if (valueLen === 0) {
-//     return `${field} field is required`
-//   } else if (valueLen > 0 && valueLen < min) {
-//     return `${field} must be at least ${min} characters`
-//   } else {
-//     return ''
-//   }
-// }
-
-const Header = styled(Box)<BoxProps>(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  padding: theme.spacing(3, 4),
-  justifyContent: 'space-between',
-  backgroundColor: theme.palette.background.default
-}))
-
-const schema = yup.object().shape({
-  company: yup.string().required(),
-  name: yup.string().required(),
-  description: yup.string().required(),
-})
-
-// const defaultValues = {
-//   email: '',
-//   company: '',
-//   country: '',
-//   fullName: '',
-//   username: '',
-//   contact: Number('')
-// }
-
-const SidebarAddProject = (props: SidebarAddProjectType) => {
+const SidebarAddUser = (props: SidebarAddUserType) => {
   // ** Props
   const { open, toggle } = props
 
   // ** State
-  // const [plan, setPlan] = useState<string>('basic')
-  // const [role, setRole] = useState<string>('subscriber')
-
-  // // ** Hooks
-  // const dispatch = useDispatch()
-  const {
-    reset,
-    control,
-    setValue,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({
-    // defaultValues,
-    mode: 'onChange',
-    resolver: yupResolver(schema)
-  })
-
-  const onSubmit = () => {
-    toggle()
-    reset()
-  }
-
-  const handleClose = () => {
-    // setPlan('basic')
-    // setRole('subscriber')
-    setValue('contact', Number(''))
-    setFiles([])
-    toggle()
-    reset()
-  }
-
-  // ** State
+  const [plan, setPlan] = useState<string>('basic')
+  const [role, setRole] = useState<string>('subscriber')
   const [files, setFiles] = useState<File[]>([])
 
   // ** Hooks
@@ -166,8 +143,26 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
       })
     }
   })
+  const dispatch = useDispatch<AppDispatch>()
+  const {
+    reset,
+    control,
+    setValue,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    // defaultValues,
+    mode: 'onChange',
+    resolver: yupResolver(schema)
+  })
 
-  const renderFilePreview = (file: FileProp) => {
+  const onSubmit = (data: UserData) => {
+    dispatch(addUser({ ...data, role, currentPlan: plan }))
+    toggle()
+    reset()
+  }
+
+  const renderFilePreview = (file: any) => {
     if (file.type.startsWith('image')) {
       return (
         <img
@@ -181,34 +176,13 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
     }
   }
 
-  // const handleRemoveFile = (file: FileProp) => {
-  //   const uploadedFiles = files
-  //   const filtered = uploadedFiles.filter((i: FileProp) => i.name !== file.name)
-  //   setFiles([...filtered])
-  // }
-
-  // const fileList = files.map((file: FileProp) => (
-  //   <ListItem key={file.name}>
-  //     <div className='file-details'>
-  //       <div className='file-preview'>{renderFilePreview(file)}</div>
-  //       <div>
-  //         <Typography className='file-name'>{file.name}</Typography>
-  //         <Typography className='file-size' variant='body2'>
-  //           {Math.round(file.size / 100) / 10 > 1000
-  //             ? `${(Math.round(file.size / 100) / 10000).toFixed(1)} mb`
-  //             : `${(Math.round(file.size / 100) / 10).toFixed(1)} kb`}
-  //         </Typography>
-  //       </div>
-  //     </div>
-  //     <IconButton onClick={() => handleRemoveFile(file)}>
-  //       <Icon icon='mdi:close' fontSize={20} />
-  //     </IconButton>
-  //   </ListItem>
-  // ))
-
-  // const handleRemoveAllFiles = () => {
-  //   setFiles([])
-  // }
+  const handleClose = () => {
+    setPlan('basic')
+    setRole('subscriber')
+    setValue('contact', Number(''))
+    toggle()
+    reset()
+  }
 
   return (
     <Drawer
@@ -220,19 +194,19 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
       sx={{ '& .MuiDrawer-paper': { width: { xs: 300, sm: 400 } } }}
     >
       <Header>
-        <Typography variant='h6'>Add Project</Typography>
+        <Typography variant='h6'>Add User</Typography>
         <IconButton size='small' onClick={handleClose} sx={{ color: 'text.primary' }}>
           <Icon icon='mdi:close' fontSize={20} />
         </IconButton>
       </Header>
       <Box sx={{ p: 5 }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Fragment>
+        <Fragment>
             <div {...getRootProps({ className: 'dropzone' })}>
               <input {...getInputProps()} />
               <Box sx={{ textAlign: 'center' }}>
                 <HeadingTypography sx={{ marginBottom: '10px' }} variant='h6'>
-                  Drop logo here or click to upload
+                  Drop avatar here or click to upload
                 </HeadingTypography>
                 {files[0] ? (
                   renderFilePreview(files[0])
@@ -259,56 +233,109 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
           </Fragment>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
-              name='name'
+              name='firstname'
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   value={value}
-                  label='Name'
+                  label='First Name'
                   onChange={onChange}
-                  placeholder='Example: BPM'
+                  placeholder='John'
                   error={Boolean(errors.fullName)}
                 />
               )}
             />
-            {errors.fullName && <FormHelperText sx={{ color: 'error.main' }}>{errors.fullName.message}</FormHelperText>}
+            {errors.fullName && (
+              <FormHelperText sx={{ color: 'error.main' }}>{errors.firstname.message}</FormHelperText>
+            )}
           </FormControl>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
-              name='company'
+              name='lastname'
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   value={value}
-                  label='Company'
+                  label='Last Name'
                   onChange={onChange}
-                  placeholder='Company PVT LTD'
-                  error={Boolean(errors.company)}
+                  placeholder='Doe'
+                  error={Boolean(errors.fullName)}
                 />
               )}
             />
-            {errors.company && <FormHelperText sx={{ color: 'error.main' }}>{errors.company.message}</FormHelperText>}
+            {errors.fullName && <FormHelperText sx={{ color: 'error.main' }}>{errors.lastname.message}</FormHelperText>}
           </FormControl>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
-              name='description'
+              name='username'
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   value={value}
-                  multiline
-                  rows={4}
-                  label='Description'
+                  label='Username'
                   onChange={onChange}
-                  placeholder='A New Project For ...'
+                  placeholder='johndoe'
                   error={Boolean(errors.username)}
                 />
               )}
             />
             {errors.username && <FormHelperText sx={{ color: 'error.main' }}>{errors.username.message}</FormHelperText>}
+          </FormControl>
+          <FormControl fullWidth sx={{ mb: 6 }}>
+            <Controller
+              name='mobile'
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <TextField
+                  value={value}
+                  label='Mobile'
+                  onChange={onChange}
+                  placeholder='989123456789'
+                  error={Boolean(errors.mobile)}
+                />
+              )}
+            />
+            {errors.mobile && <FormHelperText sx={{ color: 'error.main' }}>{errors.mobile.message}</FormHelperText>}
+          </FormControl>
+          <FormControl fullWidth sx={{ mb: 6 }}>
+            <Controller
+              name='email'
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <TextField
+                  type='email'
+                  value={value}
+                  label='Email'
+                  onChange={onChange}
+                  placeholder='johndoe@email.com'
+                  error={Boolean(errors.email)}
+                />
+              )}
+            />
+            {errors.email && <FormHelperText sx={{ color: 'error.main' }}>{errors.email.message}</FormHelperText>}
+          </FormControl>
+          <FormControl fullWidth sx={{ mb: 6 }}>
+            <InputLabel id='role-select'>Select Role</InputLabel>
+            <Select
+              fullWidth
+              value={role}
+              id='select-role'
+              label='Select Role'
+              labelId='role-select'
+              onChange={e => setRole(e.target.value)}
+              inputProps={{ placeholder: 'Select Role' }}
+            >
+              <MenuItem value='admin'>Admin</MenuItem>
+              <MenuItem value='author'>Author</MenuItem>
+              <MenuItem value='editor'>Editor</MenuItem>
+              <MenuItem value='maintainer'>Maintainer</MenuItem>
+              <MenuItem value='subscriber'>Subscriber</MenuItem>
+            </Select>
           </FormControl>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button size='large' type='submit' variant='contained' sx={{ mr: 3 }}>
@@ -324,4 +351,4 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
   )
 }
 
-export default SidebarAddProject
+export default SidebarAddUser
