@@ -53,13 +53,13 @@ const columns = [
     flex: 0.2,
     minWidth: 230,
     field: 'project_id',
-    headerName: 'Project',
+    headerName: 'User',
     renderCell: ({ row }: any) => {
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {renderClient(row)}
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-            <StyledLink href={`/users/view/${row.firstname} ${row.lastname}`} onClick={e => e.preventDefault()}>
+            <StyledLink href={`/users/view/${row.id}/overview`}>
               {`${row.firstname} ${row.lastname}`}
             </StyledLink>
           </Box>
@@ -113,7 +113,7 @@ const columns = [
     renderCell: ({ row }: any) => {
       return (
         <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-          <StyledLink href={`/users/${row.created_by}`} onClick={e => e.preventDefault()}>
+          <StyledLink href={`/users/view/${row.id}/overview`}>
             {row.created_by}
           </StyledLink>
         </Typography>

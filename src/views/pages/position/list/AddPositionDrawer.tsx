@@ -99,6 +99,7 @@ const SidebarAddPosition = (props: SidebarAddPositionType) => {
 
   // ** State
   const [files, setFiles] = useState<File[]>([])
+  const [level, setLevel] = useState<string>('')
 
   // ** Hooks
   const { getRootProps, getInputProps } = useDropzone({
@@ -214,7 +215,14 @@ const SidebarAddPosition = (props: SidebarAddPositionType) => {
           </FormControl>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <InputLabel id='level-select'>Select Level</InputLabel>
-            <Select fullWidth label='Select Level' labelId='level-select' inputProps={{ placeholder: 'Select Level' }}>
+            <Select
+              fullWidth
+              label='Select Level'
+              labelId='level-select'
+              inputProps={{ placeholder: 'Select Level' }}
+              value={level}
+              onChange={e => setLevel(e.target.value)}
+            >
               {['senior', 'mid', 'junior'].map(item => (
                 <MenuItem value={item}>
                   <Typography sx={{ textTransform: 'capitalize' }}>{item}</Typography>

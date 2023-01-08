@@ -8,43 +8,40 @@ import AnalyticsSessions from 'src/views/statistics/AnalyticsSessions'
 import CrmMeetingSchedule from 'src/views/statistics/CrmMeetingSchedule'
 import CrmMonthlyBudget from 'src/views/statistics/CrmMonthlyBudget'
 
-const ProjectViewOverview = () => {
+const ViewOverview = () => {
   return (
     <Grid container spacing={6}>
-        <Grid item xs={12} sm={6} md={6}>
-          <AnalyticsSalesCountry categories={['Front-end', 'Back-End', 'UI Design', 'Scrum Master', 'Dev-Ops']} title="Positions' Resumes Number"/>
-        </Grid>
-        <Grid item xs={12} sm={6} md={6}>
-          <Grid container spacing={6}>
-            <Grid item xs={6}>
-              <AnalyticsTotalRevenue />
-            </Grid>
-            <Grid item xs={6}>
-              <AnalyticsSessions />
-            </Grid>
-            <Grid item xs={6}>
-              <CardStatisticsVertical
-                color='info'
-                stats='142.8k'
-                trendNumber='+62%'
-                chipText='Last One Year'
-                title='Total Impressions'
-                icon={<Icon icon='mdi:link' />}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <AnalyticsOverview />
-            </Grid>
+      <Grid item xs={12} sm={6} md={6}>
+        <CrmMeetingSchedule />
+      </Grid>
+      <Grid item xs={12} sm={6} md={6}>
+        <Grid container spacing={6}>
+          <Grid item xs={6}>
+            <AnalyticsTotalRevenue />
+          </Grid>
+          <Grid item xs={6}>
+            <AnalyticsSessions />
+          </Grid>
+          <Grid item xs={6}>
+            <CardStatisticsVertical
+              color='info'
+              stats='142.8k'
+              trendNumber='+62%'
+              chipText='Last One Year'
+              title='Total Impressions'
+              icon={<Icon icon='mdi:link' />}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <AnalyticsOverview />
           </Grid>
         </Grid>
-        <Grid item xs={12} sm={6} md={6}>
-          <CrmMeetingSchedule />
-        </Grid>
-        <Grid item xs={12} sm={6} md={6}>
-          <CrmMonthlyBudget />
-        </Grid>
+      </Grid>
+      <Grid item xs={12} sm={6} md={6}>
+        <CrmMonthlyBudget />
+      </Grid>
     </Grid>
   )
 }
 
-export default ProjectViewOverview
+export default ViewOverview
