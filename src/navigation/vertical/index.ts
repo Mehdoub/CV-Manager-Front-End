@@ -35,6 +35,11 @@ const navigation = (): VerticalNavItemsType => {
       path: '/projects',
       icon: 'pajamas:project',
     },
+    {
+      title: 'Positions',
+      path: '/positions',
+      icon: 'ic:baseline-work-outline',
+    },
   ]
 }
 

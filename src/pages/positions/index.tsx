@@ -2,6 +2,8 @@
 import {
   useState,
   useEffect,
+
+  //  MouseEvent,
   useCallback
 } from 'react'
 
@@ -12,12 +14,9 @@ import { GetStaticProps, InferGetStaticPropsType } from 'next/types'
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
-
 import Grid from '@mui/material/Grid'
-
 import { DataGrid } from '@mui/x-data-grid'
 import { styled } from '@mui/material/styles'
-
 import Typography from '@mui/material/Typography'
 
 // ** Icon Imports
@@ -33,29 +32,14 @@ import CardStatisticsHorizontal from 'src/@core/components/card-statistics/card-
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
 
-// ** Actions Imports
 import { fetchData } from 'src/store/apps/project'
-
-// ** Types Imports
 import { CardStatsHorizontalProps } from 'src/@core/components/card-statistics/types'
 
 // ** Custom Table Components Imports
-import TableHeader from 'src/views/pages/company/list/TableHeader'
-import AddCompanyDrawer from 'src/views/pages/company/list/AddCompanyDrawer'
-import { AvatarGroup, Tooltip, TooltipProps, tooltipClasses } from '@mui/material'
-import { Stack } from '@mui/system'
-
-
-export const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} arrow classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.arrow}`]: {
-    color: theme.palette.common.black
-  },
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: theme.palette.common.black
-  }
-}))
+import TableHeader from 'src/views/pages/position/list/TableHeader'
+import AddPositionDrawer from 'src/views/pages/position/list/AddPositionDrawer'
+import { AvatarGroup, Stack } from '@mui/material'
+import { BootstrapTooltip } from '../companies'
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -69,9 +53,9 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }))
 
 // ** renders client column
-const renderClient = (row: any) => {
-  if (row.logo.length) {
-    return <CustomAvatar src={row.logo} sx={{ mr: 3, width: 34, height: 34 }} />
+export const renderClient = (row: any, field = 'avatar') => {
+  if (row[field].length) {
+    return <CustomAvatar src={row[field]} sx={{ mr: 3, width: 34, height: 34 }} />
   } else {
     return (
       <CustomAvatar
@@ -85,13 +69,11 @@ const renderClient = (row: any) => {
   }
 }
 
-
-
-const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) => {
   // ** State
   const [value, setValue] = useState<string>('')
   const [pageSize, setPageSize] = useState<number>(10)
-  const [addUserOpen, setAddUserOpen] = useState<boolean>(false)
+  const [addProjectOpen, setaddProjectOpen] = useState<boolean>(false)
 
   // ** Hooks
   const dispatch = useDispatch<any>()
@@ -105,27 +87,56 @@ const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
     setValue(val)
   }, [])
 
-  const toggleAddCompanyDrawer = () => setAddUserOpen(!addUserOpen)
+  const toggleAddPositionDrawer = () => setaddProjectOpen(!addProjectOpen)
 
   const columns = [
     {
       flex: 0.2,
       minWidth: 230,
-      field: 'company',
-      headerName: 'Company',
+      field: 'position',
+      headerName: 'Position',
       renderCell: ({ row }: any) => {
-        const { company } = row
+        const { position } = row
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href={`/companies/view/${row.id}/overview`}>
-                {company}
-              </StyledLink>
-              {/* <Typography noWrap variant='caption'>
-                {`@${username}`}
-              </Typography> */}
+              <StyledLink href={`/positions/view/${row.id}/overview/`}>{position}</StyledLink>
+            </Box>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.2,
+      minWidth: 230,
+      field: 'project_id',
+      headerName: 'Project',
+      renderCell: ({ row }: any) => {
+        const { project_id } = row
+
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {renderClient(row, 'logo')}
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+              <StyledLink href={`/projects/view/${row.id}/overview/`}>{project_id}</StyledLink>
+            </Box>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.2,
+      minWidth: 250,
+      field: 'company',
+      headerName: 'Company',
+      renderCell: ({ row }: any) => {
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {renderClient(row)}
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+              <StyledLink href={`/companies/view/${row.id}/overview/`}>{row.company}</StyledLink>
             </Box>
           </Box>
         )
@@ -134,31 +145,13 @@ const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
     {
       flex: 0.1,
       field: 'team',
-      minWidth: 120,
+      minWidth: 150,
       headerName: 'Managers',
       renderCell: ({ row }: any) =>
         row?.avatarGroup.length > 0 ? (
           <AvatarGroup className='pull-up'>
             {row?.avatarGroup?.map((src: any, index: any) => (
               <BootstrapTooltip key={index} title='Manager Name' placement='top'>
-                <CustomAvatar src={src} sx={{ height: 26, width: 26 }} />
-              </BootstrapTooltip>
-            ))}
-          </AvatarGroup>
-        ) : (
-          '---'
-        )
-    },
-    {
-      flex: 0.1,
-      field: 'projects',
-      minWidth: 120,
-      headerName: 'Projects',
-      renderCell: ({ row }: any) =>
-        row?.logoGroup.length > 0 ? (
-          <AvatarGroup className='pull-up'>
-            {row?.logoGroup?.map((src: any, index: any) => (
-              <BootstrapTooltip key={index} title='Project Name' placement='top'>
                 <CustomAvatar src={src} sx={{ height: 26, width: 26 }} />
               </BootstrapTooltip>
             ))}
@@ -204,12 +197,12 @@ const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       renderCell: ({ row }: any) => (
         <Stack direction='row' spacing={2}>
           <BootstrapTooltip title='view' placement='top'>
-            <StyledLink href={`/companies/view/${row.id}/overview`}>
+            <StyledLink href={`/positions/view/${row.id}/overview`} onClick={e => e.preventDefault()}>
               <Icon icon='mdi:eye-outline' fontSize={20} />
             </StyledLink>
           </BootstrapTooltip>
           <BootstrapTooltip title='edit' placement='top'>
-            <div style={{cursor: 'pointer'}}  onClick={toggleAddCompanyDrawer}>
+            <div style={{ cursor: 'pointer' }} onClick={toggleAddPositionDrawer}>
               <Icon icon='mdi:pencil-outline' fontSize={20} />
             </div>
           </BootstrapTooltip>
@@ -235,7 +228,7 @@ const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <TableHeader value={value} handleFilter={handleFilter} toggle={toggleAddCompanyDrawer} />
+          <TableHeader value={value} handleFilter={handleFilter} toggle={toggleAddPositionDrawer} />
           <DataGrid
             autoHeight
             rows={store.data}
@@ -249,19 +242,19 @@ const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
         </Card>
       </Grid>
 
-      <AddCompanyDrawer open={addUserOpen} toggle={toggleAddCompanyDrawer} />
+      <AddPositionDrawer open={addProjectOpen} toggle={toggleAddPositionDrawer} />
     </Grid>
   )
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  // const res = await axios.get('/cards/statistics')
   const apiData = {
     statsHorizontal: [
       {
         stats: '8,458',
+        trend: 'negative',
         trendNumber: '8.1%',
-        title: 'New Resumes',
+        title: 'New Customers',
         icon: 'mdi:account-outline'
       },
       {
@@ -286,7 +279,7 @@ export const getStaticProps: GetStaticProps = async () => {
         trendNumber: '22.5%',
         title: 'Total Revenue'
       }
-    ],
+    ]
   }
 
   return {
@@ -296,4 +289,4 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 }
 
-export default CompanyList
+export default ProjectList

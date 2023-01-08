@@ -34,6 +34,11 @@ const navigation = (): HorizontalNavItemsType => [
     path: '/projects',
     icon: 'pajamas:project',
   },
+  {
+    title: 'Positions',
+    path: '/positions',
+    icon: 'ic:baseline-work-outline',
+  },
 ]
 
 export default navigation

@@ -17,23 +17,9 @@ import Card from '@mui/material/Card'
 
 // import Menu from '@mui/material/Menu'
 import Grid from '@mui/material/Grid'
-
-// import Divider from '@mui/material/Divider'
 import { DataGrid } from '@mui/x-data-grid'
 import { styled } from '@mui/material/styles'
-
-// import MenuItem from '@mui/material/MenuItem'
-// import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
-
-// import CardHeader from '@mui/material/CardHeader'
-// import InputLabel from '@mui/material/InputLabel'
-// import FormControl from '@mui/material/FormControl'
-// import CardContent from '@mui/material/CardContent'
-// import {
-//   Select,
-//   SelectChangeEvent
-// } from '@mui/material/Select'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -70,9 +56,9 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }))
 
 // ** renders client column
-export const renderClient = (row: any) => {
-  if (row.avatar.length) {
-    return <CustomAvatar src={row.avatar} sx={{ mr: 3, width: 34, height: 34 }} />
+export const renderClient = (row: any, field = 'avatar') => {
+  if (row[field].length) {
+    return <CustomAvatar src={row[field]} sx={{ mr: 3, width: 34, height: 34 }} />
   } else {
     return (
       <CustomAvatar
@@ -134,11 +120,12 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       headerName: 'Company',
       renderCell: ({ row }: any) => {
         return (
-          <Typography noWrap variant='body2'>
-            <StyledLink href='/' onClick={e => e.preventDefault()}>
-              {row.company}
-            </StyledLink>
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {renderClient(row, 'logo')}
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+              <StyledLink href={`/companies/view/${row.id}/overview/`}>{row.company}</StyledLink>
+            </Box>
+          </Box>
         )
       }
     },
@@ -168,7 +155,7 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       renderCell: ({ row }: any) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            <StyledLink href={`/users/${row.username}`} onClick={e => e.preventDefault()}>
+            <StyledLink href={`/users/view/${row.id}/overview`}>
               {row.username}
             </StyledLink>
           </Typography>
