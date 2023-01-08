@@ -264,7 +264,7 @@ const columns = [
   }
 ]
 
-const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const UserList = () => {
   // ** State
   const [role, setRole] = useState<string>('')
   const [plan, setPlan] = useState<string>('')
@@ -281,9 +281,6 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
     dispatch(fetchData())
   }, [])
 
-  const handleFilter = useCallback((val: string) => {
-    setValue(val)
-  }, [])
 
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen)
 
@@ -291,6 +288,7 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
+        <TableHeader value={value} toggle={toggleAddUserDrawer} />
           <DataGrid
             autoHeight
             rows={store.data}
@@ -307,48 +305,6 @@ const UserList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) =
       <AddUserDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
     </Grid>
   )
-}
-
-export const getStaticProps: GetStaticProps = async () => {
-  const apiData = {
-    statsHorizontal: [
-      {
-        stats: '8,458',
-        trend: 'negative',
-        trendNumber: '8.1%',
-        title: 'New Customers',
-        icon: 'mdi:account-outline'
-      },
-      {
-        icon: 'mdi:poll',
-        stats: '$28.5k',
-        color: 'warning',
-        trendNumber: '18.2%',
-        title: 'Total Profit'
-      },
-      {
-        color: 'info',
-        stats: '2,450k',
-        trend: 'negative',
-        icon: 'mdi:trending-up',
-        trendNumber: '24.6%',
-        title: 'New Transactions'
-      },
-      {
-        stats: '$48.2K',
-        color: 'success',
-        icon: 'mdi:currency-usd',
-        trendNumber: '22.5%',
-        title: 'Total Revenue'
-      }
-    ]
-  }
-
-  return {
-    props: {
-      apiData
-    }
-  }
 }
 
 export default UserList

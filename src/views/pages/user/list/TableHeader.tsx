@@ -9,12 +9,11 @@ import Icon from 'src/@core/components/icon'
 interface TableHeaderProps {
   value: string
   toggle: () => void
-  handleFilter: (val: string) => void
 }
 
 const TableHeader = (props: TableHeaderProps) => {
   // ** Props
-  const { handleFilter, toggle, value } = props
+  const { toggle, value } = props
 
   return (
     <Box sx={{ p: 5, pb: 3, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>

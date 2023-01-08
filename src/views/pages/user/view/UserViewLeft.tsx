@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -41,6 +41,8 @@ import { UsersType } from 'src/types/apps/userTypes'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
+import { useDropzone } from 'react-dropzone'
+import { toast } from 'react-hot-toast'
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -58,7 +60,7 @@ const data: UsersType = {
   currentPlan: 'enterprise',
   fullName: 'Daisy Patterson',
   email: 'gslixby0@abc.net.au',
-  avatar: '/images/avatars/4.png'
+  avatar: '/images/avatars/1.png'
 }
 
 const roleColors: ColorsType = {
@@ -83,6 +85,15 @@ const Sup = styled('sup')(({ theme }) => ({
   color: theme.palette.primary.main
 }))
 
+const Img = styled('img')(({ theme }) => ({
+  [theme.breakpoints.down('md')]: {
+    marginBottom: theme.spacing(4)
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: 250
+  }
+}))
+
 // ** Styled <sub> component
 const Sub = styled('sub')({
   fontWeight: 300,
@@ -94,8 +105,39 @@ const UserViewLeft = () => {
   // ** States
   const [openEdit, setOpenEdit] = useState<boolean>(false)
   const [openPlans, setOpenPlans] = useState<boolean>(false)
+  const [files, setFiles] = useState<File[]>([])
   const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
   const [subscriptionDialogOpen, setSubscriptionDialogOpen] = useState<boolean>(false)
+
+  const { getRootProps, getInputProps } = useDropzone({
+    maxFiles: 1,
+    maxSize: 2000000,
+    accept: {
+      'image/*': ['.png', '.jpg', '.jpeg', '.gif']
+    },
+    onDrop: (acceptedFiles: File[]) => {
+      setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
+    },
+    onDropRejected: () => {
+      toast.error('You can only upload maximum size of 2 MB.', {
+        duration: 2000
+      })
+    }
+  })
+
+  const renderFilePreview = (file: any) => {
+    if (file.type.startsWith('image')) {
+      return (
+        <img
+          style={{ borderRadius: '50%', width: '150px', height: '150px' }}
+          alt={file.name}
+          src={URL.createObjectURL(file as any)}
+        />
+      )
+    } else {
+      return <Icon icon='mdi:file-document-outline' />
+    }
+  }
 
   // Handle Edit dialog
   const handleEditClickOpen = () => setOpenEdit(true)
@@ -116,14 +158,14 @@ const UserViewLeft = () => {
                   src={data.avatar}
                   variant='rounded'
                   alt={data.fullName}
-                  sx={{ width: 120, height: 120, fontWeight: 600, mb: 4, fontSize: '3rem' }}
+                  sx={{ width: 150, height: 150, fontWeight: 600, mb: 4, fontSize: '3rem', borderRadius: '50%' }}
                 />
               ) : (
                 <CustomAvatar
                   skin='light'
                   variant='rounded'
                   color={data.avatarColor as ThemeColor}
-                  sx={{ width: 120, height: 120, fontWeight: 600, mb: 4, fontSize: '3rem' }}
+                  sx={{ width: 150, height: 150, fontWeight: 600, mb: 4, fontSize: '3rem', borderRadius: '50%' }}
                 >
                   {getInitials(data.fullName)}
                 </CustomAvatar>
@@ -215,6 +257,18 @@ const UserViewLeft = () => {
                   Updating user details will receive a privacy audit.
                 </DialogContentText>
                 <form>
+                <Fragment>
+            <div {...getRootProps({ className: 'dropzone' })}>
+              <input {...getInputProps()} />
+              <Box sx={{ textAlign: 'center', marginBottom: '35px' }}>
+                {files[0] ? (
+                  renderFilePreview(files[0])
+                ) : (
+                  <Img width={150} alt='Upload img' src='/images/avatars/1.png' sx={{ borderRadius: '50%' }} />
+                )}
+              </Box>
+            </div>
+          </Fragment>
                   <Grid container spacing={6}>
                     <Grid item xs={12} sm={6}>
                       <TextField fullWidth label='First Name' defaultValue={data.fullName} />
