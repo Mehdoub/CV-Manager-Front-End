@@ -24,7 +24,7 @@ import Icon from 'src/@core/components/icon'
 // ** Custom Components
 import CustomChip from 'src/@core/components/mui/chip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
-import UserSuspendDialog from 'src/views/pages/company/view/CompanySuspendDialog'
+import CompanySuspendDialog from 'src/views/pages/company/view/CompanySuspendDialog'
 
 // ** Types
 import { ThemeColor } from 'src/@core/layouts/types'
@@ -287,7 +287,7 @@ const CompanyViewLeft = () => {
               </DialogActions>
             </Dialog>
 
-            <UserSuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
+            <CompanySuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
           </Card>
         </Grid>
       </Grid>

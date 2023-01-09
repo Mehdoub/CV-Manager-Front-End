@@ -11,7 +11,6 @@ import CardHeader from '@mui/material/CardHeader'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import CustomAvatar from 'src/@core/components/mui/avatar'
-import AddProjectDrawer from 'src/views/pages/project/list/AddProjectDrawer'
 
 // ** Type Imports
 import { useDispatch } from 'react-redux'
@@ -194,8 +193,7 @@ const CompanyProjectListTable = () => {
     dispatch(fetchData())
   }, [dispatch])
 
-  const [addProjectOpen, setAddProjectOpen] = useState<boolean>(false)
-  const toggleAddProjectDrawer = () => setAddProjectOpen(!addProjectOpen)
+
 
   return (
     <Grid container spacing={6}>
@@ -236,9 +234,6 @@ const CompanyProjectListTable = () => {
           <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
             <CardHeader title='Latest Projects' />
             {/* <TextField size='small' value={value} sx={{ mr: 6, mb: 2 }} placeholder='Search Project' /> */}
-            <Button sx={{ mt: 2, mr: 5 }} variant='contained' onClick={toggleAddProjectDrawer}>
-              Add Project
-            </Button>
           </Box>
           <DataGrid
             autoHeight
@@ -251,7 +246,6 @@ const CompanyProjectListTable = () => {
           />
         </Card>
       </Grid>
-      <AddProjectDrawer open={addProjectOpen} toggle={toggleAddProjectDrawer} />
     </Grid>
   )
 }
