@@ -28,7 +28,7 @@ import CompanyViewProjects from 'src/views/pages/company/view/CompanyViewProject
 
 interface Props {
   tab: string
-  invoiceData: any
+  companyId: string
 }
 
 // ** Styled Tab component
@@ -41,7 +41,7 @@ const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   }
 }))
 
-const CompanyViewRight = ({ tab, invoiceData }: Props) => {
+const CompanyViewRight = ({ tab, companyId }: Props) => {
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -54,7 +54,7 @@ const CompanyViewRight = ({ tab, invoiceData }: Props) => {
     setActiveTab(value)
     router
       .push({
-        pathname: `/companies/view/${invoiceData.id}/${value.toLowerCase()}`
+        pathname: `/companies/view/${companyId}/${value.toLowerCase()}`
       })
       .then(() => setIsLoading(false))
   }
@@ -68,10 +68,10 @@ const CompanyViewRight = ({ tab, invoiceData }: Props) => {
   }, [tab])
 
   useEffect(() => {
-    if (invoiceData) {
+    if (companyId) {
       setIsLoading(false)
     }
-  }, [invoiceData])
+  }, [companyId])
 
   return (
     <TabContext value={activeTab}>

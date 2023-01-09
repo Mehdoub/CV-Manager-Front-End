@@ -9,10 +9,14 @@ interface requestConfig {
 }
 
 export default class ApiRequest {
-  public accessToken: string
-  public refreshToken: string
-  public baseUrl: string
-  public defaultConf: requestConfig
+  private accessToken: string
+  private refreshToken: string
+  private baseUrl: string
+  private defaultConf: requestConfig
+  private needAuth: boolean = false
+  private pageNumber: number | null = null
+  private responseSize: number | null = null
+  private querySearch: string = ''
 
   public constructor() {
     this.baseUrl = process.env.NEXT_PUBLIC_API_URL ?? ''
@@ -27,6 +31,26 @@ export default class ApiRequest {
 
   static builder(): ApiRequest {
     return new ApiRequest()
+  }
+
+  private getUrl(url: string) {
+    let params = []
+    let paramsString = ''
+
+    this.pageNumber && params.push(`page=${this.pageNumber}`)
+    this.responseSize && params.push(`size=${this.responseSize}`)
+    this.querySearch && params.push(`query=${this.querySearch}`)
+
+
+    if (params.length > 0) {
+      paramsString = '?'
+      params.map(item => {
+        paramsString += item + '&'
+      })
+      paramsString = paramsString.substring(0, paramsString.length - 1)
+    }
+
+    return this.baseUrl + url + paramsString
   }
 
   private async responseHandler(requestMethod: any): Promise<AxiosResponse> {
@@ -61,20 +85,44 @@ export default class ApiRequest {
     }
   }
 
+  public auth(): ApiRequest {
+    this.needAuth = true
+
+    return this
+  }
+
+  public page(value: number): ApiRequest {
+    this.pageNumber = value
+
+    return this
+  }
+
+  public size(value: number): ApiRequest {
+    this.responseSize = value
+
+    return this
+  }
+
+  public query(value: string): ApiRequest {
+    this.querySearch = value
+
+    return this
+  }
+
   public async request(method: string, url: string, data = {}) {
     const requestMethod = (accessToken = '') =>
       axios.request({
         method,
-        url,
+        url: this.getUrl(url),
         data,
         baseURL: this.baseUrl,
         headers: {
           ...this.defaultConf.header,
-          authorization: accessToken
+          authorization: this.needAuth && accessToken
             ? `Bearer ${accessToken}`
             : this.accessToken
-            ? `Bearer ${this.accessToken}`
-            : undefined
+              ? `Bearer ${this.accessToken}`
+              : undefined
         }
       })
     const response = await this.responseHandler(requestMethod)

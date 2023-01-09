@@ -1,9 +1,5 @@
 // ** React Imports
-import {
-  useState,
-  useEffect,
-  useCallback
-} from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
@@ -44,7 +40,7 @@ import TableHeader from 'src/views/pages/company/list/TableHeader'
 import AddCompanyDrawer from 'src/views/pages/company/list/AddCompanyDrawer'
 import { AvatarGroup, Tooltip, TooltipProps, tooltipClasses } from '@mui/material'
 import { Stack } from '@mui/system'
-
+import { getCompanies } from 'src/store/company'
 
 export const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -69,23 +65,21 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }))
 
 // ** renders client column
-const renderClient = (row: any) => {
-  if (row.logo.length) {
+const renderClient = (row: any, field = 'logo') => {
+  if (row[field]?.length) {
     return <CustomAvatar src={row.logo} sx={{ mr: 3, width: 34, height: 34 }} />
   } else {
     return (
       <CustomAvatar
         skin='light'
-        color={row.avatarColor || 'primary'}
+        color='primary'
         sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}
       >
-        {getInitials(row.fullName ? row.fullName : 'John Doe')}
+        {getInitials(row.name ? row.name : 'John Doe')}
       </CustomAvatar>
     )
   }
 }
-
-
 
 const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) => {
   // ** State
@@ -95,11 +89,12 @@ const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
 
   // ** Hooks
   const dispatch = useDispatch<any>()
-  const store = useSelector((state: any) => state.user)
+  const store = useSelector((state: any) => state.companiesList)
+  const { data: companies } = store
 
   useEffect(() => {
-    dispatch(fetchData())
-  }, [dispatch, value])
+    dispatch(getCompanies())
+  }, [])
 
   const handleFilter = useCallback((val: string) => {
     setValue(val)
@@ -114,18 +109,13 @@ const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       field: 'company',
       headerName: 'Company',
       renderCell: ({ row }: any) => {
-        const { company } = row
+        const { name } = row
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href={`/companies/view/${row.id}/overview`}>
-                {company}
-              </StyledLink>
-              {/* <Typography noWrap variant='caption'>
-                {`@${username}`}
-              </Typography> */}
+              <StyledLink href={`/companies/view/${row.id}/overview`}>{name}</StyledLink>
             </Box>
           </Box>
         )
@@ -133,15 +123,15 @@ const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
     },
     {
       flex: 0.1,
-      field: 'team',
+      field: 'managers',
       minWidth: 120,
       headerName: 'Managers',
       renderCell: ({ row }: any) =>
-        row?.avatarGroup.length > 0 ? (
+        row?.managers?.length > 0 ? (
           <AvatarGroup className='pull-up'>
-            {row?.avatarGroup?.map((src: any, index: any) => (
-              <BootstrapTooltip key={index} title='Manager Name' placement='top'>
-                <CustomAvatar src={src} sx={{ height: 26, width: 26 }} />
+            {row?.managers?.map((item: any, index: any) => (
+              <BootstrapTooltip key={index} title={`${item?.user_id?.firstname} ${item?.user_id?.lastname}`} placement='top'>
+                <CustomAvatar src={item?.user_id?.avatar} sx={{ height: 26, width: 26 }} />
               </BootstrapTooltip>
             ))}
           </AvatarGroup>
@@ -155,11 +145,11 @@ const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       minWidth: 120,
       headerName: 'Projects',
       renderCell: ({ row }: any) =>
-        row?.logoGroup.length > 0 ? (
+        row?.projects?.length > 0 ? (
           <AvatarGroup className='pull-up'>
-            {row?.logoGroup?.map((src: any, index: any) => (
-              <BootstrapTooltip key={index} title='Project Name' placement='top'>
-                <CustomAvatar src={src} sx={{ height: 26, width: 26 }} />
+            {row?.projects?.map((item: any, index: any) => (
+              <BootstrapTooltip key={index} title={`${item?.name}`} placement='top'>
+                <CustomAvatar src={item?.logo} sx={{ height: 26, width: 26 }} />
               </BootstrapTooltip>
             ))}
           </AvatarGroup>
@@ -171,13 +161,11 @@ const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       flex: 0.15,
       minWidth: 120,
       headerName: 'User Create',
-      field: 'username',
+      field: 'created_by',
       renderCell: ({ row }: any) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            <StyledLink href={`/users/view/${row.id}/overview`}>
-              {row.username}
-            </StyledLink>
+            <StyledLink href={`/users/view/${row.created_by}/overview`}>{row.created_by}</StyledLink>
           </Typography>
         )
       }
@@ -186,11 +174,11 @@ const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       flex: 0.15,
       minWidth: 120,
       headerName: 'Time Create',
-      field: 'time_created',
+      field: 'createdAt',
       renderCell: ({ row }: any) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {row.time_created}
+            {new Date(row.createdAt).toDateString()}
           </Typography>
         )
       }
@@ -209,7 +197,7 @@ const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
             </StyledLink>
           </BootstrapTooltip>
           <BootstrapTooltip title='edit' placement='top'>
-            <div style={{cursor: 'pointer'}}  onClick={toggleAddCompanyDrawer}>
+            <div style={{ cursor: 'pointer' }} onClick={toggleAddCompanyDrawer}>
               <Icon icon='mdi:pencil-outline' fontSize={20} />
             </div>
           </BootstrapTooltip>
@@ -238,7 +226,7 @@ const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
           <TableHeader value={value} handleFilter={handleFilter} toggle={toggleAddCompanyDrawer} />
           <DataGrid
             autoHeight
-            rows={store.data}
+            rows={companies?.docs ?? []}
             columns={columns}
             pageSize={pageSize}
             disableSelectionOnClick
@@ -255,7 +243,6 @@ const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  // const res = await axios.get('/cards/statistics')
   const apiData = {
     statsHorizontal: [
       {
@@ -286,7 +273,7 @@ export const getStaticProps: GetStaticProps = async () => {
         trendNumber: '22.5%',
         title: 'Total Revenue'
       }
-    ],
+    ]
   }
 
   return {

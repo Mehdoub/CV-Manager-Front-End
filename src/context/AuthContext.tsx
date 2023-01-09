@@ -4,9 +4,6 @@ import { createContext, useEffect, useState, ReactNode } from 'react'
 // ** Next Import
 import { useRouter } from 'next/router'
 
-// ** Axios
-import axios from 'axios'
-
 // ** Config
 import authConfig from 'src/configs/auth'
 
@@ -87,7 +84,7 @@ const AuthProvider = ({ children }: Props) => {
   }
 
   const handleLogout = async () => {
-    await ApiRequest.builder().request('post', 'auth/logout')
+    await ApiRequest.builder().auth().request('post', 'auth/logout')
     setUser(null)
     window.localStorage.removeItem('userData')
     window.localStorage.removeItem(authConfig.storageTokenKeyName)
@@ -97,7 +94,7 @@ const AuthProvider = ({ children }: Props) => {
 
   const handleRegister = async (params: RegisterParams, errorCallback?: ErrCallbackType) => {
     try {
-      const response = await ApiRequest.builder().request('post', 'auth/signup', params)
+      const response = await ApiRequest.builder().auth().request('post', 'auth/signup', params)
       if (response.data.data[0].access_token) {
         localStorage.setItem(authConfig.storageTokenKeyName, response.data.data[0].access_token)
         localStorage.setItem(authConfig.refreshTokenKeyName, response.data.data[0].refresh_token)

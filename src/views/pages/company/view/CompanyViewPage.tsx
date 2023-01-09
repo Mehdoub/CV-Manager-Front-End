@@ -16,10 +16,10 @@ import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 
 type Props = {
   tab: string
-  invoiceData: any
+  companyId: string
 }
 
-const CompanyView = ({ tab, invoiceData }: Props) => {
+const CompanyView = ({ tab, companyId }: Props) => {
   return (
     <ApexChartWrapper>
       <Grid container spacing={6}>
@@ -58,7 +58,7 @@ const CompanyView = ({ tab, invoiceData }: Props) => {
           <CompanyViewLeft />
         </Grid>
         <Grid item xs={12} md={7} lg={8}>
-          <CompanyViewRight tab={tab} invoiceData={invoiceData} />
+          <CompanyViewRight tab={tab} companyId={companyId} />
         </Grid>
       </Grid>
     </ApexChartWrapper>
