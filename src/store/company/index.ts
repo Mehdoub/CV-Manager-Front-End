@@ -1,13 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ApiRequest from "src/helpers/ApiRequest";
 
-export const getCompanies: any = createAsyncThunk(
+export const getCompanies : any = createAsyncThunk(
   'getCompanies',
   async (params:
-    { page?: number, size?: number, query?: string },
+    { page: number, size: number, query: string } = { page: 1, size: 10, query: '' },
     { rejectWithValue }) => {
     try {
-      const { page = 1, size = 10, query = '' } = params
+      const { page, size, query } = params
       const response = await ApiRequest.builder().auth().page(page).size(size).query(query).request('get', 'companies')
 
       return response.data

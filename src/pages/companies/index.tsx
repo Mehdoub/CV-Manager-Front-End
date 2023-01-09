@@ -81,7 +81,40 @@ const renderClient = (row: any, field = 'logo') => {
   }
 }
 
-const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) => {
+  const apiData = {
+    statsHorizontal: [
+      {
+        stats: '8,458',
+        trendNumber: '8.1%',
+        title: 'New Resumes',
+        icon: 'mdi:account-outline'
+      },
+      {
+        icon: 'mdi:poll',
+        stats: '$28.5k',
+        color: 'warning',
+        trendNumber: '18.2%',
+        title: 'Total Profit'
+      },
+      {
+        color: 'info',
+        stats: '2,450k',
+        trend: 'negative',
+        icon: 'mdi:trending-up',
+        trendNumber: '24.6%',
+        title: 'New Transactions'
+      },
+      {
+        stats: '$48.2K',
+        color: 'success',
+        icon: 'mdi:currency-usd',
+        trendNumber: '22.5%',
+        title: 'Total Revenue'
+      }
+    ]
+  }
+
+const CompanyList = () => {
   // ** State
   const [value, setValue] = useState<string>('')
   const [pageSize, setPageSize] = useState<number>(10)
@@ -211,7 +244,7 @@ const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       <Grid item xs={12}>
         {apiData && (
           <Grid container spacing={6}>
-            {apiData.statsHorizontal.map((item: CardStatsHorizontalProps, index: number) => {
+            {apiData.statsHorizontal.map((item: any, index: number) => {
               return (
                 <Grid item xs={12} md={3} sm={6} key={index}>
                   <CardStatisticsHorizontal {...item} icon={<Icon icon={item.icon as string} />} />
@@ -242,45 +275,5 @@ const CompanyList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  const apiData = {
-    statsHorizontal: [
-      {
-        stats: '8,458',
-        trendNumber: '8.1%',
-        title: 'New Resumes',
-        icon: 'mdi:account-outline'
-      },
-      {
-        icon: 'mdi:poll',
-        stats: '$28.5k',
-        color: 'warning',
-        trendNumber: '18.2%',
-        title: 'Total Profit'
-      },
-      {
-        color: 'info',
-        stats: '2,450k',
-        trend: 'negative',
-        icon: 'mdi:trending-up',
-        trendNumber: '24.6%',
-        title: 'New Transactions'
-      },
-      {
-        stats: '$48.2K',
-        color: 'success',
-        icon: 'mdi:currency-usd',
-        trendNumber: '22.5%',
-        title: 'Total Revenue'
-      }
-    ]
-  }
-
-  return {
-    props: {
-      apiData
-    }
-  }
-}
 
 export default CompanyList
