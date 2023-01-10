@@ -22,6 +22,8 @@ import CompanyViewManagers from 'src/views/pages/company/view/CompanyViewManager
 import CompanyViewOverview from 'src/views/pages/company/view/CompanyViewOverview'
 import CompanyViewResumes from 'src/views/pages/company/view/CompanyViewResumes'
 import CompanyViewProjects from 'src/views/pages/company/view/CompanyViewProjects'
+import AddProjectDrawer from 'src/views/pages/project/list/AddProjectDrawer'
+import { Button } from '@mui/material'
 
 // ** Types
 // import { InvoiceType } from 'src/types/apps/invoiceTypes'
@@ -49,6 +51,9 @@ const CompanyViewRight = ({ tab, companyId }: Props) => {
   // ** Hooks
   const router = useRouter()
 
+  const [addProjectOpen, setAddProjectOpen] = useState<boolean>(false)
+  const toggleAddProjectDrawer = () => setAddProjectOpen(!addProjectOpen)
+
   const handleChange = (event: SyntheticEvent, value: string) => {
     setIsLoading(true)
     setActiveTab(value)
@@ -74,43 +79,53 @@ const CompanyViewRight = ({ tab, companyId }: Props) => {
   }, [companyId])
 
   return (
-    <TabContext value={activeTab}>
-      <TabList
-        variant='scrollable'
-        scrollButtons='auto'
-        onChange={handleChange}
-        aria-label='forced scroll tabs example'
-        sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
-      >
-        <Tab value='overview' label='Overview' icon={<Icon icon='mdi:account-outline' />} />
-        <Tab value='project' label='Projects' icon={<Icon icon='pajamas:project' />} />
-        <Tab value='resume' label='Resumes' icon={<Icon icon='pepicons-pop:cv' />} />
-        <Tab value='manager' label='Managers' icon={<Icon icon='grommet-icons:user-manager' />} />
-      </TabList>
-      <Box sx={{ mt: 6 }}>
-        {isLoading ? (
-          <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            <CircularProgress sx={{ mb: 4 }} />
-            <Typography>Loading...</Typography>
-          </Box>
-        ) : (
-          <>
-            <TabPanel sx={{ p: 0 }} value='overview'>
-              <CompanyViewOverview />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='project'>
-              <CompanyViewProjects />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='resume'>
-              <CompanyViewResumes />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='manager'>
-              <CompanyViewManagers />
-            </TabPanel>
-          </>
-        )}
-      </Box>
-    </TabContext>
+    <>
+      <TabContext value={activeTab}>
+        <TabList
+          variant='scrollable'
+          scrollButtons='auto'
+          onChange={handleChange}
+          aria-label='forced scroll tabs example'
+          sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
+        >
+          <Tab value='overview' label='Overview' icon={<Icon icon='mdi:account-outline' />} />
+          <Tab value='project' label='Projects' icon={<Icon icon='pajamas:project' />} />
+          <Tab value='resume' label='Resumes' icon={<Icon icon='pepicons-pop:cv' />} />
+          <Tab value='manager' label='Managers' icon={<Icon icon='grommet-icons:user-manager' />} />
+          {activeTab == 'project' ? (
+            <Button sx={{ mb: 2, position: 'absolute', right: '5px', top: '5px' }} onClick={toggleAddProjectDrawer} variant='outlined'>
+              Add Project
+            </Button>
+          ) : (
+            ''
+          )}
+        </TabList>
+        <Box sx={{ mt: 6 }}>
+          {isLoading ? (
+            <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+              <CircularProgress sx={{ mb: 4 }} />
+              <Typography>Loading...</Typography>
+            </Box>
+          ) : (
+            <>
+              <TabPanel sx={{ p: 0 }} value='overview'>
+                <CompanyViewOverview />
+              </TabPanel>
+              <TabPanel sx={{ p: 0 }} value='project'>
+                <CompanyViewProjects />
+              </TabPanel>
+              <TabPanel sx={{ p: 0 }} value='resume'>
+                <CompanyViewResumes />
+              </TabPanel>
+              <TabPanel sx={{ p: 0 }} value='manager'>
+                <CompanyViewManagers />
+              </TabPanel>
+            </>
+          )}
+        </Box>
+      </TabContext>
+      <AddProjectDrawer open={addProjectOpen} toggle={toggleAddProjectDrawer} />
+    </>
   )
 }
 

@@ -55,7 +55,7 @@ const CompanyView = ({ tab, companyId }: Props) => {
           </Grid>
         </Grid>
         <Grid item xs={12} md={5} lg={4}>
-          <CompanyViewLeft />
+          <CompanyViewLeft companyId={companyId} />
         </Grid>
         <Grid item xs={12} md={7} lg={8}>
           <CompanyViewRight tab={tab} companyId={companyId} />

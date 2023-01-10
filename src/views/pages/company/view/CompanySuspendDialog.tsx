@@ -17,7 +17,7 @@ type Props = {
   setOpen: (val: boolean) => void
 }
 
-const UserSuspendDialog = (props: Props) => {
+const CompanySuspendDialog = (props: Props) => {
   // ** Props
   const { open, setOpen } = props
 
@@ -96,4 +96,4 @@ const UserSuspendDialog = (props: Props) => {
   )
 }
 
-export default UserSuspendDialog
+export default CompanySuspendDialog
