@@ -3,33 +3,29 @@ import CompanyManagerListTable from './CompanyManagerListTable'
 import {
   Autocomplete,
   Avatar,
-  Box,
-  Button,
   Card,
   CardContent,
-  IconButton,
+  CardHeader,
   InputLabel,
   List,
   ListItem,
   ListItemAvatar,
   ListItemSecondaryAction,
   ListItemText,
-  Menu,
-  MenuItem,
+  Skeleton,
   TextField,
   Typography,
   useMediaQuery
 } from '@mui/material'
 import Icon from 'src/@core/components/icon'
-import { Fragment, useState } from 'react'
-import { useSettings } from 'src/@core/hooks/useSettings'
+import { useState } from 'react'
 import { styled } from '@mui/material/styles'
-import themeConfig from 'src/configs/themeConfig'
 import Link from 'next/link'
 import CustomChip from 'src/@core/components/mui/chip'
 import { BootstrapTooltip } from 'src/pages/companies'
 import { Stack } from '@mui/system'
 import CompanySuspendDialog from './CompanySuspendDialog'
+import { useSelector } from 'react-redux'
 
 const statusColors: any = {
   manager: 'success',
@@ -147,23 +143,10 @@ const StyledLink = styled(Link)(({ theme }: any) => ({
 }))
 
 const CompanyViewManagers = () => {
-  const [show, setShow] = useState<boolean>(false)
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
 
-  // ** Hooks
-  const { settings } = useSettings()
-  const hidden = useMediaQuery((theme: any) => theme.breakpoints.down('sm'))
-
-  // ** Var
-  const { direction } = settings
-
-  const handleClick = (event: any) => {
-    setAnchorEl(event.currentTarget)
-  }
-  const handleClose = () => {
-    setAnchorEl(null)
-  }
+  const store = useSelector((state: any) => state.company)
+  const { managers, loading } = store
 
   return (
     <Grid container spacing={6}>
@@ -200,12 +183,12 @@ const CompanyViewManagers = () => {
                 </ListItem>
               )}
             />
-            <Typography variant='h6'>{`${data.length} Members`}</Typography>
+            <Typography variant='h6'>{`${managers.length} Members`}</Typography>
             <List dense sx={{ py: 4 }}>
-              {data.map(member => {
+              {managers.map((manager: any) => {
                 return (
                   <ListItem
-                    key={member.name}
+                    key={manager?.id}
                     sx={{
                       p: 0,
                       display: 'flex',
@@ -214,31 +197,36 @@ const CompanyViewManagers = () => {
                     }}
                   >
                     <ListItemAvatar>
-                      <Avatar src={`/images/avatars/${member.avatar}`} alt={member.name} />
+                      <Avatar
+                        src={`/images/avatars/${manager?.avatar}`}
+                        alt={`${manager?.firstname} ${manager?.lastname}`}
+                      />
                     </ListItemAvatar>
                     <ListItemText
                       primary={
                         <>
-                      <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-                      <StyledLink href={`/companies/view/1/overview`}>{member.name}</StyledLink>
-                          <CustomChip
-                            skin='light'
-                            size='small'
-                            label={member.type}
-                            color={statusColors[member.type]}
-                            sx={{
-                              height: 20,
-                              fontWeight: 500,
-                              fontSize: '0.75rem',
-                              borderRadius: '5px',
-                              textTransform: 'capitalize',
-                              marginLeft: '5px'
-                            }}
-                          />
-                        </Typography>
+                          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+                            <StyledLink
+                              href={`/companies/view/1/overview`}
+                            >{`${manager?.firstname} ${manager?.lastname}`}</StyledLink>
+                            <CustomChip
+                              skin='light'
+                              size='small'
+                              label={manager?.type}
+                              color={statusColors[manager?.type]}
+                              sx={{
+                                height: 20,
+                                fontWeight: 500,
+                                fontSize: '0.75rem',
+                                borderRadius: '5px',
+                                textTransform: 'capitalize',
+                                marginLeft: '5px'
+                              }}
+                            />
+                          </Typography>
                         </>
-                    }
-                      secondary={member.email}
+                      }
+                      secondary={manager?.email}
                       sx={{
                         m: 0,
                         '& .MuiListItemText-primary, & .MuiListItemText-secondary': { lineHeight: '1.25rem' }
@@ -247,7 +235,10 @@ const CompanyViewManagers = () => {
                     <ListItemSecondaryAction sx={{ right: 0 }}>
                       <Stack direction='row' spacing={2}>
                         <BootstrapTooltip title='delete' placement='top'>
-                          <div style={{ cursor: 'pointer', marginTop: '4px' }} onClick={() => setSuspendDialogOpen(true)}>
+                          <div
+                            style={{ cursor: 'pointer', marginTop: '4px' }}
+                            onClick={() => setSuspendDialogOpen(true)}
+                          >
                             <Icon color='gray' icon='mdi:delete-outline' fontSize={20} />
                           </div>
                         </BootstrapTooltip>
@@ -256,6 +247,20 @@ const CompanyViewManagers = () => {
                   </ListItem>
                 )
               })}
+              {loading && (
+                <>
+                <CardHeader
+                  avatar={<Skeleton animation="wave" variant="circular" width={50} height={50} />}
+                  title={<Skeleton animation="wave" width="35%" />}
+                  subheader={<Skeleton animation="wave" width="25%" />}
+                />
+                <CardHeader
+                  avatar={<Skeleton animation="wave" variant="circular" width={50} height={50} />}
+                  title={<Skeleton animation="wave" width="35%" />}
+                  subheader={<Skeleton animation="wave" width="25%" />}
+                />
+              </>
+              )}
             </List>
           </CardContent>
         </Card>

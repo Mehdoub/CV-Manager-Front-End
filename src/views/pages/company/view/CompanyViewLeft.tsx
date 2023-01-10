@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -33,6 +33,10 @@ import { ThemeColor } from 'src/@core/layouts/types'
 import { getInitials } from 'src/@core/utils/get-initials'
 import { useDropzone } from 'react-dropzone'
 import { toast } from 'react-hot-toast'
+import { useDispatch } from 'react-redux'
+import { getCompany } from 'src/store/company'
+import { useSelector } from 'react-redux'
+import { Avatar, Chip, Skeleton } from '@mui/material'
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -78,15 +82,26 @@ const roleColors: ColorsType = {
 
 const statusColors: ColorsType = {
   active: 'success',
-  pending: 'warning',
   inactive: 'secondary'
 }
 
-const CompanyViewLeft = () => {
+interface Props {
+  companyId: string
+}
+
+const CompanyViewLeft = ({ companyId }: Props) => {
   // ** States
   const [openEdit, setOpenEdit] = useState<boolean>(false)
   const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
   const [files, setFiles] = useState<File[]>([])
+
+  const dispatch = useDispatch()
+  const store = useSelector((state: any) => state.company)
+  const { data: company, loading, managers } = store
+
+  useEffect(() => {
+    dispatch(getCompany(companyId))
+  }, [companyId])
 
   // Handle Edit dialog
   const handleEditClickOpen = () => setOpenEdit(true)
@@ -128,40 +143,47 @@ const CompanyViewLeft = () => {
         <Grid item xs={12}>
           <Card>
             <CardContent sx={{ pt: 15, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-              {data.avatar.length ? (
+              {loading ? (
+                <Skeleton animation='wave' variant='circular' width={150} height={150} />
+              ) : company?.logo ? (
                 <CustomAvatar
-                  src={data.avatar}
+                  src={company?.logo}
                   variant='rounded'
-                  alt={data.fullName}
+                  alt={company?.name}
                   sx={{ width: 150, height: 150, fontWeight: 600, mb: 4, fontSize: '3rem', borderRadius: '50%' }}
                 />
               ) : (
                 <CustomAvatar
                   skin='light'
                   variant='rounded'
-                  color={data.avatarColor as ThemeColor}
+                  color='primary'
                   sx={{ width: 150, height: 150, fontWeight: 600, mb: 4, fontSize: '3rem', borderRadius: '50%' }}
                 >
-                  {getInitials(data.fullName)}
+                  {getInitials(company?.name)}
                 </CustomAvatar>
               )}
               <Typography variant='h6' sx={{ mb: 2 }}>
-                {data.fullName}
+                {company?.name}
               </Typography>
-              <CustomChip
-                skin='light'
-                size='small'
-                label={data.role}
-                color={roleColors[data.role]}
-                sx={{
-                  height: 20,
-                  fontWeight: 600,
-                  borderRadius: '5px',
-                  fontSize: '0.875rem',
-                  textTransform: 'capitalize',
-                  '& .MuiChip-label': { mt: -0.25 }
-                }}
-              />
+              {loading && <Skeleton animation='wave' width='35%' height={30} style={{ marginBottom: '7px' }} />}
+              {loading ? (
+                <Skeleton animation='wave' width='15%' height={30} style={{ marginBottom: '7px' }} />
+              ) : (
+                <CustomChip
+                  skin='light'
+                  size='small'
+                  label={data.role}
+                  color={roleColors[data.role]}
+                  sx={{
+                    height: 20,
+                    fontWeight: 600,
+                    borderRadius: '5px',
+                    fontSize: '0.875rem',
+                    textTransform: 'capitalize',
+                    '& .MuiChip-label': { mt: -0.25 }
+                  }}
+                />
+              )}
             </CardContent>
             <CardContent>
               <Typography variant='h6'>Details</Typography>
@@ -169,39 +191,65 @@ const CompanyViewLeft = () => {
               <Box sx={{ pt: 2, pb: 1 }}>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
                   <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                    Manager(s):
-                  </Typography>
-                  <Typography variant='body2'>{data.managers}</Typography>
-                </Box>
-                <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
                     Status:
                   </Typography>
-                  <CustomChip
-                    skin='light'
-                    size='small'
-                    label={data.status}
-                    color={statusColors[data.status]}
-                    sx={{
-                      height: 20,
-                      fontWeight: 500,
-                      fontSize: '0.75rem',
-                      borderRadius: '5px',
-                      textTransform: 'capitalize'
-                    }}
-                  />
+                  {loading ? (
+                    <Skeleton animation='wave' width='15%' />
+                  ) : (
+                    <CustomChip
+                      skin='light'
+                      size='small'
+                      label={company?.is_active ? 'active' : 'inactive'}
+                      color={statusColors[company?.is_active ? 'active' : 'inactive']}
+                      sx={{
+                        height: 20,
+                        fontWeight: 500,
+                        fontSize: '0.75rem',
+                        borderRadius: '5px',
+                        textTransform: 'capitalize'
+                      }}
+                    />
+                  )}
                 </Box>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Phone:</Typography>
-                  <Typography variant='body2'>+98 {data.contact}</Typography>
+                  {loading ? (
+                    <Skeleton animation='wave' width='35%' />
+                  ) : (
+                    <Typography variant='body2'>+98 {data.contact}</Typography>
+                  )}
                 </Box>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
                   <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Address:</Typography>
-                  <Typography variant='body2'>{data.address}</Typography>
+                  {loading ? (
+                    <Skeleton animation='wave' width='50%' />
+                  ) : (
+                    <Typography variant='body2'>{data.address}</Typography>
+                  )}
+                </Box>
+                <Box sx={{ display: 'flex' }}>
+                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Description:</Typography>
+                  {loading ? (
+                    <Skeleton animation='wave' width='50%' />
+                  ) : (
+                    <Typography variant='body2'>{data.description}</Typography>
+                  )}
                 </Box>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Description:</Typography>
-                  <Typography variant='body2'>{data.description}</Typography>
+                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary', mt: '10px' }}>
+                    Manager(s):
+                  </Typography>
+                  <Typography variant='body2' style={{ marginTop: '5px' }}>
+                    {managers.map((manager: any, index: number) => (
+                      <Chip
+                        key={index}
+                        label={`${manager?.firstname} ${manager?.lastname}`}
+                        avatar={<Avatar src={manager?.avatar} />}
+                        style={{ marginTop: '3px' }}
+                      />
+                    ))}
+                  </Typography>
+                    {loading && <Skeleton animation='wave' width='50%' style={{ marginTop: '9px' }} />}
                 </Box>
               </Box>
             </CardContent>
