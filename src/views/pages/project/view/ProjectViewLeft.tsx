@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -33,6 +33,9 @@ import { ThemeColor } from 'src/@core/layouts/types'
 import { getInitials } from 'src/@core/utils/get-initials'
 import { useDropzone } from 'react-dropzone'
 import { toast } from 'react-hot-toast'
+import { useDispatch } from 'react-redux'
+import { getProject } from 'src/store/project'
+import { useSelector } from 'react-redux'
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -82,7 +85,11 @@ const statusColors: ColorsType = {
   inactive: 'secondary'
 }
 
-const ProjectViewLeft = () => {
+interface Props {
+  projectId: string
+}
+
+const ProjectViewLeft = ({ projectId }: Props) => {
   // ** States
   const [openEdit, setOpenEdit] = useState<boolean>(false)
   const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
@@ -91,6 +98,14 @@ const ProjectViewLeft = () => {
   // Handle Edit dialog
   const handleEditClickOpen = () => setOpenEdit(true)
   const handleEditClose = () => setOpenEdit(false)
+
+  const dispatch = useDispatch()
+  const store = useSelector((state: any) => state.projectFind)
+  const { data: project } = store
+
+  useEffect(() => {
+    dispatch(getProject(projectId))
+  }, [])
 
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 1,
@@ -128,25 +143,25 @@ const ProjectViewLeft = () => {
         <Grid item xs={12}>
           <Card>
             <CardContent sx={{ pt: 15, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-              {data.avatar.length ? (
+              {project?.logo?.length ? (
                 <CustomAvatar
-                  src={data.avatar}
+                  src={project?.logo}
                   variant='rounded'
-                  alt={data.fullName}
+                  alt={project?.name}
                   sx={{ width: 150, height: 150, fontWeight: 600, mb: 4, fontSize: '3rem', borderRadius: '50%' }}
                 />
               ) : (
                 <CustomAvatar
                   skin='light'
                   variant='rounded'
-                  color={data.avatarColor as ThemeColor}
+                  color='primary'
                   sx={{ width: 150, height: 150, fontWeight: 600, mb: 4, fontSize: '3rem', borderRadius: '50%' }}
                 >
-                  {getInitials(data.fullName)}
+                  {getInitials(project?.name)}
                 </CustomAvatar>
               )}
               <Typography variant='h6' sx={{ mb: 2 }}>
-                {data.fullName}
+                {project?.name}
               </Typography>
               <CustomChip
                 skin='light'
@@ -168,7 +183,7 @@ const ProjectViewLeft = () => {
               <Divider sx={{ mt: theme => `${theme.spacing(4)} !important` }} />
               <Box sx={{ display: 'flex', mb: 2.7 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Company:</Typography>
-                <Typography variant='body2'>{data.company}</Typography>
+                <Typography variant='body2'>{project?.company_id?.name}</Typography>
               </Box>
               <Box sx={{ pt: 2, pb: 1 }}>
                 <Box sx={{ display: 'flex', mb: 2.7 }}>

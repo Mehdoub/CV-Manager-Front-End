@@ -28,7 +28,7 @@ import ProjectViewPositions from 'src/views/pages/project/view/ProjectViewPositi
 
 interface Props {
   tab: string
-  invoiceData: any
+  projectId: any
 }
 
 // ** Styled Tab component
@@ -41,7 +41,7 @@ const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   }
 }))
 
-const ProjectViewRight = ({ tab, invoiceData }: Props) => {
+const ProjectViewRight = ({ tab, projectId }: Props) => {
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -54,7 +54,7 @@ const ProjectViewRight = ({ tab, invoiceData }: Props) => {
     setActiveTab(value)
     router
       .push({
-        pathname: `/projects/view/${invoiceData.id}/${value.toLowerCase()}`
+        pathname: `/projects/view/${projectId}/${value.toLowerCase()}`
       })
       .then(() => setIsLoading(false))
   }
@@ -68,10 +68,10 @@ const ProjectViewRight = ({ tab, invoiceData }: Props) => {
   }, [tab])
 
   useEffect(() => {
-    if (invoiceData) {
+    if (projectId) {
       setIsLoading(false)
     }
-  }, [invoiceData])
+  }, [projectId])
 
   return (
     <TabContext value={activeTab}>

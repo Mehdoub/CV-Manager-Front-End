@@ -43,6 +43,7 @@ import TableHeader from 'src/views/pages/project/list/TableHeader'
 import AddProjectDrawer from 'src/views/pages/project/list/AddProjectDrawer'
 import { AvatarGroup, Stack } from '@mui/material'
 import { BootstrapTooltip } from '../companies'
+import { getProjects } from 'src/store/project'
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -56,17 +57,17 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }))
 
 // ** renders client column
-export const renderClient = (row: any, field = 'avatar') => {
-  if (row[field].length) {
+export const renderClient = (row: any, field = 'logo') => {
+  if (row[field]?.length) {
     return <CustomAvatar src={row[field]} sx={{ mr: 3, width: 34, height: 34 }} />
   } else {
     return (
       <CustomAvatar
         skin='light'
-        color={row.avatarColor || 'primary'}
+        color='primary'
         sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}
       >
-        {getInitials(row.fullName ? row.fullName : 'John Doe')}
+        {getInitials(row.name ? row.name : 'John Doe')}
       </CustomAvatar>
     )
   }
@@ -80,11 +81,12 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
 
   // ** Hooks
   const dispatch = useDispatch<any>()
-  const store = useSelector((state: any) => state.user)
+  const store = useSelector((state: any) => state.projectsList)
+  const { data: projects } = store
 
   useEffect(() => {
-    dispatch(fetchData())
-  }, [dispatch, value])
+    dispatch(getProjects())
+  }, [])
 
   const handleFilter = useCallback((val: string) => {
     setValue(val)
@@ -96,18 +98,16 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
     {
       flex: 0.2,
       minWidth: 230,
-      field: 'project_id',
+      field: 'name',
       headerName: 'Project',
       renderCell: ({ row }: any) => {
-        const { project_id } = row
+        const { name, id } = row
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href={`/projects/view/${row.id}/overview/`}>
-                {project_id}
-              </StyledLink>
+              <StyledLink href={`/projects/view/${id}/overview/`}>{name}</StyledLink>
             </Box>
           </Box>
         )
@@ -121,9 +121,9 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       renderCell: ({ row }: any) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {renderClient(row, 'logo')}
+            {renderClient(row?.company_id)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href={`/companies/view/${row.id}/overview/`}>{row.company}</StyledLink>
+              <StyledLink href={`/companies/view/${row?.company_id?.id}/overview/`}>{row?.company_id?.name}</StyledLink>
             </Box>
           </Box>
         )
@@ -131,15 +131,15 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
     },
     {
       flex: 0.1,
-      field: 'team',
+      field: 'managers',
       minWidth: 120,
       headerName: 'Managers',
       renderCell: ({ row }: any) =>
-        row?.avatarGroup.length > 0 ? (
+        row?.managers?.length > 0 ? (
           <AvatarGroup className='pull-up'>
-            {row?.avatarGroup?.map((src: any, index: any) => (
-              <BootstrapTooltip key={index} title='Manager Name' placement='top'>
-                <CustomAvatar src={src} sx={{ height: 26, width: 26 }} />
+            {row?.managers?.map((manager: any, index: any) => (
+              <BootstrapTooltip key={index} title={`${manager?.user_id?.firstname} ${manager?.user_id?.lastname}`} placement='top'>
+                <CustomAvatar src={manager?.user_id?.avatar} sx={{ height: 26, width: 26 }} />
               </BootstrapTooltip>
             ))}
           </AvatarGroup>
@@ -151,13 +151,11 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       flex: 0.15,
       minWidth: 120,
       headerName: 'User Create',
-      field: 'username',
+      field: 'created_by',
       renderCell: ({ row }: any) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            <StyledLink href={`/users/view/${row.id}/overview`}>
-              {row.username}
-            </StyledLink>
+            <StyledLink href={`/users/view/${row?.created_by}/overview`}>{row?.created_by}</StyledLink>
           </Typography>
         )
       }
@@ -170,7 +168,7 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       renderCell: ({ row }: any) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {row.time_created}
+            {new Date(row.createdAt).toDateString()}
           </Typography>
         )
       }
@@ -218,7 +216,7 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
           <TableHeader value={value} handleFilter={handleFilter} toggle={toggleAddProjectDrawer} />
           <DataGrid
             autoHeight
-            rows={store.data}
+            rows={projects?.docs ?? []}
             columns={columns}
             pageSize={pageSize}
             disableSelectionOnClick
