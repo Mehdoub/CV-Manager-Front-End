@@ -70,69 +70,71 @@ const renderClient = (row: any, field = 'logo') => {
     return <CustomAvatar src={row.logo} sx={{ mr: 3, width: 34, height: 34 }} />
   } else {
     return (
-      <CustomAvatar
-        skin='light'
-        color='primary'
-        sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}
-      >
+      <CustomAvatar skin='light' color='primary' sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}>
         {getInitials(row.name ? row.name : 'John Doe')}
       </CustomAvatar>
     )
   }
 }
 
-  const apiData = {
-    statsHorizontal: [
-      {
-        stats: '8,458',
-        trendNumber: '8.1%',
-        title: 'New Resumes',
-        icon: 'mdi:account-outline'
-      },
-      {
-        icon: 'mdi:poll',
-        stats: '$28.5k',
-        color: 'warning',
-        trendNumber: '18.2%',
-        title: 'Total Profit'
-      },
-      {
-        color: 'info',
-        stats: '2,450k',
-        trend: 'negative',
-        icon: 'mdi:trending-up',
-        trendNumber: '24.6%',
-        title: 'New Transactions'
-      },
-      {
-        stats: '$48.2K',
-        color: 'success',
-        icon: 'mdi:currency-usd',
-        trendNumber: '22.5%',
-        title: 'Total Revenue'
-      }
-    ]
-  }
+const apiData = {
+  statsHorizontal: [
+    {
+      stats: '8,458',
+      trendNumber: '8.1%',
+      title: 'New Resumes',
+      icon: 'mdi:account-outline'
+    },
+    {
+      icon: 'mdi:poll',
+      stats: '$28.5k',
+      color: 'warning',
+      trendNumber: '18.2%',
+      title: 'Total Profit'
+    },
+    {
+      color: 'info',
+      stats: '2,450k',
+      trend: 'negative',
+      icon: 'mdi:trending-up',
+      trendNumber: '24.6%',
+      title: 'New Transactions'
+    },
+    {
+      stats: '$48.2K',
+      color: 'success',
+      icon: 'mdi:currency-usd',
+      trendNumber: '22.5%',
+      title: 'Total Revenue'
+    }
+  ]
+}
 
 const CompanyList = () => {
   // ** State
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const [pageSize, setPageSize] = useState<number>(10)
+  const [pageSize, setPageSize] = useState<number>(2)
+  const [page, setPage] = useState<number>(0)
   const [addUserOpen, setAddUserOpen] = useState<boolean>(false)
 
   // ** Hooks
   const dispatch = useDispatch<any>()
   const store = useSelector((state: any) => state.companiesList)
-  const { data: companies } = store
+  const { data: companies, loading } = store
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage++)
+    dispatch(getCompanies({ page: newPage, size: pageSize, query: searchQuery }))
+  }
 
   useEffect(() => {
-    dispatch(getCompanies())
+    dispatch(getCompanies({ size: pageSize, page: page, query: searchQuery }))
   }, [])
 
   const handleFilter = useCallback((val: string) => {
     setSearchQuery(val)
     if (val.length > 2) {
-      dispatch(getCompanies({query: val}))
+      dispatch(getCompanies({ query: val, size: pageSize }))
     }
   }, [])
 
@@ -166,7 +168,11 @@ const CompanyList = () => {
         row?.managers?.length > 0 ? (
           <AvatarGroup className='pull-up'>
             {row?.managers?.map((item: any, index: any) => (
-              <BootstrapTooltip key={index} title={`${item?.user_id?.firstname} ${item?.user_id?.lastname}`} placement='top'>
+              <BootstrapTooltip
+                key={index}
+                title={`${item?.user_id?.firstname} ${item?.user_id?.lastname}`}
+                placement='top'
+              >
                 <CustomAvatar src={item?.user_id?.avatar} sx={{ height: 26, width: 26 }} />
               </BootstrapTooltip>
             ))}
@@ -260,16 +266,23 @@ const CompanyList = () => {
       <Grid item xs={12}>
         <Card>
           <TableHeader searchQuery={searchQuery} handleFilter={handleFilter} toggle={toggleAddCompanyDrawer} />
-          <DataGrid
-            autoHeight
-            rows={companies?.docs ?? []}
-            columns={columns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[10, 25, 50]}
-            sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-            onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
-          />
+          {!loading && companies?.docs?.length > 0 && (
+            <DataGrid
+              autoHeight
+              rows={companies?.docs ?? []}
+              columns={columns}
+              pageSize={pageSize}
+              disableSelectionOnClick
+              rowsPerPageOptions={[2]}
+              sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+              onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
+              pagination
+              paginationMode='server'
+              rowCount={companies?.totalDocs}
+              page={page}
+              onPageChange={newPage => handlePageChange(newPage)}
+            />
+          )}
         </Card>
       </Grid>
 
@@ -277,6 +290,5 @@ const CompanyList = () => {
     </Grid>
   )
 }
-
 
 export default CompanyList
