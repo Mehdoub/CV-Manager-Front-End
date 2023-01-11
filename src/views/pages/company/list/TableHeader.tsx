@@ -33,6 +33,7 @@ const TableHeader = (props: TableHeaderProps) => {
           sx={{ mr: 6, mb: 2 }}
           placeholder='Search Company'
           onChange={e => handleFilter(e.target.value)}
+          autoFocus
         />
 
         <Button sx={{ mb: 2 }} onClick={toggle} variant='contained'>

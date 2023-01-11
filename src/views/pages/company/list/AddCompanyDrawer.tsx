@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Drawer from '@mui/material/Drawer'
@@ -17,17 +17,6 @@ import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, Controller } from 'react-hook-form'
 
-// ** Store Imports
-// import { useDispatch } from 'react-redux'
-
-// ** Actions Imports
-// import { addUser } from 'src/store/apps/user'
-
-// ** Types Imports
-// import { AppDispatch } from 'src/store'
-
-// import List from '@mui/material/List'
-// import ListItem from '@mui/material/ListItem'
 import { TypographyProps } from '@mui/material/Typography'
 
 // ** Icon Imports
@@ -36,6 +25,9 @@ import Icon from 'src/@core/components/icon'
 // ** Third Party Components
 import toast from 'react-hot-toast'
 import { useDropzone } from 'react-dropzone'
+import { useDispatch } from 'react-redux'
+import { createCompany, getCompanies } from 'src/store/company'
+import { useSelector } from 'react-redux'
 
 interface FileProp {
   name: string
@@ -45,9 +37,6 @@ interface FileProp {
 
 // Styled component for the upload image inside the dropzone area
 const Img = styled('img')(({ theme }) => ({
-  // [theme.breakpoints.up('md')]: {
-  //   marginRight: theme.spacing(10)
-  // },
   [theme.breakpoints.down('md')]: {
     marginBottom: theme.spacing(4)
   },
@@ -69,15 +58,6 @@ interface SidebarAddProjectType {
   toggle: () => void
 }
 
-// interface UserData {
-//   email: string
-//   company: string
-//   country: string
-//   contact: number
-//   fullName: string
-//   username: string
-// }
-
 // const showErrors = (field: string, valueLen: number, min: number) => {
 //   if (valueLen === 0) {
 //     return `${field} field is required`
@@ -97,30 +77,25 @@ const Header = styled(Box)<BoxProps>(({ theme }) => ({
 }))
 
 const schema = yup.object().shape({
-  company: yup.string().required(),
-  name: yup.string().required(),
-  description: yup.string().required(),
+  name: yup.string().required().min(3)
 })
 
-// const defaultValues = {
-//   email: '',
-//   company: '',
-//   country: '',
-//   fullName: '',
-//   username: '',
-//   contact: Number('')
-// }
+export interface CompanyFormData {
+  name: string
+}
+
+const defaultValues = {
+  name: ''
+}
 
 const SidebarAddProject = (props: SidebarAddProjectType) => {
   // ** Props
   const { open, toggle } = props
 
-  // ** State
-  // const [plan, setPlan] = useState<string>('basic')
-  // const [role, setRole] = useState<string>('subscriber')
+  const dispatch = useDispatch()
+  const store = useSelector((state:any) => state.createCompany)
+  const {status} = store
 
-  // // ** Hooks
-  // const dispatch = useDispatch()
   const {
     reset,
     control,
@@ -128,20 +103,23 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
     handleSubmit,
     formState: { errors }
   } = useForm({
-    // defaultValues,
-    mode: 'onChange',
+    defaultValues,
+    mode: 'onBlur',
     resolver: yupResolver(schema)
   })
 
-  const onSubmit = () => {
+  useEffect(() => {
+    if (status) dispatch(getCompanies())
+  }, [status])
+
+  const onSubmit = (data: any) => {
+    dispatch(createCompany({ name: data?.name }))
     toggle()
     reset()
   }
 
   const handleClose = () => {
-    // setPlan('basic')
-    // setRole('subscriber')
-    setValue('contact', Number(''))
+    setValue('name', '')
     setFiles([])
     toggle()
     reset()
@@ -180,35 +158,6 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
       return <Icon icon='mdi:file-document-outline' />
     }
   }
-
-  // const handleRemoveFile = (file: FileProp) => {
-  //   const uploadedFiles = files
-  //   const filtered = uploadedFiles.filter((i: FileProp) => i.name !== file.name)
-  //   setFiles([...filtered])
-  // }
-
-  // const fileList = files.map((file: FileProp) => (
-  //   <ListItem key={file.name}>
-  //     <div className='file-details'>
-  //       <div className='file-preview'>{renderFilePreview(file)}</div>
-  //       <div>
-  //         <Typography className='file-name'>{file.name}</Typography>
-  //         <Typography className='file-size' variant='body2'>
-  //           {Math.round(file.size / 100) / 10 > 1000
-  //             ? `${(Math.round(file.size / 100) / 10000).toFixed(1)} mb`
-  //             : `${(Math.round(file.size / 100) / 10).toFixed(1)} kb`}
-  //         </Typography>
-  //       </div>
-  //     </div>
-  //     <IconButton onClick={() => handleRemoveFile(file)}>
-  //       <Icon icon='mdi:close' fontSize={20} />
-  //     </IconButton>
-  //   </ListItem>
-  // ))
-
-  // const handleRemoveAllFiles = () => {
-  //   setFiles([])
-  // }
 
   return (
     <Drawer
@@ -262,17 +211,18 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
               name='name'
               control={control}
               rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
+              render={({ field: { value, onChange, onBlur } }) => (
                 <TextField
                   value={value}
                   label='Name'
+                  onBlur={onBlur}
                   onChange={onChange}
                   placeholder='PSP'
-                  error={Boolean(errors.fullName)}
+                  error={Boolean(errors.name)}
                 />
               )}
             />
-            {errors.fullName && <FormHelperText sx={{ color: 'error.main' }}>{errors.fullName.message}</FormHelperText>}
+            {errors.name && <FormHelperText sx={{ color: 'error.main' }}>{errors.name.message}</FormHelperText>}
           </FormControl>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller

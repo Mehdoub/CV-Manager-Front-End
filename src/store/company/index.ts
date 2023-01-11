@@ -4,7 +4,7 @@ import ApiRequest from "src/helpers/ApiRequest";
 export const getCompanies: any = createAsyncThunk(
   'getCompanies',
   async (params:
-    { page: number, size: number, query: string } = { page: 1, size: 10, query: '' },
+    { page: number, size: number, query: string } = { page: 1, size: 2, query: '' },
     { rejectWithValue }) => {
     try {
       const { page, size, query } = params
@@ -86,5 +86,47 @@ const companySlice = createSlice({
   }
 })
 
+
+export const createCompany: any = createAsyncThunk(
+  'createCompany',
+  async (data: any,
+    { rejectWithValue }) => {
+    try {
+      const response = await ApiRequest.builder().auth().request('post', 'companies', data)
+
+      return response.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const createCompanySlice = createSlice({
+  name: 'createCompany',
+  initialState: {
+    loading: false,
+    errors: {},
+    status: false,
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(createCompany.pending, state => {
+      state.loading = true
+      state.status = false
+      state.errors = []
+    })
+    builder.addCase(createCompany.fulfilled, (state) => {
+      state.loading = false
+      state.status = true
+      state.errors = []
+    })
+    builder.addCase(createCompany.rejected, (state, action) => {
+      state.loading = false
+      state.status = false
+      state.errors = action.payload
+    })
+  }
+})
+
 export const companiesListReducer = companiesListSlice.reducer
 export const companyReducer = companySlice.reducer
+export const createCompanyReducer = createCompanySlice.reducer

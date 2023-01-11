@@ -38,7 +38,7 @@ import { CardStatsHorizontalProps } from 'src/@core/components/card-statistics/t
 // ** Custom Table Components Imports
 import TableHeader from 'src/views/pages/company/list/TableHeader'
 import AddCompanyDrawer from 'src/views/pages/company/list/AddCompanyDrawer'
-import { AvatarGroup, Tooltip, TooltipProps, tooltipClasses } from '@mui/material'
+import { AvatarGroup, Skeleton, Tooltip, TooltipProps, tooltipClasses } from '@mui/material'
 import { Stack } from '@mui/system'
 import { getCompanies } from 'src/store/company'
 
@@ -133,9 +133,7 @@ const CompanyList = () => {
 
   const handleFilter = useCallback((val: string) => {
     setSearchQuery(val)
-    if (val.length > 2) {
-      dispatch(getCompanies({ query: val, size: pageSize }))
-    }
+    dispatch(getCompanies({ query: val, size: pageSize }))
   }, [])
 
   const toggleAddCompanyDrawer = () => setAddUserOpen(!addUserOpen)
@@ -256,7 +254,11 @@ const CompanyList = () => {
             {apiData.statsHorizontal.map((item: any, index: number) => {
               return (
                 <Grid item xs={12} md={3} sm={6} key={index}>
-                  <CardStatisticsHorizontal {...item} icon={<Icon icon={item.icon as string} />} />
+                  {loading ? (
+                    <Skeleton variant='rounded' height={100} />
+                  ) : (
+                    <CardStatisticsHorizontal {...item} icon={<Icon icon={item.icon as string} />} />
+                  )}
                 </Grid>
               )
             })}
@@ -265,23 +267,27 @@ const CompanyList = () => {
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <TableHeader searchQuery={searchQuery} handleFilter={handleFilter} toggle={toggleAddCompanyDrawer} />
-          {!loading && companies?.docs?.length > 0 && (
-            <DataGrid
-              autoHeight
-              rows={companies?.docs ?? []}
-              columns={columns}
-              pageSize={pageSize}
-              disableSelectionOnClick
-              rowsPerPageOptions={[2]}
-              sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-              onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
-              pagination
-              paginationMode='server'
-              rowCount={companies?.totalDocs}
-              page={page}
-              onPageChange={newPage => handlePageChange(newPage)}
-            />
+          {loading ? (
+            <Skeleton variant='rounded' height={500} />
+          ) : (
+            <>
+              <TableHeader searchQuery={searchQuery} handleFilter={handleFilter} toggle={toggleAddCompanyDrawer} />
+              <DataGrid
+                autoHeight
+                rows={companies?.docs ?? []}
+                columns={columns}
+                pageSize={pageSize}
+                disableSelectionOnClick
+                rowsPerPageOptions={[2]}
+                sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+                onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
+                pagination
+                paginationMode='server'
+                rowCount={companies?.totalDocs}
+                page={page}
+                onPageChange={newPage => handlePageChange(newPage)}
+              />
+            </>
           )}
         </Card>
       </Grid>
