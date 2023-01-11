@@ -62,11 +62,7 @@ export const renderClient = (row: any, field = 'logo') => {
     return <CustomAvatar src={row[field]} sx={{ mr: 3, width: 34, height: 34 }} />
   } else {
     return (
-      <CustomAvatar
-        skin='light'
-        color='primary'
-        sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}
-      >
+      <CustomAvatar skin='light' color='primary' sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}>
         {getInitials(row.name ? row.name : 'John Doe')}
       </CustomAvatar>
     )
@@ -75,21 +71,30 @@ export const renderClient = (row: any, field = 'logo') => {
 
 const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) => {
   // ** State
-  const [value, setValue] = useState<string>('')
-  const [pageSize, setPageSize] = useState<number>(10)
+  const [searchQuery, setSearchQuery] = useState<string>('')
+  const [pageSize, setPageSize] = useState<number>(2)
+  const [page, setPage] = useState<number>(0)
   const [addProjectOpen, setaddProjectOpen] = useState<boolean>(false)
 
   // ** Hooks
   const dispatch = useDispatch<any>()
   const store = useSelector((state: any) => state.projectsList)
-  const { data: projects } = store
+  const { data: projects, loading } = store
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage++)
+    dispatch(getProjects({ page: newPage, size: pageSize, query: searchQuery }))
+  }
 
   useEffect(() => {
-    dispatch(getProjects())
+    dispatch(getProjects({ size: pageSize, query: searchQuery }))
   }, [])
 
   const handleFilter = useCallback((val: string) => {
-    setValue(val)
+    setSearchQuery(val)
+    if (val.length > 2) {
+      dispatch(getProjects({ query: val, size: pageSize }))
+    }
   }, [])
 
   const toggleAddProjectDrawer = () => setaddProjectOpen(!addProjectOpen)
@@ -138,7 +143,11 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
         row?.managers?.length > 0 ? (
           <AvatarGroup className='pull-up'>
             {row?.managers?.map((manager: any, index: any) => (
-              <BootstrapTooltip key={index} title={`${manager?.user_id?.firstname} ${manager?.user_id?.lastname}`} placement='top'>
+              <BootstrapTooltip
+                key={index}
+                title={`${manager?.user_id?.firstname} ${manager?.user_id?.lastname}`}
+                placement='top'
+              >
                 <CustomAvatar src={manager?.user_id?.avatar} sx={{ height: 26, width: 26 }} />
               </BootstrapTooltip>
             ))}
@@ -213,17 +222,24 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <TableHeader value={value} handleFilter={handleFilter} toggle={toggleAddProjectDrawer} />
-          <DataGrid
-            autoHeight
-            rows={projects?.docs ?? []}
-            columns={columns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[10, 25, 50]}
-            sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-            onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
-          />
+          <TableHeader searchQuery={searchQuery} handleFilter={handleFilter} toggle={toggleAddProjectDrawer} />
+          {!loading && projects?.docs?.length > 0 && (
+            <DataGrid
+              autoHeight
+              rows={projects?.docs ?? []}
+              columns={columns}
+              pageSize={pageSize}
+              disableSelectionOnClick
+              rowsPerPageOptions={[2]}
+              sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+              onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
+              pagination
+              paginationMode='server'
+              rowCount={projects?.totalDocs}
+              page={page}
+              onPageChange={newPage => handlePageChange(newPage)}
+            />
+          )}
         </Card>
       </Grid>
 
