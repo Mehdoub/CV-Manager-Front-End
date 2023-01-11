@@ -137,123 +137,122 @@ const CompanyViewLeft = ({ companyId }: Props) => {
     }
   }
 
-  if (data) {
-    return (
-      <Grid container spacing={6}>
-        <Grid item xs={12}>
-          <Card>
-            <CardContent sx={{ pt: 15, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-              {loading ? (
-                <Skeleton animation='wave' variant='circular' width={150} height={150} />
-              ) : company?.logo ? (
-                <CustomAvatar
-                  src={company?.logo}
-                  variant='rounded'
-                  alt={company?.name}
-                  sx={{ width: 150, height: 150, fontWeight: 600, mb: 4, fontSize: '3rem', borderRadius: '50%' }}
-                />
-              ) : (
-                <CustomAvatar
-                  skin='light'
-                  variant='rounded'
-                  color='primary'
-                  sx={{ width: 150, height: 150, fontWeight: 600, mb: 4, fontSize: '3rem', borderRadius: '50%' }}
-                >
-                  {getInitials(company?.name)}
-                </CustomAvatar>
-              )}
-              <Typography variant='h6' sx={{ mb: 2 }}>
-                {company?.name}
-              </Typography>
-              {loading && <Skeleton animation='wave' width='35%' height={30} style={{ marginBottom: '7px' }} />}
-              {loading ? (
-                <Skeleton animation='wave' width='15%' height={30} style={{ marginBottom: '7px' }} />
-              ) : (
-                <CustomChip
-                  skin='light'
-                  size='small'
-                  label={data.role}
-                  color={roleColors[data.role]}
-                  sx={{
-                    height: 20,
-                    fontWeight: 600,
-                    borderRadius: '5px',
-                    fontSize: '0.875rem',
-                    textTransform: 'capitalize',
-                    '& .MuiChip-label': { mt: -0.25 }
-                  }}
-                />
-              )}
-            </CardContent>
-            <CardContent>
-              <Typography variant='h6'>Details</Typography>
-              <Divider sx={{ mt: theme => `${theme.spacing(4)} !important` }} />
-              <Box sx={{ pt: 2, pb: 1 }}>
-                <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                    Status:
-                  </Typography>
-                  {loading ? (
-                    <Skeleton animation='wave' width='15%' />
-                  ) : (
-                    <CustomChip
-                      skin='light'
-                      size='small'
-                      label={company?.is_active ? 'active' : 'inactive'}
-                      color={statusColors[company?.is_active ? 'active' : 'inactive']}
-                      sx={{
-                        height: 20,
-                        fontWeight: 500,
-                        fontSize: '0.75rem',
-                        borderRadius: '5px',
-                        textTransform: 'capitalize'
-                      }}
-                    />
-                  )}
-                </Box>
-                <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Phone:</Typography>
-                  {loading ? (
-                    <Skeleton animation='wave' width='35%' />
-                  ) : (
-                    <Typography variant='body2'>+98 {data.contact}</Typography>
-                  )}
-                </Box>
-                <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Address:</Typography>
-                  {loading ? (
-                    <Skeleton animation='wave' width='50%' />
-                  ) : (
-                    <Typography variant='body2'>{data.address}</Typography>
-                  )}
-                </Box>
-                <Box sx={{ display: 'flex' }}>
-                  <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Description:</Typography>
-                  {loading ? (
-                    <Skeleton animation='wave' width='50%' />
-                  ) : (
-                    <Typography variant='body2'>{data.description}</Typography>
-                  )}
-                </Box>
-                <Box sx={{ display: 'flex', mb: 2.7 }}>
-                  <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary', mt: '10px' }}>
-                    Manager(s):
-                  </Typography>
-                  <Typography variant='body2' style={{ marginTop: '5px' }}>
-                    {managers.map((manager: any, index: number) => (
-                      <Chip
-                        key={index}
-                        label={`${manager?.firstname} ${manager?.lastname}`}
-                        avatar={<Avatar src={manager?.avatar} />}
-                        style={{ marginTop: '3px' }}
-                      />
-                    ))}
-                  </Typography>
-                    {loading && <Skeleton animation='wave' width='50%' style={{ marginTop: '9px' }} />}
-                </Box>
+  return (
+    <Grid container spacing={6}>
+      <Grid item xs={12}>
+        <Card>
+          <CardContent sx={{ pt: 15, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+            {loading ? (
+              <Skeleton animation='wave' variant='circular' width={150} height={150} />
+            ) : company?.logo ? (
+              <CustomAvatar
+                src={company?.logo}
+                variant='rounded'
+                alt={company?.name}
+                sx={{ width: 150, height: 150, fontWeight: 600, mb: 4, fontSize: '3rem', borderRadius: '50%' }}
+              />
+            ) : (
+              <CustomAvatar
+                skin='light'
+                variant='rounded'
+                color='primary'
+                sx={{ width: 150, height: 150, fontWeight: 600, mb: 4, fontSize: '3rem', borderRadius: '50%' }}
+              >
+                {getInitials(company?.name)}
+              </CustomAvatar>
+            )}
+            <Typography variant='h6' sx={{ mb: 2 }}>
+              {company?.name}
+            </Typography>
+            {loading && <Skeleton animation='wave' width='35%' height={30} style={{ marginBottom: '7px' }} />}
+            {loading ? (
+              <Skeleton animation='wave' width='15%' height={30} style={{ marginBottom: '7px' }} />
+            ) : (
+              <CustomChip
+                skin='light'
+                size='small'
+                label={data.role}
+                color={roleColors[data.role]}
+                sx={{
+                  height: 20,
+                  fontWeight: 600,
+                  borderRadius: '5px',
+                  fontSize: '0.875rem',
+                  textTransform: 'capitalize',
+                  '& .MuiChip-label': { mt: -0.25 }
+                }}
+              />
+            )}
+          </CardContent>
+          <CardContent>
+            <Typography variant='h6'>Details</Typography>
+            <Divider sx={{ mt: theme => `${theme.spacing(4)} !important` }} />
+            <Box sx={{ pt: 2, pb: 1 }}>
+              <Box sx={{ display: 'flex', mb: 2.7 }}>
+                <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
+                  Status:
+                </Typography>
+                {loading ? (
+                  <Skeleton animation='wave' width='15%' />
+                ) : (
+                  <CustomChip
+                    skin='light'
+                    size='small'
+                    label={company?.is_active ? 'active' : 'inactive'}
+                    color={statusColors[company?.is_active ? 'active' : 'inactive']}
+                    sx={{
+                      height: 20,
+                      fontWeight: 500,
+                      fontSize: '0.75rem',
+                      borderRadius: '5px',
+                      textTransform: 'capitalize'
+                    }}
+                  />
+                )}
               </Box>
-            </CardContent>
-
+              <Box sx={{ display: 'flex', mb: 2.7 }}>
+                <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Phone:</Typography>
+                {loading ? (
+                  <Skeleton animation='wave' width='35%' />
+                ) : (
+                  <Typography variant='body2'>+98 {data.contact}</Typography>
+                )}
+              </Box>
+              <Box sx={{ display: 'flex', mb: 2.7 }}>
+                <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Address:</Typography>
+                {loading ? (
+                  <Skeleton animation='wave' width='50%' />
+                ) : (
+                  <Typography variant='body2'>{data.address}</Typography>
+                )}
+              </Box>
+              <Box sx={{ display: 'flex' }}>
+                <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Description:</Typography>
+                {loading ? (
+                  <Skeleton animation='wave' width='50%' />
+                ) : (
+                  <Typography variant='body2'>{data.description}</Typography>
+                )}
+              </Box>
+              <Box sx={{ display: 'flex', mb: 2.7 }}>
+                <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary', mt: '10px' }}>
+                  Manager(s):
+                </Typography>
+                <Typography variant='body2' style={{ marginTop: '5px' }}>
+                  {managers.map((manager: any, index: number) => (
+                    <Chip
+                      key={index}
+                      label={`${manager?.firstname} ${manager?.lastname}`}
+                      avatar={<Avatar src={manager?.avatar} />}
+                      style={{ marginTop: '3px' }}
+                    />
+                  ))}
+                </Typography>
+                {loading && <Skeleton animation='wave' width='50%' style={{ marginTop: '9px' }} />}
+              </Box>
+            </Box>
+          </CardContent>
+          {!loading && (
             <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
               <Button variant='contained' sx={{ mr: 2 }} onClick={handleEditClickOpen}>
                 Edit
@@ -262,87 +261,85 @@ const CompanyViewLeft = ({ companyId }: Props) => {
                 Suspend
               </Button>
             </CardActions>
+          )}
 
-            <Dialog
-              open={openEdit}
-              onClose={handleEditClose}
-              aria-labelledby='user-view-edit'
-              sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 650, p: [2, 10] } }}
-              aria-describedby='user-view-edit-description'
-            >
-              <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-                Edit Company Information
-              </DialogTitle>
-              <DialogContent>
-                <DialogContentText variant='body2' id='user-view-edit-description' sx={{ textAlign: 'center', mb: 7 }}>
-                  Updating company details will receive a privacy audit.
-                </DialogContentText>
-                <form>
-                  <Fragment>
-                    <div {...getRootProps({ className: 'dropzone' })}>
-                      <input {...getInputProps()} />
-                      <Box sx={{ textAlign: 'center' }}>
-                        {files[0] ? (
-                          renderFilePreview(files[0])
-                        ) : (
-                          <Img
-                            width={140}
-                            alt='Upload img'
-                            src='/images/logos/facebook-round.png'
-                            sx={{ borderRadius: '50%', marginBottom: '25px' }}
-                          />
-                        )}
-                      </Box>
-                    </div>
-                  </Fragment>
-                  <Grid container spacing={6}>
-                    <Grid item xs={12} sm={6}>
-                      <TextField fullWidth label='Name' defaultValue={data.fullName} />
-                    </Grid>
-                    <Grid item xs={12} sm={6}>
-                      <TextField fullWidth label='Phone' defaultValue={`+98 ${data.contact}`} />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={12}>
-                      <TextField
-                        fullWidth
-                        defaultValue={`${data.address}`}
-                        multiline
-                        rows={4}
-                        label='Address'
-                        placeholder='Company Address Shuould Be Here ...'
-                      />
-                    </Grid>
-                    <Grid item xs={12} sm={12} md={12}>
-                      <TextField
-                        fullWidth
-                        defaultValue={`${data.description}`}
-                        multiline
-                        rows={4}
-                        label='Description'
-                        placeholder='Company Description Shuould Be Here ...'
-                      />
-                    </Grid>
+          <Dialog
+            open={openEdit}
+            onClose={handleEditClose}
+            aria-labelledby='user-view-edit'
+            sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 650, p: [2, 10] } }}
+            aria-describedby='user-view-edit-description'
+          >
+            <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
+              Edit Company Information
+            </DialogTitle>
+            <DialogContent>
+              <DialogContentText variant='body2' id='user-view-edit-description' sx={{ textAlign: 'center', mb: 7 }}>
+                Updating company details will receive a privacy audit.
+              </DialogContentText>
+              <form>
+                <Fragment>
+                  <div {...getRootProps({ className: 'dropzone' })}>
+                    <input {...getInputProps()} />
+                    <Box sx={{ textAlign: 'center' }}>
+                      {files[0] ? (
+                        renderFilePreview(files[0])
+                      ) : (
+                        <Img
+                          width={140}
+                          alt='Upload img'
+                          src='/images/logos/facebook-round.png'
+                          sx={{ borderRadius: '50%', marginBottom: '25px' }}
+                        />
+                      )}
+                    </Box>
+                  </div>
+                </Fragment>
+                <Grid container spacing={6}>
+                  <Grid item xs={12} sm={6}>
+                    <TextField fullWidth label='Name' defaultValue={data.fullName} />
                   </Grid>
-                </form>
-              </DialogContent>
-              <DialogActions sx={{ justifyContent: 'center' }}>
-                <Button variant='contained' sx={{ mr: 1 }} onClick={handleEditClose}>
-                  Submit
-                </Button>
-                <Button variant='outlined' color='secondary' onClick={handleEditClose}>
-                  Cancel
-                </Button>
-              </DialogActions>
-            </Dialog>
+                  <Grid item xs={12} sm={6}>
+                    <TextField fullWidth label='Phone' defaultValue={`+98 ${data.contact}`} />
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={12}>
+                    <TextField
+                      fullWidth
+                      defaultValue={`${data.address}`}
+                      multiline
+                      rows={4}
+                      label='Address'
+                      placeholder='Company Address Shuould Be Here ...'
+                    />
+                  </Grid>
+                  <Grid item xs={12} sm={12} md={12}>
+                    <TextField
+                      fullWidth
+                      defaultValue={`${data.description}`}
+                      multiline
+                      rows={4}
+                      label='Description'
+                      placeholder='Company Description Shuould Be Here ...'
+                    />
+                  </Grid>
+                </Grid>
+              </form>
+            </DialogContent>
+            <DialogActions sx={{ justifyContent: 'center' }}>
+              <Button variant='contained' sx={{ mr: 1 }} onClick={handleEditClose}>
+                Submit
+              </Button>
+              <Button variant='outlined' color='secondary' onClick={handleEditClose}>
+                Cancel
+              </Button>
+            </DialogActions>
+          </Dialog>
 
-            <CompanySuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
-          </Card>
-        </Grid>
+          <CompanySuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
+        </Card>
       </Grid>
-    )
-  } else {
-    return null
-  }
+    </Grid>
+  )
 }
 
 export default CompanyViewLeft

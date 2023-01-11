@@ -13,6 +13,8 @@ import CrmTotalProfit from 'src/views/statistics/CrmTotalProfit'
 import Icon from 'src/@core/components/icon'
 import CrmAward from 'src/views/statistics/CrmAward'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
+import { useSelector } from 'react-redux'
+import { Skeleton } from '@mui/material'
 
 type Props = {
   tab: string
@@ -20,38 +22,48 @@ type Props = {
 }
 
 const CompanyView = ({ tab, companyId }: Props) => {
+  const store = useSelector((state: any) => state.company)
+  const { loading } = store
   return (
     <ApexChartWrapper>
       <Grid container spacing={6}>
         <Grid item container spacing={6}>
           <Grid item xs={6} sm={3} md={4}>
-            <CrmAward />
+            {loading ? <Skeleton variant='rounded' height={200} /> : <CrmAward />}
           </Grid>
           <Grid item xs={6} sm={3} md={2}>
-            <CardStatisticsVertical
-              stats='155k'
-              color='primary'
-              trendNumber='+22%'
-              title='Total Orders'
-              chipText='Last 4 Month'
-              icon={<Icon icon='mdi:cart-plus' />}
-            />
+            {loading ? (
+              <Skeleton variant='rounded' height={200} />
+            ) : (
+              <CardStatisticsVertical
+                stats='155k'
+                color='primary'
+                trendNumber='+22%'
+                title='Total Orders'
+                chipText='Last 4 Month'
+                icon={<Icon icon='mdi:cart-plus' />}
+              />
+            )}
           </Grid>
           <Grid item xs={6} sm={3} md={2}>
-            <CardStatisticsVertical
-              stats='$13.4k'
-              color='success'
-              trendNumber='+38%'
-              title='Total Sales'
-              chipText='Last Six Month'
-              icon={<Icon icon='mdi:currency-usd' />}
-            />
+            {loading ? (
+              <Skeleton variant='rounded' height={200} />
+            ) : (
+              <CardStatisticsVertical
+                stats='$13.4k'
+                color='success'
+                trendNumber='+38%'
+                title='Total Sales'
+                chipText='Last Six Month'
+                icon={<Icon icon='mdi:currency-usd' />}
+              />
+            )}
           </Grid>
           <Grid item xs={6} sm={3} md={2}>
-            <CrmTotalProfit />
+            {loading ? <Skeleton variant='rounded' height={200} /> : <CrmTotalProfit />}
           </Grid>
           <Grid item xs={6} sm={3} md={2}>
-            <CrmTotalGrowth />
+            {loading ? <Skeleton variant='rounded' height={200} /> : <CrmTotalGrowth />}
           </Grid>
         </Grid>
         <Grid item xs={12} md={5} lg={4}>
