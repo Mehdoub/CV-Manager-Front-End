@@ -7,14 +7,14 @@ import TextField from '@mui/material/TextField'
 import Icon from 'src/@core/components/icon'
 
 interface TableHeaderProps {
-  value: string
+  searchQuery: string
   toggle: () => void
   handleFilter: (val: string) => void
 }
 
 const TableHeader = (props: TableHeaderProps) => {
   // ** Props
-  const { handleFilter, toggle, value } = props
+  const { handleFilter, toggle, searchQuery } = props
 
   return (
     <Box sx={{ p: 5, pb: 3, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -29,7 +29,7 @@ const TableHeader = (props: TableHeaderProps) => {
       <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
         <TextField
           size='small'
-          value={value}
+          value={searchQuery}
           sx={{ mr: 6, mb: 2 }}
           placeholder='Search Project'
           onChange={e => handleFilter(e.target.value)}

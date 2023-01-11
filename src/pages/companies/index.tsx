@@ -116,7 +116,7 @@ const renderClient = (row: any, field = 'logo') => {
 
 const CompanyList = () => {
   // ** State
-  const [value, setValue] = useState<string>('')
+  const [searchQuery, setSearchQuery] = useState<string>('')
   const [pageSize, setPageSize] = useState<number>(10)
   const [addUserOpen, setAddUserOpen] = useState<boolean>(false)
 
@@ -130,7 +130,10 @@ const CompanyList = () => {
   }, [])
 
   const handleFilter = useCallback((val: string) => {
-    setValue(val)
+    setSearchQuery(val)
+    if (val.length > 2) {
+      dispatch(getCompanies({query: val}))
+    }
   }, [])
 
   const toggleAddCompanyDrawer = () => setAddUserOpen(!addUserOpen)
@@ -256,7 +259,7 @@ const CompanyList = () => {
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <TableHeader value={value} handleFilter={handleFilter} toggle={toggleAddCompanyDrawer} />
+          <TableHeader searchQuery={searchQuery} handleFilter={handleFilter} toggle={toggleAddCompanyDrawer} />
           <DataGrid
             autoHeight
             rows={companies?.docs ?? []}

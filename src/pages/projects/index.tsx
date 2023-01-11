@@ -75,7 +75,7 @@ export const renderClient = (row: any, field = 'logo') => {
 
 const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) => {
   // ** State
-  const [value, setValue] = useState<string>('')
+  const [searchQuery, setSearchQuery] = useState<string>('')
   const [pageSize, setPageSize] = useState<number>(10)
   const [addProjectOpen, setaddProjectOpen] = useState<boolean>(false)
 
@@ -89,7 +89,10 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
   }, [])
 
   const handleFilter = useCallback((val: string) => {
-    setValue(val)
+    setSearchQuery(val)
+    if (val.length > 2) {
+      dispatch(getProjects({query: val}))
+    }
   }, [])
 
   const toggleAddProjectDrawer = () => setaddProjectOpen(!addProjectOpen)
@@ -213,7 +216,7 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <TableHeader value={value} handleFilter={handleFilter} toggle={toggleAddProjectDrawer} />
+          <TableHeader searchQuery={searchQuery} handleFilter={handleFilter} toggle={toggleAddProjectDrawer} />
           <DataGrid
             autoHeight
             rows={projects?.docs ?? []}
