@@ -213,9 +213,9 @@ const CompanyViewLeft = ({ companyId }: Props) => {
               <Box sx={{ display: 'flex', mb: 2.7 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Phone:</Typography>
                 {loading ? (
-                  <Skeleton animation='wave' width='35%' />
+                  <Skeleton animation='wave' width='50%' />
                 ) : (
-                  <Typography variant='body2'>+98 {data.contact}</Typography>
+                  <Typography variant='body2'>{company?.phone?.length > 0 ? company?.phone : '---'}</Typography>
                 )}
               </Box>
               <Box sx={{ display: 'flex', mb: 2.7 }}>
@@ -223,7 +223,7 @@ const CompanyViewLeft = ({ companyId }: Props) => {
                 {loading ? (
                   <Skeleton animation='wave' width='50%' />
                 ) : (
-                  <Typography variant='body2'>{data.address}</Typography>
+                  <Typography variant='body2'>{company?.address?.length > 0 ? company?.address : '---'}</Typography>
                 )}
               </Box>
               <Box sx={{ display: 'flex' }}>
@@ -231,7 +231,9 @@ const CompanyViewLeft = ({ companyId }: Props) => {
                 {loading ? (
                   <Skeleton animation='wave' width='50%' />
                 ) : (
-                  <Typography variant='body2'>{data.description}</Typography>
+                  <Typography variant='body2'>
+                    {company?.description?.length > 0 ? company?.description : '---'}
+                  </Typography>
                 )}
               </Box>
               <Box sx={{ display: 'flex', mb: 2.7 }}>
