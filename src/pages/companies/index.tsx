@@ -3,7 +3,6 @@ import { useState, useEffect, useCallback } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
-import { GetStaticProps, InferGetStaticPropsType } from 'next/types'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -28,12 +27,6 @@ import CardStatisticsHorizontal from 'src/@core/components/card-statistics/card-
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
-
-// ** Actions Imports
-import { fetchData } from 'src/store/apps/project'
-
-// ** Types Imports
-import { CardStatsHorizontalProps } from 'src/@core/components/card-statistics/types'
 
 // ** Custom Table Components Imports
 import TableHeader from 'src/views/pages/company/list/TableHeader'
@@ -113,7 +106,7 @@ const apiData = {
 const CompanyList = () => {
   // ** State
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const [pageSize, setPageSize] = useState<number>(2)
+  const [pageSize, setPageSize] = useState<number>(10)
   const [page, setPage] = useState<number>(0)
   const [addUserOpen, setAddUserOpen] = useState<boolean>(false)
 
@@ -205,7 +198,7 @@ const CompanyList = () => {
       renderCell: ({ row }: any) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            <StyledLink href={`/users/view/${row.created_by}/overview`}>{row.created_by}</StyledLink>
+            <StyledLink href={`/users/view/${row.created_by}/overview`}>{row?.created_by?.firstname} {row?.created_by?.lastname}</StyledLink>
           </Typography>
         )
       }

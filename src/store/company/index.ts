@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ApiRequest from "src/helpers/ApiRequest";
+import { CompanyFormData } from "src/views/pages/company/list/AddCompanyDrawer";
 
 export const getCompanies: any = createAsyncThunk(
   'getCompanies',
   async (params:
-    { page: number, size: number, query: string } = { page: 1, size: 2, query: '' },
+    { page: number, size: number, query: string } = { page: 1, size: 10, query: '' },
     { rejectWithValue }) => {
     try {
       const { page, size, query } = params
@@ -75,7 +76,7 @@ const companySlice = createSlice({
       state.loading = false
       state.errors = []
       state.data = action.payload.data[0]
-      state.managers = [{...action?.payload?.data[0]?.created_by, type: 'owner'}]
+      state.managers = [{ ...action?.payload?.data[0]?.created_by, type: 'owner' }]
     })
     builder.addCase(getCompany.rejected, (state, action) => {
       state.loading = false
@@ -89,7 +90,7 @@ const companySlice = createSlice({
 
 export const createCompany: any = createAsyncThunk(
   'createCompany',
-  async (data: any,
+  async (data: CompanyFormData,
     { rejectWithValue }) => {
     try {
       const response = await ApiRequest.builder().auth().request('post', 'companies', data)
@@ -107,7 +108,13 @@ const createCompanySlice = createSlice({
     errors: {},
     status: false,
   },
-  reducers: {},
+  reducers: {
+    clearCreateCompany: (state) => {
+      state.loading = false
+      state.status = false
+      state.errors = []
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(createCompany.pending, state => {
       state.loading = true
@@ -126,6 +133,8 @@ const createCompanySlice = createSlice({
     })
   }
 })
+
+export const { clearCreateCompany } = createCompanySlice.actions
 
 export const companiesListReducer = companiesListSlice.reducer
 export const companyReducer = companySlice.reducer

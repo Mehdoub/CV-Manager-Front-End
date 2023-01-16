@@ -26,7 +26,7 @@ import Icon from 'src/@core/components/icon'
 import toast from 'react-hot-toast'
 import { useDropzone } from 'react-dropzone'
 import { useDispatch } from 'react-redux'
-import { createCompany, getCompanies } from 'src/store/company'
+import { clearCreateCompany, createCompany, getCompanies } from 'src/store/company'
 import { useSelector } from 'react-redux'
 
 interface FileProp {
@@ -58,16 +58,6 @@ interface SidebarAddProjectType {
   toggle: () => void
 }
 
-// const showErrors = (field: string, valueLen: number, min: number) => {
-//   if (valueLen === 0) {
-//     return `${field} field is required`
-//   } else if (valueLen > 0 && valueLen < min) {
-//     return `${field} must be at least ${min} characters`
-//   } else {
-//     return ''
-//   }
-// }
-
 const Header = styled(Box)<BoxProps>(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -76,16 +66,53 @@ const Header = styled(Box)<BoxProps>(({ theme }) => ({
   backgroundColor: theme.palette.background.default
 }))
 
-const schema = yup.object().shape({
-  name: yup.string().required().min(3)
-})
+const schema = yup.object().shape(
+  {
+    name: yup.string().label('Name').required().min(3),
+    phone: yup.string().when('phone', (val, schema) => {
+      if (val?.length > 0) {
+        return yup
+          .string()
+          .matches(/^0[\d]{10}$/, 'Phone Is Not Valid (example: 02123456789)')
+          .required()
+      } else {
+        return yup.string().notRequired()
+      }
+    }),
+    address: yup.string().when('address', (val, schema) => {
+      if (val?.length > 0) {
+        return yup.string().label('Address').min(10).max(100).required()
+      } else {
+        return yup.string().notRequired()
+      }
+    }),
+    description: yup.string().when('description', (val, schema) => {
+      if (val?.length > 0) {
+        return yup.string().label('Description').min(10).max(100).required()
+      } else {
+        return yup.string().notRequired()
+      }
+    })
+  },
+  [
+    ['phone', 'phone'],
+    ['address', 'address'],
+    ['description', 'description']
+  ]
+)
 
 export interface CompanyFormData {
   name: string
+  phone: string | null
+  address: string | null
+  description: string | null
 }
 
 const defaultValues = {
-  name: ''
+  name: '',
+  phone: '',
+  address: '',
+  description: '',
 }
 
 const SidebarAddProject = (props: SidebarAddProjectType) => {
@@ -108,21 +135,30 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
     resolver: yupResolver(schema)
   })
 
+  const clearInputs = () => {
+    setValue('name', '')
+    setValue('phone', '')
+    setValue('address', '')
+    setValue('description', '')
+  }
+
   useEffect(() => {
     if (status) {
-      dispatch(getCompanies({ size: 2 }))
+      dispatch(getCompanies())
       toast.success('Company Created Successfully', { position: 'bottom-left', duration: 5000 })
+      clearInputs()
+      dispatch(clearCreateCompany())
     }
   }, [status])
 
-  const onSubmit = (data: any) => {
-    dispatch(createCompany({ name: data?.name }))
+  const onSubmit = (data: CompanyFormData) => {
+    dispatch(createCompany(data))
     toggle()
     reset()
   }
 
   const handleClose = () => {
-    setValue('name', '')
+    clearInputs()
     setFiles([])
     toggle()
     reset()
@@ -231,7 +267,6 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
             <Controller
               name='phone'
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   value={value}
@@ -246,9 +281,8 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
           </FormControl>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
-              name='description'
+              name='address'
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   value={value}
@@ -257,17 +291,16 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
                   label='Address'
                   onChange={onChange}
                   placeholder='Tehran, Vanak ...'
-                  error={Boolean(errors.username)}
+                  error={Boolean(errors.address)}
                 />
               )}
             />
-            {errors.username && <FormHelperText sx={{ color: 'error.main' }}>{errors.username.message}</FormHelperText>}
+            {errors.address && <FormHelperText sx={{ color: 'error.main' }}>{errors.address.message}</FormHelperText>}
           </FormControl>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
               name='description'
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   value={value}
@@ -276,11 +309,13 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
                   label='Description'
                   onChange={onChange}
                   placeholder='A Company For ...'
-                  error={Boolean(errors.username)}
+                  error={Boolean(errors.description)}
                 />
               )}
             />
-            {errors.username && <FormHelperText sx={{ color: 'error.main' }}>{errors.username.message}</FormHelperText>}
+            {errors.description && (
+              <FormHelperText sx={{ color: 'error.main' }}>{errors.description.message}</FormHelperText>
+            )}
           </FormControl>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button size='large' type='submit' variant='contained' sx={{ mr: 3 }}>
