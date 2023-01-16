@@ -93,8 +93,8 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
   const { open, toggle } = props
 
   const dispatch = useDispatch()
-  const store = useSelector((state:any) => state.createCompany)
-  const {status} = store
+  const store = useSelector((state: any) => state.createCompany)
+  const { status } = store
 
   const {
     reset,
@@ -109,7 +109,10 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
   })
 
   useEffect(() => {
-    if (status) dispatch(getCompanies())
+    if (status) {
+      dispatch(getCompanies({ size: 2 }))
+      toast.success('Company Created Successfully', { position: 'bottom-left', duration: 5000 })
+    }
   }, [status])
 
   const onSubmit = (data: any) => {

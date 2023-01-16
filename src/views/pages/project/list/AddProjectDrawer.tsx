@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Drawer from '@mui/material/Drawer'
@@ -11,24 +11,12 @@ import Typography from '@mui/material/Typography'
 import Box, { BoxProps } from '@mui/material/Box'
 import FormControl from '@mui/material/FormControl'
 import FormHelperText from '@mui/material/FormHelperText'
+import { TypographyProps } from '@mui/material/Typography'
 
 // ** Third Party Imports
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useForm, Controller } from 'react-hook-form'
-
-// ** Store Imports
-// import { useDispatch } from 'react-redux'
-
-// ** Actions Imports
-// import { addUser } from 'src/store/apps/user'
-
-// ** Types Imports
-// import { AppDispatch } from 'src/store'
-
-// import List from '@mui/material/List'
-// import ListItem from '@mui/material/ListItem'
-import { TypographyProps } from '@mui/material/Typography'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -36,6 +24,9 @@ import Icon from 'src/@core/components/icon'
 // ** Third Party Components
 import toast from 'react-hot-toast'
 import { useDropzone } from 'react-dropzone'
+import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { createProject, getProjects } from 'src/store/project'
 
 interface FileProp {
   name: string
@@ -45,9 +36,6 @@ interface FileProp {
 
 // Styled component for the upload image inside the dropzone area
 const Img = styled('img')(({ theme }) => ({
-  // [theme.breakpoints.up('md')]: {
-  //   marginRight: theme.spacing(10)
-  // },
   [theme.breakpoints.down('md')]: {
     marginBottom: theme.spacing(4)
   },
@@ -69,25 +57,6 @@ interface SidebarAddProjectType {
   toggle: () => void
 }
 
-// interface UserData {
-//   email: string
-//   company: string
-//   country: string
-//   contact: number
-//   fullName: string
-//   username: string
-// }
-
-// const showErrors = (field: string, valueLen: number, min: number) => {
-//   if (valueLen === 0) {
-//     return `${field} field is required`
-//   } else if (valueLen > 0 && valueLen < min) {
-//     return `${field} must be at least ${min} characters`
-//   } else {
-//     return ''
-//   }
-// }
-
 const Header = styled(Box)<BoxProps>(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
@@ -97,30 +66,32 @@ const Header = styled(Box)<BoxProps>(({ theme }) => ({
 }))
 
 const schema = yup.object().shape({
+  name: yup.string().min(3).required(),
   company: yup.string().required(),
-  name: yup.string().required(),
-  description: yup.string().required(),
+  description: yup.string().min(10).required()
 })
 
-// const defaultValues = {
-//   email: '',
-//   company: '',
-//   country: '',
-//   fullName: '',
-//   username: '',
-//   contact: Number('')
-// }
+const defaultValues = {
+  name: '',
+  company: '',
+  description: ''
+}
 
 const SidebarAddProject = (props: SidebarAddProjectType) => {
   // ** Props
   const { open, toggle } = props
 
-  // ** State
-  // const [plan, setPlan] = useState<string>('basic')
-  // const [role, setRole] = useState<string>('subscriber')
+  const dispatch = useDispatch()
+  const store = useSelector((state: any) => state.createProject)
+  const { status } = store
 
-  // // ** Hooks
-  // const dispatch = useDispatch()
+  useEffect(() => {
+    if (status) {
+      dispatch(getProjects({ size: 2 }))
+      toast.success('Project Created Successfully', { position: 'bottom-left', duration: 5000 })
+    }
+  }, [status])
+
   const {
     reset,
     control,
@@ -128,20 +99,21 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
     handleSubmit,
     formState: { errors }
   } = useForm({
-    // defaultValues,
+    defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema)
   })
 
-  const onSubmit = () => {
+  const onSubmit = (data: any) => {
+    dispatch(createProject({ name: data?.name, company_id: data?.company, description: data?.description }))
     toggle()
     reset()
   }
 
   const handleClose = () => {
-    // setPlan('basic')
-    // setRole('subscriber')
-    setValue('contact', Number(''))
+    setValue('name', '')
+    setValue('company', '')
+    setValue('description', '')
     setFiles([])
     toggle()
     reset()
@@ -180,35 +152,6 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
       return <Icon icon='mdi:file-document-outline' />
     }
   }
-
-  // const handleRemoveFile = (file: FileProp) => {
-  //   const uploadedFiles = files
-  //   const filtered = uploadedFiles.filter((i: FileProp) => i.name !== file.name)
-  //   setFiles([...filtered])
-  // }
-
-  // const fileList = files.map((file: FileProp) => (
-  //   <ListItem key={file.name}>
-  //     <div className='file-details'>
-  //       <div className='file-preview'>{renderFilePreview(file)}</div>
-  //       <div>
-  //         <Typography className='file-name'>{file.name}</Typography>
-  //         <Typography className='file-size' variant='body2'>
-  //           {Math.round(file.size / 100) / 10 > 1000
-  //             ? `${(Math.round(file.size / 100) / 10000).toFixed(1)} mb`
-  //             : `${(Math.round(file.size / 100) / 10).toFixed(1)} kb`}
-  //         </Typography>
-  //       </div>
-  //     </div>
-  //     <IconButton onClick={() => handleRemoveFile(file)}>
-  //       <Icon icon='mdi:close' fontSize={20} />
-  //     </IconButton>
-  //   </ListItem>
-  // ))
-
-  // const handleRemoveAllFiles = () => {
-  //   setFiles([])
-  // }
 
   return (
     <Drawer
@@ -262,28 +205,30 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
               name='name'
               control={control}
               rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
+              render={({ field: { value, onChange, onBlur } }) => (
                 <TextField
                   value={value}
                   label='Name'
                   onChange={onChange}
+                  onBlur={onBlur}
                   placeholder='Example: BPM'
-                  error={Boolean(errors.fullName)}
+                  error={Boolean(errors.name)}
                 />
               )}
             />
-            {errors.fullName && <FormHelperText sx={{ color: 'error.main' }}>{errors.fullName.message}</FormHelperText>}
+            {errors.name && <FormHelperText sx={{ color: 'error.main' }}>{errors.name.message}</FormHelperText>}
           </FormControl>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
               name='company'
               control={control}
               rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
+              render={({ field: { value, onChange, onBlur } }) => (
                 <TextField
                   value={value}
                   label='Company'
                   onChange={onChange}
+                  onBlur={onBlur}
                   placeholder='Company PVT LTD'
                   error={Boolean(errors.company)}
                 />
@@ -296,19 +241,22 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
               name='description'
               control={control}
               rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
+              render={({ field: { value, onChange, onBlur } }) => (
                 <TextField
                   value={value}
                   multiline
                   rows={4}
                   label='Description'
                   onChange={onChange}
+                  onBlur={onBlur}
                   placeholder='A New Project For ...'
-                  error={Boolean(errors.username)}
+                  error={Boolean(errors.description)}
                 />
               )}
             />
-            {errors.username && <FormHelperText sx={{ color: 'error.main' }}>{errors.username.message}</FormHelperText>}
+            {errors.description && (
+              <FormHelperText sx={{ color: 'error.main' }}>{errors.description.message}</FormHelperText>
+            )}
           </FormControl>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Button size='large' type='submit' variant='contained' sx={{ mr: 3 }}>

@@ -86,5 +86,46 @@ const projectSlice = createSlice({
   }
 })
 
+export const createProject: any = createAsyncThunk(
+  'createProject',
+  async (data: any,
+    { rejectWithValue }) => {
+    try {
+      const response = await ApiRequest.builder().auth().request('post', 'projects', data)
+
+      return response.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const createProjectSlice = createSlice({
+  name: 'createProject',
+  initialState: {
+    loading: false,
+    errors: {},
+    status: false,
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(createProject.pending, state => {
+      state.loading = true
+      state.status = false
+      state.errors = []
+    })
+    builder.addCase(createProject.fulfilled, (state) => {
+      state.loading = false
+      state.status = true
+      state.errors = []
+    })
+    builder.addCase(createProject.rejected, (state, action) => {
+      state.loading = false
+      state.status = false
+      state.errors = action.payload
+    })
+  }
+})
+
 export const projectsListReducer = projectsListSlice.reducer
 export const projectReducer = projectSlice.reducer
+export const createProjectReducer = createProjectSlice.reducer

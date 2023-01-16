@@ -5,7 +5,7 @@ import { configureStore } from '@reduxjs/toolkit'
 import project from 'src/store/apps/project'
 import user from 'src/store/apps/user'
 import { companiesListReducer, companyReducer, createCompanyReducer } from './company'
-import { projectReducer, projectsListReducer } from './project'
+import { createProjectReducer, projectReducer, projectsListReducer } from './project'
 
 export const store = configureStore({
   reducer: {
@@ -18,6 +18,7 @@ export const store = configureStore({
 
     projectsList: projectsListReducer,
     projectFind: projectReducer,
+    createProject: createProjectReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
