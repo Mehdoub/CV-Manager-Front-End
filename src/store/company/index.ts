@@ -128,6 +128,52 @@ const companyManagersSlice = createSlice({
   }
 })
 
+export interface AddCompanyManagerParams {
+  companyId: string
+  manager_id: string
+}
+
+export const addCompanyManager: any = createAsyncThunk(
+  'addCompanyManager',
+  async (data: AddCompanyManagerParams,
+    { rejectWithValue }) => {
+    try {
+      const { manager_id } = data
+      const response = await ApiRequest.builder().auth().request('patch', `companies/${data?.companyId}/manager`, { manager_id })
+
+      return response.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const addCompanyManagerSlice = createSlice({
+  name: 'addCompanyManager',
+  initialState: {
+    loading: false,
+    errors: {},
+    status: false,
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(addCompanyManager.pending, state => {
+      state.loading = true
+      state.status = false
+      state.errors = []
+    })
+    builder.addCase(addCompanyManager.fulfilled, (state, action) => {
+      state.loading = false
+      state.errors = []
+      state.status = true
+    })
+    builder.addCase(addCompanyManager.rejected, (state, action) => {
+      state.loading = false
+      state.errors = action.payload
+      state.status = false
+    })
+  }
+})
+
 
 export const createCompany: any = createAsyncThunk(
   'createCompany',
@@ -181,3 +227,4 @@ export const companiesListReducer = companiesListSlice.reducer
 export const companyReducer = companySlice.reducer
 export const companyManagersReducer = companyManagersSlice.reducer
 export const createCompanyReducer = createCompanySlice.reducer
+export const addCompanyManagerReducer = addCompanyManagerSlice.reducer

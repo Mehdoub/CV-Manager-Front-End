@@ -27,7 +27,7 @@ import { Stack } from '@mui/system'
 import CompanySuspendDialog from './CompanySuspendDialog'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
-import { getCompanyManagers } from 'src/store/company'
+import { addCompanyManager, getCompanyManagers } from 'src/store/company'
 import { getUsers } from 'src/store/user'
 
 const statusColors: any = {
@@ -151,6 +151,7 @@ interface Props {
 
 const CompanyViewManagers = ({ companyId }: Props) => {
   const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
+  // const [newManager, setNewManager] = useState<string>('')
 
   const companyStore = useSelector((state: any) => state.company)
   const { loading, data: companyData } = companyStore
@@ -161,17 +162,23 @@ const CompanyViewManagers = ({ companyId }: Props) => {
   const usersListStore = useSelector((state: any) => state.usersList)
   const { data: users } = usersListStore
 
+  const addCompanyManagerStore = useSelector((state: any) => state.addCompanyManager)
+  const { status: statusAddCompanyManager } = addCompanyManagerStore
+
   const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(getCompanyManagers(companyId))
     dispatch(getUsers())
-  }, [])
+  }, [statusAddCompanyManager])
 
-  const managersArr = [
-    { ...companyData?.created_by, type: 'owner' },
-    { ...companyManagers?.user_id, type: 'manager' }
-  ]
+  let managersArr = []
+  companyData?.created_by ? managersArr.push({ ...companyData?.created_by, type: 'owner' }) : {}
+  companyManagers?.user_id ? managersArr.push({ ...companyManagers?.user_id, type: 'manager' }) : {}
+
+  const addNewManager = (newManager: any) => {
+    dispatch(addCompanyManager({ companyId, manager_id: newManager?.id }))
+  }
 
   return (
     <Grid container spacing={6}>
@@ -196,13 +203,18 @@ const CompanyViewManagers = ({ companyId }: Props) => {
               sx={{ mb: 8 }}
               id='add-members'
               options={users?.docs}
+              onChange={(e, newValue) => addNewManager(newValue)}
               ListboxComponent={List}
               getOptionLabel={(user: any) => `${user?.firstname} ${user?.lastname}`}
               renderInput={params => <TextField {...params} size='small' placeholder='Add project managers...' />}
               renderOption={(props, user) => (
                 <ListItem {...props}>
                   <ListItemAvatar>
-                    <Avatar src={`/images/avatars/${user?.avatar}`} alt={`${user?.firstname} ${user?.lastname}`} sx={{ height: 28, width: 28 }} />
+                    <Avatar
+                      src={`/images/avatars/${user?.avatar}`}
+                      alt={`${user?.firstname} ${user?.lastname}`}
+                      sx={{ height: 28, width: 28 }}
+                    />
                   </ListItemAvatar>
                   <ListItemText primary={`${user?.firstname} ${user?.lastname}`} />
                 </ListItem>
