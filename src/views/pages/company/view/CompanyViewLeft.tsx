@@ -97,7 +97,11 @@ const CompanyViewLeft = ({ companyId }: Props) => {
 
   const dispatch = useDispatch()
   const store = useSelector((state: any) => state.company)
-  const { data: company, loading, managers } = store
+  const {
+    data: company,
+    // managers,
+    loading
+  } = store
 
   useEffect(() => {
     dispatch(getCompany(companyId))
@@ -236,7 +240,7 @@ const CompanyViewLeft = ({ companyId }: Props) => {
                   </Typography>
                 )}
               </Box>
-              <Box sx={{ display: 'flex', mb: 2.7 }}>
+              {/* <Box sx={{ display: 'flex', mb: 2.7 }}>
                 <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary', mt: '10px' }}>
                   Manager(s):
                 </Typography>
@@ -251,7 +255,7 @@ const CompanyViewLeft = ({ companyId }: Props) => {
                   ))}
                 </Typography>
                 {loading && <Skeleton animation='wave' width='50%' style={{ marginTop: '9px' }} />}
-              </Box>
+              </Box> */}
             </Box>
           </CardContent>
           {!loading && (

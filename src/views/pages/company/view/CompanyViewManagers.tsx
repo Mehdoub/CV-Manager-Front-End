@@ -18,7 +18,7 @@ import {
   useMediaQuery
 } from '@mui/material'
 import Icon from 'src/@core/components/icon'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles'
 import Link from 'next/link'
 import CustomChip from 'src/@core/components/mui/chip'
@@ -26,6 +26,9 @@ import { BootstrapTooltip } from 'src/pages/companies'
 import { Stack } from '@mui/system'
 import CompanySuspendDialog from './CompanySuspendDialog'
 import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { getCompanyManagers } from 'src/store/company'
+import { getUsers } from 'src/store/user'
 
 const statusColors: any = {
   manager: 'success',
@@ -142,11 +145,33 @@ const StyledLink = styled(Link)(({ theme }: any) => ({
   }
 }))
 
-const CompanyViewManagers = () => {
+interface Props {
+  companyId: string
+}
+
+const CompanyViewManagers = ({ companyId }: Props) => {
   const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
 
-  const store = useSelector((state: any) => state.company)
-  const { managers, loading } = store
+  const companyStore = useSelector((state: any) => state.company)
+  const { loading, data: companyData } = companyStore
+
+  const companyManagersStore = useSelector((state: any) => state.companyManagers)
+  const { data: companyManagers } = companyManagersStore
+
+  const usersListStore = useSelector((state: any) => state.usersList)
+  const { data: users } = usersListStore
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getCompanyManagers(companyId))
+    dispatch(getUsers())
+  }, [])
+
+  const managersArr = [
+    { ...companyData?.created_by, type: 'owner' },
+    { ...companyManagers?.user_id, type: 'manager' }
+  ]
 
   return (
     <Grid container spacing={6}>
@@ -170,22 +195,22 @@ const CompanyViewManagers = () => {
               autoHighlight
               sx={{ mb: 8 }}
               id='add-members'
-              options={options}
+              options={users?.docs}
               ListboxComponent={List}
-              getOptionLabel={option => option.name}
+              getOptionLabel={(user: any) => `${user?.firstname} ${user?.lastname}`}
               renderInput={params => <TextField {...params} size='small' placeholder='Add project managers...' />}
-              renderOption={(props, option) => (
+              renderOption={(props, user) => (
                 <ListItem {...props}>
                   <ListItemAvatar>
-                    <Avatar src={`/images/avatars/${option.avatar}`} alt={option.name} sx={{ height: 28, width: 28 }} />
+                    <Avatar src={`/images/avatars/${user?.avatar}`} alt={`${user?.firstname} ${user?.lastname}`} sx={{ height: 28, width: 28 }} />
                   </ListItemAvatar>
-                  <ListItemText primary={option.name} />
+                  <ListItemText primary={`${user?.firstname} ${user?.lastname}`} />
                 </ListItem>
               )}
             />
-            <Typography variant='h6'>{`${managers.length} Members`}</Typography>
+            <Typography variant='h6'>{`${managersArr.length} Members`}</Typography>
             <List dense sx={{ py: 4 }}>
-              {managers.map((manager: any) => {
+              {managersArr.map((manager: any) => {
                 return (
                   <ListItem
                     key={manager?.id}
@@ -233,7 +258,7 @@ const CompanyViewManagers = () => {
                       }}
                     />
                     <ListItemSecondaryAction sx={{ right: 0 }}>
-                      <Stack direction='row' spacing={2}>
+                      {manager?.type !== 'owner' && (
                         <BootstrapTooltip title='delete' placement='top'>
                           <div
                             style={{ cursor: 'pointer', marginTop: '4px' }}
@@ -242,24 +267,24 @@ const CompanyViewManagers = () => {
                             <Icon color='gray' icon='mdi:delete-outline' fontSize={20} />
                           </div>
                         </BootstrapTooltip>
-                      </Stack>
+                      )}
                     </ListItemSecondaryAction>
                   </ListItem>
                 )
               })}
               {loading && (
                 <>
-                <CardHeader
-                  avatar={<Skeleton animation="wave" variant="circular" width={50} height={50} />}
-                  title={<Skeleton animation="wave" width="35%" />}
-                  subheader={<Skeleton animation="wave" width="25%" />}
-                />
-                <CardHeader
-                  avatar={<Skeleton animation="wave" variant="circular" width={50} height={50} />}
-                  title={<Skeleton animation="wave" width="35%" />}
-                  subheader={<Skeleton animation="wave" width="25%" />}
-                />
-              </>
+                  <CardHeader
+                    avatar={<Skeleton animation='wave' variant='circular' width={50} height={50} />}
+                    title={<Skeleton animation='wave' width='35%' />}
+                    subheader={<Skeleton animation='wave' width='25%' />}
+                  />
+                  <CardHeader
+                    avatar={<Skeleton animation='wave' variant='circular' width={50} height={50} />}
+                    title={<Skeleton animation='wave' width='35%' />}
+                    subheader={<Skeleton animation='wave' width='25%' />}
+                  />
+                </>
               )}
             </List>
           </CardContent>

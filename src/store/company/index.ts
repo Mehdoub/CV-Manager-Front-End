@@ -62,7 +62,7 @@ const companySlice = createSlice({
     loading: false,
     errors: {},
     data: {},
-    managers: [] as any,
+    // managers: [] as any,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -70,19 +70,60 @@ const companySlice = createSlice({
       state.loading = true
       state.errors = []
       state.data = {}
-      state.managers = []
+      // state.managers = []
     })
     builder.addCase(getCompany.fulfilled, (state, action) => {
       state.loading = false
       state.errors = []
       state.data = action.payload.data[0]
-      state.managers = [{ ...action?.payload?.data[0]?.created_by, type: 'owner' }]
+      // state.managers = [{ ...action?.payload?.data[0]?.created_by, type: 'owner' }]
     })
     builder.addCase(getCompany.rejected, (state, action) => {
       state.loading = false
       state.errors = action.payload
       state.data = {}
-      state.managers = []
+      // state.managers = []
+    })
+  }
+})
+
+
+export const getCompanyManagers: any = createAsyncThunk(
+  'getCompanyManagers',
+  async (companyId: string,
+    { rejectWithValue }) => {
+    try {
+      const response = await ApiRequest.builder().auth().request('get', `companies/${companyId}/managers`)
+
+      return response.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const companyManagersSlice = createSlice({
+  name: 'companyManagers',
+  initialState: {
+    loading: false,
+    errors: {},
+    data: {},
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(getCompanyManagers.pending, state => {
+      state.loading = true
+      state.errors = []
+      state.data = {}
+    })
+    builder.addCase(getCompanyManagers.fulfilled, (state, action) => {
+      state.loading = false
+      state.errors = []
+      state.data = action.payload.data[0]
+    })
+    builder.addCase(getCompanyManagers.rejected, (state, action) => {
+      state.loading = false
+      state.errors = action.payload
+      state.data = {}
     })
   }
 })
@@ -138,4 +179,5 @@ export const { clearCreateCompany } = createCompanySlice.actions
 
 export const companiesListReducer = companiesListSlice.reducer
 export const companyReducer = companySlice.reducer
+export const companyManagersReducer = companyManagersSlice.reducer
 export const createCompanyReducer = createCompanySlice.reducer
