@@ -62,7 +62,6 @@ const companySlice = createSlice({
     loading: false,
     errors: {},
     data: {},
-    // managers: [] as any,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -70,19 +69,16 @@ const companySlice = createSlice({
       state.loading = true
       state.errors = []
       state.data = {}
-      // state.managers = []
     })
     builder.addCase(getCompany.fulfilled, (state, action) => {
       state.loading = false
       state.errors = []
       state.data = action.payload.data[0]
-      // state.managers = [{ ...action?.payload?.data[0]?.created_by, type: 'owner' }]
     })
     builder.addCase(getCompany.rejected, (state, action) => {
       state.loading = false
       state.errors = action.payload
       state.data = {}
-      // state.managers = []
     })
   }
 })
@@ -201,7 +197,13 @@ const removeCompanyManagerSlice = createSlice({
     errors: {},
     status: false,
   },
-  reducers: {},
+  reducers: {
+    clearRemoveCompany: (state) => {
+      state.loading = false
+      state.status = false
+      state.errors = []
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(removeCompanyManager.pending, state => {
       state.loading = true
@@ -270,7 +272,7 @@ const createCompanySlice = createSlice({
 })
 
 export const { clearCreateCompany } = createCompanySlice.actions
-
+export const { clearRemoveCompany } = removeCompanyManagerSlice.actions
 export const companiesListReducer = companiesListSlice.reducer
 export const companyReducer = companySlice.reducer
 export const companyManagersReducer = companyManagersSlice.reducer

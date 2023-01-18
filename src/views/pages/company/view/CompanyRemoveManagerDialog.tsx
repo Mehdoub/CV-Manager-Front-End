@@ -12,7 +12,7 @@ import DialogActions from '@mui/material/DialogActions'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 import { useDispatch } from 'react-redux'
-import { getCompanyManagers, removeCompanyManager } from 'src/store/company'
+import { clearRemoveCompany, getCompanyManagers, removeCompanyManager } from 'src/store/company'
 import { useSelector } from 'react-redux'
 
 type Props = {
@@ -42,6 +42,7 @@ const CompanyRemoveManagerDialog = (props: Props) => {
     if (companyManagerRemoveStatus) {
       handleClose()
       setSecondDialogOpen(true)
+      dispatch(clearRemoveCompany())
       dispatch(getCompanyManagers(companyId))
     }
   }, [companyManagerRemoveStatus])
