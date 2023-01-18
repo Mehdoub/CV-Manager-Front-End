@@ -1,5 +1,4 @@
 import Grid from '@mui/material/Grid'
-import CompanyManagerListTable from './CompanyManagerListTable'
 import {
   Autocomplete,
   Avatar,
@@ -14,8 +13,7 @@ import {
   ListItemText,
   Skeleton,
   TextField,
-  Typography,
-  useMediaQuery
+  Typography
 } from '@mui/material'
 import Icon from 'src/@core/components/icon'
 import { useEffect, useState } from 'react'
@@ -23,116 +21,11 @@ import { styled } from '@mui/material/styles'
 import Link from 'next/link'
 import CustomChip from 'src/@core/components/mui/chip'
 import { BootstrapTooltip } from 'src/pages/companies'
-import { Stack } from '@mui/system'
-import CompanySuspendDialog from './CompanySuspendDialog'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { addCompanyManager, getCompanyManagers } from 'src/store/company'
 import { getUsers } from 'src/store/user'
-
-const statusColors: any = {
-  manager: 'success',
-  owner: 'error'
-}
-
-interface DataType {
-  name: string
-  email: string
-  value: string
-  avatar: string
-  type: string
-}
-
-interface OptionsType {
-  name: string
-  avatar: string
-}
-
-const data: DataType[] = [
-  {
-    avatar: '1.png',
-    value: 'Can Edit',
-    name: 'Lester Palmer',
-    type: 'manager',
-    email: 'pe@vogeiz.net'
-  },
-  {
-    avatar: '2.png',
-    value: 'owner',
-    name: 'Mittie Blair',
-    type: 'owner',
-    email: 'peromak@zukedohik.gov'
-  },
-  {
-    avatar: '3.png',
-    value: 'Can Comment',
-    name: 'Marvin Wheeler',
-    type: 'manager',
-    email: 'rumet@jujpejah.net'
-  },
-  {
-    avatar: '4.png',
-    value: 'Can View',
-    name: 'Nannie Ford',
-    type: 'manager',
-    email: 'negza@nuv.io'
-  },
-  {
-    avatar: '5.png',
-    value: 'Can Edit',
-    name: 'Julian Murphy',
-    type: 'manager',
-    email: 'lunebame@umdomgu.net'
-  },
-  {
-    avatar: '6.png',
-    value: 'Can View',
-    name: 'Sophie Gilbert',
-    type: 'manager',
-    email: 'ha@sugit.gov'
-  },
-  {
-    avatar: '7.png',
-    value: 'Can Comment',
-    name: 'Chris Watkins',
-    type: 'manager',
-    email: 'zokap@mak.org'
-  },
-  {
-    avatar: '8.png',
-    value: 'Can Edit',
-    name: 'Adelaide Nichols',
-    type: 'manager',
-    email: 'ujinomu@jigo.com'
-  }
-]
-
-const options: OptionsType[] = [
-  {
-    avatar: '1.png',
-    name: 'Chandler Bing'
-  },
-  {
-    avatar: '2.png',
-    name: 'Rachel Green'
-  },
-  {
-    avatar: '3.png',
-    name: 'Joey Tribbiani'
-  },
-  {
-    avatar: '4.png',
-    name: 'Pheobe Buffay'
-  },
-  {
-    avatar: '5.png',
-    name: 'Ross Geller'
-  },
-  {
-    avatar: '8.png',
-    name: 'Monica Geller'
-  }
-]
+import CompanyRemoveManagerDialog from './CompanyRemoveManagerDialog'
 
 const StyledLink = styled(Link)(({ theme }: any) => ({
   fontWeight: 600,
@@ -150,8 +43,8 @@ interface Props {
 }
 
 const CompanyViewManagers = ({ companyId }: Props) => {
-  const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
-  // const [newManager, setNewManager] = useState<string>('')
+  const [removeManagerDialogOpen, setRemoveManagerDialogOpen] = useState<boolean>(false)
+  const [managerRemove, setManagerRemove] = useState<any>({})
 
   const companyStore = useSelector((state: any) => state.company)
   const { loading, data: companyData } = companyStore
@@ -183,7 +76,6 @@ const CompanyViewManagers = ({ companyId }: Props) => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
-        {/* <CompanyManagerListTable /> */}
         <Card>
           <CardContent sx={{ position: 'relative' }}>
             <InputLabel
@@ -275,7 +167,10 @@ const CompanyViewManagers = ({ companyId }: Props) => {
                         <BootstrapTooltip title='delete' placement='top'>
                           <div
                             style={{ cursor: 'pointer', marginTop: '4px' }}
-                            onClick={() => setSuspendDialogOpen(true)}
+                            onClick={() => {
+                              setRemoveManagerDialogOpen(true)
+                              setManagerRemove(manager)
+                            }}
                           >
                             <Icon color='gray' icon='mdi:delete-outline' fontSize={20} />
                           </div>
@@ -303,7 +198,12 @@ const CompanyViewManagers = ({ companyId }: Props) => {
           </CardContent>
         </Card>
       </Grid>
-      <CompanySuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
+      <CompanyRemoveManagerDialog
+        open={removeManagerDialogOpen}
+        setOpen={setRemoveManagerDialogOpen}
+        manager={managerRemove}
+        companyId={companyId}
+      />
     </Grid>
   )
 }
