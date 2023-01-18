@@ -118,7 +118,7 @@ const companyManagersSlice = createSlice({
     builder.addCase(getCompanyManagers.fulfilled, (state, action) => {
       state.loading = false
       state.errors = []
-      state.data = action.payload.data[0]
+      state.data = action.payload.data
     })
     builder.addCase(getCompanyManagers.rejected, (state, action) => {
       state.loading = false

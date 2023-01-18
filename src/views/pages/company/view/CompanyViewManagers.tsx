@@ -172,9 +172,9 @@ const CompanyViewManagers = ({ companyId }: Props) => {
     dispatch(getUsers())
   }, [statusAddCompanyManager])
 
-  let managersArr = []
-  companyData?.created_by ? managersArr.push({ ...companyData?.created_by, type: 'owner' }) : {}
-  companyManagers?.user_id ? managersArr.push({ ...companyManagers?.user_id, type: 'manager' }) : {}
+  let managersList = []
+  managersList = companyManagers?.length > 0 ? [...companyManagers] : []
+  companyData?.created_by ? managersList.push({ ...companyData?.created_by, type: 'owner' }) : {}
 
   const addNewManager = (newManager: any) => {
     dispatch(addCompanyManager({ companyId, manager_id: newManager?.id }))
@@ -220,12 +220,13 @@ const CompanyViewManagers = ({ companyId }: Props) => {
                 </ListItem>
               )}
             />
-            <Typography variant='h6'>{`${managersArr.length} Members`}</Typography>
+            <Typography variant='h6'>{`${managersList.length} Members`}</Typography>
             <List dense sx={{ py: 4 }}>
-              {managersArr.map((manager: any) => {
+              {managersList.map((manager: any, index: number) => {
+                manager = manager?.type == 'owner' ? manager : manager?.user_id
                 return (
                   <ListItem
-                    key={manager?.id}
+                    key={manager?.id + index}
                     sx={{
                       p: 0,
                       display: 'flex',
@@ -249,8 +250,8 @@ const CompanyViewManagers = ({ companyId }: Props) => {
                             <CustomChip
                               skin='light'
                               size='small'
-                              label={manager?.type}
-                              color={statusColors[manager?.type]}
+                              label={manager?.type == 'owner' ? 'owner' : 'manager'}
+                              color={manager?.type == 'owner' ? 'error' : 'success'}
                               sx={{
                                 height: 20,
                                 fontWeight: 500,

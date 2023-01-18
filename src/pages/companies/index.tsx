@@ -198,7 +198,7 @@ const CompanyList = () => {
       renderCell: ({ row }: any) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            <StyledLink href={`/users/view/${row.created_by}/overview`}>{row?.created_by?.firstname} {row?.created_by?.lastname}</StyledLink>
+            <StyledLink href={`/users/view/${row?.created_by?.id}/overview`}>{row?.created_by?.firstname} {row?.created_by?.lastname}</StyledLink>
           </Typography>
         )
       }
