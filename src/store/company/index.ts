@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ApiRequest from "src/helpers/ApiRequest";
 import { CompanyFormData } from "src/views/pages/company/list/AddCompanyDrawer";
+import { CompanyEditData } from "src/views/pages/company/view/CompanyEditDialog";
 
 export const getCompanies: any = createAsyncThunk(
   'getCompanies',
@@ -305,7 +306,6 @@ const removeCompanyManagerSlice = createSlice({
 })
 
 
-
 export const createCompany: any = createAsyncThunk(
   'createCompany',
   async (data: CompanyFormData,
@@ -352,7 +352,57 @@ const createCompanySlice = createSlice({
   }
 })
 
+
+export const editCompany: any = createAsyncThunk(
+  'editCompany',
+  async (data: CompanyEditData,
+    { rejectWithValue }) => {
+    try {
+      const { companyId } = data
+      delete data.companyId
+      const response = await ApiRequest.builder().auth().request('patch', `companies/${companyId}`, data)
+
+      return response.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const editCompanySlice = createSlice({
+  name: 'editCompany',
+  initialState: {
+    loading: false,
+    errors: {},
+    status: false,
+  },
+  reducers: {
+    clearEditCompany: (state) => {
+      state.loading = false
+      state.status = false
+      state.errors = []
+    }
+  },
+  extraReducers: (builder) => {
+    builder.addCase(editCompany.pending, state => {
+      state.loading = true
+      state.status = false
+      state.errors = []
+    })
+    builder.addCase(editCompany.fulfilled, (state) => {
+      state.loading = false
+      state.status = true
+      state.errors = []
+    })
+    builder.addCase(editCompany.rejected, (state, action) => {
+      state.loading = false
+      state.status = false
+      state.errors = action.payload
+    })
+  }
+})
+
 export const { clearCreateCompany } = createCompanySlice.actions
+export const { clearEditCompany } = editCompanySlice.actions
 export const { clearRemoveCompany } = removeCompanyManagerSlice.actions
 export const companiesListReducer = companiesListSlice.reducer
 export const companyReducer = companySlice.reducer
@@ -360,5 +410,6 @@ export const companyManagersReducer = companyManagersSlice.reducer
 export const companyProjectsReducer = companyProjectsSlice.reducer
 export const companyResumesReducer = companyResumesSlice.reducer
 export const createCompanyReducer = createCompanySlice.reducer
+export const editCompanyReducer = editCompanySlice.reducer
 export const addCompanyManagerReducer = addCompanyManagerSlice.reducer
 export const removeCompanyManagerReducer = removeCompanyManagerSlice.reducer
