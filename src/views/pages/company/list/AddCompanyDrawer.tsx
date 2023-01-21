@@ -53,7 +53,7 @@ const HeadingTypography = styled(Typography)<TypographyProps>(({ theme }) => ({
   }
 }))
 
-interface SidebarAddProjectType {
+interface Props {
   open: boolean
   toggle: () => void
 }
@@ -115,7 +115,7 @@ const defaultValues = {
   description: '',
 }
 
-const SidebarAddProject = (props: SidebarAddProjectType) => {
+const AddCompanyDrawer = (props: Props) => {
   // ** Props
   const { open, toggle } = props
 
@@ -331,4 +331,4 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
   )
 }
 
-export default SidebarAddProject
+export default AddCompanyDrawer
