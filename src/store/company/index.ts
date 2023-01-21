@@ -165,6 +165,46 @@ const companyProjectsSlice = createSlice({
   }
 })
 
+export const getCompanyResumes: any = createAsyncThunk(
+  'getCompanyResumes',
+  async (companyId: string,
+    { rejectWithValue }) => {
+    try {
+      const response = await ApiRequest.builder().auth().request('get', `companies/${companyId}/resumes`)
+
+      return response.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const companyResumesSlice = createSlice({
+  name: 'companyResumes',
+  initialState: {
+    loading: false,
+    errors: {},
+    data: {},
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(getCompanyResumes.pending, state => {
+      state.loading = true
+      state.errors = []
+      state.data = {}
+    })
+    builder.addCase(getCompanyResumes.fulfilled, (state, action) => {
+      state.loading = false
+      state.errors = []
+      state.data = action.payload.data
+    })
+    builder.addCase(getCompanyResumes.rejected, (state, action) => {
+      state.loading = false
+      state.errors = action.payload
+      state.data = {}
+    })
+  }
+})
+
 export interface AddCompanyManagerParams {
   companyId: string
   manager_id: string
@@ -318,6 +358,7 @@ export const companiesListReducer = companiesListSlice.reducer
 export const companyReducer = companySlice.reducer
 export const companyManagersReducer = companyManagersSlice.reducer
 export const companyProjectsReducer = companyProjectsSlice.reducer
+export const companyResumesReducer = companyResumesSlice.reducer
 export const createCompanyReducer = createCompanySlice.reducer
 export const addCompanyManagerReducer = addCompanyManagerSlice.reducer
 export const removeCompanyManagerReducer = removeCompanyManagerSlice.reducer

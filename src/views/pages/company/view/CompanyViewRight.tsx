@@ -20,10 +20,10 @@ import Icon from 'src/@core/components/icon'
 // ** Demo Components Imports
 import CompanyViewManagers from 'src/views/pages/company/view/CompanyViewManagers'
 import CompanyViewOverview from 'src/views/pages/company/view/CompanyViewOverview'
-import CompanyViewResumes from 'src/views/pages/company/view/CompanyViewResumes'
 import AddProjectDrawer from 'src/views/pages/project/list/AddProjectDrawer'
 import { Button } from '@mui/material'
-import CompanyProjectListTable from './CompanyProjectListTable'
+import CompanyViewProjects from './CompanyViewProjects'
+import CompanyViewResumes from './CompanyViewResumes'
 
 // ** Types
 // import { InvoiceType } from 'src/types/apps/invoiceTypes'
@@ -116,10 +116,10 @@ const CompanyViewRight = ({ tab, companyId }: Props) => {
                 <CompanyViewOverview />
               </TabPanel>
               <TabPanel sx={{ p: 0 }} value='project'>
-                <CompanyProjectListTable companyId={companyId} />
+                <CompanyViewProjects companyId={companyId} />
               </TabPanel>
               <TabPanel sx={{ p: 0 }} value='resume'>
-                <CompanyViewResumes />
+                <CompanyViewResumes companyId={companyId} />
               </TabPanel>
               <TabPanel sx={{ p: 0 }} value='manager'>
                 <CompanyViewManagers companyId={companyId} />
