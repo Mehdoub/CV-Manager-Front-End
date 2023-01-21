@@ -22,7 +22,7 @@ const companiesListSlice = createSlice({
   name: 'companiesList',
   initialState: {
     loading: false,
-    errors: {},
+    errors: [],
     data: {},
   },
   reducers: {},
@@ -61,7 +61,7 @@ const companySlice = createSlice({
   name: 'company',
   initialState: {
     loading: false,
-    errors: {},
+    errors: [],
     data: {},
   },
   reducers: {},
@@ -229,10 +229,16 @@ const addCompanyManagerSlice = createSlice({
   name: 'addCompanyManager',
   initialState: {
     loading: false,
-    errors: {},
+    errors: [],
     status: false,
   },
-  reducers: {},
+  reducers: {
+    clearAddCompanyManager: (state) => {
+      state.loading = false
+      state.status = false
+      state.errors = []
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(addCompanyManager.pending, state => {
       state.loading = true
@@ -276,7 +282,7 @@ const removeCompanyManagerSlice = createSlice({
   name: 'removeCompanyManager',
   initialState: {
     loading: false,
-    errors: {},
+    errors: [],
     status: false,
   },
   reducers: {
@@ -323,7 +329,7 @@ const createCompanySlice = createSlice({
   name: 'createCompany',
   initialState: {
     loading: false,
-    errors: {},
+    errors: [],
     status: false,
   },
   reducers: {
@@ -372,7 +378,7 @@ const editCompanySlice = createSlice({
   name: 'editCompany',
   initialState: {
     loading: false,
-    errors: {},
+    errors: [],
     status: false,
   },
   reducers: {
@@ -404,6 +410,7 @@ const editCompanySlice = createSlice({
 export const { clearCreateCompany } = createCompanySlice.actions
 export const { clearEditCompany } = editCompanySlice.actions
 export const { clearRemoveCompany } = removeCompanyManagerSlice.actions
+export const { clearAddCompanyManager } = addCompanyManagerSlice.actions
 export const companiesListReducer = companiesListSlice.reducer
 export const companyReducer = companySlice.reducer
 export const companyManagersReducer = companyManagersSlice.reducer

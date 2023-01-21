@@ -23,9 +23,10 @@ import CustomChip from 'src/@core/components/mui/chip'
 import { BootstrapTooltip } from 'src/pages/companies'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
-import { addCompanyManager, getCompanyManagers } from 'src/store/company'
+import { addCompanyManager, clearAddCompanyManager, getCompanyManagers } from 'src/store/company'
 import { getUsers } from 'src/store/user'
 import CompanyRemoveManagerDialog from './CompanyRemoveManagerDialog'
+import { toast } from 'react-hot-toast'
 
 const StyledLink = styled(Link)(({ theme }: any) => ({
   fontWeight: 600,
@@ -61,8 +62,12 @@ const CompanyViewManagers = ({ companyId }: Props) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(getCompanyManagers(companyId))
-    dispatch(getUsers())
+    if (statusAddCompanyManager) {
+      dispatch(getCompanyManagers(companyId))
+      dispatch(getUsers())
+      toast.success('Manager Added To Company Successfully!', {position: 'bottom-left', duration: 5000})
+      dispatch(clearAddCompanyManager())
+    }
   }, [statusAddCompanyManager])
 
   let managersList = []
@@ -70,7 +75,9 @@ const CompanyViewManagers = ({ companyId }: Props) => {
   companyData?.created_by ? managersList.push({ ...companyData?.created_by, type: 'owner' }) : {}
 
   const addNewManager = (newManager: any) => {
-    dispatch(addCompanyManager({ companyId, manager_id: newManager?.id }))
+    if (newManager?.id?.length > 0) {
+      dispatch(addCompanyManager({ companyId, manager_id: newManager?.id }))
+    }
   }
 
   return (
@@ -137,7 +144,7 @@ const CompanyViewManagers = ({ companyId }: Props) => {
                         <>
                           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
                             <StyledLink
-                              href={`/companies/view/1/overview`}
+                              href={`/users/view/${manager?.id}/overview`}
                             >{`${manager?.firstname} ${manager?.lastname}`}</StyledLink>
                             <CustomChip
                               skin='light'

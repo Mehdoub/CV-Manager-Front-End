@@ -63,7 +63,7 @@ export default class ApiRequest {
 
         return await requestMethod(response.data.data[0].access_token)
       }
-      toast.error('An Error Aquired!', { position: 'bottom-left', duration: 5000 })
+      toast.error(err?.response?.data?.message, { position: 'bottom-left', duration: 5000 })
     }
   }
 
