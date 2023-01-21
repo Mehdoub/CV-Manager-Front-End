@@ -30,10 +30,10 @@ import { getInitials } from 'src/@core/utils/get-initials'
 
 // ** Custom Table Components Imports
 import TableHeader from 'src/views/pages/company/list/TableHeader'
-import AddCompanyDrawer from 'src/views/pages/company/list/AddCompanyDrawer'
 import { AvatarGroup, Skeleton, Tooltip, TooltipProps, tooltipClasses } from '@mui/material'
 import { Stack } from '@mui/system'
 import { getCompanies } from 'src/store/company'
+import CompanyEditDialog from 'src/views/pages/company/view/CompanyEditDialog'
 
 export const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -106,6 +106,7 @@ const apiData = {
 const CompanyList = () => {
   // ** State
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const [companyId, setCompanyId] = useState<string>('')
   const [pageSize, setPageSize] = useState<number>(10)
   const [page, setPage] = useState<number>(0)
   const [addUserOpen, setAddUserOpen] = useState<boolean>(false)
@@ -129,7 +130,7 @@ const CompanyList = () => {
     dispatch(getCompanies({ query: val, size: pageSize }))
   }, [])
 
-  const toggleAddCompanyDrawer = () => setAddUserOpen(!addUserOpen)
+  const toggleEditCompanyDrawer = () => setAddUserOpen(!addUserOpen)
 
   const columns = [
     {
@@ -230,7 +231,10 @@ const CompanyList = () => {
             </StyledLink>
           </BootstrapTooltip>
           <BootstrapTooltip title='edit' placement='top'>
-            <div style={{ cursor: 'pointer' }} onClick={toggleAddCompanyDrawer}>
+            <div style={{ cursor: 'pointer' }} onClick={()=>{
+              setCompanyId(row?.id)
+              toggleEditCompanyDrawer()
+            }}>
               <Icon icon='mdi:pencil-outline' fontSize={20} />
             </div>
           </BootstrapTooltip>
@@ -264,7 +268,7 @@ const CompanyList = () => {
             <Skeleton variant='rounded' height={500} />
           ) : (
             <>
-              <TableHeader searchQuery={searchQuery} handleFilter={handleFilter} toggle={toggleAddCompanyDrawer} />
+              <TableHeader searchQuery={searchQuery} handleFilter={handleFilter} toggle={toggleEditCompanyDrawer} />
               <DataGrid
                 autoHeight
                 rows={companies?.docs ?? []}
@@ -285,7 +289,7 @@ const CompanyList = () => {
         </Card>
       </Grid>
 
-      <AddCompanyDrawer open={addUserOpen} toggle={toggleAddCompanyDrawer} />
+      <CompanyEditDialog open={addUserOpen} closeHandler={toggleEditCompanyDrawer} companyId={companyId} />
     </Grid>
   )
 }

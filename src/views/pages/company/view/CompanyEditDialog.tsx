@@ -23,7 +23,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { CompanyFormData } from '../list/AddCompanyDrawer'
 import { useDispatch } from 'react-redux'
-import { clearEditCompany, editCompany, getCompany } from 'src/store/company'
+import { clearEditCompany, editCompany, getCompanies, getCompany } from 'src/store/company'
 
 const schema = yup.object().shape({
   name: yup.string().label('Name').min(3).required()
@@ -55,6 +55,7 @@ const CompanyEditDialog = (props: Props) => {
   useEffect(() => {
     if (status) {
       dispatch(getCompany(companyId))
+      dispatch(getCompanies())
       toast.success('Company Information Edited Successfully', { position: 'bottom-left', duration: 5000 })
       clearInputs()
       dispatch(clearEditCompany())
@@ -63,14 +64,8 @@ const CompanyEditDialog = (props: Props) => {
   }, [status])
 
   useEffect(() => {
-    if (company?.name)
-      [
-        setValue('name', company?.name),
-        setValue('phone', company?.phone),
-        setValue('address', company?.address),
-        setValue('description', company?.description)
-      ]
-  }, [company])
+    if (companyId) dispatch(getCompany(companyId))
+  }, [companyId])
 
   const defaultValues = {
     name: '',
@@ -90,6 +85,11 @@ const CompanyEditDialog = (props: Props) => {
     mode: 'onBlur',
     resolver: yupResolver(schema)
   })
+
+  setValue('name', company?.name)
+  setValue('phone', company?.phone)
+  setValue('address', company?.address)
+  setValue('description', company?.description)
 
   const clearInputs = () => {
     setValue('name', '')
