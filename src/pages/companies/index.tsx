@@ -34,6 +34,7 @@ import { AvatarGroup, Skeleton, Tooltip, TooltipProps, tooltipClasses } from '@m
 import { Stack } from '@mui/system'
 import { getCompanies } from 'src/store/company'
 import CompanyEditDialog from 'src/views/pages/company/view/CompanyEditDialog'
+import AddCompanyDrawer from 'src/views/pages/company/list/AddCompanyDrawer'
 
 export const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -109,7 +110,8 @@ const CompanyList = () => {
   const [companyId, setCompanyId] = useState<string>('')
   const [pageSize, setPageSize] = useState<number>(10)
   const [page, setPage] = useState<number>(0)
-  const [addUserOpen, setAddUserOpen] = useState<boolean>(false)
+  const [editCompanyOpen, setEditCompanyOpen] = useState<boolean>(false)
+  const [addCompanyOpen, setAddCompanyOpen] = useState<boolean>(false)
 
   // ** Hooks
   const dispatch = useDispatch<any>()
@@ -130,7 +132,8 @@ const CompanyList = () => {
     dispatch(getCompanies({ query: val, size: pageSize }))
   }, [])
 
-  const toggleEditCompanyDrawer = () => setAddUserOpen(!addUserOpen)
+  const toggleEditCompanyDialog = () => setEditCompanyOpen(!editCompanyOpen)
+  const toggleAddCompanyDrawer = () => setAddCompanyOpen(!addCompanyOpen)
 
   const columns = [
     {
@@ -233,7 +236,7 @@ const CompanyList = () => {
           <BootstrapTooltip title='edit' placement='top'>
             <div style={{ cursor: 'pointer' }} onClick={()=>{
               setCompanyId(row?.id)
-              toggleEditCompanyDrawer()
+              toggleEditCompanyDialog()
             }}>
               <Icon icon='mdi:pencil-outline' fontSize={20} />
             </div>
@@ -268,7 +271,7 @@ const CompanyList = () => {
             <Skeleton variant='rounded' height={500} />
           ) : (
             <>
-              <TableHeader searchQuery={searchQuery} handleFilter={handleFilter} toggle={toggleEditCompanyDrawer} />
+              <TableHeader searchQuery={searchQuery} handleFilter={handleFilter} toggle={toggleAddCompanyDrawer} />
               <DataGrid
                 autoHeight
                 rows={companies?.docs ?? []}
@@ -288,8 +291,8 @@ const CompanyList = () => {
           )}
         </Card>
       </Grid>
-
-      <CompanyEditDialog open={addUserOpen} closeHandler={toggleEditCompanyDrawer} companyId={companyId} />
+      <AddCompanyDrawer open={addCompanyOpen} toggle={toggleAddCompanyDrawer} />
+      <CompanyEditDialog open={editCompanyOpen} closeHandler={toggleEditCompanyDialog} companyId={companyId} />
     </Grid>
   )
 }

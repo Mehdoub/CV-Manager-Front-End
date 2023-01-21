@@ -62,9 +62,9 @@ const CompanyViewManagers = ({ companyId }: Props) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
+    dispatch(getCompanyManagers(companyId))
+    dispatch(getUsers())
     if (statusAddCompanyManager) {
-      dispatch(getCompanyManagers(companyId))
-      dispatch(getUsers())
       toast.success('Manager Added To Company Successfully!', {position: 'bottom-left', duration: 5000})
       dispatch(clearAddCompanyManager())
     }
