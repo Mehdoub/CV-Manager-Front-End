@@ -1,4 +1,5 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
+import { toast } from 'react-hot-toast'
 import authConfig from 'src/configs/auth'
 
 interface requestConfig {
@@ -62,7 +63,7 @@ export default class ApiRequest {
 
         return await requestMethod(response.data.data[0].access_token)
       }
-      throw err
+      toast.error('An Error Aquired!', { position: 'bottom-left', duration: 5000 })
     }
   }
 

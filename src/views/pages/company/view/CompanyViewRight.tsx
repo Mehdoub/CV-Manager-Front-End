@@ -21,9 +21,9 @@ import Icon from 'src/@core/components/icon'
 import CompanyViewManagers from 'src/views/pages/company/view/CompanyViewManagers'
 import CompanyViewOverview from 'src/views/pages/company/view/CompanyViewOverview'
 import CompanyViewResumes from 'src/views/pages/company/view/CompanyViewResumes'
-import CompanyViewProjects from 'src/views/pages/company/view/CompanyViewProjects'
 import AddProjectDrawer from 'src/views/pages/project/list/AddProjectDrawer'
 import { Button } from '@mui/material'
+import CompanyProjectListTable from './CompanyProjectListTable'
 
 // ** Types
 // import { InvoiceType } from 'src/types/apps/invoiceTypes'
@@ -93,7 +93,11 @@ const CompanyViewRight = ({ tab, companyId }: Props) => {
           <Tab value='resume' label='Resumes' icon={<Icon icon='pepicons-pop:cv' />} />
           <Tab value='manager' label='Managers' icon={<Icon icon='grommet-icons:user-manager' />} />
           {activeTab == 'project' ? (
-            <Button sx={{ mb: 2, position: 'absolute', right: '5px', top: '5px' }} onClick={toggleAddProjectDrawer} variant='outlined'>
+            <Button
+              sx={{ mb: 2, position: 'absolute', right: '5px', top: '5px' }}
+              onClick={toggleAddProjectDrawer}
+              variant='outlined'
+            >
               Add Project
             </Button>
           ) : (
@@ -112,7 +116,7 @@ const CompanyViewRight = ({ tab, companyId }: Props) => {
                 <CompanyViewOverview />
               </TabPanel>
               <TabPanel sx={{ p: 0 }} value='project'>
-                <CompanyViewProjects />
+                <CompanyProjectListTable companyId={companyId} />
               </TabPanel>
               <TabPanel sx={{ p: 0 }} value='resume'>
                 <CompanyViewResumes />
@@ -124,7 +128,7 @@ const CompanyViewRight = ({ tab, companyId }: Props) => {
           )}
         </Box>
       </TabContext>
-      <AddProjectDrawer open={addProjectOpen} toggle={toggleAddProjectDrawer} />
+      <AddProjectDrawer open={addProjectOpen} toggle={toggleAddProjectDrawer} companyId={companyId} />
     </>
   )
 }

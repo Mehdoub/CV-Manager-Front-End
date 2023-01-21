@@ -20,6 +20,7 @@ import { renderClient } from 'src/pages/projects'
 import Link from 'next/link'
 import { AvatarGroup, Button, Grid } from '@mui/material'
 import { BootstrapTooltip } from 'src/pages/companies'
+import { getCompanyProjects } from 'src/store/company'
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -36,56 +37,20 @@ const columns = [
   {
     flex: 0.2,
     minWidth: 230,
-    field: 'project_id',
+    field: 'name',
     headerName: 'Project',
     renderCell: ({ row }: any) => {
-      const { project_id, username } = row
+      const { id, name } = row
 
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {renderClient(row)}
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-            <StyledLink href='/user/view/overview/' onClick={e => e.preventDefault()}>
-              {project_id}
+            <StyledLink href={`/projects/view/${id}/overview/`}>
+              {name}
             </StyledLink>
-            <Typography noWrap variant='caption'>
-              {`${username}`}
-            </Typography>
           </Box>
         </Box>
-      )
-    }
-  },
-  {
-    flex: 0.1,
-    field: 'team',
-    minWidth: 120,
-    headerName: 'Managers',
-    renderCell: ({ row }: any) =>
-      row?.avatarGroup.length > 0 ? (
-        <AvatarGroup className='pull-up'>
-          {row?.avatarGroup?.map((src: any, index: any) => (
-            <BootstrapTooltip key={index} title='Manager Name' placement='top'>
-              <CustomAvatar src={src} sx={{ height: 26, width: 26 }} />
-            </BootstrapTooltip>
-          ))}
-        </AvatarGroup>
-      ) : (
-        '---'
-      )
-  },
-  {
-    flex: 0.15,
-    minWidth: 120,
-    headerName: 'User Create',
-    field: 'username',
-    renderCell: ({ row }: any) => {
-      return (
-        <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-          <StyledLink href={`/users/${row.username}`} onClick={e => e.preventDefault()}>
-            {row.username}
-          </StyledLink>
-        </Typography>
       )
     }
   },
@@ -97,11 +62,11 @@ const columns = [
     renderCell: ({ row }: any) => {
       return (
         <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-          {row.time_created}
+          {new Date(row.createdAt).toDateString()}
         </Typography>
       )
     }
-  }
+  },
 ]
 
 const resumeColumns = [
@@ -182,18 +147,25 @@ const positionColumns = [
   }
 ]
 
-const CompanyProjectListTable = () => {
+interface Props {
+  companyId: string
+}
+
+const CompanyProjectListTable = (props: Props) => {
+  const { companyId } = props
   // ** State
   const [pageSize, setPageSize] = useState<number>(7)
 
   const dispatch = useDispatch<any>()
   const store = useSelector((state: any) => state.user)
 
+  const companyProjectsStore = useSelector((state: any) => state.companyProjects)
+  const { data: projects } = companyProjectsStore
+
   useEffect(() => {
     dispatch(fetchData())
+    dispatch(getCompanyProjects(companyId))
   }, [dispatch])
-
-
 
   return (
     <Grid container spacing={6}>
@@ -237,7 +209,7 @@ const CompanyProjectListTable = () => {
           </Box>
           <DataGrid
             autoHeight
-            rows={store.data}
+            rows={projects}
             columns={columns}
             pageSize={pageSize}
             disableSelectionOnClick

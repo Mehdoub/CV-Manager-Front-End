@@ -104,7 +104,9 @@ const CompanyViewLeft = ({ companyId }: Props) => {
   } = store
 
   useEffect(() => {
-    dispatch(getCompany(companyId))
+    if (companyId) {
+      dispatch(getCompany(companyId))
+    }
   }, [companyId])
 
   // Handle Edit dialog

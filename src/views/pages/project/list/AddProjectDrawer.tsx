@@ -26,7 +26,7 @@ import toast from 'react-hot-toast'
 import { useDropzone } from 'react-dropzone'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
-import { createProject, getProjects } from 'src/store/project'
+import { clearCreateProject, createProject, getProjects } from 'src/store/project'
 
 interface FileProp {
   name: string
@@ -55,6 +55,7 @@ const HeadingTypography = styled(Typography)<TypographyProps>(({ theme }) => ({
 interface SidebarAddProjectType {
   open: boolean
   toggle: () => void
+  companyId?: string
 }
 
 const Header = styled(Box)<BoxProps>(({ theme }) => ({
@@ -67,7 +68,7 @@ const Header = styled(Box)<BoxProps>(({ theme }) => ({
 
 const schema = yup.object().shape({
   name: yup.string().min(3).required(),
-  company: yup.string().required(),
+  company: yup.string().optional(),
   description: yup.string().min(10).required()
 })
 
@@ -79,7 +80,7 @@ const defaultValues = {
 
 const SidebarAddProject = (props: SidebarAddProjectType) => {
   // ** Props
-  const { open, toggle } = props
+  const { open, toggle, companyId } = props
 
   const dispatch = useDispatch()
   const store = useSelector((state: any) => state.createProject)
@@ -89,6 +90,7 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
     if (status) {
       dispatch(getProjects({ size: 2 }))
       toast.success('Project Created Successfully', { position: 'bottom-left', duration: 5000 })
+      dispatch(clearCreateProject())
     }
   }, [status])
 
@@ -105,7 +107,8 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
   })
 
   const onSubmit = (data: any) => {
-    dispatch(createProject({ name: data?.name, company_id: data?.company, description: data?.description }))
+    const company = companyId ? companyId : data?.company
+    dispatch(createProject({ name: data?.name, company_id: company, description: data?.description }))
     toggle()
     reset()
   }
@@ -218,6 +221,7 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
             />
             {errors.name && <FormHelperText sx={{ color: 'error.main' }}>{errors.name.message}</FormHelperText>}
           </FormControl>
+          {!companyId && (
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
               name='company'
@@ -236,6 +240,7 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
             />
             {errors.company && <FormHelperText sx={{ color: 'error.main' }}>{errors.company.message}</FormHelperText>}
           </FormControl>
+          )}
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
               name='description'

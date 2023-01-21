@@ -75,7 +75,7 @@ const projectSlice = createSlice({
       state.loading = false
       state.errors = []
       state.data = action.payload.data[0]
-      state.managers = [{...action?.payload?.data[0]?.created_by, type: 'owner'}]
+      state.managers = [{ ...action?.payload?.data[0]?.created_by, type: 'owner' }]
     })
     builder.addCase(getProject.rejected, (state, action) => {
       state.loading = false
@@ -106,7 +106,13 @@ const createProjectSlice = createSlice({
     errors: {},
     status: false,
   },
-  reducers: {},
+  reducers: {
+    clearCreateProject: (state) => {
+      state.loading = false
+      state.status = false
+      state.errors = []
+    }
+  },
   extraReducers: (builder) => {
     builder.addCase(createProject.pending, state => {
       state.loading = true
@@ -125,6 +131,8 @@ const createProjectSlice = createSlice({
     })
   }
 })
+
+export const { clearCreateProject } = createProjectSlice.actions
 
 export const projectsListReducer = projectsListSlice.reducer
 export const projectReducer = projectSlice.reducer

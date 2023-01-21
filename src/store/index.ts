@@ -4,7 +4,7 @@ import { configureStore } from '@reduxjs/toolkit'
 // ** Reducers
 import project from 'src/store/apps/project'
 import user from 'src/store/apps/user'
-import { addCompanyManagerReducer, companiesListReducer, companyManagersReducer, companyReducer, createCompanyReducer, removeCompanyManagerReducer } from './company'
+import { addCompanyManagerReducer, companiesListReducer, companyManagersReducer, companyProjectsReducer, companyReducer, createCompanyReducer, removeCompanyManagerReducer } from './company'
 import { createProjectReducer, projectReducer, projectsListReducer } from './project'
 import { usersListReducer } from './user'
 
@@ -16,6 +16,7 @@ export const store = configureStore({
     companiesList: companiesListReducer,
     company: companyReducer,
     companyManagers: companyManagersReducer,
+    companyProjects: companyProjectsReducer,
     createCompany: createCompanyReducer,
     addCompanyManager: addCompanyManagerReducer,
     removeCompanyManager: removeCompanyManagerReducer,
