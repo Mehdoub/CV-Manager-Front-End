@@ -32,7 +32,7 @@ const schema = yup.object().shape({
 interface Props {
   open: boolean
   closeHandler: any
-  companyId: string
+  company: any
 }
 
 export interface CompanyEditData extends CompanyFormData {
@@ -40,12 +40,9 @@ export interface CompanyEditData extends CompanyFormData {
 }
 
 const CompanyEditDialog = (props: Props) => {
-  const { closeHandler, open, companyId } = props
+  const { closeHandler, open, company } = props
 
   const [files, setFiles] = useState<File[]>([])
-
-  const companyStore = useSelector((state: any) => state.company)
-  const { data: company } = companyStore
 
   const dispatch = useDispatch()
 
@@ -54,7 +51,6 @@ const CompanyEditDialog = (props: Props) => {
 
   useEffect(() => {
     if (status) {
-      dispatch(getCompany(companyId))
       dispatch(getCompanies())
       toast.success('Company Information Edited Successfully', { position: 'bottom-left', duration: 5000 })
       clearInputs()
@@ -62,10 +58,6 @@ const CompanyEditDialog = (props: Props) => {
       closeHandler()
     }
   }, [status])
-
-  useEffect(() => {
-    if (companyId) dispatch(getCompany(companyId))
-  }, [companyId])
 
   const defaultValues = {
     name: '',
@@ -129,7 +121,7 @@ const CompanyEditDialog = (props: Props) => {
   }
 
   const onSubmit = (data: CompanyFormData) => {
-    const editCompanyData: CompanyEditData = { ...data, companyId }
+    const editCompanyData: CompanyEditData = { ...data, companyId: company?.id }
     dispatch(editCompany(editCompanyData))
     reset()
   }

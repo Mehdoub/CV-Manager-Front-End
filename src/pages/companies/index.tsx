@@ -107,7 +107,7 @@ const apiData = {
 const CompanyList = () => {
   // ** State
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const [companyId, setCompanyId] = useState<string>('')
+  const [company, setCompany] = useState<any>({})
   const [pageSize, setPageSize] = useState<number>(10)
   const [page, setPage] = useState<number>(0)
   const [editCompanyOpen, setEditCompanyOpen] = useState<boolean>(false)
@@ -235,7 +235,7 @@ const CompanyList = () => {
           </BootstrapTooltip>
           <BootstrapTooltip title='edit' placement='top'>
             <div style={{ cursor: 'pointer' }} onClick={()=>{
-              setCompanyId(row?.id)
+              setCompany(row)
               toggleEditCompanyDialog()
             }}>
               <Icon icon='mdi:pencil-outline' fontSize={20} />
@@ -292,7 +292,7 @@ const CompanyList = () => {
         </Card>
       </Grid>
       <AddCompanyDrawer open={addCompanyOpen} toggle={toggleAddCompanyDrawer} />
-      <CompanyEditDialog open={editCompanyOpen} closeHandler={toggleEditCompanyDialog} companyId={companyId} />
+      <CompanyEditDialog open={editCompanyOpen} closeHandler={toggleEditCompanyDialog} company={company} />
     </Grid>
   )
 }
