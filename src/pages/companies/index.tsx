@@ -202,7 +202,9 @@ const CompanyList = () => {
       renderCell: ({ row }: any) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            <StyledLink href={`/users/view/${row?.created_by?.id}/overview`}>{row?.created_by?.firstname} {row?.created_by?.lastname}</StyledLink>
+            <StyledLink href={`/users/view/${row?.created_by?.id}/overview`}>
+              {row?.created_by?.firstname} {row?.created_by?.lastname}
+            </StyledLink>
           </Typography>
         )
       }
@@ -234,10 +236,13 @@ const CompanyList = () => {
             </StyledLink>
           </BootstrapTooltip>
           <BootstrapTooltip title='edit' placement='top'>
-            <div style={{ cursor: 'pointer' }} onClick={()=>{
-              setCompany(row)
-              toggleEditCompanyDialog()
-            }}>
+            <div
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                setCompany(row)
+                toggleEditCompanyDialog()
+              }}
+            >
               <Icon icon='mdi:pencil-outline' fontSize={20} />
             </div>
           </BootstrapTooltip>
@@ -267,9 +272,7 @@ const CompanyList = () => {
       </Grid>
       <Grid item xs={12}>
         <Card>
-          {loading ? (
-            <Skeleton variant='rounded' height={500} />
-          ) : (
+          {companies?.docs && !loading ? (
             <>
               <TableHeader searchQuery={searchQuery} handleFilter={handleFilter} toggle={toggleAddCompanyDrawer} />
               <DataGrid
@@ -278,7 +281,7 @@ const CompanyList = () => {
                 columns={columns}
                 pageSize={pageSize}
                 disableSelectionOnClick
-                rowsPerPageOptions={[2]}
+                rowsPerPageOptions={[10]}
                 sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
                 onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
                 pagination
@@ -288,6 +291,8 @@ const CompanyList = () => {
                 onPageChange={newPage => handlePageChange(newPage)}
               />
             </>
+          ) : (
+            <Skeleton variant='rounded' height={600} />
           )}
         </Card>
       </Grid>

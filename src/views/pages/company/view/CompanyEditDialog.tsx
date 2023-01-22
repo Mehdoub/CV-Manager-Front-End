@@ -23,11 +23,18 @@ import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { CompanyFormData } from '../list/AddCompanyDrawer'
 import { useDispatch } from 'react-redux'
-import { clearEditCompany, editCompany, getCompanies, getCompany } from 'src/store/company'
+import { clearEditCompany, editCompany, getCompanies } from 'src/store/company'
 
 const schema = yup.object().shape({
   name: yup.string().label('Name').min(3).required()
 })
+
+const defaultValues = {
+  name: '',
+  phone: '',
+  address: '',
+  description: ''
+}
 
 interface Props {
   open: boolean
@@ -40,14 +47,23 @@ export interface CompanyEditData extends CompanyFormData {
 }
 
 const CompanyEditDialog = (props: Props) => {
-  const { closeHandler, open, company } = props
+  const { closeHandler, open, company: companyDataFromList } = props
 
   const [files, setFiles] = useState<File[]>([])
+  const [company, setCompany] = useState<any>({})
 
   const dispatch = useDispatch()
 
   const editCompanyStore = useSelector((state: any) => state.editCompany)
   const { status } = editCompanyStore
+
+  const companyStore = useSelector((state: any) => state.company)
+  const { data: companyDataFromView } = companyStore
+
+  useEffect(() => {
+    if (companyDataFromList) setCompany(companyDataFromList)
+    else if (companyDataFromView) setCompany(companyDataFromView)
+  }, [companyDataFromList, companyDataFromView])
 
   useEffect(() => {
     if (status) {
@@ -58,13 +74,6 @@ const CompanyEditDialog = (props: Props) => {
       closeHandler()
     }
   }, [status])
-
-  const defaultValues = {
-    name: '',
-    phone: '',
-    address: '',
-    description: ''
-  }
 
   const {
     reset,
@@ -78,10 +87,12 @@ const CompanyEditDialog = (props: Props) => {
     resolver: yupResolver(schema)
   })
 
-  setValue('name', company?.name)
-  setValue('phone', company?.phone)
-  setValue('address', company?.address)
-  setValue('description', company?.description)
+  useEffect(() => {
+    setValue('name', company?.name)
+    setValue('phone', company?.phone)
+    setValue('address', company?.address)
+    setValue('description', company?.description)
+  }, [company])
 
   const clearInputs = () => {
     setValue('name', '')
