@@ -27,6 +27,7 @@ import { useDropzone } from 'react-dropzone'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { clearCreateProject, createProject, getProjects } from 'src/store/project'
+import { getCompanyProjects } from 'src/store/company'
 
 interface FileProp {
   name: string
@@ -56,6 +57,7 @@ interface SidebarAddProjectType {
   open: boolean
   toggle: () => void
   companyId?: string
+  dispatchCompanyProjects?: boolean
 }
 
 const Header = styled(Box)<BoxProps>(({ theme }) => ({
@@ -80,7 +82,7 @@ const defaultValues = {
 
 const SidebarAddProject = (props: SidebarAddProjectType) => {
   // ** Props
-  const { open, toggle, companyId } = props
+  const { open, toggle, companyId, dispatchCompanyProjects } = props
 
   const dispatch = useDispatch()
   const store = useSelector((state: any) => state.createProject)
@@ -91,6 +93,7 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
       dispatch(getProjects({ size: 2 }))
       toast.success('Project Created Successfully', { position: 'bottom-left', duration: 5000 })
       dispatch(clearCreateProject())
+      if (dispatchCompanyProjects) dispatch(getCompanyProjects(companyId))
     }
   }, [status])
 

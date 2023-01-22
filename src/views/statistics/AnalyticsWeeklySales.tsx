@@ -80,7 +80,7 @@ const AnalyticsWeeklySales = () => {
         filter: { type: 'none' }
       }
     },
-    legend: { show: true },
+    legend: { show: false },
     grid: {
       yaxis: {
         lines: { show: true }

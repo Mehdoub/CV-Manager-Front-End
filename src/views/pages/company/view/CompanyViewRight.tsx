@@ -128,7 +128,7 @@ const CompanyViewRight = ({ tab, companyId }: Props) => {
           )}
         </Box>
       </TabContext>
-      <AddProjectDrawer open={addProjectOpen} toggle={toggleAddProjectDrawer} companyId={companyId} />
+      <AddProjectDrawer open={addProjectOpen} toggle={toggleAddProjectDrawer} companyId={companyId} dispatchCompanyProjects={true} />
     </>
   )
 }

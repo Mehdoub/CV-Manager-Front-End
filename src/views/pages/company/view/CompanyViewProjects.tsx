@@ -152,7 +152,7 @@ interface Props {
 const CompanyViewProjects = (props: Props) => {
   const { companyId } = props
   // ** State
-  const [pageSize, setPageSize] = useState<number>(7)
+  const [pageSize, setPageSize] = useState<number>(10)
 
   const dispatch = useDispatch<any>()
   const store = useSelector((state: any) => state.user)
@@ -203,7 +203,6 @@ const CompanyViewProjects = (props: Props) => {
         <Card>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
             <CardHeader title='Latest Projects' />
-            {/* <TextField size='small' value={value} sx={{ mr: 6, mb: 2 }} placeholder='Search Project' /> */}
           </Box>
           <DataGrid
             autoHeight
@@ -211,7 +210,7 @@ const CompanyViewProjects = (props: Props) => {
             columns={columns}
             pageSize={pageSize}
             disableSelectionOnClick
-            rowsPerPageOptions={[7, 10, 25, 50]}
+            rowsPerPageOptions={[10]}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
           />
         </Card>
