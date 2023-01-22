@@ -148,13 +148,13 @@ const AddCompanyDrawer = (props: Props) => {
       toast.success('Company Created Successfully', { position: 'bottom-left', duration: 5000 })
       clearInputs()
       dispatch(clearCreateCompany())
+      toggle()
+      reset()
     }
   }, [status])
 
   const onSubmit = (data: CompanyFormData) => {
     dispatch(createCompany(data))
-    toggle()
-    reset()
   }
 
   const handleClose = () => {

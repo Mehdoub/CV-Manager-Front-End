@@ -93,6 +93,8 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
       dispatch(getProjects({ size: 2 }))
       toast.success('Project Created Successfully', { position: 'bottom-left', duration: 5000 })
       dispatch(clearCreateProject())
+      toggle()
+      reset()
       if (dispatchCompanyProjects) dispatch(getCompanyProjects(companyId))
     }
   }, [status])
@@ -112,8 +114,6 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
   const onSubmit = (data: any) => {
     const company = companyId ? companyId : data?.company
     dispatch(createProject({ name: data?.name, company_id: company, description: data?.description }))
-    toggle()
-    reset()
   }
 
   const handleClose = () => {

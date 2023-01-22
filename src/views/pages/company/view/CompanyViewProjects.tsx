@@ -18,7 +18,7 @@ import { useSelector } from 'react-redux'
 import { fetchData } from 'src/store/apps/project'
 import { renderClient } from 'src/pages/projects'
 import Link from 'next/link'
-import { AvatarGroup, Button, Grid } from '@mui/material'
+import { AvatarGroup, Button, Grid, Skeleton } from '@mui/material'
 import { BootstrapTooltip } from 'src/pages/companies'
 import { getCompanyProjects } from 'src/store/company'
 
@@ -158,7 +158,7 @@ const CompanyViewProjects = (props: Props) => {
   const store = useSelector((state: any) => state.user)
 
   const companyProjectsStore = useSelector((state: any) => state.companyProjects)
-  const { data: projects } = companyProjectsStore
+  const { data: projects, loading } = companyProjectsStore
 
   useEffect(() => {
     dispatch(fetchData())
@@ -168,52 +168,64 @@ const CompanyViewProjects = (props: Props) => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={6}>
-        <Card>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-            <CardHeader title='Most Resumes' />
-          </Box>
-          <DataGrid
-            autoHeight
-            rows={store.data}
-            columns={resumeColumns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[7, 10, 25, 50]}
-            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          />
-        </Card>
+        {!store?.data?.length ? (
+          <Skeleton variant='rounded' height={400} />
+        ) : (
+          <Card>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+              <CardHeader title='Most Resumes' />
+            </Box>
+            <DataGrid
+              autoHeight
+              rows={store.data}
+              columns={resumeColumns}
+              pageSize={pageSize}
+              disableSelectionOnClick
+              rowsPerPageOptions={[7, 10, 25, 50]}
+              onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+            />
+          </Card>
+        )}
       </Grid>
       <Grid item xs={6}>
-        <Card>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-            <CardHeader title='Most Positions' />
-          </Box>
-          <DataGrid
-            autoHeight
-            rows={store.data}
-            columns={positionColumns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[7, 10, 25, 50]}
-            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          />
-        </Card>
+        {!store?.data?.length ? (
+          <Skeleton variant='rounded' height={400} />
+        ) : (
+          <Card>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+              <CardHeader title='Most Positions' />
+            </Box>
+            <DataGrid
+              autoHeight
+              rows={store.data}
+              columns={positionColumns}
+              pageSize={pageSize}
+              disableSelectionOnClick
+              rowsPerPageOptions={[7, 10, 25, 50]}
+              onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+            />
+          </Card>
+        )}
       </Grid>
       <Grid item xs={12}>
-        <Card>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-            <CardHeader title='Latest Projects' />
-          </Box>
-          <DataGrid
-            autoHeight
-            rows={projects}
-            columns={columns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[10]}
-            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          />
-        </Card>
+        {loading ? (
+          <Skeleton variant='rounded' height={500} />
+        ) : (
+          <Card>
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+              <CardHeader title='Latest Projects' />
+            </Box>
+            <DataGrid
+              autoHeight
+              rows={projects}
+              columns={columns}
+              pageSize={pageSize}
+              disableSelectionOnClick
+              rowsPerPageOptions={[10]}
+              onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+            />
+          </Card>
+        )}
       </Grid>
     </Grid>
   )
