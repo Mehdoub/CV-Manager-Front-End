@@ -24,21 +24,21 @@ const CrmAward = () => {
         <Typography variant='h6'>
           Congratulations{' '}
           <Box component='span' sx={{ fontWeight: 'bold' }}>
-            Norris
+            BPM
           </Box>
           ! 🎉
         </Typography>
         <Typography variant='body2' sx={{ mb: 3.25 }}>
-          Best seller of the month
+          Best project of the month
         </Typography>
         <Typography variant='h5' sx={{ fontWeight: 600, color: 'primary.main' }}>
-          $42.8k
+          428
         </Typography>
         <Typography variant='body2' sx={{ mb: 3.25 }}>
           78% of target 🤟🏻
         </Typography>
         <Button size='small' variant='contained'>
-          View Sales
+          View Hired Resumes
         </Button>
         <TrophyImg alt='trophy' src='/images/cards/trophy.png' />
       </CardContent>

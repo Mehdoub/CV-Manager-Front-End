@@ -18,8 +18,8 @@ const CrmTotalGrowth = () => {
   const options: ApexOptions = {
     legend: { show: false },
     stroke: { width: 5, colors: [theme.palette.background.paper] },
-    colors: [theme.palette.primary.main, theme.palette.success.main, theme.palette.secondary.main],
-    labels: [`${new Date().getFullYear()}`, `${new Date().getFullYear() - 1}`, `${new Date().getFullYear() - 2}`],
+    colors: [theme.palette.primary.main, theme.palette.success.main, theme.palette.error.main],
+    labels: ['Pending', 'Hired', 'Rejected'],
     tooltip: {
       y: { formatter: (val: number) => `${val}%` }
     },
@@ -67,14 +67,14 @@ const CrmTotalGrowth = () => {
       <CardContent>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
           <Typography variant='h6' sx={{ mr: 1.5 }}>
-            $27.9k
+            2796
           </Typography>
           <Typography variant='subtitle2' sx={{ color: 'success.main' }}>
             +16%
           </Typography>
         </Box>
-        <Typography variant='body2'>Total Growth</Typography>
-        <ReactApexcharts type='donut' height={135} options={options} series={[35, 30, 23]} />
+        <Typography variant='body2'>Total Resumes</Typography>
+        <ReactApexcharts type='donut' height={135} options={options} series={[35, 30, 65]} />
       </CardContent>
     </Card>
   )

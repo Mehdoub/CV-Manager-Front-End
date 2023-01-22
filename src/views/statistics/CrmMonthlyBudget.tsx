@@ -22,14 +22,14 @@ const CrmMonthlyBudget = () => {
       parentHeightOffset: 0,
       toolbar: { show: false }
     },
-    tooltip: { enabled: false },
-    dataLabels: { enabled: false },
+    tooltip: { enabled: true },
+    dataLabels: { enabled: true },
     stroke: {
       width: 5,
       curve: 'smooth'
     },
     grid: {
-      show: false,
+      show: true,
       padding: {
         left: 10,
         top: -24,
@@ -68,9 +68,10 @@ const CrmMonthlyBudget = () => {
       }
     },
     xaxis: {
-      type: 'numeric',
-      labels: { show: false },
+      // type: 'numeric',
+      labels: { show: true },
       axisTicks: { show: false },
+      categories: ['01', '05', '10', '15', '20', '25', '30'],
       axisBorder: { show: false }
     },
     yaxis: { show: false },
@@ -82,22 +83,22 @@ const CrmMonthlyBudget = () => {
       strokeOpacity: 1,
       colors: ['transparent'],
       strokeColors: 'transparent',
-      discrete: [
-        {
-          size: 7,
-          seriesIndex: 0,
-          dataPointIndex: 7,
-          strokeColor: theme.palette.success.main,
-          fillColor: theme.palette.background.paper
-        }
-      ]
+      // discrete: [
+      //   {
+      //     size: 7,
+      //     seriesIndex: 0,
+      //     dataPointIndex: 7,
+      //     strokeColor: theme.palette.success.main,
+      //     fillColor: theme.palette.background.paper
+      //   }
+      // ]
     }
   }
 
   return (
     <Card>
       <CardHeader
-        title='Monthly Budget'
+        title='Last Month'
         action={
           <OptionsMenu
             options={['Refresh', 'Edit', 'Update']}
@@ -110,10 +111,10 @@ const CrmMonthlyBudget = () => {
           type='area'
           height={262}
           options={options}
-          series={[{ name: 'Traffic Rate', data: [0, 85, 25, 125, 90, 250, 200, 350] }]}
+          series={[{ name: 'Received Resumes', data: [0, 85, 25, 125, 90, 250, 200] }]}
         />
         <Typography variant='body2'>
-          Last month you had $2.42 expense transactions, 12 savings entries and 4 bills.
+          Last month you had 242 received resumes, 102 hired and 140 rejected.
         </Typography>
       </CardContent>
     </Card>

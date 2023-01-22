@@ -61,13 +61,13 @@ const AnalyticsOverview = () => {
       <CardContent>
         <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
           <Typography variant='h6' sx={{ mr: 1.5 }}>
-            $67.1k
+            167
           </Typography>
           <Typography variant='subtitle2' sx={{ color: 'success.main' }}>
             +49%
           </Typography>
         </Box>
-        <Typography variant='body2'>Overview</Typography>
+        <Typography variant='body2'>Open Positions</Typography>
         <ReactApexcharts type='radialBar' height={119} series={[64]} options={options} />
       </CardContent>
     </Card>

@@ -27,7 +27,7 @@ const CompanyView = ({ tab, companyId }: Props) => {
   return (
     <ApexChartWrapper>
       <Grid container spacing={6}>
-        <Grid item container spacing={6}>
+        <Grid item container spacing={6} className='match-height'>
           <Grid item xs={6} sm={3} md={4}>
             {loading ? <Skeleton variant='rounded' height={200} /> : <CrmAward />}
           </Grid>
@@ -36,12 +36,12 @@ const CompanyView = ({ tab, companyId }: Props) => {
               <Skeleton variant='rounded' height={200} />
             ) : (
               <CardStatisticsVertical
-                stats='155k'
+                stats='924'
                 color='primary'
-                trendNumber='+22%'
-                title='Total Orders'
-                chipText='Last 4 Month'
-                icon={<Icon icon='mdi:cart-plus' />}
+                trendNumber='+73%'
+                title='Total Received Resumes'
+                chipText='Last Six Month'
+                icon={<Icon icon='material-symbols:quick-reference-all-outline-rounded' />}
               />
             )}
           </Grid>
@@ -50,18 +50,32 @@ const CompanyView = ({ tab, companyId }: Props) => {
               <Skeleton variant='rounded' height={200} />
             ) : (
               <CardStatisticsVertical
-                stats='$13.4k'
-                color='success'
+                stats='568'
+                color='error'
                 trendNumber='+38%'
-                title='Total Sales'
+                title='Rejected Resumes'
                 chipText='Last Six Month'
-                icon={<Icon icon='mdi:currency-usd' />}
+                icon={<Icon icon='mdi:account-cancel' />}
               />
             )}
           </Grid>
           <Grid item xs={6} sm={3} md={2}>
-            {loading ? <Skeleton variant='rounded' height={200} /> : <CrmTotalProfit />}
+            {loading ? (
+              <Skeleton variant='rounded' height={200} />
+            ) : (
+              <CardStatisticsVertical
+                stats='142'
+                color='success'
+                trendNumber='+22%'
+                title='Hired Resumes'
+                chipText='Last Six Month'
+                icon={<Icon icon='mdi:user-check' />}
+              />
+            )}
           </Grid>
+          {/* <Grid item xs={6} sm={3} md={2}>
+            {loading ? <Skeleton variant='rounded' /> : <CrmTotalProfit />}
+          </Grid> */}
           <Grid item xs={6} sm={3} md={2}>
             {loading ? <Skeleton variant='rounded' height={200} /> : <CrmTotalGrowth />}
           </Grid>
