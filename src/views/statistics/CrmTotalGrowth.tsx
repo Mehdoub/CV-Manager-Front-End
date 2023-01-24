@@ -18,8 +18,8 @@ const CrmTotalGrowth = () => {
   const options: ApexOptions = {
     legend: { show: false },
     stroke: { width: 5, colors: [theme.palette.background.paper] },
-    colors: [theme.palette.primary.main, theme.palette.success.main, theme.palette.error.main],
-    labels: ['Pending', 'Hired', 'Rejected'],
+    colors: [theme.palette.primary.main, theme.palette.success.main, theme.palette.error.main, theme.palette.warning.main, theme.palette.secondary.main, theme.palette.info.main],
+    labels: ['Pending', 'Hired', 'Rejected', 'Test1', 'Test2', 'Test3'],
     tooltip: {
       y: { formatter: (val: number) => `${val}%` }
     },
@@ -74,7 +74,7 @@ const CrmTotalGrowth = () => {
           </Typography>
         </Box>
         <Typography variant='body2'>Total Resumes</Typography>
-        <ReactApexcharts type='donut' height={135} options={options} series={[35, 30, 65]} />
+        <ReactApexcharts type='donut' height={135} options={options} series={[35, 30, 65, 20, 40, 45]} />
       </CardContent>
     </Card>
   )
