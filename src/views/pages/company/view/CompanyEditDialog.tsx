@@ -92,8 +92,8 @@ const CompanyEditDialog = (props: Props) => {
   const { data: companyDataFromView } = companyStore
 
   useEffect(() => {
-    if (companyDataFromView) setCompany(companyDataFromView)
-    else if (companyDataFromList) setCompany(companyDataFromList)
+    if (companyDataFromView?.id?.length > 0) setCompany(companyDataFromView)
+    else if (companyDataFromList?.id?.length > 0) setCompany(companyDataFromList)
   }, [companyDataFromList, companyDataFromView])
 
   useEffect(() => {
