@@ -6,17 +6,10 @@ import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
 import Divider from '@mui/material/Divider'
-import { styled } from '@mui/material/styles'
-import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import CardActions from '@mui/material/CardActions'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContentText from '@mui/material/DialogContentText'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -36,49 +29,11 @@ import { toast } from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { getCompany } from 'src/store/company'
 import { useSelector } from 'react-redux'
-import { Avatar, Chip, Skeleton } from '@mui/material'
+import { Skeleton } from '@mui/material'
 import CompanyEditDialog from './CompanyEditDialog'
 
 interface ColorsType {
   [key: string]: ThemeColor
-}
-
-const Img = styled('img')(({ theme }) => ({
-  // [theme.breakpoints.up('md')]: {
-  //   marginRight: theme.spacing(10)
-  // },
-  [theme.breakpoints.down('md')]: {
-    marginBottom: theme.spacing(4)
-  },
-  [theme.breakpoints.down('sm')]: {
-    width: 250
-  }
-}))
-
-const data: any = {
-  id: 1,
-  role: 'admin',
-  managers: 'Ali Fallah',
-  status: 'active',
-  username: 'fatertejarat',
-  avatarColor: 'primary',
-  country: 'El Salvador',
-  company: 'Yotz PVT LTD',
-  contact: '(21) 232-9151',
-  currentPlan: 'enterprise',
-  description: 'Hello, We Are A Company That ...',
-  address: 'Tehran, Abbas Abad, Sarafraz Street',
-  fullName: 'Favin',
-  email: 'favin@abc.net.ir',
-  avatar: '/images/logos/sample-logo.jpeg'
-}
-
-const roleColors: ColorsType = {
-  admin: 'error',
-  editor: 'info',
-  author: 'warning',
-  maintainer: 'success',
-  subscriber: 'primary'
 }
 
 const statusColors: ColorsType = {
@@ -176,33 +131,6 @@ const CompanyViewLeft = ({ companyId }: Props) => {
               <Skeleton animation='wave' width='15%' height={30} style={{ marginBottom: '7px' }} />
             ) : (
               <CustomChip
-                skin='light'
-                size='small'
-                label={data.role}
-                color={roleColors[data.role]}
-                sx={{
-                  height: 20,
-                  fontWeight: 600,
-                  borderRadius: '5px',
-                  fontSize: '0.875rem',
-                  textTransform: 'capitalize',
-                  '& .MuiChip-label': { mt: -0.25 }
-                }}
-              />
-            )}
-          </CardContent>
-          <CardContent>
-            <Typography variant='h6'>Details</Typography>
-            <Divider sx={{ mt: theme => `${theme.spacing(4)} !important` }} />
-            <Box sx={{ pt: 2, pb: 1 }}>
-              <Box sx={{ display: 'flex', mb: 2.7 }}>
-                <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary' }}>
-                  Status:
-                </Typography>
-                {loading ? (
-                  <Skeleton animation='wave' width='15%' />
-                ) : (
-                  <CustomChip
                     skin='light'
                     size='small'
                     label={company?.is_active ? 'active' : 'inactive'}
@@ -215,8 +143,13 @@ const CompanyViewLeft = ({ companyId }: Props) => {
                       textTransform: 'capitalize'
                     }}
                   />
-                )}
-              </Box>
+            )}
+          </CardContent>
+          <CardContent>
+            <Typography variant='h6'>Details</Typography>
+            <Divider sx={{ mt: theme => `${theme.spacing(4)} !important` }} />
+            <Box sx={{ pt: 2, pb: 1 }}>
+
               <Box sx={{ display: 'flex', mb: 2.7 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Phone:</Typography>
                 {loading ? (

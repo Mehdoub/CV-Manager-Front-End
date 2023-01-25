@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 // ** Custom Components Imports
 import CustomAvatar from 'src/@core/components/mui/avatar'
+import CustomChip from 'src/@core/components/mui/chip'
 import CardStatisticsHorizontal from 'src/@core/components/card-statistics/card-stats-horizontal'
 
 // ** Utils Import
@@ -35,6 +36,11 @@ import { Stack } from '@mui/system'
 import { getCompanies } from 'src/store/company'
 import CompanyEditDialog from 'src/views/pages/company/view/CompanyEditDialog'
 import AddCompanyDrawer from 'src/views/pages/company/list/AddCompanyDrawer'
+
+const statusColors : any = {
+  active: 'success',
+  inactive: 'secondary'
+}
 
 export const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} arrow classes={{ popper: className }} />
@@ -206,6 +212,29 @@ const CompanyList = () => {
               {row?.created_by?.firstname} {row?.created_by?.lastname}
             </StyledLink>
           </Typography>
+        )
+      }
+    },
+    {
+      flex: 0.15,
+      minWidth: 120,
+      headerName: 'Status',
+      field: 'is_active',
+      renderCell: ({ row }: any) => {
+        return (
+          <CustomChip
+            skin='light'
+            size='small'
+            label={row?.is_active ? 'active' : 'inactive'}
+            color={statusColors[row?.is_active ? 'active' : 'inactive']}
+            sx={{
+              height: 20,
+              fontWeight: 500,
+              fontSize: '0.75rem',
+              borderRadius: '5px',
+              textTransform: 'capitalize'
+            }}
+          />
         )
       }
     },
