@@ -36,23 +36,31 @@ const AuthProvider = ({ children }: Props) => {
   // ** Hooks
   const router = useRouter()
 
+  const clearLogin = () => {
+    setLoading(false)
+
+    localStorage.removeItem('userData')
+    localStorage.removeItem('refreshToken')
+    localStorage.removeItem('accessToken')
+
+    setUser(null)
+    router.replace('/login')
+  }
+
   const getUserData = async () => {
-    try {
-      setLoading(false)
-      const result = await ApiRequest.builder().request('get', 'users/getMe')
+    if (localStorage.getItem('accessToken')) {
+      try {
+        setLoading(false)
+        const result = await ApiRequest.builder().auth().request('get', 'users/getMe')
 
-      const userData = { ...result.data.data[0], role: 'admin' }
-      setUser(userData)
-      localStorage.setItem('userData', JSON.stringify(userData))
-    } catch (err) {
-      setLoading(false)
-
-      localStorage.removeItem('userData')
-      localStorage.removeItem('refreshToken')
-      localStorage.removeItem('accessToken')
-
-      setUser(null)
-      router.replace('/login')
+        const userData = { ...result.data.data[0], role: 'admin' }
+        setUser(userData)
+        localStorage.setItem('userData', JSON.stringify(userData))
+      } catch (err) {
+        clearLogin()
+      }
+    } else {
+      clearLogin()
     }
   }
 

@@ -118,10 +118,6 @@ const LoginPage = () => {
     const { mobile, password } = data
     setDisabled(true)
     auth.login({ mobile, password }, () => {
-      setError('mobile', {
-        type: 'manual',
-        message: 'Mobile and password does not match!'
-      })
       setDisabled(false)
     })
   }

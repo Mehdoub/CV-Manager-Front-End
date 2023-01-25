@@ -63,7 +63,9 @@ export default class ApiRequest {
 
         return await requestMethod(response.data.data[0].access_token)
       }
-      toast.error(err?.response?.data?.message, { position: 'bottom-left', duration: 5000 })
+      const textMessage = err?.response?.data?.message?.length > 0? err?.response?.data?.message: 'Server Is Not Reachable!'
+
+      toast.error(textMessage, { position: 'bottom-left', duration: 5000 })
     }
   }
 
