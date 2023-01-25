@@ -266,11 +266,12 @@ const AddCompanyDrawer = (props: Props) => {
             <Controller
               name='phone'
               control={control}
-              render={({ field: { value, onChange } }) => (
+              render={({ field: { value, onChange, onBlur } }) => (
                 <TextField
                   value={value}
                   label='Phone'
                   onChange={onChange}
+                  onBlur={onBlur}
                   placeholder='02188651256'
                   error={Boolean(errors.phone)}
                 />
@@ -282,13 +283,14 @@ const AddCompanyDrawer = (props: Props) => {
             <Controller
               name='address'
               control={control}
-              render={({ field: { value, onChange } }) => (
+              render={({ field: { value, onChange, onBlur } }) => (
                 <TextField
                   value={value}
                   multiline
                   rows={4}
                   label='Address'
                   onChange={onChange}
+                  onBlur={onBlur}
                   placeholder='Tehran, Vanak ...'
                   error={Boolean(errors.address)}
                 />
@@ -300,13 +302,14 @@ const AddCompanyDrawer = (props: Props) => {
             <Controller
               name='description'
               control={control}
-              render={({ field: { value, onChange } }) => (
+              render={({ field: { value, onChange, onBlur } }) => (
                 <TextField
                   value={value}
                   multiline
                   rows={4}
                   label='Description'
                   onChange={onChange}
+                  onBlur={onBlur}
                   placeholder='A Company For ...'
                   error={Boolean(errors.description)}
                 />
