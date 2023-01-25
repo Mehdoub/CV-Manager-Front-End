@@ -39,6 +39,11 @@ const StyledLink = styled(Link)(({ theme }: any) => ({
   }
 }))
 
+const managerTypeColor: any = {
+  owner: 'error',
+  moderator: 'success',
+}
+
 interface Props {
   companyId: string
 }
@@ -68,10 +73,6 @@ const CompanyViewManagers = ({ companyId }: Props) => {
       dispatch(clearAddCompanyManager())
     }
   }, [statusAddCompanyManager])
-
-  let managersList = []
-  managersList = companyManagers?.length > 0 ? [...companyManagers] : []
-  companyData?.created_by ? managersList.push({ ...companyData?.created_by, type: 'owner' }) : {}
 
   const addNewManager = (newManager: any) => {
     if (newManager?.id?.length > 0) {
@@ -118,10 +119,11 @@ const CompanyViewManagers = ({ companyId }: Props) => {
                 </ListItem>
               )}
             />
-            <Typography variant='h6'>{`${managersList.length} Members`}</Typography>
+            <Typography variant='h6'>{`${companyManagers?.length} Members`}</Typography>
             <List dense sx={{ py: 4 }}>
-              {managersList.map((manager: any, index: number) => {
-                manager = manager?.type == 'owner' ? manager : manager?.user_id
+              {companyManagers.length > 0 && companyManagers.map((manager: any, index: number) => {
+                const managerType = manager?.type
+                manager = manager?.user_id
                 return (
                   <ListItem
                     key={manager?.id + index}
@@ -145,31 +147,31 @@ const CompanyViewManagers = ({ companyId }: Props) => {
                             <StyledLink
                               href={`/users/view/${manager?.id}/overview`}
                             >{`${manager?.firstname} ${manager?.lastname}`}</StyledLink>
+                          </Typography>
                             <CustomChip
                               skin='light'
                               size='small'
-                              label={manager?.type == 'owner' ? 'owner' : 'manager'}
-                              color={manager?.type == 'owner' ? 'error' : 'success'}
+                              label={managerType}
+                              color={managerTypeColor[managerType]}
                               sx={{
                                 height: 20,
                                 fontWeight: 500,
                                 fontSize: '0.75rem',
                                 borderRadius: '5px',
                                 textTransform: 'capitalize',
-                                marginLeft: '5px'
+                                // marginLeft: '5px'
                               }}
                             />
-                          </Typography>
                         </>
                       }
-                      secondary={manager?.email}
+                      // secondary={manager?.email}
                       sx={{
                         m: 0,
                         '& .MuiListItemText-primary, & .MuiListItemText-secondary': { lineHeight: '1.25rem' }
                       }}
                     />
                     <ListItemSecondaryAction sx={{ right: 0 }}>
-                      {manager?.type !== 'owner' && (
+                      {managerType !== 'owner' && (
                         <BootstrapTooltip title='delete' placement='top'>
                           <div
                             style={{ cursor: 'pointer', marginTop: '4px' }}
