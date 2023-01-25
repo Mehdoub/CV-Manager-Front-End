@@ -221,7 +221,7 @@ const AddCompanyDrawer = (props: Props) => {
                 {files[0] ? (
                   renderFilePreview(files[0])
                 ) : (
-                  <Img width={150} alt='Upload img' src='/images/avatars/1.png' sx={{ borderRadius: '50%' }} />
+                  <Img width={150} alt='Upload img' src='/images/logos/slack.png' sx={{ borderRadius: '50%' }} />
                 )}
                 <Box
                   sx={{
