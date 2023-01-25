@@ -157,10 +157,10 @@ const AddCompanyDrawer = (props: Props) => {
   }
 
   const handleClose = () => {
-    clearInputs()
-    setFiles([])
+    // clearInputs()
+    // setFiles([])
     toggle()
-    reset()
+    // reset()
   }
 
   // ** State

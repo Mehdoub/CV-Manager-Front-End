@@ -23,11 +23,42 @@ import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { CompanyFormData } from '../list/AddCompanyDrawer'
 import { useDispatch } from 'react-redux'
-import { clearEditCompany, editCompany, getCompanies } from 'src/store/company'
+import { clearEditCompany, editCompany, getCompanies, getCompany } from 'src/store/company'
 
-const schema = yup.object().shape({
-  name: yup.string().label('Name').min(3).required()
-})
+const schema = yup.object().shape(
+  {
+    name: yup.string().label('Name').required().min(3),
+    phone: yup.string().when('phone', (val, schema) => {
+      if (val?.length > 0) {
+        return yup
+          .string()
+          .matches(/^0[\d]{10}$/, 'Phone Is Not Valid (example: 02123456789)')
+          .required()
+      } else {
+        return yup.string().notRequired()
+      }
+    }),
+    address: yup.string().when('address', (val, schema) => {
+      if (val?.length > 0) {
+        return yup.string().label('Address').min(10).max(100).required()
+      } else {
+        return yup.string().notRequired()
+      }
+    }),
+    description: yup.string().when('description', (val, schema) => {
+      if (val?.length > 0) {
+        return yup.string().label('Description').min(10).max(100).required()
+      } else {
+        return yup.string().notRequired()
+      }
+    })
+  },
+  [
+    ['phone', 'phone'],
+    ['address', 'address'],
+    ['description', 'description']
+  ]
+)
 
 const defaultValues = {
   name: '',
@@ -61,13 +92,14 @@ const CompanyEditDialog = (props: Props) => {
   const { data: companyDataFromView } = companyStore
 
   useEffect(() => {
-    if (companyDataFromList) setCompany(companyDataFromList)
-    else if (companyDataFromView) setCompany(companyDataFromView)
+    if (companyDataFromView) setCompany(companyDataFromView)
+    else if (companyDataFromList) setCompany(companyDataFromList)
   }, [companyDataFromList, companyDataFromView])
 
   useEffect(() => {
     if (status) {
       dispatch(getCompanies())
+      dispatch(getCompany(company?.id))
       clearInputs()
       dispatch(clearEditCompany())
       closeHandler()

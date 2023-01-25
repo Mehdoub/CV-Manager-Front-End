@@ -116,12 +116,12 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
   }
 
   const handleClose = () => {
-    setValue('name', '')
-    setValue('company', '')
-    setValue('description', '')
-    setFiles([])
+    // setValue('name', '')
+    // setValue('company', '')
+    // setValue('description', '')
+    // setFiles([])
     toggle()
-    reset()
+    // reset()
   }
 
   // ** State

@@ -7,6 +7,8 @@ const successHandler = ({ }) => (next: any) => async (action: any) => {
     'createCompany/fulfilled',
     'createProject/fulfilled',
     'addCompanyManager/fulfilled',
+    'removeCompanyManager/fulfilled',
+    'editCompany/fulfilled',
   ]
 
   if (isFulfilled(action) && showTypesArr.includes(action.type)) {
