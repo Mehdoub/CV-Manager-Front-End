@@ -39,13 +39,14 @@ import { useSettings } from 'src/@core/hooks/useSettings'
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 
-// const defaultValues = {
-//   firstname: '',
-//   lastname: '',
-//   mobile: '',
-//   password: '',
-//   repeatpassword: '',
-// }
+const defaultValues = {
+  firstname: '',
+  lastname: '',
+  username: '',
+  mobile: '',
+  password: '',
+  repeatpassword: ''
+}
 interface FormData {
   firstname: string
   lastname: string
@@ -132,6 +133,7 @@ const Register = () => {
     handleSubmit,
     formState: { errors }
   } = useForm({
+    defaultValues,
     mode: 'onBlur',
     resolver: yupResolver(schema)
   })
@@ -377,6 +379,7 @@ const Register = () => {
                         <InputAdornment position='end'>
                           <IconButton
                             edge='end'
+                            tabIndex={-1}
                             onMouseDown={e => e.preventDefault()}
                             onClick={() => setShowPassword(!showPassword)}
                           >
@@ -393,7 +396,7 @@ const Register = () => {
                   </FormHelperText>
                 )}
               </FormControl>
-              <FormControl fullWidth sx={{mb: 8}}>
+              <FormControl fullWidth sx={{ mb: 8 }}>
                 <InputLabel htmlFor='auth-login-v2-repeatpassword' error={Boolean(errors.repeatpassword)}>
                   Repeat Password
                 </InputLabel>
@@ -414,6 +417,7 @@ const Register = () => {
                         <InputAdornment position='end'>
                           <IconButton
                             edge='end'
+                            tabIndex={-1}
                             onMouseDown={e => e.preventDefault()}
                             onClick={() => setShowRepeatPassword(!showRepeatPassword)}
                           >
