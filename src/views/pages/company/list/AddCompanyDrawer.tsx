@@ -71,10 +71,7 @@ const schema = yup.object().shape(
     name: yup.string().label('Name').required().min(3),
     phone: yup.string().when('phone', (val, schema) => {
       if (val?.length > 0) {
-        return yup
-          .string()
-          .matches(/^0[\d]{10}$/, 'Phone Is Not Valid (example: 02123456789)')
-          .required()
+        return yup.string().label('Phone').min(8).max(11).required()
       } else {
         return yup.string().notRequired()
       }
