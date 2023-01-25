@@ -146,12 +146,7 @@ const Register = () => {
         message: 'Password and repeat password should be the same'
       })
     } else {
-      register({ firstname, lastname, mobile, password, repeatpassword, username }, err => {
-        setError('firstname', {
-          type: 'manual',
-          message: 'Something went wrong!'
-        })
-      })
+      register({ firstname, lastname, mobile, password, repeatpassword, username })
     }
   }
 
