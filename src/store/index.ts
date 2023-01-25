@@ -7,6 +7,7 @@ import user from 'src/store/apps/user'
 import { addCompanyManagerReducer, companiesListReducer, companyManagersReducer, companyProjectsReducer, companyReducer, companyResumesReducer, createCompanyReducer, editCompanyReducer, removeCompanyManagerReducer } from './company'
 import { createProjectReducer, projectReducer, projectsListReducer } from './project'
 import { usersListReducer } from './user'
+import successHandler from 'src/middlewares/successHandler'
 
 export const store = configureStore({
   reducer: {
@@ -32,7 +33,7 @@ export const store = configureStore({
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: false
-    })
+    }).concat([successHandler])
 })
 
 export type AppDispatch = typeof store.dispatch

@@ -145,7 +145,6 @@ const AddCompanyDrawer = (props: Props) => {
   useEffect(() => {
     if (status) {
       dispatch(getCompanies())
-      toast.success('Company Created Successfully', { position: 'bottom-left', duration: 5000 })
       clearInputs()
       dispatch(clearCreateCompany())
       toggle()

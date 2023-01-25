@@ -68,7 +68,6 @@ const CompanyEditDialog = (props: Props) => {
   useEffect(() => {
     if (status) {
       dispatch(getCompanies())
-      toast.success('Company Information Edited Successfully', { position: 'bottom-left', duration: 5000 })
       clearInputs()
       dispatch(clearEditCompany())
       closeHandler()

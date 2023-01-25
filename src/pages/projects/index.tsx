@@ -72,7 +72,7 @@ export const renderClient = (row: any, field = 'logo') => {
 const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) => {
   // ** State
   const [searchQuery, setSearchQuery] = useState<string>('')
-  const [pageSize, setPageSize] = useState<number>(2)
+  const [pageSize, setPageSize] = useState<number>(10)
   const [page, setPage] = useState<number>(0)
   const [addProjectOpen, setaddProjectOpen] = useState<boolean>(false)
 
@@ -164,7 +164,7 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       renderCell: ({ row }: any) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            <StyledLink href={`/users/view/${row?.created_by}/overview`}>{row?.created_by}</StyledLink>
+            <StyledLink href={`/users/view/${row?.created_by?.id}/overview`}>{row?.created_by?.firstname} {row?.created_by?.lastname}</StyledLink>
           </Typography>
         )
       }
@@ -230,7 +230,7 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
               columns={columns}
               pageSize={pageSize}
               disableSelectionOnClick
-              rowsPerPageOptions={[2]}
+              rowsPerPageOptions={[10]}
               sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
               onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
               pagination

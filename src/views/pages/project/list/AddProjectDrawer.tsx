@@ -91,7 +91,6 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
   useEffect(() => {
     if (status) {
       dispatch(getProjects({ size: 2 }))
-      toast.success('Project Created Successfully', { position: 'bottom-left', duration: 5000 })
       dispatch(clearCreateProject())
       toggle()
       reset()
