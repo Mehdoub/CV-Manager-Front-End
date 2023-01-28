@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
-import { toast } from 'react-hot-toast'
 import authConfig from 'src/configs/auth'
+import { toastError } from './functions'
 
 interface requestConfig {
   header: {
@@ -63,9 +63,9 @@ export default class ApiRequest {
 
         return await requestMethod(response.data.data[0].access_token)
       }
-      const textMessage = err?.response?.data?.message?.length > 0? err?.response?.data?.message: 'Server Is Not Reachable!'
+      if (err?.response?.data?.message?.length == 0) toastError('')
 
-      toast.error(textMessage, { position: 'bottom-left', duration: 5000 })
+      throw err
     }
   }
 

@@ -1,5 +1,5 @@
 import { isFulfilled } from "@reduxjs/toolkit";
-import { toast } from "react-hot-toast";
+import { toastSuccess } from "src/helpers/functions";
 
 
 const successHandler = ({ }) => (next: any) => async (action: any) => {
@@ -12,8 +12,7 @@ const successHandler = ({ }) => (next: any) => async (action: any) => {
   ]
 
   if (isFulfilled(action) && showTypesArr.includes(action.type)) {
-    const textMessage = action.payload.message ? action.payload.message : 'Successfully Done!'
-    toast.success(textMessage, { duration: 5000, position: 'bottom-left', style: { maxWidth: '650px' } })
+    toastSuccess(action?.payload?.message)
   }
 
   return next(action)

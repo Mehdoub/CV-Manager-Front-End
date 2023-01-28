@@ -1,5 +1,5 @@
 // ** React Imports
-import { ReactNode, useState } from 'react'
+import { ReactNode, useEffect, useState } from 'react'
 
 // ** Next Import
 import Link from 'next/link'
@@ -38,6 +38,10 @@ import { useSettings } from 'src/@core/hooks/useSettings'
 
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
+import { useDispatch } from 'react-redux'
+import { checkUsername } from 'src/store/auth'
+import { useSelector } from 'react-redux'
+import { toastError } from 'src/helpers/functions'
 
 const defaultValues = {
   firstname: '',
@@ -103,6 +107,7 @@ const Register = () => {
   // ** States
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [showRepeatPassword, setShowRepeatPassword] = useState<boolean>(false)
+  const [usernameErr, setUsernameErr] = useState<string>('')
 
   // ** Hooks
   const theme = useTheme()
@@ -110,12 +115,15 @@ const Register = () => {
   const { settings } = useSettings()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
 
+  const dispatch = useDispatch()
+  const { isAvailable } = useSelector((state: any) => state.usernameCheck)
+
   // ** Vars
   const { skin } = settings
   const schema = yup.object().shape({
     firstname: yup.string().label('First name').min(3).required(),
     lastname: yup.string().label('Last name').min(3).required(),
-    username: yup.string().label('Username').min(3).required(),
+    username: yup.string().label('Username').min(8).max(10).required(),
     mobile: yup
       .string()
       .label('Mobile')
@@ -123,8 +131,6 @@ const Register = () => {
       .required(),
     password: yup.string().label('Password').min(8).max(12).required(),
     repeatpassword: yup.string().label('Repeat assword').min(8).max(12).required()
-
-    // terms: yup.bool().oneOf([true], 'You must accept the privacy policy & terms')
   })
 
   const {
@@ -145,12 +151,28 @@ const Register = () => {
         type: 'manual',
         message: 'Password and repeat password should be the same'
       })
-    } else {
-      register({ firstname, lastname, mobile, password, repeatpassword, username })
+    } else if (isAvailable === true) {
+      register({ firstname, lastname, mobile, password, repeatpassword, username }, (err) => {
+        toastError(err?.response?.data?.message)
+      })
     }
   }
 
   const imageSource = skin === 'bordered' ? 'auth-v2-register-illustration-bordered' : 'auth-v2-register-illustration'
+
+  useEffect(() => {
+    if (isAvailable === false) {
+      setUsernameErr('Username Is Already Taken!')
+    } else {
+      setUsernameErr('')
+    }
+  }, [isAvailable])
+
+  const usernameHandler = (value: string) => {
+    if (value.length >= 8 && value.length <= 10) {
+      dispatch(checkUsername(value))
+    }
+  }
 
   return (
     <Box className='content-right'>
@@ -312,19 +334,26 @@ const Register = () => {
                   name='username'
                   control={control}
                   rules={{ required: true }}
-                  render={({ field: { value, onChange, onBlur } }) => (
+                  render={({ field: { value, onBlur, onChange } }) => (
                     <TextField
                       value={value}
                       label='Username'
-                      onBlur={onBlur}
+                      onBlur={e => {
+                        onBlur(e)
+                        usernameHandler(e.target.value)
+                      }}
                       onChange={onChange}
-                      error={Boolean(errors.username)}
+                      error={Boolean(errors.username) || usernameErr.length > 0}
                       placeholder='john23'
                     />
                   )}
                 />
-                {errors.username && (
+                {usernameErr.length > 0 ? (
+                  <FormHelperText sx={{ color: 'error.main' }}>{usernameErr}</FormHelperText>
+                ) : errors.username ? (
                   <FormHelperText sx={{ color: 'error.main' }}>{errors.username.message}</FormHelperText>
+                ) : (
+                  ''
                 )}
               </FormControl>
               <FormControl fullWidth sx={{ mb: 4 }}>

@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, ReactNode } from 'react'
+import { useState, ReactNode, useEffect } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
@@ -38,6 +38,9 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 import Translations from 'src/layouts/components/Translations'
+import { toastError } from 'src/helpers/functions'
+import { clearUsernameCheck } from 'src/store/auth'
+import { useDispatch } from 'react-redux'
 
 // ** Styled Components
 const LoginIllustrationWrapper = styled(Box)<BoxProps>(({ theme }) => ({
@@ -82,11 +85,6 @@ const TypographyStyled = styled(Typography)<TypographyProps>(({ theme }) => ({
   [theme.breakpoints.down('md')]: { marginTop: theme.spacing(8) }
 }))
 
-// const schema = yup.object().shape({
-//   mobile: yup.number().required(),
-//   password: yup.string().min(5).required()
-// })
-
 interface FormData {
   mobile: number
   password: string
@@ -101,13 +99,17 @@ const LoginPage = () => {
   const theme = useTheme()
   const { settings } = useSettings()
   const hidden = useMediaQuery(theme.breakpoints.down('md'))
+  const dispatch = useDispatch()
 
   // ** Vars
   const { skin } = settings
 
+  useEffect(() => {
+    dispatch(clearUsernameCheck())
+  }, [])
+
   const {
     control,
-    setError,
     handleSubmit,
     formState: { errors }
   } = useForm({
@@ -117,7 +119,8 @@ const LoginPage = () => {
   const onSubmit = (data: FormData) => {
     const { mobile, password } = data
     setDisabled(true)
-    auth.login({ mobile, password }, () => {
+    auth.login({ mobile, password }, (err) => {
+      toastError(err?.response?.data?.message)
       setDisabled(false)
     })
   }

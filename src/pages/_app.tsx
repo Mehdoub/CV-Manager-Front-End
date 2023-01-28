@@ -3,7 +3,7 @@ import { ReactNode, useEffect, useState } from 'react'
 
 // ** Next Imports
 import Head from 'next/head'
-import { Router } from 'next/router'
+import { Router, useRouter } from 'next/router'
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 
@@ -106,6 +106,9 @@ const Guard = ({ children, authGuard, guestGuard }: GuardProps) => {
 const App = (props: ExtendedAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
 
+  const router = useRouter()
+  const title = router.pathname.substring(1, 2).toUpperCase() + router.pathname.substring(2)
+
   // Variables
   const contentHeightFixed = Component.contentHeightFixed ?? false
   const getLayout =
@@ -200,7 +203,7 @@ const App = (props: ExtendedAppProps) => {
     <Provider store={store}>
       <CacheProvider value={emotionCache}>
         <Head>
-          <title>{`${themeConfig.templateName} - Resumes Management System`}</title>
+          <title>{`${themeConfig.templateName} - ${title}`}</title>
           <meta
             name='description'
             content={`${themeConfig.templateName} – A System Form Manage Resumes And positions.`}

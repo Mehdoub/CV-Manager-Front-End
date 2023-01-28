@@ -8,6 +8,8 @@ import { addCompanyManagerReducer, companiesListReducer, companyManagersReducer,
 import { createProjectReducer, projectReducer, projectsListReducer } from './project'
 import { usersListReducer } from './user'
 import successHandler from 'src/middlewares/successHandler'
+import { usernameCheckReducer } from './auth'
+import errorHandler from 'src/middlewares/errorHandler'
 
 export const store = configureStore({
   reducer: {
@@ -29,11 +31,13 @@ export const store = configureStore({
     createProject: createProjectReducer,
 
     usersList: usersListReducer,
+
+    usernameCheck: usernameCheckReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: false
-    }).concat([successHandler])
+    }).concat([successHandler, errorHandler])
 })
 
 export type AppDispatch = typeof store.dispatch
