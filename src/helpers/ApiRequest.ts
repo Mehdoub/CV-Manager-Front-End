@@ -112,6 +112,12 @@ export default class ApiRequest {
     return this
   }
 
+  public contentType = (newContentType: string) : ApiRequest => {
+    this.defaultConf.header['Content-Type'] = newContentType
+
+    return this
+  }
+
   public async request(method: string, url: string, data = {}) {
     const requestMethod = (accessToken = '') =>
       axios.request({

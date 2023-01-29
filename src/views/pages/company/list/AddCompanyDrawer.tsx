@@ -103,6 +103,7 @@ export interface CompanyFormData {
   phone: string | null
   address: string | null
   description: string | null
+  logo?: any
 }
 
 const defaultValues = {
@@ -137,6 +138,7 @@ const AddCompanyDrawer = (props: Props) => {
     setValue('phone', '')
     setValue('address', '')
     setValue('description', '')
+    setFiles([])
   }
 
   useEffect(() => {
@@ -150,14 +152,14 @@ const AddCompanyDrawer = (props: Props) => {
   }, [status])
 
   const onSubmit = (data: CompanyFormData) => {
+    if (files[0]) {
+      data = {...data, logo: files[0]}
+    }
     dispatch(createCompany(data))
   }
 
   const handleClose = () => {
-    // clearInputs()
-    // setFiles([])
     toggle()
-    // reset()
   }
 
   // ** State

@@ -36,6 +36,7 @@ import { Stack } from '@mui/system'
 import { getCompanies } from 'src/store/company'
 import CompanyEditDialog from 'src/views/pages/company/view/CompanyEditDialog'
 import AddCompanyDrawer from 'src/views/pages/company/list/AddCompanyDrawer'
+import { getImagePath } from 'src/helpers/functions'
 
 const statusColors : any = {
   active: 'success',
@@ -67,7 +68,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 // ** renders client column
 const renderClient = (row: any, field = 'logo') => {
   if (row[field]?.length) {
-    return <CustomAvatar src={row.logo} sx={{ mr: 3, width: 34, height: 34 }} />
+    return <CustomAvatar src={getImagePath(row[field])} sx={{ mr: 3, width: 34, height: 34 }} />
   } else {
     return (
       <CustomAvatar skin='light' color='primary' sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}>

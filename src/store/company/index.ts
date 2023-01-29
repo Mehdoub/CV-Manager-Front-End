@@ -317,9 +317,25 @@ export const createCompany: any = createAsyncThunk(
   async (data: CompanyFormData,
     { rejectWithValue }) => {
     try {
+      let companyLogo: any
+
+      if (data?.logo) {
+        companyLogo = data?.logo
+        delete data.logo
+      }
+
       const response = await ApiRequest.builder().auth().request('post', 'companies', data)
 
-      return response.data
+      const newCompanyId = response?.data?.data[0]?.id
+
+      if (companyLogo && newCompanyId) {
+        await ApiRequest.builder()
+          .auth()
+          .contentType('multipart/form-data')
+          .request('patch', `companies/${newCompanyId}/logo`, { logo: companyLogo })
+      }
+
+      return response?.data
     } catch (err: any) {
       return rejectWithValue(err?.response)
     }
