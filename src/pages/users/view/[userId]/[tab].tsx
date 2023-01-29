@@ -1,47 +1,14 @@
 // ** Next Import
-import { GetStaticProps, GetStaticPaths, GetStaticPropsContext, InferGetStaticPropsType } from 'next/types'
-
-// ** Third Party Imports
-import axios from 'axios'
-
-// ** Types
-// import { InvoiceType } from 'src/types/apps/invoiceTypes'
+import { useRouter } from 'next/router'
 
 // ** Demo Components Imports
 import UserViewPage from 'src/views/pages/user/view/UserViewPage'
 
-const UserView = ({ tab, invoiceData }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  return <UserViewPage tab={tab} invoiceData={invoiceData} />
-}
-
-export const getStaticPaths: GetStaticPaths = () => {
-  // eslint-disable-next-line prefer-const
-  let paths: any = []
-  const userIds = ['1', '2', '3', '4', '5']
-  userIds.map(item => {
-    paths.push({ params: { userId: item, tab: 'overview' } })
-    paths.push({ params: { userId: item, tab: 'project' } })
-    paths.push({ params: { userId: item, tab: 'company' } })
-    paths.push({ params: { userId: item, tab: 'security' } })
-  })
-  return {
-    paths,
-    fallback: false
-  }
-}
-const data: any = {
-  invoices: []
-}
-
-export const getStaticProps: GetStaticProps = async ({ params }: GetStaticPropsContext) => {
-  const invoiceData: any = { id: params?.userId, ...data.invoices }
-
-  return {
-    props: {
-      invoiceData,
-      tab: params?.tab
-    }
-  }
+const UserView = () => {
+  const {
+    query: { tab, userId }
+  } = useRouter()
+  return <UserViewPage tab={tab as string} userId={userId as string} />
 }
 
 export default UserView

@@ -20,7 +20,7 @@ import MuiTimeline, { TimelineProps } from '@mui/lab/Timeline'
 // ** Demo Component Imports
 
 interface Props {
-  invoiceData: any[]
+  userId: string
 }
 
 // Styled Timeline component
@@ -38,7 +38,7 @@ const Timeline = styled(MuiTimeline)<TimelineProps>(({ theme }) => ({
   }
 }))
 
-const UserViewOverview = ({ invoiceData }: Props) => {
+const UserViewOverview = ({ userId }: Props) => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>

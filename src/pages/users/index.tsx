@@ -1,26 +1,17 @@
 // ** React Imports
-import { useState, useEffect, MouseEvent, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
-import { GetStaticProps, InferGetStaticPropsType } from 'next/types'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
-import Menu from '@mui/material/Menu'
 import Grid from '@mui/material/Grid'
-import Divider from '@mui/material/Divider'
 import { DataGrid } from '@mui/x-data-grid'
 import { styled } from '@mui/material/styles'
-import MenuItem from '@mui/material/MenuItem'
-import IconButton from '@mui/material/IconButton'
+import CustomChip from 'src/@core/components/mui/chip'
 import Typography from '@mui/material/Typography'
-import CardHeader from '@mui/material/CardHeader'
-import InputLabel from '@mui/material/InputLabel'
-import FormControl from '@mui/material/FormControl'
-import CardContent from '@mui/material/CardContent'
-import Select, { SelectChangeEvent } from '@mui/material/Select'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -29,9 +20,7 @@ import Icon from 'src/@core/components/icon'
 import { useDispatch, useSelector } from 'react-redux'
 
 // ** Custom Components Imports
-import CustomChip from 'src/@core/components/mui/chip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
-import CardStatisticsHorizontal from 'src/@core/components/card-statistics/card-stats-horizontal'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
@@ -39,21 +28,17 @@ import { getInitials } from 'src/@core/utils/get-initials'
 // ** Actions Imports
 import { fetchData } from 'src/store/apps/project'
 
-// ** Third Party Components
-import axios from 'axios'
-
 // ** Types Imports
-import { RootState, AppDispatch } from 'src/store'
-import { CardStatsType } from 'src/@fake-db/types'
+import { AppDispatch } from 'src/store'
 import { ThemeColor } from 'src/@core/layouts/types'
-import { UsersType } from 'src/types/apps/userTypes'
-import { CardStatsHorizontalProps } from 'src/@core/components/card-statistics/types'
 
 // ** Custom Table Components Imports
 import TableHeader from 'src/views/pages/user/list/TableHeader'
 import AddUserDrawer from 'src/views/pages/user/list/AddUserDrawer'
 import { Stack } from '@mui/material'
 import { BootstrapTooltip } from '../companies'
+import { getUsers } from 'src/store/user'
+import { showIsActiveColor, showIsActiveTxt } from 'src/helpers/functions'
 
 interface UserRoleType {
   [key: string]: { icon: string; color: string }
@@ -61,25 +46,6 @@ interface UserRoleType {
 
 interface UserStatusType {
   [key: string]: ThemeColor
-}
-
-// ** Vars
-const userRoleObj: UserRoleType = {
-  admin: { icon: 'mdi:laptop', color: 'error.main' },
-  author: { icon: 'mdi:cog-outline', color: 'warning.main' },
-  editor: { icon: 'mdi:pencil-outline', color: 'info.main' },
-  maintainer: { icon: 'mdi:chart-donut', color: 'success.main' },
-  subscriber: { icon: 'mdi:account-outline', color: 'primary.main' }
-}
-
-interface CellType {
-  row: UsersType
-}
-
-const userStatusObj: UserStatusType = {
-  active: 'success',
-  pending: 'warning',
-  inactive: 'secondary'
 }
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -94,8 +60,9 @@ const StyledLink = styled(Link)(({ theme }) => ({
 }))
 
 // ** renders client column
-const renderClient = (row: UsersType) => {
-  if (row.avatar.length) {
+const renderClient = (row: any) => {
+  const fullName = row?.firstname + ' ' + row?.lastname
+  if (row?.avatar?.length) {
     return <CustomAvatar src={row.avatar} sx={{ mr: 3, width: 34, height: 34 }} />
   } else {
     return (
@@ -104,73 +71,10 @@ const renderClient = (row: UsersType) => {
         color={row.avatarColor || 'primary'}
         sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}
       >
-        {getInitials(row.fullName ? row.fullName : 'John Doe')}
+        {getInitials(fullName ?? 'John Doe')}
       </CustomAvatar>
     )
   }
-}
-
-const RowOptions = ({ id }: { id: number | string }) => {
-  // ** Hooks
-  const dispatch = useDispatch<AppDispatch>()
-
-  // ** State
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-
-  const rowOptionsOpen = Boolean(anchorEl)
-
-  const handleRowOptionsClick = (event: MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
-  const handleRowOptionsClose = () => {
-    setAnchorEl(null)
-  }
-
-  // const handleDelete = () => {
-  //   dispatch(deleteUser(id))
-  //   handleRowOptionsClose()
-  // }
-
-  return (
-    <>
-      <IconButton size='small' onClick={handleRowOptionsClick}>
-        <Icon icon='mdi:dots-vertical' />
-      </IconButton>
-      <Menu
-        keepMounted
-        anchorEl={anchorEl}
-        open={rowOptionsOpen}
-        onClose={handleRowOptionsClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'right'
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right'
-        }}
-        PaperProps={{ style: { minWidth: '8rem' } }}
-      >
-        <MenuItem
-          component={Link}
-          sx={{ '& svg': { mr: 2 } }}
-          onClick={handleRowOptionsClose}
-          href='/users/view/overview/'
-        >
-          <Icon icon='mdi:eye-outline' fontSize={20} />
-          View
-        </MenuItem>
-        <MenuItem onClick={handleRowOptionsClose} sx={{ '& svg': { mr: 2 } }}>
-          <Icon icon='mdi:pencil-outline' fontSize={20} />
-          Edit
-        </MenuItem>
-        <MenuItem sx={{ '& svg': { mr: 2 } }}>
-          <Icon icon='mdi:delete-outline' fontSize={20} />
-          Delete
-        </MenuItem>
-      </Menu>
-    </>
-  )
 }
 
 const columns = [
@@ -179,14 +83,16 @@ const columns = [
     minWidth: 230,
     field: 'fullName',
     headerName: 'User',
-    renderCell: ({ row }: CellType) => {
-      const { fullName, username, id } = row
+    renderCell: ({ row }: any) => {
+      const { firstname, lastname, username, id } = row
 
       return (
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {renderClient(row)}
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-            <StyledLink href={`/users/view/${id}/overview`}>{fullName}</StyledLink>
+            <StyledLink href={`/users/view/${id}/overview`}>
+              {firstname} {lastname}
+            </StyledLink>
             <Typography noWrap variant='caption'>
               {`@${username}`}
             </Typography>
@@ -200,44 +106,54 @@ const columns = [
     minWidth: 250,
     field: 'email',
     headerName: 'Email',
-    renderCell: ({ row }: CellType) => {
+    renderCell: ({ row }: any) => {
       return (
         <Typography noWrap variant='body2'>
-          {row.email}
+          {row?.email ?? '---'}
         </Typography>
       )
     }
   },
   {
-    flex: 0.15,
-    field: 'role',
-    minWidth: 150,
-    headerName: 'Role',
-    renderCell: ({ row }: CellType) => {
+    flex: 0.2,
+    minWidth: 250,
+    field: 'mobile',
+    headerName: 'Mobile',
+    renderCell: ({ row }: any) => {
       return (
-        <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 3, color: userRoleObj[row.role].color } }}>
-          <Icon icon={userRoleObj[row.role].icon} fontSize={20} />
-          <Typography noWrap sx={{ color: 'text.secondary', textTransform: 'capitalize' }}>
-            {row.role}
-          </Typography>
-        </Box>
+        <Typography noWrap variant='body2'>
+          {row?.mobile ?? '---'}
+        </Typography>
       )
     }
   },
   {
     flex: 0.1,
     minWidth: 110,
-    field: 'status',
+    field: 'is_baned',
     headerName: 'Status',
-    renderCell: ({ row }: CellType) => {
+    renderCell: ({ row }: any) => {
       return (
         <CustomChip
           skin='light'
           size='small'
-          label={row.status}
-          color={userStatusObj[row.status]}
+          label={showIsActiveTxt(!row.is_baned)}
+          color={showIsActiveColor(!row.is_baned)}
           sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
         />
+      )
+    }
+  },
+  {
+    flex: 0.15,
+    minWidth: 120,
+    headerName: 'Time Join',
+    field: 'createdAt',
+    renderCell: ({ row }: any) => {
+      return (
+        <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+          {new Date(row.createdAt).toDateString()}
+        </Typography>
       )
     }
   },
@@ -266,39 +182,54 @@ const columns = [
 
 const UserList = () => {
   // ** State
-  const [role, setRole] = useState<string>('')
-  const [plan, setPlan] = useState<string>('')
-  const [value, setValue] = useState<string>('')
-  const [status, setStatus] = useState<string>('')
   const [pageSize, setPageSize] = useState<number>(10)
+  const [searchQuery, setSearchQuery] = useState<string>('')
+  const [page, setPage] = useState<number>(0)
   const [addUserOpen, setAddUserOpen] = useState<boolean>(false)
 
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
-  const store = useSelector((state: RootState) => state.user)
+
+  const { data: users } = useSelector((state: any) => state.usersList)
 
   useEffect(() => {
-    dispatch(fetchData())
+    dispatch(getUsers({ page, size: pageSize, query: searchQuery }))
   }, [])
 
-
   const toggleAddUserDrawer = () => setAddUserOpen(!addUserOpen)
+
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage++)
+    dispatch(getUsers({ page: newPage, size: pageSize, query: searchQuery }))
+  }
+
+  const handleFilter = useCallback((val: string) => {
+    setSearchQuery(val)
+    dispatch(getUsers({ query: val, size: pageSize }))
+  }, [])
 
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-        <TableHeader value={value} toggle={toggleAddUserDrawer} />
-          <DataGrid
-            autoHeight
-            rows={store.data}
-            columns={columns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[10, 25, 50]}
-            sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-            onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
-          />
+          <TableHeader value={searchQuery} toggle={toggleAddUserDrawer} handleFilter={handleFilter} />
+          {users?.docs?.length > 0 && (
+            <DataGrid
+              autoHeight
+              rows={users?.docs ?? []}
+              columns={columns}
+              pageSize={pageSize}
+              disableSelectionOnClick
+              rowsPerPageOptions={[10]}
+              sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+              onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
+              pagination
+              paginationMode='server'
+              rowCount={users?.totalDocs}
+              page={page}
+              onPageChange={newPage => handlePageChange(newPage)}
+            />
+          )}
         </Card>
       </Grid>
 

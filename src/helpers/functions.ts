@@ -12,5 +12,13 @@ export const toastSuccess = (msg: string, duration: number = 5000, position: Toa
 
 export const getImagePath = (imgAddress: string): string => {
   const rootUrl = process.env.NEXT_PUBLIC_API_URL?.split('/api/v1/')[0]
-  return rootUrl+ imgAddress
+  return rootUrl + imgAddress
+}
+
+export const showIsActiveTxt = (isActive: boolean) => {
+  return isActive ? 'Active' : 'Inactive'
+}
+
+export const showIsActiveColor = (isActive: boolean) => {
+  return isActive ? 'success' : 'error'
 }

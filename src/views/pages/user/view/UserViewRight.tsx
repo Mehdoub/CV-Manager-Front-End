@@ -36,7 +36,7 @@ const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   }
 }))
 
-const UserViewRight = ({ tab, invoiceData }: any) => {
+const UserViewRight = ({ tab, userId }: any) => {
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -54,7 +54,7 @@ const UserViewRight = ({ tab, invoiceData }: any) => {
     setActiveTab(value)
     router
       .push({
-        pathname: `/users/view/${invoiceData?.id}/${value.toLowerCase()}`
+        pathname: `/users/view/${userId}/${value.toLowerCase()}`
       })
       .then(() => setIsLoading(false))
   }
@@ -68,10 +68,10 @@ const UserViewRight = ({ tab, invoiceData }: any) => {
   }, [tab])
 
   useEffect(() => {
-    if (invoiceData) {
+    if (userId) {
       setIsLoading(false)
     }
-  }, [invoiceData])
+  }, [userId])
 
   return (
     <>
@@ -106,7 +106,7 @@ const UserViewRight = ({ tab, invoiceData }: any) => {
           ) : (
             <>
               <TabPanel sx={{ p: 0 }} value='overview'>
-                <UserViewOverview invoiceData={invoiceData} />
+                <UserViewOverview userId={userId} />
               </TabPanel>
               <TabPanel sx={{ p: 0 }} value='project'>
                 <UserViewProject />

@@ -90,7 +90,7 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
 
   useEffect(() => {
     if (status) {
-      dispatch(getProjects({ size: 2 }))
+      dispatch(getProjects())
       dispatch(clearCreateProject())
       toggle()
       reset()
