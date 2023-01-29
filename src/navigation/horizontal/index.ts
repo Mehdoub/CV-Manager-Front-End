@@ -3,27 +3,27 @@ import { HorizontalNavItemsType } from 'src/@core/layouts/types'
 
 const navigation = (): HorizontalNavItemsType => [
   {
-    title: 'Home',
+    title: 'sidebar.home',
     path: '/home',
     icon: 'mdi:home-outline',
   },
   {
-    title: 'Users',
+    title: 'sidebar.users',
     path: '/users',
     icon: 'mdi:users-outline',
   },
   {
-    title: 'Companies',
+    title: 'sidebar.companies',
     path: '/companies',
     icon: 'carbon:location-company',
   },
   {
-    title: 'Projects',
+    title: 'sidebar.projects',
     path: '/projects',
     icon: 'pajamas:project',
   },
   {
-    title: 'Positions',
+    title: 'sidebar.positions',
     path: '/positions',
     icon: 'ic:baseline-work-outline',
   },

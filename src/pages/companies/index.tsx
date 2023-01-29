@@ -37,6 +37,7 @@ import { getCompanies } from 'src/store/company'
 import CompanyEditDialog from 'src/views/pages/company/view/CompanyEditDialog'
 import AddCompanyDrawer from 'src/views/pages/company/list/AddCompanyDrawer'
 import { getImagePath } from 'src/helpers/functions'
+import { useTranslation } from 'react-i18next'
 
 const statusColors : any = {
   active: 'success',
@@ -124,6 +125,7 @@ const CompanyList = () => {
   const dispatch = useDispatch<any>()
   const store = useSelector((state: any) => state.companiesList)
   const { data: companies, loading } = store
+  const { t } = useTranslation()
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage++)
@@ -147,7 +149,7 @@ const CompanyList = () => {
       flex: 0.2,
       minWidth: 230,
       field: 'company',
-      headerName: 'Company',
+      headerName: t('companies.list.company'),
       renderCell: ({ row }: any) => {
         const { name } = row
 
@@ -165,7 +167,7 @@ const CompanyList = () => {
       flex: 0.1,
       field: 'managers',
       minWidth: 120,
-      headerName: 'Managers',
+      headerName: t('companies.list.managers'),
       renderCell: ({ row }: any) =>
         row?.managers?.length > 0 ? (
           <AvatarGroup className='pull-up'>

@@ -1,3 +1,20 @@
 {
-    "home": "خانه"
+    "sidebar": {
+      "home": "خانه",
+      "users": "کاربران",
+      "companies": "شرکت ها",
+      "projects": "پروژه ها",
+      "positions": "پوزیشن ها"
+    },
+    "companies": {
+      "list": {
+        "company": "شرکت",
+        "managers": "مدیران"
+      },
+      "view": {
+        "details": "جزییات",
+        "edit": "ویرایش",
+        "suspend": "معلق کردن"
+      }
+    }
 }

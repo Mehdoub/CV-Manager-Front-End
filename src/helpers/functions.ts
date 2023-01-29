@@ -11,6 +11,6 @@ export const toastSuccess = (msg: string, duration: number = 5000, position: Toa
 }
 
 export const getImagePath = (imgAddress: string): string => {
-  if (imgAddress.substring(0, 1) == '/') imgAddress = imgAddress.substring(1)
-  return process.env.NEXT_PUBLIC_API_URL + imgAddress
+  const rootUrl = process.env.NEXT_PUBLIC_API_URL?.split('/api/v1/')[0]
+  return rootUrl+ imgAddress
 }

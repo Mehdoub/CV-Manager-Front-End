@@ -107,7 +107,8 @@ const App = (props: ExtendedAppProps) => {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props
 
   const router = useRouter()
-  const title = router.pathname.substring(1, 2).toUpperCase() + router.pathname.substring(2)
+  let title = router.pathname.substring(1, 2).toUpperCase() + router.pathname.substring(2)
+  title = title.split('/')[0]
 
   // Variables
   const contentHeightFixed = Component.contentHeightFixed ?? false

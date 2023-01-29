@@ -1,3 +1,20 @@
 {
-    "home": "Home"
+    "sidebar": {
+      "home": "Home",
+      "users": "Users",
+      "companies": "Companies",
+      "projects": "Projects",
+      "positions": "Positions"
+    },
+    "companies": {
+      "list": {
+        "company": "Company",
+        "managers": "Managers"
+      },
+      "view": {
+        "details": "Details",
+        "edit": "Edit",
+        "suspend": "Suspend"
+      }
+    }
 }

@@ -24,13 +24,12 @@ import { ThemeColor } from 'src/@core/layouts/types'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
-import { useDropzone } from 'react-dropzone'
-import { toast } from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { getCompany } from 'src/store/company'
 import { useSelector } from 'react-redux'
 import { Skeleton } from '@mui/material'
 import CompanyEditDialog from './CompanyEditDialog'
+import Translations from 'src/layouts/components/Translations'
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -49,7 +48,6 @@ const CompanyViewLeft = ({ companyId }: Props) => {
   // ** States
   const [openEdit, setOpenEdit] = useState<boolean>(false)
   const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
-  const [files, setFiles] = useState<File[]>([])
 
   const dispatch = useDispatch()
   const store = useSelector((state: any) => state.company)
@@ -68,36 +66,6 @@ const CompanyViewLeft = ({ companyId }: Props) => {
   // Handle Edit dialog
   const handleEditClickOpen = () => setOpenEdit(true)
   const handleEditClose = () => setOpenEdit(false)
-
-  const { getRootProps, getInputProps } = useDropzone({
-    maxFiles: 1,
-    maxSize: 2000000,
-    accept: {
-      'image/*': ['.png', '.jpg', '.jpeg', '.gif']
-    },
-    onDrop: (acceptedFiles: File[]) => {
-      setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
-    },
-    onDropRejected: () => {
-      toast.error('You can only upload maximum size of 2 MB.', {
-        duration: 2000
-      })
-    }
-  })
-
-  const renderFilePreview = (file: any) => {
-    if (file.type.startsWith('image')) {
-      return (
-        <img
-          style={{ borderRadius: '50%', width: '150px', height: '150px' }}
-          alt={file.name}
-          src={URL.createObjectURL(file as any)}
-        />
-      )
-    } else {
-      return <Icon icon='mdi:file-document-outline' />
-    }
-  }
 
   return (
     <Grid container spacing={6}>
@@ -131,25 +99,26 @@ const CompanyViewLeft = ({ companyId }: Props) => {
               <Skeleton animation='wave' width='15%' height={30} style={{ marginBottom: '7px' }} />
             ) : (
               <CustomChip
-                    skin='light'
-                    size='small'
-                    label={company?.is_active ? 'active' : 'inactive'}
-                    color={statusColors[company?.is_active ? 'active' : 'inactive']}
-                    sx={{
-                      height: 20,
-                      fontWeight: 500,
-                      fontSize: '0.75rem',
-                      borderRadius: '5px',
-                      textTransform: 'capitalize'
-                    }}
-                  />
+                skin='light'
+                size='small'
+                label={company?.is_active ? 'active' : 'inactive'}
+                color={statusColors[company?.is_active ? 'active' : 'inactive']}
+                sx={{
+                  height: 20,
+                  fontWeight: 500,
+                  fontSize: '0.75rem',
+                  borderRadius: '5px',
+                  textTransform: 'capitalize'
+                }}
+              />
             )}
           </CardContent>
           <CardContent>
-            <Typography variant='h6'>Details</Typography>
+            <Typography variant='h6'>
+              <Translations text='companies.view.details' />
+            </Typography>
             <Divider sx={{ mt: theme => `${theme.spacing(4)} !important` }} />
             <Box sx={{ pt: 2, pb: 1 }}>
-
               <Box sx={{ display: 'flex', mb: 2.7 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Phone:</Typography>
                 {loading ? (
@@ -176,35 +145,19 @@ const CompanyViewLeft = ({ companyId }: Props) => {
                   </Typography>
                 )}
               </Box>
-              {/* <Box sx={{ display: 'flex', mb: 2.7 }}>
-                <Typography variant='subtitle2' sx={{ mr: 2, color: 'text.primary', mt: '10px' }}>
-                  Manager(s):
-                </Typography>
-                <Typography variant='body2' style={{ marginTop: '5px' }}>
-                  {managers.map((manager: any, index: number) => (
-                    <Chip
-                      key={index}
-                      label={`${manager?.firstname} ${manager?.lastname}`}
-                      avatar={<Avatar src={manager?.avatar} />}
-                      style={{ marginTop: '3px' }}
-                    />
-                  ))}
-                </Typography>
-                {loading && <Skeleton animation='wave' width='50%' style={{ marginTop: '9px' }} />}
-              </Box> */}
             </Box>
           </CardContent>
           {!loading && (
             <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
               <Button variant='contained' sx={{ mr: 2 }} onClick={handleEditClickOpen}>
-                Edit
+                <Translations text='companies.view.edit' />
               </Button>
               <Button color='error' variant='outlined' onClick={() => setSuspendDialogOpen(true)}>
-                Suspend
+                <Translations text='companies.view.suspend' />
               </Button>
             </CardActions>
           )}
-          <CompanyEditDialog open={openEdit} closeHandler={handleEditClose} companyId={companyId} />
+          <CompanyEditDialog open={openEdit} closeHandler={handleEditClose} />
           <CompanySuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
         </Card>
       </Grid>
