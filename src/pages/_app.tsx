@@ -204,7 +204,7 @@ const App = (props: ExtendedAppProps) => {
     <Provider store={store}>
       <CacheProvider value={emotionCache}>
         <Head>
-          <title>{`${themeConfig.templateName} - ${title}`}</title>
+          <title>{`${themeConfig.templateName}${title ? ' - ' + title : ''}`}</title>
           <meta
             name='description'
             content={`${themeConfig.templateName} – A System Form Manage Resumes And positions.`}
