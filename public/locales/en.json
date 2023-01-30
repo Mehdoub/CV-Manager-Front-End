@@ -16,5 +16,9 @@
         "edit": "Edit",
         "suspend": "Suspend"
       }
+    },
+    "home": {
+      "title": "Welcome To The CVManager App! 🚀",
+      "description": " Here you can manage the resumes you received by creating companies, related projects, add and open positions, set meeting and etc. Please make sure to read our Please make sure to read our Template Documentation to understand where to go from here and how to use our template."
     }
 }

@@ -11,27 +11,27 @@ const Home = () => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='Kick start your project 🚀'></CardHeader>
-          <CardContent>
-            <Typography sx={{ mb: 2 }}>
-              <Translations text='sidebar.home' />
-            </Typography>
-            <Typography>
-              Please make sure to read our Template Documentation to understand where to go from here and how to use our
-              template.
-            </Typography>
-          </CardContent>
-        </Card>
-      </Grid>
-      <Grid item xs={12}>
-        <Card>
-          <CardHeader title='ACL and JWT 🔒'></CardHeader>
-          <CardContent>
-            <Typography sx={{ mb: 2 }}>
-              Access Control (ACL) and Authentication (JWT) are the two main security features of our template and are implemented in the starter-kit as well.
-            </Typography>
-            <Typography>Please read our Authentication and ACL Documentations to get more out of them.</Typography>
-          </CardContent>
+          <Grid container md={12}>
+            <Grid sm={12} md={6} item>
+              <img src='/images/banners/welcome.webp' width={'100%'} />
+            </Grid>
+            <Grid sm={12} md={6} item>
+              <CardHeader title={<Translations text='home.title' />}></CardHeader>
+              <CardContent>
+                <Typography>
+                  <Translations text='home.description' />
+                </Typography>
+                <Typography sx={{fontSize: '20px', fontWeight: '600', pt: '15px'}}>Features</Typography>
+                <Typography>
+                  <Translations text='home.description' />
+                </Typography>
+                <Typography sx={{fontSize: '20px', fontWeight: '600', pt: '15px'}}>Benefits</Typography>
+                <Typography>
+                  <Translations text='home.description' />
+                </Typography>
+              </CardContent>
+            </Grid>
+          </Grid>
         </Card>
       </Grid>
     </Grid>
