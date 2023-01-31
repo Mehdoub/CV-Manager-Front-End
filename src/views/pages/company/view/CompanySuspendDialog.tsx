@@ -12,18 +12,18 @@ import DialogActions from '@mui/material/DialogActions'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 import { useDispatch } from 'react-redux'
-import { clearDeactiveCompany, deactiveCompany, getCompany } from 'src/store/company'
+import { activeCompany, clearActiveCompany, clearDeactiveCompany, deactiveCompany, getCompany } from 'src/store/company'
 import { useSelector } from 'react-redux'
 
 type Props = {
   open: boolean
   setOpen: (val: boolean) => void
-  companyId: string
+  // companyId: string
 }
 
 const CompanySuspendDialog = (props: Props) => {
   // ** Props
-  const { open, setOpen, companyId } = props
+  const { open, setOpen } = props
 
   // ** States
   const [userInput, setUserInput] = useState<string>('yes')
@@ -32,7 +32,15 @@ const CompanySuspendDialog = (props: Props) => {
   const dispatch = useDispatch()
 
   const companyDeactiveStore = useSelector((state: any) => state.companyDeactive)
-  const { status: companyDeactiveStatus, errors } = companyDeactiveStore
+  const { status: companyDeactiveStatus, errors: deactivaErrors } = companyDeactiveStore
+
+  const companyActiveStore = useSelector((state: any) => state.companyActive)
+  const { status: companyActiveStatus, errors: activaErrors } = companyActiveStore
+
+  const store = useSelector((state: any) => state.company)
+  const { data: company } = store
+
+  const companyId = company?.id
 
   useEffect(() => {
     if (companyDeactiveStatus) {
@@ -41,7 +49,16 @@ const CompanySuspendDialog = (props: Props) => {
       dispatch(getCompany(companyId))
     }
     handleClose()
-  }, [companyDeactiveStatus, errors])
+  }, [companyDeactiveStatus, deactivaErrors])
+
+  useEffect(() => {
+    if (companyActiveStatus) {
+      setSecondDialogOpen(true)
+      dispatch(clearActiveCompany())
+      dispatch(getCompany(companyId))
+    }
+    handleClose()
+  }, [companyActiveStatus, activaErrors])
 
   const handleClose = () => setOpen(false)
 
@@ -49,13 +66,18 @@ const CompanySuspendDialog = (props: Props) => {
 
   const handleConfirmation = (value: string) => {
     if (value == 'yes') {
-      dispatch(deactiveCompany(companyId))
+      if (company?.is_active) dispatch(deactiveCompany(companyId))
+      else dispatch(activeCompany(companyId))
     } else {
       handleClose()
       setSecondDialogOpen(true)
     }
     setUserInput(value)
   }
+
+  const action = company?.is_active ? 'Suspend' : 'Activate'
+  const operation = !company?.is_active ? 'Suspention' : 'Activation'
+  const operationStatus = !company?.is_active ? 'Suspended' : 'Activated'
 
   return (
     <>
@@ -73,7 +95,7 @@ const CompanySuspendDialog = (props: Props) => {
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>
           <Button variant='contained' onClick={() => handleConfirmation('yes')}>
-            Yes, Suspend company!
+            Yes, {action} company!
           </Button>
           <Button variant='outlined' color='secondary' onClick={() => handleConfirmation('cancel')}>
             Cancel
@@ -103,9 +125,11 @@ const CompanySuspendDialog = (props: Props) => {
               icon={userInput === 'yes' ? 'mdi:check-circle-outline' : 'mdi:close-circle-outline'}
             />
             <Typography variant='h4' sx={{ mb: 8 }}>
-              {userInput === 'yes' ? 'Suspended!' : 'Cancelled'}
+              {userInput === 'yes' ? operationStatus + '!' : 'Cancelled'}
             </Typography>
-            <Typography>{userInput === 'yes' ? 'Company has been suspended.' : 'Cancelled Suspension :)'}</Typography>
+            <Typography>
+              {userInput === 'yes' ? `Company has been ${operationStatus}.` : `Cancelled ${operation} :)`}
+            </Typography>
           </Box>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>

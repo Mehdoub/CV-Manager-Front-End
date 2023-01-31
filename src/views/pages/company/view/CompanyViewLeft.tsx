@@ -52,11 +52,7 @@ const CompanyViewLeft = ({ companyId }: Props) => {
 
   const dispatch = useDispatch()
   const store = useSelector((state: any) => state.company)
-  const {
-    data: company,
-    // managers,
-    loading
-  } = store
+  const { data: company, loading } = store
 
   useEffect(() => {
     if (companyId) {
@@ -153,13 +149,19 @@ const CompanyViewLeft = ({ companyId }: Props) => {
               <Button variant='contained' sx={{ mr: 2 }} onClick={handleEditClickOpen}>
                 <Translations text='companies.view.edit' />
               </Button>
-              <Button color='error' variant='outlined' onClick={() => setSuspendDialogOpen(true)}>
-                <Translations text='companies.view.suspend' />
-              </Button>
+              {company?.is_active ? (
+                <Button color='error' variant='outlined' onClick={() => setSuspendDialogOpen(true)}>
+                  <Translations text='companies.view.suspend' />
+                </Button>
+              ) : (
+                <Button color='success' variant='outlined' onClick={() => setSuspendDialogOpen(true)}>
+                  <Translations text='companies.view.activate' />
+                </Button>
+              )}
             </CardActions>
           )}
           <CompanyEditDialog open={openEdit} closeHandler={handleEditClose} />
-          <CompanySuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} companyId={companyId} />
+          <CompanySuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
         </Card>
       </Grid>
     </Grid>

@@ -14,7 +14,8 @@
       "view": {
         "details": "Details",
         "edit": "Edit",
-        "suspend": "Suspend"
+        "suspend": "Suspend",
+        "activate": "Activate"
       }
     },
     "home": {

@@ -469,11 +469,58 @@ const companyDeactiveSlice = createSlice({
   }
 })
 
+export const activeCompany: any = createAsyncThunk(
+  'activeCompany',
+  async (companyId: string,
+    { rejectWithValue }) => {
+    try {
+      const response = await ApiRequest.builder().auth().request('patch', `companies/${companyId}/active`)
+
+      return response.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const companyActiveSlice = createSlice({
+  name: 'companyActive',
+  initialState: {
+    loading: false,
+    errors: {},
+    status: false,
+  },
+  reducers: {
+    clearActiveCompany: (state) => {
+      state.loading = false
+      state.status = false
+      state.errors = {}
+    }
+  },
+  extraReducers: (builder) => {
+    builder.addCase(activeCompany.pending, state => {
+      state.loading = true
+      state.status = false
+      state.errors = {}
+    })
+    builder.addCase(activeCompany.fulfilled, (state) => {
+      state.loading = false
+      state.errors = {}
+      state.status = true
+    })
+    builder.addCase(activeCompany.rejected, (state, action) => {
+      state.loading = false
+      state.errors = action.payload
+      state.status = false
+    })
+  }
+})
+
 export const { clearCreateCompany } = createCompanySlice.actions
 export const { clearEditCompany } = editCompanySlice.actions
 export const { clearRemoveCompany } = removeCompanyManagerSlice.actions
 export const { clearAddCompanyManager } = addCompanyManagerSlice.actions
 export const { clearDeactiveCompany } = companyDeactiveSlice.actions
+export const { clearActiveCompany } = companyActiveSlice.actions
 export const companiesListReducer = companiesListSlice.reducer
 export const companyReducer = companySlice.reducer
 export const companyManagersReducer = companyManagersSlice.reducer
@@ -484,3 +531,4 @@ export const editCompanyReducer = editCompanySlice.reducer
 export const addCompanyManagerReducer = addCompanyManagerSlice.reducer
 export const removeCompanyManagerReducer = removeCompanyManagerSlice.reducer
 export const companyDeactiveReducer = companyDeactiveSlice.reducer
+export const companyActiveReducer = companyActiveSlice.reducer
