@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -11,28 +11,50 @@ import DialogActions from '@mui/material/DialogActions'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+import { useDispatch } from 'react-redux'
+import { clearDeactiveProject, deactiveProject, getProject } from 'src/store/project'
+import { useSelector } from 'react-redux'
 
 type Props = {
   open: boolean
   setOpen: (val: boolean) => void
+  projectId: string
 }
 
 const ProjectSuspendDialog = (props: Props) => {
   // ** Props
-  const { open, setOpen } = props
+  const { open, setOpen, projectId } = props
 
   // ** States
   const [userInput, setUserInput] = useState<string>('yes')
   const [secondDialogOpen, setSecondDialogOpen] = useState<boolean>(false)
+
+  const dispatch = useDispatch()
+
+  const projectDeactiveStore = useSelector((state: any) => state.projectDeactive)
+  const { status: projectDeactiveStatus, errors } = projectDeactiveStore
+
+  useEffect(() => {
+    if (projectDeactiveStatus) {
+      setSecondDialogOpen(true)
+      dispatch(clearDeactiveProject())
+      dispatch(getProject(projectId))
+    }
+    handleClose()
+  }, [projectDeactiveStatus, errors])
 
   const handleClose = () => setOpen(false)
 
   const handleSecondDialogClose = () => setSecondDialogOpen(false)
 
   const handleConfirmation = (value: string) => {
-    handleClose()
+    if (value == 'yes') {
+      dispatch(deactiveProject(projectId))
+    } else {
+      handleClose()
+      setSecondDialogOpen(true)
+    }
     setUserInput(value)
-    setSecondDialogOpen(true)
   }
 
   return (

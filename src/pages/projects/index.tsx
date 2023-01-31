@@ -14,6 +14,7 @@ import { GetStaticProps, InferGetStaticPropsType } from 'next/types'
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
+import CustomChip from 'src/@core/components/mui/chip'
 
 // import Menu from '@mui/material/Menu'
 import Grid from '@mui/material/Grid'
@@ -44,6 +45,11 @@ import AddProjectDrawer from 'src/views/pages/project/list/AddProjectDrawer'
 import { AvatarGroup, Stack } from '@mui/material'
 import { BootstrapTooltip } from '../companies'
 import { getProjects } from 'src/store/project'
+
+const statusColors : any = {
+  active: 'success',
+  inactive: 'error'
+}
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -155,6 +161,29 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
         ) : (
           '---'
         )
+    },
+    {
+      flex: 0.15,
+      minWidth: 120,
+      headerName: 'Status',
+      field: 'is_active',
+      renderCell: ({ row }: any) => {
+        return (
+          <CustomChip
+            skin='light'
+            size='small'
+            label={row?.is_active ? 'active' : 'inactive'}
+            color={statusColors[row?.is_active ? 'active' : 'inactive']}
+            sx={{
+              height: 20,
+              fontWeight: 500,
+              fontSize: '0.75rem',
+              borderRadius: '5px',
+              textTransform: 'capitalize'
+            }}
+          />
+        )
+      }
     },
     {
       flex: 0.15,

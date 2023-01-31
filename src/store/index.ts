@@ -4,8 +4,24 @@ import { configureStore } from '@reduxjs/toolkit'
 // ** Reducers
 import project from 'src/store/apps/project'
 import user from 'src/store/apps/user'
-import { addCompanyManagerReducer, companiesListReducer, companyManagersReducer, companyProjectsReducer, companyReducer, companyResumesReducer, createCompanyReducer, editCompanyReducer, removeCompanyManagerReducer } from './company'
-import { createProjectReducer, projectReducer, projectsListReducer } from './project'
+import {
+  companyDeactiveReducer,
+  addCompanyManagerReducer,
+  companiesListReducer,
+  companyManagersReducer,
+  companyProjectsReducer,
+  companyReducer,
+  companyResumesReducer,
+  createCompanyReducer,
+  editCompanyReducer,
+  removeCompanyManagerReducer
+} from './company'
+import {
+  createProjectReducer,
+  projectDeactiveReducer,
+  projectReducer,
+  projectsListReducer
+} from './project'
 import { usersListReducer } from './user'
 import successHandler from 'src/middlewares/successHandler'
 import { usernameCheckReducer } from './auth'
@@ -25,10 +41,12 @@ export const store = configureStore({
     editCompany: editCompanyReducer,
     addCompanyManager: addCompanyManagerReducer,
     removeCompanyManager: removeCompanyManagerReducer,
+    companyDeactive: companyDeactiveReducer,
 
     projectsList: projectsListReducer,
     projectFind: projectReducer,
     createProject: createProjectReducer,
+    projectDeactive: projectDeactiveReducer,
 
     usersList: usersListReducer,
 

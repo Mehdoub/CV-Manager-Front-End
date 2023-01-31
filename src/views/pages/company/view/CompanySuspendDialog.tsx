@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -11,28 +11,50 @@ import DialogActions from '@mui/material/DialogActions'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+import { useDispatch } from 'react-redux'
+import { clearDeactiveCompany, deactiveCompany, getCompany } from 'src/store/company'
+import { useSelector } from 'react-redux'
 
 type Props = {
   open: boolean
   setOpen: (val: boolean) => void
+  companyId: string
 }
 
 const CompanySuspendDialog = (props: Props) => {
   // ** Props
-  const { open, setOpen } = props
+  const { open, setOpen, companyId } = props
 
   // ** States
   const [userInput, setUserInput] = useState<string>('yes')
   const [secondDialogOpen, setSecondDialogOpen] = useState<boolean>(false)
+
+  const dispatch = useDispatch()
+
+  const companyDeactiveStore = useSelector((state: any) => state.companyDeactive)
+  const { status: companyDeactiveStatus, errors } = companyDeactiveStore
+
+  useEffect(() => {
+    if (companyDeactiveStatus) {
+      setSecondDialogOpen(true)
+      dispatch(clearDeactiveCompany())
+      dispatch(getCompany(companyId))
+    }
+    handleClose()
+  }, [companyDeactiveStatus, errors])
 
   const handleClose = () => setOpen(false)
 
   const handleSecondDialogClose = () => setSecondDialogOpen(false)
 
   const handleConfirmation = (value: string) => {
-    handleClose()
+    if (value == 'yes') {
+      dispatch(deactiveCompany(companyId))
+    } else {
+      handleClose()
+      setSecondDialogOpen(true)
+    }
     setUserInput(value)
-    setSecondDialogOpen(true)
   }
 
   return (

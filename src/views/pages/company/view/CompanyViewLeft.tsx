@@ -38,7 +38,7 @@ interface ColorsType {
 
 const statusColors: ColorsType = {
   active: 'success',
-  inactive: 'secondary'
+  inactive: 'error'
 }
 
 interface Props {
@@ -159,7 +159,7 @@ const CompanyViewLeft = ({ companyId }: Props) => {
             </CardActions>
           )}
           <CompanyEditDialog open={openEdit} closeHandler={handleEditClose} />
-          <CompanySuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
+          <CompanySuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} companyId={companyId} />
         </Card>
       </Grid>
     </Grid>

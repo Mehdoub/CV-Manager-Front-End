@@ -41,7 +41,7 @@ import { useTranslation } from 'react-i18next'
 
 const statusColors : any = {
   active: 'success',
-  inactive: 'secondary'
+  inactive: 'error'
 }
 
 export const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (

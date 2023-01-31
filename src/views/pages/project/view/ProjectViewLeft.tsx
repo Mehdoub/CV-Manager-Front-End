@@ -295,7 +295,7 @@ const ProjectViewLeft = ({ projectId }: Props) => {
               </DialogActions>
             </Dialog>
 
-            <ProjectSuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
+            <ProjectSuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} projectId={projectId} />
           </Card>
         </Grid>
       </Grid>

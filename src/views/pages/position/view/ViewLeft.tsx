@@ -82,7 +82,11 @@ const statusColors: ColorsType = {
   inactive: 'secondary'
 }
 
-const ProjectViewLeft = () => {
+interface Props {
+  projectId: string
+}
+
+const ProjectViewLeft = ({ projectId }: Props) => {
   // ** States
   const [openEdit, setOpenEdit] = useState<boolean>(false)
   const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
@@ -280,7 +284,7 @@ const ProjectViewLeft = () => {
               </DialogActions>
             </Dialog>
 
-            <ProjectSuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
+            <ProjectSuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} projectId={projectId} />
           </Card>
         </Grid>
       </Grid>
