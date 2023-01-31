@@ -149,7 +149,7 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
     if (file.type.startsWith('image')) {
       return (
         <img
-          style={{ borderRadius: '50%', width: '150px', height: '150px' }}
+          style={{ borderRadius: '50%', border: '1px solid black', width: '150px', height: '150px' }}
           alt={file.name}
           src={URL.createObjectURL(file as any)}
         />
@@ -186,7 +186,7 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
                 {files[0] ? (
                   renderFilePreview(files[0])
                 ) : (
-                  <Img width={150} alt='Upload img' src='/images/logos/slack.png' sx={{ borderRadius: '50%' }} />
+                  <Img width={150} alt='Upload img' src='/images/logos/datalogo2.avif' sx={{ borderRadius: '50%', border: '1px solid black' }} />
                 )}
                 <Box
                   sx={{
