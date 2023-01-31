@@ -30,6 +30,7 @@ import { useSelector } from 'react-redux'
 import { Skeleton } from '@mui/material'
 import CompanyEditDialog from './CompanyEditDialog'
 import Translations from 'src/layouts/components/Translations'
+import { getImagePath } from 'src/helpers/functions'
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -76,7 +77,7 @@ const CompanyViewLeft = ({ companyId }: Props) => {
               <Skeleton animation='wave' variant='circular' width={150} height={150} />
             ) : company?.logo ? (
               <CustomAvatar
-                src={company?.logo}
+                src={getImagePath(company?.logo)}
                 variant='rounded'
                 alt={company?.name}
                 sx={{ width: 150, height: 150, fontWeight: 600, mb: 4, fontSize: '3rem', borderRadius: '50%' }}
