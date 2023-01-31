@@ -25,12 +25,8 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
 
-// ** Actions Imports
-import { fetchData } from 'src/store/apps/project'
-
 // ** Types Imports
 import { AppDispatch } from 'src/store'
-import { ThemeColor } from 'src/@core/layouts/types'
 
 // ** Custom Table Components Imports
 import TableHeader from 'src/views/pages/user/list/TableHeader'
@@ -40,13 +36,6 @@ import { BootstrapTooltip } from '../companies'
 import { getUsers } from 'src/store/user'
 import { showIsActiveColor } from 'src/helpers/functions'
 
-interface UserRoleType {
-  [key: string]: { icon: string; color: string }
-}
-
-interface UserStatusType {
-  [key: string]: ThemeColor
-}
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
