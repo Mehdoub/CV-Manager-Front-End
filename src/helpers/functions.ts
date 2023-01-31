@@ -22,3 +22,14 @@ export const showIsActiveTxt = (isActive: boolean) => {
 export const showIsActiveColor = (isActive: boolean) => {
   return isActive ? 'success' : 'error'
 }
+
+export const setServerValidationErrors = (errors: object, setError: any) => {
+  if (errors) {
+    for (const [key, value] of Object.entries(errors)) {
+      setError(key, {
+        type: 'manual',
+        message: value
+      })
+    }
+  }
+}

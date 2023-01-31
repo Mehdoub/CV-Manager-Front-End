@@ -38,7 +38,7 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 import Translations from 'src/layouts/components/Translations'
-import { toastError } from 'src/helpers/functions'
+import { setServerValidationErrors, toastError } from 'src/helpers/functions'
 import { clearUsernameCheck } from 'src/store/auth'
 import { useDispatch } from 'react-redux'
 
@@ -110,6 +110,7 @@ const LoginPage = () => {
 
   const {
     control,
+    setError,
     handleSubmit,
     formState: { errors }
   } = useForm({
@@ -119,7 +120,9 @@ const LoginPage = () => {
   const onSubmit = (data: FormData) => {
     const { mobile, password } = data
     setDisabled(true)
-    auth.login({ mobile, password }, (err) => {
+    auth.login({ mobile, password }, (err: any) => {
+      const errors = err?.response?.data?.errors[0]
+      setServerValidationErrors(errors, setError)
       toastError(err?.response?.data?.message)
       setDisabled(false)
     })
@@ -276,7 +279,7 @@ const LoginPage = () => {
                   rules={{
                     required: 'Password cannot be empty',
                     minLength: { value: 8, message: 'Password should at least has 8 characters' },
-                    maxLength: { value: 16, message: 'Password maximum can be 16 characters' }
+                    maxLength: { value: 12, message: 'Password maximum can be 16 characters' }
                   }}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <OutlinedInput

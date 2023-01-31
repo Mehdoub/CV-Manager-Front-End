@@ -28,6 +28,7 @@ import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { clearCreateProject, createProject, getProjects } from 'src/store/project'
 import { getCompanyProjects } from 'src/store/company'
+import { setServerValidationErrors } from 'src/helpers/functions'
 
 interface FileProp {
   name: string
@@ -86,22 +87,13 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
 
   const dispatch = useDispatch()
   const store = useSelector((state: any) => state.createProject)
-  const { status } = store
+  const { status, errors: createErrors } = store
 
-  useEffect(() => {
-    if (status) {
-      dispatch(getProjects())
-      dispatch(clearCreateProject())
-      toggle()
-      reset()
-      if (dispatchCompanyProjects) dispatch(getCompanyProjects(companyId))
-    }
-  }, [status])
 
   const {
     reset,
     control,
-    setValue,
+    setError,
     handleSubmit,
     formState: { errors }
   } = useForm({
@@ -110,18 +102,27 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
     resolver: yupResolver(schema)
   })
 
+  useEffect(() => {
+    if (status) {
+      dispatch(getProjects())
+      dispatch(clearCreateProject())
+      toggle()
+      reset()
+      if (dispatchCompanyProjects) dispatch(getCompanyProjects(companyId))
+    } else if (createErrors) {
+      const validationErrors = createErrors?.data?.errors[0]
+      setServerValidationErrors(validationErrors, setError)
+    }
+  }, [status, createErrors])
+
   const onSubmit = (data: any) => {
     const company = companyId ? companyId : data?.company
     dispatch(createProject({ name: data?.name, company_id: company, description: data?.description }))
   }
 
   const handleClose = () => {
-    // setValue('name', '')
-    // setValue('company', '')
-    // setValue('description', '')
-    // setFiles([])
     toggle()
-    // reset()
+    dispatch(clearCreateProject())
   }
 
   // ** State

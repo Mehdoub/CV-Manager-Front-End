@@ -28,6 +28,7 @@ import { useDropzone } from 'react-dropzone'
 import { useDispatch } from 'react-redux'
 import { clearCreateCompany, createCompany, getCompanies } from 'src/store/company'
 import { useSelector } from 'react-redux'
+import { setServerValidationErrors } from 'src/helpers/functions'
 
 interface FileProp {
   name: string
@@ -68,7 +69,7 @@ const Header = styled(Box)<BoxProps>(({ theme }) => ({
 
 const schema = yup.object().shape(
   {
-    name: yup.string().label('Name').required().min(3),
+    name: yup.string().label('Name').min(3).required(),
     phone: yup.string().when('phone', (val, schema) => {
       if (val?.length > 0) {
         return yup.string().label('Phone').min(8).max(11).required()
@@ -119,11 +120,12 @@ const AddCompanyDrawer = (props: Props) => {
 
   const dispatch = useDispatch()
   const store = useSelector((state: any) => state.createCompany)
-  const { status } = store
+  const { status, errors: createErrors } = store
 
   const {
     reset,
     control,
+    setError,
     setValue,
     handleSubmit,
     formState: { errors }
@@ -148,8 +150,11 @@ const AddCompanyDrawer = (props: Props) => {
       dispatch(clearCreateCompany())
       toggle()
       reset()
+    } else if (createErrors) {
+      const validationErrors = createErrors?.data?.errors[0]
+      setServerValidationErrors(validationErrors, setError)
     }
-  }, [status])
+  }, [status, createErrors])
 
   const onSubmit = (data: CompanyFormData) => {
     if (files[0]) {
@@ -160,6 +165,7 @@ const AddCompanyDrawer = (props: Props) => {
 
   const handleClose = () => {
     toggle()
+    dispatch(clearCreateCompany())
   }
 
   // ** State

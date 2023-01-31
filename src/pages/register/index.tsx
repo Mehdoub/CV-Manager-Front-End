@@ -41,7 +41,7 @@ import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 import { useDispatch } from 'react-redux'
 import { checkUsername } from 'src/store/auth'
 import { useSelector } from 'react-redux'
-import { toastError } from 'src/helpers/functions'
+import { setServerValidationErrors, toastError } from 'src/helpers/functions'
 
 const defaultValues = {
   firstname: '',
@@ -152,7 +152,9 @@ const Register = () => {
         message: 'Password and repeat password should be the same'
       })
     } else if (isAvailable === true) {
-      register({ firstname, lastname, mobile, password, repeatpassword, username }, (err) => {
+      register({ firstname, lastname, mobile, password, repeatpassword, username }, (err: any) => {
+        const errors = err?.response?.data?.errors[0]
+        if (errors) setServerValidationErrors(errors, setError)
         toastError(err?.response?.data?.message)
       })
     }
