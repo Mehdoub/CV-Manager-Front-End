@@ -38,7 +38,7 @@ import AddUserDrawer from 'src/views/pages/user/list/AddUserDrawer'
 import { Stack } from '@mui/material'
 import { BootstrapTooltip } from '../companies'
 import { getUsers } from 'src/store/user'
-import { showIsActiveColor, showIsActiveTxt } from 'src/helpers/functions'
+import { showIsActiveColor } from 'src/helpers/functions'
 
 interface UserRoleType {
   [key: string]: { icon: string; color: string }
@@ -131,13 +131,13 @@ const columns = [
     flex: 0.1,
     minWidth: 110,
     field: 'is_baned',
-    headerName: 'Status',
+    headerName: 'Is Banned',
     renderCell: ({ row }: any) => {
       return (
         <CustomChip
           skin='light'
           size='small'
-          label={showIsActiveTxt(!row.is_baned)}
+          label={!row.is_baned ? 'Active' : 'Banned'}
           color={showIsActiveColor(!row.is_baned)}
           sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
         />

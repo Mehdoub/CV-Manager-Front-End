@@ -15,10 +15,6 @@ export const getImagePath = (imgAddress: string): string => {
   return rootUrl + imgAddress
 }
 
-export const showIsActiveTxt = (isActive: boolean) => {
-  return isActive ? 'Active' : 'Inactive'
-}
-
 export const showIsActiveColor = (isActive: boolean) => {
   return isActive ? 'success' : 'error'
 }
