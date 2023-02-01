@@ -2,10 +2,21 @@
 import { useTheme } from '@mui/material/styles'
 import Box, { BoxProps } from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
+import { useAuth } from 'src/hooks/useAuth'
 
 const FallbackSpinner = ({ sx }: { sx?: BoxProps['sx'] }) => {
   // ** Hook
   const theme = useTheme()
+  const auth = useAuth()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (auth.user) {
+      router.replace('/home')
+    }
+  }, [router, auth])
 
   return (
     <Box
