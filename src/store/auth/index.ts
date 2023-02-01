@@ -4,7 +4,7 @@ import ApiRequest from "src/helpers/ApiRequest";
 
 export const checkUsername = createAsyncThunk('checkUsername', async (username: string, { rejectWithValue }) => {
   try {
-    const response = await ApiRequest.builder().request('post', 'auth/check-username', { username })
+    const response = await ApiRequest.builder().request('post', 'auth/username-isavailable', { username })
 
     return response.data
   } catch (err: any) {
@@ -34,12 +34,12 @@ const usernameCheckSlice = createSlice({
     })
     builder.addCase(checkUsername.fulfilled, state => {
       state.loading = false
-      state.isAvailable = false
+      state.isAvailable = true
       state.errors = {}
     })
     builder.addCase(checkUsername.rejected, (state, action) => {
       state.loading = false
-      state.isAvailable = true
+      state.isAvailable = false
       state.errors = action.payload
     })
   }
