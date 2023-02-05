@@ -178,10 +178,58 @@ const projectDeactiveSlice = createSlice({
   }
 })
 
+export const activeProject: any = createAsyncThunk(
+  'activeProject',
+  async (projectId: string,
+    { rejectWithValue }) => {
+    try {
+      const response = await ApiRequest.builder().auth().request('patch', `projects/${projectId}/active`)
+
+      return response.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const projectActiveSlice = createSlice({
+  name: 'projectActive',
+  initialState: {
+    loading: false,
+    errors: {},
+    status: false,
+  },
+  reducers: {
+    clearActiveProject: (state) => {
+      state.loading = false
+      state.status = false
+      state.errors = {}
+    }
+  },
+  extraReducers: (builder) => {
+    builder.addCase(activeProject.pending, state => {
+      state.loading = true
+      state.status = false
+      state.errors = {}
+    })
+    builder.addCase(activeProject.fulfilled, (state) => {
+      state.loading = false
+      state.errors = {}
+      state.status = true
+    })
+    builder.addCase(activeProject.rejected, (state, action) => {
+      state.loading = false
+      state.errors = action.payload
+      state.status = false
+    })
+  }
+})
+
 
 export const { clearCreateProject } = createProjectSlice.actions
 export const { clearDeactiveProject } = projectDeactiveSlice.actions
+export const { clearActiveProject } = projectActiveSlice.actions
 export const projectDeactiveReducer = projectDeactiveSlice.reducer
 export const projectsListReducer = projectsListSlice.reducer
 export const projectReducer = projectSlice.reducer
 export const createProjectReducer = createProjectSlice.reducer
+export const projectActiveReducer = projectActiveSlice.reducer

@@ -12,18 +12,17 @@ import DialogActions from '@mui/material/DialogActions'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 import { useDispatch } from 'react-redux'
-import { clearDeactiveProject, deactiveProject, getProject } from 'src/store/project'
+import { activeProject, clearActiveProject, clearDeactiveProject, deactiveProject, getProject } from 'src/store/project'
 import { useSelector } from 'react-redux'
 
 type Props = {
   open: boolean
   setOpen: (val: boolean) => void
-  projectId: string
 }
 
 const ProjectSuspendDialog = (props: Props) => {
   // ** Props
-  const { open, setOpen, projectId } = props
+  const { open, setOpen } = props
 
   // ** States
   const [userInput, setUserInput] = useState<string>('yes')
@@ -31,8 +30,16 @@ const ProjectSuspendDialog = (props: Props) => {
 
   const dispatch = useDispatch()
 
+  const projectStore = useSelector((state: any) => state.projectFind)
+  const { data: project } = projectStore
+
   const projectDeactiveStore = useSelector((state: any) => state.projectDeactive)
-  const { status: projectDeactiveStatus, errors } = projectDeactiveStore
+  const { status: projectDeactiveStatus, errors: deactiveErrors } = projectDeactiveStore
+
+  const projectActiveStore = useSelector((state: any) => state.projectActive)
+  const { status: projectActiveStatus, errors: activeErrors } = projectActiveStore
+
+  const projectId = project?.id
 
   useEffect(() => {
     if (projectDeactiveStatus) {
@@ -41,7 +48,16 @@ const ProjectSuspendDialog = (props: Props) => {
       dispatch(getProject(projectId))
     }
     handleClose()
-  }, [projectDeactiveStatus, errors])
+  }, [projectDeactiveStatus, deactiveErrors])
+
+  useEffect(() => {
+    if (projectActiveStatus) {
+      setSecondDialogOpen(true)
+      dispatch(clearActiveProject())
+      dispatch(getProject(projectId))
+    }
+    handleClose()
+  }, [projectActiveStatus, activeErrors])
 
   const handleClose = () => setOpen(false)
 
@@ -49,13 +65,18 @@ const ProjectSuspendDialog = (props: Props) => {
 
   const handleConfirmation = (value: string) => {
     if (value == 'yes') {
-      dispatch(deactiveProject(projectId))
+      if (project?.is_active) dispatch(deactiveProject(projectId))
+      else dispatch(activeProject(projectId))
     } else {
       handleClose()
       setSecondDialogOpen(true)
     }
     setUserInput(value)
   }
+
+  const action = project?.is_active ? 'Suspend' : 'Activate'
+  const operation = !project?.is_active ? 'Suspention' : 'Activation'
+  const operationStatus = !project?.is_active ? 'Suspended' : 'Activated'
 
   return (
     <>
@@ -73,7 +94,7 @@ const ProjectSuspendDialog = (props: Props) => {
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>
           <Button variant='contained' onClick={() => handleConfirmation('yes')}>
-            Yes, Suspend project!
+            Yes, {action} project!
           </Button>
           <Button variant='outlined' color='secondary' onClick={() => handleConfirmation('cancel')}>
             Cancel
@@ -103,9 +124,9 @@ const ProjectSuspendDialog = (props: Props) => {
               icon={userInput === 'yes' ? 'mdi:check-circle-outline' : 'mdi:close-circle-outline'}
             />
             <Typography variant='h4' sx={{ mb: 8 }}>
-              {userInput === 'yes' ? 'Suspended!' : 'Cancelled'}
+              {userInput === 'yes' ? operationStatus + '!' : 'Cancelled'}
             </Typography>
-            <Typography>{userInput === 'yes' ? 'Project has been suspended.' : 'Cancelled Suspension :)'}</Typography>
+            <Typography>{userInput === 'yes' ? `Project has been ${operationStatus}.` : `Cancelled ${operation} :)`}</Typography>
           </Box>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>

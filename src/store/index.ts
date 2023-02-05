@@ -19,6 +19,7 @@ import {
 } from './company'
 import {
   createProjectReducer,
+  projectActiveReducer,
   projectDeactiveReducer,
   projectReducer,
   projectsListReducer
@@ -49,6 +50,7 @@ export const store = configureStore({
     projectFind: projectReducer,
     createProject: createProjectReducer,
     projectDeactive: projectDeactiveReducer,
+    projectActive: projectActiveReducer,
 
     usersList: usersListReducer,
 
