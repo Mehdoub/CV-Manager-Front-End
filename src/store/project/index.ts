@@ -224,12 +224,163 @@ const projectActiveSlice = createSlice({
   }
 })
 
+export const getProjectManagers: any = createAsyncThunk(
+  'getProjectManagers',
+  async (projectId: string,
+    { rejectWithValue }) => {
+    try {
+      const response = await ApiRequest.builder().auth().request('get', `projects/${projectId}/managers`)
+
+      return response.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const projectManagersSlice = createSlice({
+  name: 'projectManagers',
+  initialState: {
+    loading: false,
+    errors: {},
+    data: {},
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(getProjectManagers.pending, state => {
+      state.loading = true
+      state.errors = []
+      state.data = {}
+    })
+    builder.addCase(getProjectManagers.fulfilled, (state, action) => {
+      state.loading = false
+      state.errors = []
+      state.data = action.payload.data
+    })
+    builder.addCase(getProjectManagers.rejected, (state, action) => {
+      state.loading = false
+      state.errors = action.payload
+      state.data = {}
+    })
+  }
+})
+
+export interface AddProjectManagerParams {
+  projectId: string
+  manager_id: string
+}
+
+export const addProjectManager: any = createAsyncThunk(
+  'addProjectManager',
+  async (data: AddProjectManagerParams,
+    { rejectWithValue }) => {
+    try {
+      const { manager_id } = data
+      const response = await ApiRequest.builder().auth().request('patch', `projects/${data?.projectId}/manager`, { manager_id })
+
+      return response.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const addProjectManagerSlice = createSlice({
+  name: 'addProjectManager',
+  initialState: {
+    loading: false,
+    errors: [],
+    status: false,
+  },
+  reducers: {
+    clearAddProjectManager: (state) => {
+      state.loading = false
+      state.status = false
+      state.errors = []
+    }
+  },
+  extraReducers: (builder) => {
+    builder.addCase(addProjectManager.pending, state => {
+      state.loading = true
+      state.status = false
+      state.errors = []
+    })
+    builder.addCase(addProjectManager.fulfilled, (state, action) => {
+      state.loading = false
+      state.errors = []
+      state.status = true
+    })
+    builder.addCase(addProjectManager.rejected, (state, action) => {
+      state.loading = false
+      state.errors = action.payload
+      state.status = false
+    })
+  }
+})
+
+
+export interface RemoveProjectManagerParams {
+  projectId: string
+  manager_id: string
+}
+
+export const removeProjectManager: any = createAsyncThunk(
+  'removeProjectManager',
+  async (data: RemoveProjectManagerParams,
+    { rejectWithValue }) => {
+    try {
+      const { manager_id } = data
+      const response = await ApiRequest.builder().auth().request('delete', `projects/${data?.projectId}/manager`, { manager_id })
+
+      return response.data
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const removeProjectManagerSlice = createSlice({
+  name: 'removeProjectManager',
+  initialState: {
+    loading: false,
+    errors: [],
+    status: false,
+  },
+  reducers: {
+    clearRemoveProject: (state) => {
+      state.loading = false
+      state.status = false
+      state.errors = []
+    }
+  },
+  extraReducers: (builder) => {
+    builder.addCase(removeProjectManager.pending, state => {
+      state.loading = true
+      state.status = false
+      state.errors = []
+    })
+    builder.addCase(removeProjectManager.fulfilled, (state, action) => {
+      state.loading = false
+      state.errors = []
+      state.status = true
+    })
+    builder.addCase(removeProjectManager.rejected, (state, action) => {
+      state.loading = false
+      state.errors = action.payload
+      state.status = false
+    })
+  }
+})
+
+
 
 export const { clearCreateProject } = createProjectSlice.actions
 export const { clearDeactiveProject } = projectDeactiveSlice.actions
 export const { clearActiveProject } = projectActiveSlice.actions
+export const { clearRemoveProject } = removeProjectManagerSlice.actions
+export const { clearAddProjectManager } = addProjectManagerSlice.actions
 export const projectDeactiveReducer = projectDeactiveSlice.reducer
 export const projectsListReducer = projectsListSlice.reducer
 export const projectReducer = projectSlice.reducer
 export const createProjectReducer = createProjectSlice.reducer
 export const projectActiveReducer = projectActiveSlice.reducer
+export const projectManagersReducer = projectManagersSlice.reducer
+export const addProjectManagerReducer = addProjectManagerSlice.reducer
+export const removeProjectManagerReducer = removeProjectManagerSlice.reducer

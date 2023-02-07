@@ -18,11 +18,14 @@ import {
   companyActiveReducer
 } from './company'
 import {
+  addProjectManagerReducer,
   createProjectReducer,
   projectActiveReducer,
   projectDeactiveReducer,
+  projectManagersReducer,
   projectReducer,
-  projectsListReducer
+  projectsListReducer,
+  removeProjectManagerReducer
 } from './project'
 import { usersListReducer } from './user'
 import successHandler from 'src/middlewares/successHandler'
@@ -51,6 +54,9 @@ export const store = configureStore({
     createProject: createProjectReducer,
     projectDeactive: projectDeactiveReducer,
     projectActive: projectActiveReducer,
+    projectManagers: projectManagersReducer,
+    addProjectManager: addProjectManagerReducer,
+    removeProjectManager: removeProjectManagerReducer,
 
     usersList: usersListReducer,
 
