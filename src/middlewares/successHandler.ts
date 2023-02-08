@@ -5,10 +5,12 @@ import { toastSuccess } from "src/helpers/functions";
 const successHandler = ({ }) => (next: any) => async (action: any) => {
   const showTypesArr = [
     'createCompany/fulfilled',
-    'createProject/fulfilled',
     'addCompanyManager/fulfilled',
     'removeCompanyManager/fulfilled',
     'editCompany/fulfilled',
+    'createProject/fulfilled',
+    'addProjectManager/fulfilled',
+    'removeProjectManager/fulfilled',
   ]
 
   if (isFulfilled(action) && showTypesArr.includes(action.type)) {

@@ -12,19 +12,18 @@ import DialogActions from '@mui/material/DialogActions'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 import { useDispatch } from 'react-redux'
-import { clearRemoveCompanyManager, getCompanyManagers, removeCompanyManager } from 'src/store/company'
 import { useSelector } from 'react-redux'
+import { clearRemoveProjectManager, getProjectManagers, removeProjectManager } from 'src/store/project'
 
 type Props = {
   open: boolean
   setOpen: (val: boolean) => void
   manager: any
-  companyId: string
 }
 
-const CompanyRemoveManagerDialog = (props: Props) => {
+const ProjectRemoveManagerDialog = (props: Props) => {
   // ** Props
-  const { open, setOpen, manager, companyId } = props
+  const { open, setOpen, manager } = props
 
   // ** States
   const [userInput, setUserInput] = useState<string>('yes')
@@ -32,20 +31,22 @@ const CompanyRemoveManagerDialog = (props: Props) => {
 
   const dispatch = useDispatch()
 
-  const removeCompanyManagerStore = useSelector((state: any) => state.removeCompanyManager)
-  const { status: companyManagerRemoveStatus } = removeCompanyManagerStore
+  const removeProjectManagerStore = useSelector((state: any) => state.removeProjectManager)
+  const { status: projectManagerRemoveStatus } = removeProjectManagerStore
 
-  const companyStore = useSelector((state: any) => state.company)
-  const { data: companyData } = companyStore
+  const projectStore = useSelector((state: any) => state.projectFind)
+  const { data: projectData } = projectStore
+
+  const projectId = projectData?.id
 
   useEffect(() => {
-    if (companyManagerRemoveStatus) {
+    if (projectManagerRemoveStatus) {
       handleClose()
       setSecondDialogOpen(true)
-      dispatch(clearRemoveCompanyManager())
-      dispatch(getCompanyManagers(companyId))
+      dispatch(clearRemoveProjectManager())
+      dispatch(getProjectManagers(projectId))
     }
-  }, [companyManagerRemoveStatus])
+  }, [projectManagerRemoveStatus])
 
   const handleClose = () => setOpen(false)
 
@@ -53,7 +54,7 @@ const CompanyRemoveManagerDialog = (props: Props) => {
 
   const handleConfirmation = (value: string) => {
     if (value == 'yes') {
-      dispatch(removeCompanyManager({ companyId, manager_id: manager?.id }))
+      dispatch(removeProjectManager({ projectId, manager_id: manager?.id }))
     } else {
       handleClose()
       setSecondDialogOpen(true)
@@ -79,7 +80,7 @@ const CompanyRemoveManagerDialog = (props: Props) => {
               </Typography>{' '}
               From{' '}
               <Typography variant={'caption'} fontSize={16} color='error'>
-                {companyData?.name}
+                {projectData?.name}
               </Typography>{' '}
               Managers?
             </Typography>
@@ -134,4 +135,4 @@ const CompanyRemoveManagerDialog = (props: Props) => {
   )
 }
 
-export default CompanyRemoveManagerDialog
+export default ProjectRemoveManagerDialog

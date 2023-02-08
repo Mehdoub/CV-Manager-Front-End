@@ -286,7 +286,7 @@ const removeCompanyManagerSlice = createSlice({
     status: false,
   },
   reducers: {
-    clearRemoveCompany: (state) => {
+    clearRemoveCompanyManager: (state) => {
       state.loading = false
       state.status = false
       state.errors = []
@@ -517,7 +517,7 @@ const companyActiveSlice = createSlice({
 
 export const { clearCreateCompany } = createCompanySlice.actions
 export const { clearEditCompany } = editCompanySlice.actions
-export const { clearRemoveCompany } = removeCompanyManagerSlice.actions
+export const { clearRemoveCompanyManager } = removeCompanyManagerSlice.actions
 export const { clearAddCompanyManager } = addCompanyManagerSlice.actions
 export const { clearDeactiveCompany } = companyDeactiveSlice.actions
 export const { clearActiveCompany } = companyActiveSlice.actions
