@@ -33,6 +33,7 @@ import { addProjectManager, getProjectManagers } from 'src/store/project'
 import { getFullName, getImagePath } from 'src/helpers/functions'
 import { getUsers } from 'src/store/user'
 import { BootstrapTooltip } from 'src/pages/companies'
+import ProjectRemoveManagerDialog from './ProjectRemoveManagerDialog'
 
 const statusColors: any = {
   moderator: 'success',
@@ -66,7 +67,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
   }
 }))
 
-
 const ProjectViewManagers = () => {
   const [removeManagerDialogOpen, setRemoveManagerDialogOpen] = useState<boolean>(false)
   const [managerRemove, setManagerRemove] = useState<any>({})
@@ -93,12 +93,13 @@ const ProjectViewManagers = () => {
       minWidth: 230,
       field: 'firstname',
       headerName: 'Name',
-      renderCell: ({ row }: any) => {
+      renderCell: ({ row: { user_id } }: any) => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {renderClient(row)}
+            {renderClient(user_id)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href={`/users/view/${row?.id}`}>{getFullName(row?.user_id)}</StyledLink>
+              <StyledLink href={`/users/view/${user_id?.id}/overview`}>{getFullName(user_id)}</StyledLink>
+              <Typography noWrap variant='caption'>{`@${user_id?.username}`}</Typography>
             </Box>
           </Box>
         )
@@ -150,7 +151,7 @@ const ProjectViewManagers = () => {
       renderCell: ({ row }: any) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            <StyledLink href={`/users/${row?.created_by}`}>{row?.created_by}</StyledLink>
+            <StyledLink href={`/users/view/${row?.created_by}/overview`}>{row?.created_by}</StyledLink>
           </Typography>
         )
       }
@@ -160,19 +161,21 @@ const ProjectViewManagers = () => {
       minWidth: 80,
       headerName: ' ',
       field: ' ',
-      renderCell: ({row}: any) => {
-        return row?.type !== 'owner' && (
-          <BootstrapTooltip title='delete' placement='top'>
-            <div
-              style={{ cursor: 'pointer', marginTop: '4px' }}
-              onClick={() => {
-                setRemoveManagerDialogOpen(true)
-                setManagerRemove(row)
-              }}
-            >
-              <Icon color='gray' icon='mdi:delete-outline' fontSize={20} />
-            </div>
-          </BootstrapTooltip>
+      renderCell: ({ row }: any) => {
+        return (
+          row?.type !== 'owner' && (
+            <BootstrapTooltip title='delete' placement='top'>
+              <div
+                style={{ cursor: 'pointer', marginTop: '4px' }}
+                onClick={() => {
+                  setRemoveManagerDialogOpen(true)
+                  setManagerRemove(row?.user_id)
+                }}
+              >
+                <Icon color='gray' icon='mdi:delete-outline' fontSize={20} />
+              </div>
+            </BootstrapTooltip>
+          )
         )
       }
     }
@@ -254,11 +257,10 @@ const ProjectViewManagers = () => {
           )}
         </Grid>
       </Grid>
-      <CompanyRemoveManagerDialog
+      <ProjectRemoveManagerDialog
         open={removeManagerDialogOpen}
         setOpen={setRemoveManagerDialogOpen}
         manager={managerRemove}
-        companyId={companyId}
       />
     </Grid>
   )

@@ -12,19 +12,18 @@ import DialogActions from '@mui/material/DialogActions'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 import { useDispatch } from 'react-redux'
-import { getCompanyManagers, removeCompanyManager } from 'src/store/company'
 import { useSelector } from 'react-redux'
+import { clearRemoveProjectManager, getProjectManagers, removeProjectManager } from 'src/store/project'
 
 type Props = {
   open: boolean
   setOpen: (val: boolean) => void
   manager: any
-  projectId: string
 }
 
 const ProjectRemoveManagerDialog = (props: Props) => {
   // ** Props
-  const { open, setOpen, manager, projectId } = props
+  const { open, setOpen, manager } = props
 
   // ** States
   const [userInput, setUserInput] = useState<string>('yes')
@@ -38,12 +37,14 @@ const ProjectRemoveManagerDialog = (props: Props) => {
   const projectStore = useSelector((state: any) => state.projectFind)
   const { data: projectData } = projectStore
 
+  const projectId = projectData?.id
+
   useEffect(() => {
     if (projectManagerRemoveStatus) {
       handleClose()
       setSecondDialogOpen(true)
       dispatch(clearRemoveProjectManager())
-      dispatch(getCompanyManagers(projectId))
+      dispatch(getProjectManagers(projectId))
     }
   }, [projectManagerRemoveStatus])
 
@@ -53,7 +54,7 @@ const ProjectRemoveManagerDialog = (props: Props) => {
 
   const handleConfirmation = (value: string) => {
     if (value == 'yes') {
-      dispatch(removeCompanyManager({ projectId, manager_id: manager?.id }))
+      dispatch(removeProjectManager({ projectId, manager_id: manager?.id }))
     } else {
       handleClose()
       setSecondDialogOpen(true)
@@ -79,7 +80,7 @@ const ProjectRemoveManagerDialog = (props: Props) => {
               </Typography>{' '}
               From{' '}
               <Typography variant={'caption'} fontSize={16} color='error'>
-                {companyData?.name}
+                {projectData?.name}
               </Typography>{' '}
               Managers?
             </Typography>

@@ -344,7 +344,7 @@ const removeProjectManagerSlice = createSlice({
     status: false,
   },
   reducers: {
-    clearRemoveProject: (state) => {
+    clearRemoveProjectManager: (state) => {
       state.loading = false
       state.status = false
       state.errors = []
@@ -374,7 +374,7 @@ const removeProjectManagerSlice = createSlice({
 export const { clearCreateProject } = createProjectSlice.actions
 export const { clearDeactiveProject } = projectDeactiveSlice.actions
 export const { clearActiveProject } = projectActiveSlice.actions
-export const { clearRemoveProject } = removeProjectManagerSlice.actions
+export const { clearRemoveProjectManager } = removeProjectManagerSlice.actions
 export const { clearAddProjectManager } = addProjectManagerSlice.actions
 export const projectDeactiveReducer = projectDeactiveSlice.reducer
 export const projectsListReducer = projectsListSlice.reducer
