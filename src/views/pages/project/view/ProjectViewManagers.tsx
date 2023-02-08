@@ -87,6 +87,24 @@ const ProjectViewManagers = () => {
 
   const projectId = project?.id
 
+
+  useEffect(() => {
+    if (addMnanagerStatus) {
+      dispatch(getProjectManagers(projectId))
+    }
+  }, [addMnanagerStatus])
+
+  useEffect(() => {
+    if (projectId) dispatch(getProjectManagers(projectId))
+    dispatch(getUsers())
+  }, [projectId])
+
+  const addNewManager = (newManager: any) => {
+    if (newManager?.id?.length > 0) {
+      dispatch(addProjectManager({ projectId, manager_id: newManager?.id }))
+    }
+  }
+  
   const columns = [
     {
       flex: 0.2,
@@ -180,23 +198,6 @@ const ProjectViewManagers = () => {
       }
     }
   ]
-
-  useEffect(() => {
-    if (addMnanagerStatus) {
-      dispatch(getProjectManagers(projectId))
-    }
-  }, [addMnanagerStatus])
-
-  useEffect(() => {
-    if (projectId) dispatch(getProjectManagers(projectId))
-    dispatch(getUsers())
-  }, [projectId])
-
-  const addNewManager = (newManager: any) => {
-    if (newManager?.id?.length > 0) {
-      dispatch(addProjectManager({ projectId, manager_id: newManager?.id }))
-    }
-  }
 
   return (
     <Grid container spacing={6}>

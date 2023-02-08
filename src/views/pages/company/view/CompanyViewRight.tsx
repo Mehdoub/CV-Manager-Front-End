@@ -122,7 +122,7 @@ const CompanyViewRight = ({ tab, companyId }: Props) => {
                 <CompanyViewResumes companyId={companyId} />
               </TabPanel>
               <TabPanel sx={{ p: 0 }} value='manager'>
-                <CompanyViewManagers companyId={companyId} />
+                <CompanyViewManagers />
               </TabPanel>
             </>
           )}

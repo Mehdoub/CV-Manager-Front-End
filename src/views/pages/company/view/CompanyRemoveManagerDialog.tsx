@@ -19,12 +19,11 @@ type Props = {
   open: boolean
   setOpen: (val: boolean) => void
   manager: any
-  companyId: string
 }
 
 const CompanyRemoveManagerDialog = (props: Props) => {
   // ** Props
-  const { open, setOpen, manager, companyId } = props
+  const { open, setOpen, manager } = props
 
   // ** States
   const [userInput, setUserInput] = useState<string>('yes')
@@ -37,6 +36,8 @@ const CompanyRemoveManagerDialog = (props: Props) => {
 
   const companyStore = useSelector((state: any) => state.company)
   const { data: companyData } = companyStore
+
+  const companyId = companyData?.id
 
   useEffect(() => {
     if (companyManagerRemoveStatus) {
