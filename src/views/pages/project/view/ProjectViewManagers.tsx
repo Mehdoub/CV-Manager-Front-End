@@ -96,7 +96,6 @@ const ProjectViewManagers = () => {
 
   useEffect(() => {
     if (projectId) dispatch(getProjectManagers(projectId))
-    dispatch(getUsers())
   }, [projectId])
 
   const addNewManager = (newManager: any) => {
@@ -104,7 +103,12 @@ const ProjectViewManagers = () => {
       dispatch(addProjectManager({ projectId, manager_id: newManager?.id }))
     }
   }
-  
+
+  const searchUsers = (value: any) => {
+    const query = value?.target?.value
+    if (query?.length > 0) dispatch(getUsers({ query }))
+  }
+
   const columns = [
     {
       flex: 0.2,
@@ -224,16 +228,16 @@ const ProjectViewManagers = () => {
                   autoHighlight
                   sx={{ mb: 4 }}
                   id='add-members'
-                  options={users?.docs}
+                  options={users?.docs ?? []}
                   onChange={(e, newValue) => addNewManager(newValue)}
                   ListboxComponent={List}
                   getOptionLabel={(user: any) => getFullName(user)}
-                  renderInput={params => <TextField {...params} size='small' placeholder='Add project managers...' />}
+                  renderInput={params => <TextField {...params} onChange={searchUsers} size='small' placeholder='Search for managers...' />}
                   renderOption={(props, user) => (
                     <ListItem {...props}>
                       <ListItemAvatar>
                         <Avatar
-                          src={`/images/avatars/${user?.avatar}`}
+                          src={getImagePath(user?.avatar)}
                           alt={getFullName(user)}
                           sx={{ height: 28, width: 28 }}
                         />

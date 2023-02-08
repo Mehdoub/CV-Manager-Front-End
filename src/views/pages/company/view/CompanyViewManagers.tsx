@@ -62,7 +62,6 @@ const StyledLink = styled(Link)(({ theme }: any) => ({
   }
 }))
 
-
 const CompanyViewManagers = () => {
   const [removeManagerDialogOpen, setRemoveManagerDialogOpen] = useState<boolean>(false)
   const [managerRemove, setManagerRemove] = useState<any>({})
@@ -88,13 +87,17 @@ const CompanyViewManagers = () => {
     if (statusAddCompanyManager) {
       dispatch(clearAddCompanyManager())
     }
-    dispatch(getUsers())
   }, [statusAddCompanyManager, companyId])
 
   const addNewManager = (newManager: any) => {
     if (newManager?.id?.length > 0) {
       dispatch(addCompanyManager({ companyId, manager_id: newManager?.id }))
     }
+  }
+
+  const searchUsers = (value: any) => {
+    const query = value?.target?.value
+    if (query?.length > 0) dispatch(getUsers({ query }))
   }
 
   const columns = [
@@ -158,7 +161,7 @@ const CompanyViewManagers = () => {
       minWidth: 120,
       headerName: 'Assigned By',
       field: 'created_by',
-      renderCell: ({ row : { created_by } }: any) => {
+      renderCell: ({ row: { created_by } }: any) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
             <StyledLink href={`/users/view/${created_by?.id}/overview`}>{getFullName(created_by)}</StyledLink>
@@ -216,16 +219,18 @@ const CompanyViewManagers = () => {
                   autoHighlight
                   sx={{ mb: 4 }}
                   id='add-members'
-                  options={users?.docs}
+                  options={users?.docs ?? []}
                   onChange={(e, newValue) => addNewManager(newValue)}
                   ListboxComponent={List}
                   getOptionLabel={(user: any) => getFullName(user)}
-                  renderInput={params => <TextField {...params} size='small' placeholder='Add project managers...' />}
+                  renderInput={params => (
+                    <TextField {...params} onChange={searchUsers} size='small' placeholder='Search for managers...' />
+                  )}
                   renderOption={(props, user) => (
                     <ListItem {...props}>
                       <ListItemAvatar>
                         <Avatar
-                          src={`/images/avatars/${user?.avatar}`}
+                          src={user?.avatar ? getImagePath(user?.avatar) : ''}
                           alt={getFullName(user)}
                           sx={{ height: 28, width: 28 }}
                         />
