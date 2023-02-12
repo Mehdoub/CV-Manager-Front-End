@@ -38,6 +38,7 @@ import { getProject } from 'src/store/project'
 import { useSelector } from 'react-redux'
 import { Skeleton } from '@mui/material'
 import Translations from 'src/layouts/components/Translations'
+import Link from 'next/link'
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -54,6 +55,17 @@ const Img = styled('img')(({ theme }) => ({
   },
   [theme.breakpoints.down('sm')]: {
     width: 250
+  }
+}))
+
+const StyledLink = styled(Link)(({ theme }) => ({
+  fontWeight: 600,
+  fontSize: '1rem',
+  cursor: 'pointer',
+  textDecoration: 'none',
+  color: theme.palette.text.secondary,
+  '&:hover': {
+    color: theme.palette.primary.main
   }
 }))
 
@@ -158,7 +170,8 @@ const ProjectViewLeft = ({ projectId }: Props) => {
             <Divider sx={{ mt: theme => `${theme.spacing(4)} !important` }} />
             <Box sx={{ display: 'flex', mb: 2.7 }}>
               <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Company:</Typography>
-              <Typography variant='body2'>{project?.company_id}</Typography>
+              <StyledLink href={`/companies/view/${project?.company_id?.id}/overview`}>{project?.company_id?.name}</StyledLink>
+              <Typography variant='body2'></Typography>
             </Box>
             <Box sx={{ pt: 2, pb: 1 }}>
               <Box sx={{ display: 'flex', mb: 2.7 }}>
