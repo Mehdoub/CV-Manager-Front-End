@@ -98,9 +98,7 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
 
   const handleFilter = useCallback((val: string) => {
     setSearchQuery(val)
-    if (val.length > 2) {
-      dispatch(getProjects({ query: val, size: pageSize }))
-    }
+    dispatch(getProjects({ query: val, size: pageSize }))
   }, [])
 
   const toggleAddProjectDrawer = () => setaddProjectOpen(!addProjectOpen)

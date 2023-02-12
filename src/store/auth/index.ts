@@ -6,7 +6,7 @@ export const checkUsername = createAsyncThunk('checkUsername', async (username: 
   try {
     const response = await ApiRequest.builder().request('post', 'auth/username-isavailable', { username })
 
-    return response.data
+    return response
   } catch (err: any) {
     return rejectWithValue(err.response)
   }

@@ -10,7 +10,7 @@ export const getUsers: any = createAsyncThunk(
       const { page, size, query } = params
       const response = await ApiRequest.builder().auth().page(page).size(size).query(query).request('get', 'users')
 
-      return response.data
+      return response
     } catch (err: any) {
       return rejectWithValue(err?.response)
     }
@@ -31,7 +31,7 @@ const usersListSlice = createSlice({
     builder.addCase(getUsers.fulfilled, (state, action) => {
       state.loading = false
       state.errors = []
-      state.data = action.payload.data[0]
+      state.data = action.payload.data.data[0]
     })
     builder.addCase(getUsers.rejected, (state, action) => {
       state.loading = false

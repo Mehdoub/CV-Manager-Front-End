@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios'
+import axios, { AxiosRequestConfig, AxiosResponse, CancelTokenSource } from 'axios'
 import authConfig from 'src/configs/auth'
 import { toastError } from './functions'
 
@@ -8,6 +8,13 @@ interface requestConfig {
     authorization?: string | null
   }
 }
+
+interface PendingRequest {
+  name: string
+  cancelToken: CancelTokenSource
+}
+
+let pendingRequestsStack: Array<PendingRequest> = []
 
 export default class ApiRequest {
   private accessToken: string
@@ -63,7 +70,7 @@ export default class ApiRequest {
 
         return await requestMethod(response.data.data[0].access_token)
       }
-      if (err?.response?.data?.message?.length == 0) toastError('')
+      if (err?.response?.data?.message?.length == 0) toastError('Something Went Wrong!')
 
       throw err
     }
@@ -86,6 +93,25 @@ export default class ApiRequest {
     } catch (err: any) {
       throw err
     }
+  }
+
+  private cancelSimilarPendingRequest(requestName: string, cancelToken: CancelTokenSource) {
+    pendingRequestsStack?.length > 0 && pendingRequestsStack.map((request: PendingRequest, index: number) => {
+      if (request.name == requestName) {
+        request.cancelToken.cancel('Previous Request Was Canceled Due To The New Request!')
+        pendingRequestsStack.splice(index, 1)
+      }
+    })
+
+    pendingRequestsStack.push({ name: requestName, cancelToken })
+  }
+
+  private removeDoneRequestFromStack(requestName: string) {
+    pendingRequestsStack.map((request: PendingRequest, index: number) => {
+      if (request.name == requestName) {
+        pendingRequestsStack.splice(index, 1)
+      }
+    })
   }
 
   public auth(): ApiRequest {
@@ -112,19 +138,22 @@ export default class ApiRequest {
     return this
   }
 
-  public contentType = (newContentType: string) : ApiRequest => {
+  public contentType = (newContentType: string): ApiRequest => {
     this.defaultConf.header['Content-Type'] = newContentType
 
     return this
   }
 
   public async request(method: string, url: string, data = {}) {
+    const cancelToken = axios.CancelToken.source()
+    const requestName = `${method}/${url}`
     const requestMethod = (accessToken = '') =>
       axios.request({
         method,
         url: this.getUrl(url),
         data,
         baseURL: this.baseUrl,
+        cancelToken: cancelToken.token,
         headers: {
           ...this.defaultConf.header,
           authorization: this.needAuth && accessToken
@@ -134,7 +163,12 @@ export default class ApiRequest {
               : undefined
         }
       })
+
+    this.cancelSimilarPendingRequest(requestName, cancelToken)
+
     const response = await this.responseHandler(requestMethod)
+
+    this.removeDoneRequestFromStack(requestName)
 
     return response
   }
