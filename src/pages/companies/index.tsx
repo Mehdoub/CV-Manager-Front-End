@@ -39,7 +39,7 @@ import AddCompanyDrawer from 'src/views/pages/company/list/AddCompanyDrawer'
 import { getImagePath } from 'src/helpers/functions'
 import { useTranslation } from 'react-i18next'
 
-const statusColors : any = {
+const statusColors: any = {
   active: 'success',
   inactive: 'error'
 }
@@ -304,9 +304,9 @@ const CompanyList = () => {
       </Grid>
       <Grid item xs={12}>
         <Card>
-          {companies?.docs && !loading ? (
-            <>
-              <TableHeader searchQuery={searchQuery} handleFilter={handleFilter} toggle={toggleAddCompanyDrawer} />
+          <>
+            <TableHeader searchQuery={searchQuery} handleFilter={handleFilter} toggle={toggleAddCompanyDrawer} />
+            {companies?.docs && !loading ? (
               <DataGrid
                 autoHeight
                 rows={companies?.docs ?? []}
@@ -322,10 +322,10 @@ const CompanyList = () => {
                 page={page}
                 onPageChange={newPage => handlePageChange(newPage)}
               />
-            </>
-          ) : (
-            <Skeleton variant='rounded' height={600} />
-          )}
+            ) : (
+              <Skeleton variant='rounded' height={600} />
+            )}
+          </>
         </Card>
       </Grid>
       <AddCompanyDrawer open={addCompanyOpen} toggle={toggleAddCompanyDrawer} />
