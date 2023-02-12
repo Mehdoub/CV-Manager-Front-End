@@ -12,7 +12,7 @@ export const getCompanies: any = createAsyncThunk(
       const { page, size, query } = params
       const response = await ApiRequest.builder().auth().page(page).size(size).query(query).request('get', 'companies')
 
-      return response.data
+      return response
     } catch (err: any) {
       return rejectWithValue(err?.response)
     }
@@ -33,7 +33,7 @@ const companiesListSlice = createSlice({
     builder.addCase(getCompanies.fulfilled, (state, action) => {
       state.loading = false
       state.errors = []
-      state.data = action.payload.data[0]
+      state.data = action.payload.data.data[0]
     })
     builder.addCase(getCompanies.rejected, (state, action) => {
       state.loading = false
@@ -51,7 +51,7 @@ export const getCompany: any = createAsyncThunk(
     try {
       const response = await ApiRequest.builder().auth().request('get', `companies/${companyId}`)
 
-      return response.data
+      return response
     } catch (err: any) {
       return rejectWithValue(err?.response)
     }
@@ -74,7 +74,7 @@ const companySlice = createSlice({
     builder.addCase(getCompany.fulfilled, (state, action) => {
       state.loading = false
       state.errors = []
-      state.data = action.payload.data[0]
+      state.data = action.payload.data.data[0]
     })
     builder.addCase(getCompany.rejected, (state, action) => {
       state.loading = false
@@ -92,7 +92,7 @@ export const getCompanyManagers: any = createAsyncThunk(
     try {
       const response = await ApiRequest.builder().auth().request('get', `companies/${companyId}/managers`)
 
-      return response.data
+      return response
     } catch (err: any) {
       return rejectWithValue(err?.response)
     }
@@ -115,7 +115,7 @@ const companyManagersSlice = createSlice({
     builder.addCase(getCompanyManagers.fulfilled, (state, action) => {
       state.loading = false
       state.errors = []
-      state.data = action.payload.data
+      state.data = action.payload.data.data
     })
     builder.addCase(getCompanyManagers.rejected, (state, action) => {
       state.loading = false
@@ -133,7 +133,7 @@ export const getCompanyProjects: any = createAsyncThunk(
     try {
       const response = await ApiRequest.builder().auth().request('get', `companies/${companyId}/projects`)
 
-      return response.data
+      return response
     } catch (err: any) {
       return rejectWithValue(err?.response)
     }
@@ -156,7 +156,7 @@ const companyProjectsSlice = createSlice({
     builder.addCase(getCompanyProjects.fulfilled, (state, action) => {
       state.loading = false
       state.errors = []
-      state.data = action.payload.data
+      state.data = action.payload.data.data
     })
     builder.addCase(getCompanyProjects.rejected, (state, action) => {
       state.loading = false
@@ -173,7 +173,7 @@ export const getCompanyResumes: any = createAsyncThunk(
     try {
       const response = await ApiRequest.builder().auth().request('get', `companies/${companyId}/resumes`)
 
-      return response.data
+      return response
     } catch (err: any) {
       return rejectWithValue(err?.response)
     }
@@ -196,7 +196,7 @@ const companyResumesSlice = createSlice({
     builder.addCase(getCompanyResumes.fulfilled, (state, action) => {
       state.loading = false
       state.errors = []
-      state.data = action.payload.data
+      state.data = action.payload.data.data
     })
     builder.addCase(getCompanyResumes.rejected, (state, action) => {
       state.loading = false
@@ -219,7 +219,7 @@ export const addCompanyManager: any = createAsyncThunk(
       const { manager_id } = data
       const response = await ApiRequest.builder().auth().request('patch', `companies/${data?.companyId}/manager`, { manager_id })
 
-      return response.data
+      return response
     } catch (err: any) {
       return rejectWithValue(err?.response)
     }
@@ -272,7 +272,7 @@ export const removeCompanyManager: any = createAsyncThunk(
       const { manager_id } = data
       const response = await ApiRequest.builder().auth().request('delete', `companies/${data?.companyId}/manager`, { manager_id })
 
-      return response.data
+      return response
     } catch (err: any) {
       return rejectWithValue(err?.response)
     }
@@ -384,7 +384,7 @@ export const editCompany: any = createAsyncThunk(
       delete data.companyId
       const response = await ApiRequest.builder().auth().request('patch', `companies/${companyId}`, data)
 
-      return response.data
+      return response
     } catch (err: any) {
       return rejectWithValue(err?.response)
     }
@@ -430,7 +430,7 @@ export const deactiveCompany: any = createAsyncThunk(
     try {
       const response = await ApiRequest.builder().auth().request('patch', `companies/${companyId}/deactive`)
 
-      return response.data
+      return response
     } catch (err: any) {
       return rejectWithValue(err?.response)
     }
@@ -476,7 +476,7 @@ export const activeCompany: any = createAsyncThunk(
     try {
       const response = await ApiRequest.builder().auth().request('patch', `companies/${companyId}/active`)
 
-      return response.data
+      return response
     } catch (err: any) {
       return rejectWithValue(err?.response)
     }

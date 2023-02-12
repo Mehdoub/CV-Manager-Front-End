@@ -10,7 +10,7 @@ export const getProjects: any = createAsyncThunk(
       const { page, size, query } = params
       const response = await ApiRequest.builder().auth().page(page).size(size).query(query).request('get', 'projects')
 
-      return response.data
+      return response
     } catch (err: any) {
       return rejectWithValue(err?.response)
     }
@@ -31,7 +31,7 @@ const projectsListSlice = createSlice({
     builder.addCase(getProjects.fulfilled, (state, action) => {
       state.loading = false
       state.errors = []
-      state.data = action.payload.data[0]
+      state.data = action.payload.data.data[0]
     })
     builder.addCase(getProjects.rejected, (state, action) => {
       state.loading = false
@@ -49,7 +49,7 @@ export const getProject: any = createAsyncThunk(
     try {
       const response = await ApiRequest.builder().auth().request('get', `projects/${projectId}`)
 
-      return response.data
+      return response
     } catch (err: any) {
       return rejectWithValue(err?.response)
     }
@@ -74,7 +74,7 @@ const projectSlice = createSlice({
     builder.addCase(getProject.fulfilled, (state, action) => {
       state.loading = false
       state.errors = []
-      state.data = action.payload.data[0]
+      state.data = action.payload.data.data[0]
       state.managers = [{ ...action?.payload?.data[0]?.created_by, type: 'owner' }]
     })
     builder.addCase(getProject.rejected, (state, action) => {
@@ -93,7 +93,7 @@ export const createProject: any = createAsyncThunk(
     try {
       const response = await ApiRequest.builder().auth().request('post', 'projects', data)
 
-      return response.data
+      return response
     } catch (err: any) {
       return rejectWithValue(err?.response)
     }
@@ -139,7 +139,7 @@ export const deactiveProject: any = createAsyncThunk(
     try {
       const response = await ApiRequest.builder().auth().request('patch', `projects/${projectId}/deactive`)
 
-      return response.data
+      return response
     } catch (err: any) {
       return rejectWithValue(err?.response)
     }
@@ -185,7 +185,7 @@ export const activeProject: any = createAsyncThunk(
     try {
       const response = await ApiRequest.builder().auth().request('patch', `projects/${projectId}/active`)
 
-      return response.data
+      return response
     } catch (err: any) {
       return rejectWithValue(err?.response)
     }
@@ -231,7 +231,7 @@ export const getProjectManagers: any = createAsyncThunk(
     try {
       const response = await ApiRequest.builder().auth().request('get', `projects/${projectId}/managers`)
 
-      return response.data
+      return response
     } catch (err: any) {
       return rejectWithValue(err?.response)
     }
@@ -254,7 +254,7 @@ const projectManagersSlice = createSlice({
     builder.addCase(getProjectManagers.fulfilled, (state, action) => {
       state.loading = false
       state.errors = []
-      state.data = action.payload.data
+      state.data = action.payload.data.data
     })
     builder.addCase(getProjectManagers.rejected, (state, action) => {
       state.loading = false
@@ -277,7 +277,7 @@ export const addProjectManager: any = createAsyncThunk(
       const { manager_id } = data
       const response = await ApiRequest.builder().auth().request('patch', `projects/${data?.projectId}/manager`, { manager_id })
 
-      return response.data
+      return response
     } catch (err: any) {
       return rejectWithValue(err?.response)
     }
@@ -330,7 +330,7 @@ export const removeProjectManager: any = createAsyncThunk(
       const { manager_id } = data
       const response = await ApiRequest.builder().auth().request('delete', `projects/${data?.projectId}/manager`, { manager_id })
 
-      return response.data
+      return response
     } catch (err: any) {
       return rejectWithValue(err?.response)
     }
