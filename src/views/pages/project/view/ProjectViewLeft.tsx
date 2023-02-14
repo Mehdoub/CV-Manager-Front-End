@@ -170,8 +170,9 @@ const ProjectViewLeft = ({ projectId }: Props) => {
             <Divider sx={{ mt: theme => `${theme.spacing(4)} !important` }} />
             <Box sx={{ display: 'flex', mb: 2.7 }}>
               <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Company:</Typography>
-              <StyledLink href={`/companies/view/${project?.company_id?.id}/overview`}>{project?.company_id?.name}</StyledLink>
-              <Typography variant='body2'></Typography>
+              <StyledLink href={`/companies/view/${project?.company_id?.id}/overview`}>
+                {project?.company_id?.name}
+              </StyledLink>
             </Box>
             <Box sx={{ pt: 2, pb: 1 }}>
               <Box sx={{ display: 'flex', mb: 2.7 }}>

@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -11,29 +11,86 @@ import DialogActions from '@mui/material/DialogActions'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+import { useDispatch } from 'react-redux'
 
 type Props = {
   open: boolean
   setOpen: (val: boolean) => void
+  type: 'company' | 'project' | 'position'
+  entity: any
+  activeStore: any
+  deactiveStore: any
+  getEntityAction: any
+  activeAction: any
+  deactiveAction: any
+  clearActiveAction: any
+  clearDeactiveAction: any
 }
 
-const ProjectSuspendDialog = (props: Props) => {
+const SuspendDialog = (props: Props) => {
   // ** Props
-  const { open, setOpen } = props
+  const {
+    open,
+    setOpen,
+    type,
+    entity,
+    activeStore,
+    deactiveStore,
+    getEntityAction,
+    activeAction,
+    deactiveAction,
+    clearActiveAction,
+    clearDeactiveAction
+  } = props
 
   // ** States
   const [userInput, setUserInput] = useState<string>('yes')
   const [secondDialogOpen, setSecondDialogOpen] = useState<boolean>(false)
+
+  const dispatch = useDispatch()
+
+  const { status: deactiveStatus, errors: deactiveErrors } = activeStore
+
+  const { status: activeStatus, errors: activeErrors } = deactiveStore
+
+  const entityId = entity?.id
+
+  useEffect(() => {
+    if (deactiveStatus) {
+      setSecondDialogOpen(true)
+      dispatch(clearDeactiveAction())
+      dispatch(getEntityAction(entityId))
+    }
+    handleClose()
+  }, [deactiveStatus, deactiveErrors])
+
+  useEffect(() => {
+    if (activeStatus) {
+      setSecondDialogOpen(true)
+      dispatch(clearActiveAction())
+      dispatch(getEntityAction(entityId))
+    }
+    handleClose()
+  }, [activeStatus, activeErrors])
 
   const handleClose = () => setOpen(false)
 
   const handleSecondDialogClose = () => setSecondDialogOpen(false)
 
   const handleConfirmation = (value: string) => {
-    handleClose()
+    if (value == 'yes') {
+      if (entity?.is_active) dispatch(deactiveAction())
+      else dispatch(activeAction())
+    } else {
+      handleClose()
+      setSecondDialogOpen(true)
+    }
     setUserInput(value)
-    setSecondDialogOpen(true)
   }
+
+  const action = entity?.is_active ? 'Suspend' : 'Activate'
+  const operation = !entity?.is_active ? 'Suspention' : 'Activation'
+  const operationStatus = !entity?.is_active ? 'Suspended' : 'Activated'
 
   return (
     <>
@@ -46,12 +103,12 @@ const ProjectSuspendDialog = (props: Props) => {
                 Are you sure?
               </Typography>
             </Box>
-            <Typography>You won't be able to revert project!</Typography>
+            <Typography>You won't be able to revert {type}!</Typography>
           </Box>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>
           <Button variant='contained' onClick={() => handleConfirmation('yes')}>
-            Yes, Suspend project!
+            Yes, {action} {type}!
           </Button>
           <Button variant='outlined' color='secondary' onClick={() => handleConfirmation('cancel')}>
             Cancel
@@ -81,9 +138,11 @@ const ProjectSuspendDialog = (props: Props) => {
               icon={userInput === 'yes' ? 'mdi:check-circle-outline' : 'mdi:close-circle-outline'}
             />
             <Typography variant='h4' sx={{ mb: 8 }}>
-              {userInput === 'yes' ? 'Suspended!' : 'Cancelled'}
+              {userInput === 'yes' ? operationStatus + '!' : 'Cancelled'}
             </Typography>
-            <Typography>{userInput === 'yes' ? 'Project has been suspended.' : 'Cancelled Suspension :)'}</Typography>
+            <Typography>
+              {userInput === 'yes' ? `${type} has been ${operationStatus}.` : `Cancelled ${operation} :)`}
+            </Typography>
           </Box>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>
@@ -96,4 +155,4 @@ const ProjectSuspendDialog = (props: Props) => {
   )
 }
 
-export default ProjectSuspendDialog
+export default SuspendDialog

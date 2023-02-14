@@ -92,7 +92,7 @@ export const createPosition: any = createAsyncThunk(
   async (data: any,
     { rejectWithValue }) => {
     try {
-      const response = await ApiRequest.builder().auth().request('post', 'projects', data)
+      const response = await ApiRequest.builder().auth().request('post', 'positions', data)
 
       return response
     } catch (err: any) {
@@ -137,8 +137,8 @@ export const deactivePosition: any = createAsyncThunk(
   'deactivePosition',
   async (_, { rejectWithValue, getState }) => {
     try {
-      const { position } = getState() as any
-      const response = await ApiRequest.builder().auth().request('patch', `positions/${position?.id}/deactive`)
+      const { position: { data } } = getState() as any
+      const response = await ApiRequest.builder().auth().request('patch', `positions/${data?.id}/deactive`)
 
       return response
     } catch (err: any) {
@@ -183,8 +183,8 @@ export const activePosition: any = createAsyncThunk(
   'activePosition',
   async (_, { rejectWithValue, getState }) => {
     try {
-      const { position } = getState() as any
-      const response = await ApiRequest.builder().auth().request('patch', `positions/${position?.id}/active`)
+      const { position: { data } } = getState() as any
+      const response = await ApiRequest.builder().auth().request('patch', `positions/${data?.id}/active`)
 
       return response
     } catch (err: any) {
@@ -229,8 +229,8 @@ export const getPositionManagers: any = createAsyncThunk(
   'getPositionManagers',
   async (_, { rejectWithValue, getState }) => {
     try {
-      const { position } = getState() as any
-      const response = await ApiRequest.builder().auth().request('get', `positions/${position?.id}/managers`)
+      const { position: { data } } = getState() as any
+      const response = await ApiRequest.builder().auth().request('get', `positions/${data?.id}/managers`)
 
       return response
     } catch (err: any) {
@@ -270,8 +270,8 @@ export const addPositionManager: any = createAsyncThunk(
   async (manager_id: string,
     { rejectWithValue, getState }) => {
     try {
-      const { position } = getState() as any
-      const response = await ApiRequest.builder().auth().request('patch', `positions/${position?.id}/manager`, { manager_id })
+      const { position: { data } } = getState() as any
+      const response = await ApiRequest.builder().auth().request('patch', `positions/${data?.id}/manager`, { manager_id })
 
       return response
     } catch (err: any) {
@@ -317,8 +317,8 @@ export const removePositionManager: any = createAsyncThunk(
   async (manager_id: string,
     { rejectWithValue, getState }) => {
     try {
-      const { position } = getState() as any
-      const response = await ApiRequest.builder().auth().request('delete', `positions/${position?.id}/manager`, { manager_id })
+      const { position: { data } } = getState() as any
+      const response = await ApiRequest.builder().auth().request('delete', `positions/${data?.id}/manager`, { manager_id })
 
       return response
     } catch (err: any) {

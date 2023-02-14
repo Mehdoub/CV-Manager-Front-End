@@ -9,7 +9,6 @@ import {
 
 // ** Next Imports
 import Link from 'next/link'
-import { GetStaticProps, InferGetStaticPropsType } from 'next/types'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -18,6 +17,7 @@ import Grid from '@mui/material/Grid'
 import { DataGrid } from '@mui/x-data-grid'
 import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
+import CustomChip from 'src/@core/components/mui/chip'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -32,14 +32,12 @@ import CardStatisticsHorizontal from 'src/@core/components/card-statistics/card-
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
 
-import { fetchData } from 'src/store/apps/project'
-import { CardStatsHorizontalProps } from 'src/@core/components/card-statistics/types'
-
 // ** Custom Table Components Imports
 import TableHeader from 'src/views/pages/position/list/TableHeader'
 import AddPositionDrawer from 'src/views/pages/position/list/AddPositionDrawer'
 import { AvatarGroup, Stack } from '@mui/material'
 import { BootstrapTooltip } from '../companies'
+import { getPositions } from 'src/store/position'
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -52,42 +50,88 @@ const StyledLink = styled(Link)(({ theme }) => ({
   }
 }))
 
+const statusColors : any = {
+  active: 'success',
+  inactive: 'error'
+}
+
 // ** renders client column
-export const renderClient = (row: any, field = 'avatar') => {
-  if (row[field].length) {
+export const renderClient = (row: any, field = 'logo') => {
+  if (row[field]?.length) {
     return <CustomAvatar src={row[field]} sx={{ mr: 3, width: 34, height: 34 }} />
   } else {
     return (
       <CustomAvatar
         skin='light'
-        color={row.avatarColor || 'primary'}
+        color={'primary'}
         sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}
       >
-        {getInitials(row.fullName ? row.fullName : 'John Doe')}
+        {getInitials(row?.title ?? 'John Doe')}
       </CustomAvatar>
     )
   }
 }
 
-const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const apiData = {
+  statsHorizontal: [
+    {
+      stats: '8,458',
+      trend: 'negative',
+      trendNumber: '8.1%',
+      title: 'New Customers',
+      icon: 'mdi:account-outline'
+    },
+    {
+      icon: 'mdi:poll',
+      stats: '$28.5k',
+      color: 'warning',
+      trendNumber: '18.2%',
+      title: 'Total Profit'
+    },
+    {
+      color: 'info',
+      stats: '2,450k',
+      trend: 'negative',
+      icon: 'mdi:trending-up',
+      trendNumber: '24.6%',
+      title: 'New Transactions'
+    },
+    {
+      stats: '$48.2K',
+      color: 'success',
+      icon: 'mdi:currency-usd',
+      trendNumber: '22.5%',
+      title: 'Total Revenue'
+    }
+  ]
+}
+
+const PositionList = () => {
   // ** State
-  const [value, setValue] = useState<string>('')
+  const [searchQuery, setSearchQuery] = useState<string>('')
   const [pageSize, setPageSize] = useState<number>(10)
-  const [addProjectOpen, setaddProjectOpen] = useState<boolean>(false)
+  const [page, setPage] = useState<number>(0)
+  const [addPositionOpen, setaddPositionOpen] = useState<boolean>(false)
 
   // ** Hooks
   const dispatch = useDispatch<any>()
-  const store = useSelector((state: any) => state.user)
+
+  const { data: positions, loading } = useSelector((state: any) => state.positionsList)
 
   useEffect(() => {
-    dispatch(fetchData())
-  }, [dispatch, value])
-
-  const handleFilter = useCallback((val: string) => {
-    setValue(val)
+    dispatch(getPositions({ size: pageSize, query: searchQuery, page }))
   }, [])
 
-  const toggleAddPositionDrawer = () => setaddProjectOpen(!addProjectOpen)
+  const handlePageChange = (newPage: number) => {
+    setPage(newPage++)
+    dispatch(getPositions({ page: newPage, size: pageSize, query: searchQuery }))
+  }
+  const handleFilter = useCallback((val: string) => {
+    setSearchQuery(val)
+    dispatch(getPositions({ query: val, size: pageSize }))
+  }, [])
+
+  const toggleAddPositionDrawer = () => setaddPositionOpen(!addPositionOpen)
 
   const columns = [
     {
@@ -96,13 +140,13 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       field: 'position',
       headerName: 'Position',
       renderCell: ({ row }: any) => {
-        const { position } = row
+        const { id, title } = row
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href={`/positions/view/${row.id}/overview/`}>{position}</StyledLink>
+              <StyledLink href={`/positions/view/${id}/overview/`}>{title}</StyledLink>
             </Box>
           </Box>
         )
@@ -118,9 +162,9 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {renderClient(row, 'logo')}
+            {renderClient(project_id)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href={`/projects/view/${row.id}/overview/`}>{project_id}</StyledLink>
+              <StyledLink href={`/projects/view/${project_id}/overview/`}>{project_id}</StyledLink>
             </Box>
           </Box>
         )
@@ -128,15 +172,17 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
     },
     {
       flex: 0.2,
-      minWidth: 250,
-      field: 'company',
+      minWidth: 230,
+      field: 'company_id',
       headerName: 'Company',
       renderCell: ({ row }: any) => {
+        const { company_id } = row
+
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {renderClient(row)}
+            {renderClient(company_id)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href={`/companies/view/${row.id}/overview/`}>{row.company}</StyledLink>
+              <StyledLink href={`/companies/view/${company_id}/overview/`}>{company_id}</StyledLink>
             </Box>
           </Box>
         )
@@ -144,15 +190,19 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
     },
     {
       flex: 0.1,
-      field: 'team',
-      minWidth: 150,
+      field: 'managers',
+      minWidth: 120,
       headerName: 'Managers',
       renderCell: ({ row }: any) =>
-        row?.avatarGroup.length > 0 ? (
+        row?.managers?.length > 0 ? (
           <AvatarGroup className='pull-up'>
-            {row?.avatarGroup?.map((src: any, index: any) => (
-              <BootstrapTooltip key={index} title='Manager Name' placement='top'>
-                <CustomAvatar src={src} sx={{ height: 26, width: 26 }} />
+            {row?.managers?.map((manager: any, index: any) => (
+              <BootstrapTooltip
+                key={index}
+                title={`${manager?.user_id?.firstname} ${manager?.user_id?.lastname}`}
+                placement='top'
+              >
+                <CustomAvatar src={manager?.user_id?.avatar} sx={{ height: 26, width: 26 }} />
               </BootstrapTooltip>
             ))}
           </AvatarGroup>
@@ -162,16 +212,41 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
     },
     {
       flex: 0.15,
-      minWidth: 120,
-      headerName: 'User Create',
-      field: 'username',
+      minWidth: 90,
+      headerName: 'Status',
+      field: 'is_active',
       renderCell: ({ row }: any) => {
         return (
-          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            <StyledLink href={`/users/view/${row.id}/overview`}>
-              {row.username}
-            </StyledLink>
-          </Typography>
+          <CustomChip
+            skin='light'
+            size='small'
+            label={row?.is_active ? 'active' : 'inactive'}
+            color={statusColors[row?.is_active ? 'active' : 'inactive']}
+            sx={{
+              height: 20,
+              fontWeight: 500,
+              fontSize: '0.75rem',
+              borderRadius: '5px',
+              textTransform: 'capitalize'
+            }}
+          />
+        )
+      }
+    },
+    {
+      flex: 0.2,
+      minWidth: 230,
+      field: 'created_by',
+      headerName: 'User Create',
+      renderCell: ({ row }: any) => {
+        const { created_by } = row
+
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+              <StyledLink href={`/users/view/${created_by}/overview/`}>{created_by}</StyledLink>
+            </Box>
+          </Box>
         )
       }
     },
@@ -183,7 +258,7 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       renderCell: ({ row }: any) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {row.time_created}
+            {new Date(row?.createdAt).toDateString()}
           </Typography>
         )
       }
@@ -197,7 +272,7 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       renderCell: ({ row }: any) => (
         <Stack direction='row' spacing={2}>
           <BootstrapTooltip title='view' placement='top'>
-            <StyledLink href={`/positions/view/${row.id}/overview`} onClick={e => e.preventDefault()}>
+            <StyledLink href={`/positions/view/${row?.id}/overview`}>
               <Icon icon='mdi:eye-outline' fontSize={20} />
             </StyledLink>
           </BootstrapTooltip>
@@ -216,7 +291,7 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       <Grid item xs={12}>
         {apiData && (
           <Grid container spacing={6}>
-            {apiData.statsHorizontal.map((item: CardStatsHorizontalProps, index: number) => {
+            {apiData.statsHorizontal.map((item: any, index: number) => {
               return (
                 <Grid item xs={12} md={3} sm={6} key={index}>
                   <CardStatisticsHorizontal {...item} icon={<Icon icon={item.icon as string} />} />
@@ -228,65 +303,30 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <TableHeader value={value} handleFilter={handleFilter} toggle={toggleAddPositionDrawer} />
-          <DataGrid
-            autoHeight
-            rows={store.data}
-            columns={columns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[10, 25, 50]}
-            sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
-            onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
-          />
+          <TableHeader value={searchQuery} handleFilter={handleFilter} toggle={toggleAddPositionDrawer} />
+          {!loading && positions?.docs?.length > 0 && (
+            <DataGrid
+              autoHeight
+              rows={positions?.docs ?? []}
+              columns={columns}
+              pageSize={pageSize}
+              disableSelectionOnClick
+              rowsPerPageOptions={[10]}
+              sx={{ '& .MuiDataGrid-columnHeaders': { borderRadius: 0 } }}
+              onPageSizeChange={(newPageSize: number) => setPageSize(newPageSize)}
+              pagination
+              paginationMode='server'
+              rowCount={positions?.totalDocs}
+              page={page}
+              onPageChange={newPage => handlePageChange(newPage)}
+            />
+          )}
         </Card>
       </Grid>
 
-      <AddPositionDrawer open={addProjectOpen} toggle={toggleAddPositionDrawer} />
+      <AddPositionDrawer open={addPositionOpen} toggle={toggleAddPositionDrawer} />
     </Grid>
   )
 }
 
-export const getStaticProps: GetStaticProps = async () => {
-  const apiData = {
-    statsHorizontal: [
-      {
-        stats: '8,458',
-        trend: 'negative',
-        trendNumber: '8.1%',
-        title: 'New Customers',
-        icon: 'mdi:account-outline'
-      },
-      {
-        icon: 'mdi:poll',
-        stats: '$28.5k',
-        color: 'warning',
-        trendNumber: '18.2%',
-        title: 'Total Profit'
-      },
-      {
-        color: 'info',
-        stats: '2,450k',
-        trend: 'negative',
-        icon: 'mdi:trending-up',
-        trendNumber: '24.6%',
-        title: 'New Transactions'
-      },
-      {
-        stats: '$48.2K',
-        color: 'success',
-        icon: 'mdi:currency-usd',
-        trendNumber: '22.5%',
-        title: 'Total Revenue'
-      }
-    ]
-  }
-
-  return {
-    props: {
-      apiData
-    }
-  }
-}
-
-export default ProjectList
+export default PositionList

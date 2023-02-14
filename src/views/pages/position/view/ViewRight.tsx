@@ -30,7 +30,7 @@ import AddManagerDrawer from './AddManagerDrawer'
 
 interface Props {
   tab: string
-  invoiceData: any
+  positionId: string
 }
 
 // ** Styled Tab component
@@ -43,7 +43,7 @@ const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   }
 }))
 
-const ViewRight = ({ tab, invoiceData }: Props) => {
+const ViewRight = ({ tab, positionId }: Props) => {
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -59,7 +59,7 @@ const ViewRight = ({ tab, invoiceData }: Props) => {
     setActiveTab(value)
     router
       .push({
-        pathname: `/positions/view/${invoiceData.id}/${value.toLowerCase()}`
+        pathname: `/positions/view/${positionId}/${value.toLowerCase()}`
       })
       .then(() => setIsLoading(false))
   }
@@ -73,10 +73,10 @@ const ViewRight = ({ tab, invoiceData }: Props) => {
   }, [tab])
 
   useEffect(() => {
-    if (invoiceData) {
+    if (positionId) {
       setIsLoading(false)
     }
-  }, [invoiceData])
+  }, [positionId])
 
   return (
     <>
