@@ -24,7 +24,7 @@ import Icon from 'src/@core/components/icon'
 // ** Custom Components
 import CustomChip from 'src/@core/components/mui/chip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
-import SuspendDialog from 'src/views/pages/position/view/SuspendDialog'
+import SuspendDialog from 'src/views/common/SuspendDialog'
 
 // ** Types
 import { ThemeColor } from 'src/@core/layouts/types'
