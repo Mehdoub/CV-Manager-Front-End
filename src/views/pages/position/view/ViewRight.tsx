@@ -18,12 +18,20 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Icon from 'src/@core/components/icon'
 
 // ** Demo Components Imports
-import ViewManagers from 'src/views/pages/position/view/ViewManagers'
 import ViewOverview from 'src/views/pages/position/view/ViewOverview'
 import ViewResumes from 'src/views/pages/position/view/ViewResumes'
 import ViewInterviews from 'src/views/pages/position/view/ViewInterviews'
 import { Button } from '@mui/material'
 import AddManagerDrawer from './AddManagerDrawer'
+import ManagersView from 'src/views/common/ManagersView'
+import { useSelector } from 'react-redux'
+import {
+  addPositionManager,
+  clearPositionManagerAdd,
+  clearPositionManagerRemove,
+  getPositionManagers,
+  removePositionManager
+} from 'src/store/position'
 
 // ** Types
 // import { InvoiceType } from 'src/types/apps/invoiceTypes'
@@ -53,6 +61,13 @@ const ViewRight = ({ tab, positionId }: Props) => {
 
   // ** Hooks
   const router = useRouter()
+
+  const positionStore = useSelector((state: any) => state.position)
+  const { data: position, loading } = positionStore
+
+  const positionManagersStore = useSelector((state: any) => state.positionManagers)
+  const positionManagerAddStore = useSelector((state: any) => state.positionManagerAdd)
+  const positionManagerRemoveStore = useSelector((state: any) => state.positionManagerRemove)
 
   const handleChange = (event: SyntheticEvent, value: string) => {
     setIsLoading(true)
@@ -130,7 +145,17 @@ const ViewRight = ({ tab, positionId }: Props) => {
                 <ViewResumes />
               </TabPanel>
               <TabPanel sx={{ p: 0 }} value='manager'>
-                <ViewManagers />
+                <ManagersView
+                  entity={position}
+                  entityManagersStore={positionManagersStore}
+                  entityManagerAddStore={positionManagerAddStore}
+                  addEntityManagerAction={addPositionManager}
+                  clearEntityManagerAddAction={clearPositionManagerAdd}
+                  entityManagerRemoveStore={positionManagerRemoveStore}
+                  removeEntityManagerAction={removePositionManager}
+                  clearEntityManagerRemoveAction={clearPositionManagerRemove}
+                  getEntityManagersAction={getPositionManagers}
+                />
               </TabPanel>
             </>
           )}
