@@ -14,12 +14,12 @@ import AddProjectDrawer from 'src/views/pages/project/list/AddProjectDrawer'
 // ** Type Imports
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
-import { fetchData } from 'src/store/apps/project'
-import { renderClient } from 'src/pages/projects'
 import Link from 'next/link'
 import { AvatarGroup, Button, Grid } from '@mui/material'
 import { BootstrapTooltip } from 'src/pages/companies'
 import { getProjectPositions } from 'src/store/project'
+import { getFullName } from 'src/helpers/functions'
+import { getInitials } from 'src/@core/utils/get-initials'
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -32,84 +32,23 @@ const StyledLink = styled(Link)(({ theme }) => ({
   }
 }))
 
-const resumeColumns = [
-  {
-    flex: 0.2,
-    minWidth: 230,
-    field: 'position',
-    headerName: 'Position',
-    renderCell: ({ row }: any) => {
-      const { position } = row
-
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {renderClient(row)}
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-            <StyledLink href='/position/view/overview/' onClick={e => e.preventDefault()}>
-              {position}
-            </StyledLink>
-          </Box>
-        </Box>
-      )
-    }
-  },
-  {
-    flex: 0.15,
-    minWidth: 120,
-    headerName: 'Resumes Number',
-    field: 'resumesNumber',
-    renderCell: ({ row }: any) => {
-      return (
-        <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-          {row.resumesNumber}
-        </Typography>
-      )
-    }
+const renderClient = (row: any, field = 'logo') => {
+  if (row[field]?.length) {
+    return <CustomAvatar src={row[field]} sx={{ mr: 3, width: 34, height: 34 }} />
+  } else {
+    return (
+      <CustomAvatar skin='light' color='primary' sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}>
+        {getInitials(row?.title ?? 'John Doe')}
+      </CustomAvatar>
+    )
   }
-]
-
-const positionColumns = [
-  {
-    flex: 0.2,
-    minWidth: 230,
-    field: 'position',
-    headerName: 'Position',
-    renderCell: ({ row }: any) => {
-      const { position } = row
-
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {renderClient(row)}
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-            <StyledLink href='/position/view/overview/' onClick={e => e.preventDefault()}>
-              {position}
-            </StyledLink>
-          </Box>
-        </Box>
-      )
-    }
-  },
-  {
-    flex: 0.15,
-    minWidth: 120,
-    headerName: 'Positions Number',
-    field: 'resumesNumber',
-    renderCell: ({ row }: any) => {
-      return (
-        <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-          {row.resumesNumber}
-        </Typography>
-      )
-    }
-  }
-]
+}
 
 const ProjectPositionListTable = () => {
   // ** State
   const [pageSize, setPageSize] = useState<number>(7)
 
   const dispatch = useDispatch<any>()
-  const store: any = useSelector((state: any) => state.user)
   const { data: project } = useSelector((state: any) => state.projectFind)
 
   const { data: positions, loading: loadingPositions } = useSelector((state: any) => state.projectPositions)
@@ -173,7 +112,7 @@ const ProjectPositionListTable = () => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href={`/users/view/${created_by}/overview/`}>{created_by}</StyledLink>
+              <StyledLink href={`/users/view/${created_by?.id}/overview/`}>{getFullName(created_by)}</StyledLink>
             </Box>
           </Box>
         )
@@ -196,38 +135,6 @@ const ProjectPositionListTable = () => {
 
   return (
     <Grid container spacing={6}>
-      <Grid item xs={6}>
-        <Card>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-            <CardHeader title='Most Resumes' />
-          </Box>
-          <DataGrid
-            autoHeight
-            rows={store.data}
-            columns={resumeColumns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[7, 10, 25, 50]}
-            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          />
-        </Card>
-      </Grid>
-      <Grid item xs={6}>
-        <Card>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-            <CardHeader title='Last Updates' />
-          </Box>
-          <DataGrid
-            autoHeight
-            rows={store.data}
-            columns={positionColumns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[7, 10, 25, 50]}
-            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          />
-        </Card>
-      </Grid>
       <Grid item xs={12}>
         <Card>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>

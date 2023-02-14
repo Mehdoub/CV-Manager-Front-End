@@ -121,58 +121,6 @@ const columns = [
   }
 ]
 
-const latestColumns = [
-  {
-    flex: 0.15,
-
-    // minWidth: 230,
-    field: 'project_id',
-    headerName: 'Project',
-    renderCell: ({ row }: any) => {
-      const { project_id } = row
-
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {renderClient(row)}
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-            <StyledLink href='/projects/view/' onClick={e => e.preventDefault()}>
-              {project_id}
-            </StyledLink>
-          </Box>
-        </Box>
-      )
-    }
-  },
-  {
-    flex: 0.15,
-    minWidth: 120,
-    headerName: 'Position',
-    field: 'position_id',
-    renderCell: ({ row }: any) => {
-      return (
-        <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-          <StyledLink href={`/postions/${row.position_id}`} onClick={e => e.preventDefault()}>
-            {row.position_id}
-          </StyledLink>
-        </Typography>
-      )
-    }
-  },
-  {
-    flex: 0.15,
-    minWidth: 120,
-    headerName: 'Full Name',
-    field: 'fullName',
-    renderCell: ({ row }: any) => {
-      return (
-        <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-          {`${row.firstname} ${row.lastname}`}
-        </Typography>
-      )
-    }
-  }
-]
-
 const ProjectResumeListTable = () => {
   // ** State
   const [pageSize, setPageSize] = useState<number>(7)
@@ -185,34 +133,6 @@ const ProjectResumeListTable = () => {
 
   return (
     <Grid container spacing={6}>
-      <Grid item md={6}>
-        <Card>
-          <CardHeader title='Hiered Resumes' />
-          <DataGrid
-            autoHeight
-            rows={resumes}
-            columns={latestColumns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[7, 10, 25, 50]}
-            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          />
-        </Card>
-      </Grid>
-      <Grid item md={6}>
-        <Card>
-          <CardHeader title='Last Updated Resumes' />
-          <DataGrid
-            autoHeight
-            rows={resumes}
-            columns={latestColumns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[7, 10, 25, 50]}
-            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          />
-        </Card>
-      </Grid>
       <Grid item md={12}>
         <Card sx={{ marginTop: '20px' }}>
           <CardHeader title='Latest Resumes' />
