@@ -13,10 +13,10 @@ import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 
 type Props = {
   tab: string
-  invoiceData: any
+  positionId: string
 }
 
-const ViewPage = ({ tab, invoiceData }: Props) => {
+const ViewPage = ({ tab, positionId }: Props) => {
   return (
     <ApexChartWrapper>
       <Grid container spacing={6}>
@@ -52,10 +52,10 @@ const ViewPage = ({ tab, invoiceData }: Props) => {
           </Grid>
         </Grid>
         <Grid item xs={12} md={5} lg={4}>
-          <ViewLeft />
+          <ViewLeft positionId={positionId} />
         </Grid>
         <Grid item xs={12} md={7} lg={8}>
-          <ViewRight tab={tab} invoiceData={invoiceData} />
+          <ViewRight tab={tab} positionId={positionId} />
         </Grid>
       </Grid>
     </ApexChartWrapper>

@@ -1,5 +1,5 @@
 // ** React Imports
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Drawer from '@mui/material/Drawer'
@@ -25,12 +25,18 @@ import Icon from 'src/@core/components/icon'
 import toast from 'react-hot-toast'
 import { useDropzone } from 'react-dropzone'
 import { InputLabel, MenuItem, Select } from '@mui/material'
+import { useDispatch } from 'react-redux'
+import { clearPositionCreate, createPosition, getPositions } from 'src/store/position'
+import { setServerValidationErrors } from 'src/helpers/functions'
+import { useSelector } from 'react-redux'
 
 interface FileProp {
   name: string
   type: string
   size: number
 }
+
+const levelOptions = ['senior', 'mid', 'junior']
 
 // Styled component for the upload image inside the dropzone area
 const Img = styled('img')(({ theme }) => ({
@@ -53,6 +59,7 @@ const HeadingTypography = styled(Typography)<TypographyProps>(({ theme }) => ({
 interface SidebarAddPositionType {
   open: boolean
   toggle: () => void
+  projectId?: string
 }
 
 const Header = styled(Box)<BoxProps>(({ theme }) => ({
@@ -64,37 +71,63 @@ const Header = styled(Box)<BoxProps>(({ theme }) => ({
 }))
 
 const schema = yup.object().shape({
-  project: yup.string().required(),
-  name: yup.string().required(),
-  description: yup.string().required()
+  title: yup.string().label('Title').min(3).max(50).required(),
+  project: yup.string().label('Project').required(),
+  level: yup.string().label('Level').oneOf(levelOptions),
+  description: yup.string().label('Description').min(10).max(100).required()
 })
+
+const defaultValues = {
+  title: '',
+  project: '',
+  level: '',
+  description: ''
+}
 
 const SidebarAddPosition = (props: SidebarAddPositionType) => {
   // ** Props
-  const { open, toggle } = props
+  const { open, toggle, projectId } = props
+
+  const dispatch = useDispatch()
+
+  const positionCreateStore = useSelector((state: any) => state.positionCreate)
+  const { status, errors: createErrors } = positionCreateStore
 
   const {
     reset,
     control,
-    setValue,
+    setError,
     handleSubmit,
     formState: { errors }
   } = useForm({
-    // defaultValues,
+    defaultValues,
     mode: 'onChange',
     resolver: yupResolver(schema)
   })
 
-  const onSubmit = () => {
-    toggle()
-    reset()
+  useEffect(() => {
+    if (status) {
+      dispatch(getPositions())
+      dispatch(clearPositionCreate())
+      toggle()
+      reset()
+    }
+    if (createErrors) {
+      const validationErrors = createErrors?.data?.errors[0]
+      setServerValidationErrors(validationErrors, setError)
+    }
+  }, [status, createErrors])
+
+  const onSubmit = (data: any) => {
+    const project = projectId ? projectId : data?.project
+    dispatch(
+      createPosition({ title: data?.title, project_id: project, level: data?.level, description: data?.description })
+    )
   }
 
   const handleClose = () => {
-    setValue('contact', Number(''))
-    setFiles([])
     toggle()
-    reset()
+    dispatch(clearPositionCreate())
   }
 
   // ** State
@@ -181,20 +214,20 @@ const SidebarAddPosition = (props: SidebarAddPositionType) => {
           </Fragment>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
-              name='name'
+              name='title'
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <TextField
                   value={value}
-                  label='Name'
+                  label='Title'
                   onChange={onChange}
                   placeholder='Example: Front-end'
-                  error={Boolean(errors.fullName)}
+                  error={Boolean(errors.title)}
                 />
               )}
             />
-            {errors.fullName && <FormHelperText sx={{ color: 'error.main' }}>{errors.fullName.message}</FormHelperText>}
+            {errors.title && <FormHelperText sx={{ color: 'error.main' }}>{errors.title.message}</FormHelperText>}
           </FormControl>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
@@ -214,21 +247,32 @@ const SidebarAddPosition = (props: SidebarAddPositionType) => {
             {errors.project && <FormHelperText sx={{ color: 'error.main' }}>{errors.project.message}</FormHelperText>}
           </FormControl>
           <FormControl fullWidth sx={{ mb: 6 }}>
-            <InputLabel id='level-select'>Select Level</InputLabel>
-            <Select
-              fullWidth
-              label='Select Level'
-              labelId='level-select'
-              inputProps={{ placeholder: 'Select Level' }}
-              value={level}
-              onChange={e => setLevel(e.target.value)}
-            >
-              {['senior', 'mid', 'junior'].map(item => (
-                <MenuItem value={item}>
-                  <Typography sx={{ textTransform: 'capitalize' }}>{item}</Typography>
-                </MenuItem>
-              ))}
-            </Select>
+            <Controller
+              name='level'
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value, onChange } }) => (
+                <>
+                  <InputLabel id='level-select'>Select Level</InputLabel>
+                  <Select
+                    fullWidth
+                    label='Select Level'
+                    labelId='level-select'
+                    inputProps={{ placeholder: 'Select Level' }}
+                    value={value}
+                    onChange={onChange}
+                    error={Boolean(errors.level)}
+                  >
+                    {levelOptions.map(item => (
+                      <MenuItem value={item}>
+                        <Typography sx={{ textTransform: 'capitalize' }}>{item}</Typography>
+                      </MenuItem>
+                    ))}
+                  </Select>
+                </>
+              )}
+            />
+            {errors.level && <FormHelperText sx={{ color: 'error.main' }}>{errors.level.message}</FormHelperText>}
           </FormControl>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller

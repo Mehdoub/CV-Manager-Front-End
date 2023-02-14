@@ -18,19 +18,27 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Icon from 'src/@core/components/icon'
 
 // ** Demo Components Imports
-import ViewManagers from 'src/views/pages/position/view/ViewManagers'
 import ViewOverview from 'src/views/pages/position/view/ViewOverview'
 import ViewResumes from 'src/views/pages/position/view/ViewResumes'
 import ViewInterviews from 'src/views/pages/position/view/ViewInterviews'
 import { Button } from '@mui/material'
 import AddManagerDrawer from './AddManagerDrawer'
+import ManagersView from 'src/views/common/ManagersView'
+import { useSelector } from 'react-redux'
+import {
+  addPositionManager,
+  clearPositionManagerAdd,
+  clearPositionManagerRemove,
+  getPositionManagers,
+  removePositionManager
+} from 'src/store/position'
 
 // ** Types
 // import { InvoiceType } from 'src/types/apps/invoiceTypes'
 
 interface Props {
   tab: string
-  invoiceData: any
+  positionId: string
 }
 
 // ** Styled Tab component
@@ -43,7 +51,7 @@ const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   }
 }))
 
-const ViewRight = ({ tab, invoiceData }: Props) => {
+const ViewRight = ({ tab, positionId }: Props) => {
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -54,12 +62,19 @@ const ViewRight = ({ tab, invoiceData }: Props) => {
   // ** Hooks
   const router = useRouter()
 
+  const positionStore = useSelector((state: any) => state.position)
+  const { data: position, loading } = positionStore
+
+  const positionManagersStore = useSelector((state: any) => state.positionManagers)
+  const positionManagerAddStore = useSelector((state: any) => state.positionManagerAdd)
+  const positionManagerRemoveStore = useSelector((state: any) => state.positionManagerRemove)
+
   const handleChange = (event: SyntheticEvent, value: string) => {
     setIsLoading(true)
     setActiveTab(value)
     router
       .push({
-        pathname: `/positions/view/${invoiceData.id}/${value.toLowerCase()}`
+        pathname: `/positions/view/${positionId}/${value.toLowerCase()}`
       })
       .then(() => setIsLoading(false))
   }
@@ -73,10 +88,10 @@ const ViewRight = ({ tab, invoiceData }: Props) => {
   }, [tab])
 
   useEffect(() => {
-    if (invoiceData) {
+    if (positionId) {
       setIsLoading(false)
     }
-  }, [invoiceData])
+  }, [positionId])
 
   return (
     <>
@@ -130,7 +145,17 @@ const ViewRight = ({ tab, invoiceData }: Props) => {
                 <ViewResumes />
               </TabPanel>
               <TabPanel sx={{ p: 0 }} value='manager'>
-                <ViewManagers />
+                <ManagersView
+                  entity={position}
+                  entityManagersStore={positionManagersStore}
+                  entityManagerAddStore={positionManagerAddStore}
+                  addEntityManagerAction={addPositionManager}
+                  clearEntityManagerAddAction={clearPositionManagerAdd}
+                  entityManagerRemoveStore={positionManagerRemoveStore}
+                  removeEntityManagerAction={removePositionManager}
+                  clearEntityManagerRemoveAction={clearPositionManagerRemove}
+                  getEntityManagersAction={getPositionManagers}
+                />
               </TabPanel>
             </>
           )}

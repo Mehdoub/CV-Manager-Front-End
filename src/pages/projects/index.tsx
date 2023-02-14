@@ -75,7 +75,41 @@ export const renderClient = (row: any, field = 'logo') => {
   }
 }
 
-const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>) => {
+const apiData = {
+  statsHorizontal: [
+    {
+      stats: '8,458',
+      trend: 'negative',
+      trendNumber: '8.1%',
+      title: 'New Customers',
+      icon: 'mdi:account-outline'
+    },
+    {
+      icon: 'mdi:poll',
+      stats: '$28.5k',
+      color: 'warning',
+      trendNumber: '18.2%',
+      title: 'Total Profit'
+    },
+    {
+      color: 'info',
+      stats: '2,450k',
+      trend: 'negative',
+      icon: 'mdi:trending-up',
+      trendNumber: '24.6%',
+      title: 'New Transactions'
+    },
+    {
+      stats: '$48.2K',
+      color: 'success',
+      icon: 'mdi:currency-usd',
+      trendNumber: '22.5%',
+      title: 'Total Revenue'
+    }
+  ]
+}
+
+const ProjectList = () => {
   // ** State
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [pageSize, setPageSize] = useState<number>(10)
@@ -93,7 +127,7 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
   }
 
   useEffect(() => {
-    dispatch(getProjects({ size: pageSize, query: searchQuery }))
+    dispatch(getProjects({ size: pageSize, query: searchQuery, page }))
   }, [])
 
   const handleFilter = useCallback((val: string) => {
@@ -273,48 +307,6 @@ const ProjectList = ({ apiData }: InferGetStaticPropsType<typeof getStaticProps>
       <AddProjectDrawer open={addProjectOpen} toggle={toggleAddProjectDrawer} />
     </Grid>
   )
-}
-
-export const getStaticProps: GetStaticProps = async () => {
-  const apiData = {
-    statsHorizontal: [
-      {
-        stats: '8,458',
-        trend: 'negative',
-        trendNumber: '8.1%',
-        title: 'New Customers',
-        icon: 'mdi:account-outline'
-      },
-      {
-        icon: 'mdi:poll',
-        stats: '$28.5k',
-        color: 'warning',
-        trendNumber: '18.2%',
-        title: 'Total Profit'
-      },
-      {
-        color: 'info',
-        stats: '2,450k',
-        trend: 'negative',
-        icon: 'mdi:trending-up',
-        trendNumber: '24.6%',
-        title: 'New Transactions'
-      },
-      {
-        stats: '$48.2K',
-        color: 'success',
-        icon: 'mdi:currency-usd',
-        trendNumber: '22.5%',
-        title: 'Total Revenue'
-      }
-    ]
-  }
-
-  return {
-    props: {
-      apiData
-    }
-  }
 }
 
 export default ProjectList
