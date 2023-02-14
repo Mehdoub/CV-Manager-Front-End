@@ -369,6 +369,46 @@ const removeProjectManagerSlice = createSlice({
   }
 })
 
+export const getProjectPositions: any = createAsyncThunk(
+  'getProjectPositions',
+  async (_, { rejectWithValue, getState }) => {
+    try {
+      const { projectFind: { data } } = getState() as any
+      const response = await ApiRequest.builder().auth().request('get', `projects/${data?.id}/positions`)
+
+      return response
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const projectPositionsSlice = createSlice({
+  name: 'projectPositions',
+  initialState: {
+    loading: false,
+    errors: {},
+    data: {},
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(getProjectPositions.pending, state => {
+      state.loading = true
+      state.errors = []
+      state.data = {}
+    })
+    builder.addCase(getProjectPositions.fulfilled, (state, action) => {
+      state.loading = false
+      state.errors = []
+      state.data = action.payload.data.data
+    })
+    builder.addCase(getProjectPositions.rejected, (state, action) => {
+      state.loading = false
+      state.errors = action.payload
+      state.data = {}
+    })
+  }
+})
+
 
 
 export const { clearCreateProject } = createProjectSlice.actions
@@ -384,3 +424,4 @@ export const projectActiveReducer = projectActiveSlice.reducer
 export const projectManagersReducer = projectManagersSlice.reducer
 export const addProjectManagerReducer = addProjectManagerSlice.reducer
 export const removeProjectManagerReducer = removeProjectManagerSlice.reducer
+export const projectPositionsReducer = projectPositionsSlice.reducer

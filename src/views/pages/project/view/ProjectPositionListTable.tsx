@@ -19,6 +19,7 @@ import { renderClient } from 'src/pages/projects'
 import Link from 'next/link'
 import { AvatarGroup, Button, Grid } from '@mui/material'
 import { BootstrapTooltip } from 'src/pages/companies'
+import { getProjectPositions } from 'src/store/project'
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -30,75 +31,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
     color: theme.palette.primary.main
   }
 }))
-
-const columns = [
-  {
-    flex: 0.2,
-    minWidth: 230,
-    field: 'position',
-    headerName: 'Position',
-    renderCell: ({ row }: any) => {
-      const { position } = row
-
-      return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {renderClient(row)}
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-            <StyledLink href='/position/view/overview/' onClick={e => e.preventDefault()}>
-              {position}
-            </StyledLink>
-          </Box>
-        </Box>
-      )
-    }
-  },
-  {
-    flex: 0.1,
-    field: 'team',
-    minWidth: 120,
-    headerName: 'Managers',
-    renderCell: ({ row }: any) =>
-      row?.avatarGroup.length > 0 ? (
-        <AvatarGroup className='pull-up'>
-          {row?.avatarGroup?.map((src: any, index: any) => (
-            <BootstrapTooltip key={index} title='Manager Name' placement='top'>
-              <CustomAvatar src={src} sx={{ height: 26, width: 26 }} />
-            </BootstrapTooltip>
-          ))}
-        </AvatarGroup>
-      ) : (
-        '---'
-      )
-  },
-  {
-    flex: 0.15,
-    minWidth: 120,
-    headerName: 'User Create',
-    field: 'username',
-    renderCell: ({ row }: any) => {
-      return (
-        <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-          <StyledLink href={`/users/${row.username}`} onClick={e => e.preventDefault()}>
-            {row.username}
-          </StyledLink>
-        </Typography>
-      )
-    }
-  },
-  {
-    flex: 0.15,
-    minWidth: 120,
-    headerName: 'Time Create',
-    field: 'time_created',
-    renderCell: ({ row }: any) => {
-      return (
-        <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-          {row.time_created}
-        </Typography>
-      )
-    }
-  }
-]
 
 const resumeColumns = [
   {
@@ -178,13 +110,89 @@ const ProjectPositionListTable = () => {
 
   const dispatch = useDispatch<any>()
   const store: any = useSelector((state: any) => state.user)
+  const { data: project } = useSelector((state: any) => state.projectFind)
+
+  const { data: positions, loading: loadingPositions } = useSelector((state: any) => state.projectPositions)
 
   useEffect(() => {
-    dispatch(fetchData())
-  }, [dispatch])
+    if (project?.id) dispatch(getProjectPositions())
+  }, [project?.id])
 
   const [addProjectOpen, setAddProjectOpen] = useState<boolean>(false)
   const toggleAddProjectDrawer = () => setAddProjectOpen(!addProjectOpen)
+
+  const latestPositionColumns = [
+    {
+      flex: 0.2,
+      minWidth: 230,
+      field: 'position',
+      headerName: 'Position',
+      renderCell: ({ row }: any) => {
+        const { id, title } = row
+
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {renderClient(row)}
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+              <StyledLink href={`/positions/view/${id}/overview/`}>{title}</StyledLink>
+            </Box>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.1,
+      field: 'managers',
+      minWidth: 120,
+      headerName: 'Managers',
+      renderCell: ({ row }: any) =>
+        row?.managers?.length > 0 ? (
+          <AvatarGroup className='pull-up'>
+            {row?.managers?.map((manager: any, index: any) => (
+              <BootstrapTooltip
+                key={index}
+                title={`${manager?.user_id?.firstname} ${manager?.user_id?.lastname}`}
+                placement='top'
+              >
+                <CustomAvatar src={manager?.user_id?.avatar} sx={{ height: 26, width: 26 }} />
+              </BootstrapTooltip>
+            ))}
+          </AvatarGroup>
+        ) : (
+          '---'
+        )
+    },
+    {
+      flex: 0.2,
+      minWidth: 230,
+      field: 'created_by',
+      headerName: 'User Create',
+      renderCell: ({ row }: any) => {
+        const { created_by } = row
+
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+              <StyledLink href={`/users/view/${created_by}/overview/`}>{created_by}</StyledLink>
+            </Box>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.15,
+      minWidth: 120,
+      headerName: 'Time Create',
+      field: 'time_created',
+      renderCell: ({ row }: any) => {
+        return (
+          <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+            {new Date(row?.createdAt).toDateString()}
+          </Typography>
+        )
+      }
+    }
+  ]
 
   return (
     <Grid container spacing={6}>
@@ -224,18 +232,17 @@ const ProjectPositionListTable = () => {
         <Card>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
             <CardHeader title='Latest Positions' />
-            {/* <TextField size='small' value={value} sx={{ mr: 6, mb: 2 }} placeholder='Search Project' /> */}
             <Button sx={{ mt: 2, mr: 5 }} variant='contained' onClick={toggleAddProjectDrawer}>
               Add Position
             </Button>
           </Box>
           <DataGrid
             autoHeight
-            rows={store.data}
-            columns={columns}
+            rows={positions ?? []}
+            columns={latestPositionColumns}
             pageSize={pageSize}
             disableSelectionOnClick
-            rowsPerPageOptions={[7, 10, 25, 50]}
+            rowsPerPageOptions={[10]}
             onPageSizeChange={newPageSize => setPageSize(newPageSize)}
           />
         </Card>
