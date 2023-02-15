@@ -6,20 +6,15 @@ import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import { DataGrid } from '@mui/x-data-grid'
 import { styled } from '@mui/material/styles'
-import TextField from '@mui/material/TextField'
 import CardHeader from '@mui/material/CardHeader'
 import Typography from '@mui/material/Typography'
-import CardContent from '@mui/material/CardContent'
-import CustomAvatar from 'src/@core/components/mui/avatar'
 
 // ** Type Imports
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
-import { fetchData } from 'src/store/apps/project'
 import { renderClient } from 'src/pages/projects'
 import Link from 'next/link'
-import { AvatarGroup, Button, Grid, Skeleton } from '@mui/material'
-import { BootstrapTooltip } from 'src/pages/companies'
+import { Grid, Skeleton } from '@mui/material'
 import { getCompanyProjects } from 'src/store/company'
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -77,13 +72,11 @@ const CompanyViewProjects = (props: Props) => {
   const [pageSize, setPageSize] = useState<number>(10)
 
   const dispatch = useDispatch<any>()
-  const store = useSelector((state: any) => state.user)
 
   const companyProjectsStore = useSelector((state: any) => state.companyProjects)
   const { data: projects, loading } = companyProjectsStore
 
   useEffect(() => {
-    dispatch(fetchData())
     dispatch(getCompanyProjects(companyId))
   }, [dispatch])
 

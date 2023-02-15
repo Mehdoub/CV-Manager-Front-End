@@ -1,5 +1,18 @@
 import { ToastPosition, toast } from "react-hot-toast"
 
+export const sliceInitialStateWithData = {
+  loading: false,
+  errors: [],
+  data: {}
+}
+
+export const sliceInitialStateWithStatus = {
+  loading: false,
+  errors: [],
+  status: false
+}
+
+
 export const toastError = (msg: string, duration: number = 5000, position: ToastPosition = 'bottom-left') => {
   if (msg?.length > 0) toast.error(msg, { duration, position, style: { maxWidth: '650px' } })
 }
@@ -31,4 +44,25 @@ export const setServerValidationErrors = (errors: object, setError: any) => {
       })
     }
   }
+}
+
+export const defaultPendingStatesValue = (state: any) => {
+  state.loading = true
+  state.status = false
+  state.errors = {}
+}
+
+export const defaultFulfilledStatesValue = (state: any, action: any = {}, zeroIndex: boolean = false) => {
+  state.loading = false
+  state.errors = {}
+  if (action)
+    if (zeroIndex) state.data = action.payload.data.data[0]
+    else state.data = action.payload.data.data
+  else state.status = true
+}
+
+export const defaultRejectedStatesValue = (state: any, action: any) => {
+  state.loading = false
+  state.errors = action.payload
+  state.status = false
 }
