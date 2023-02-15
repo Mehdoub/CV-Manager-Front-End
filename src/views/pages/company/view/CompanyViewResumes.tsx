@@ -12,11 +12,10 @@ import Typography from '@mui/material/Typography'
 // ** Type Imports
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
-import { renderClient } from 'src/pages/projects'
 import Link from 'next/link'
 import { Grid } from '@mui/material'
-import resumes from 'src/data/resumes.json'
 import { getCompanyResumes } from 'src/store/company'
+import { getFullName } from 'src/helpers/functions'
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -32,22 +31,13 @@ const StyledLink = styled(Link)(({ theme }) => ({
 const columns = [
   {
     flex: 0.15,
-
-    // minWidth: 230,
-    field: 'project_id',
-    headerName: 'Project',
+    field: 'fullname',
+    headerName: 'Full Name',
     renderCell: ({ row }: any) => {
-      const { project_id } = row
-
       return (
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          {renderClient(row)}
-          <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-            <StyledLink href={`/projects/view/${project_id?.id}/overview`} onClick={e => e.preventDefault()}>
-              {project_id?.name}
-            </StyledLink>
-          </Box>
-        </Box>
+        <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+          {getFullName(row)}
+        </Typography>
       )
     }
   },
@@ -60,9 +50,7 @@ const columns = [
       const { position_id } = row
       return (
         <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-          <StyledLink href={`/postions/view/${position_id.id}/overview`} onClick={e => e.preventDefault()}>
-            {position_id?.title}
-          </StyledLink>
+          <StyledLink href={`/postions/view/${position_id?.id}/overview`}>{position_id?.title}</StyledLink>
         </Typography>
       )
     }
@@ -70,12 +58,12 @@ const columns = [
   {
     flex: 0.15,
     minWidth: 120,
-    headerName: 'Full Name',
-    field: 'fullName',
+    headerName: 'User Create',
+    field: 'created_by',
     renderCell: ({ row }: any) => {
       return (
         <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-          {`${row?.firstname} ${row?.lastname}`}
+          <StyledLink href={`/users/view/${row?.created_by?.id}/overview`}>{getFullName(row?.created_by)}</StyledLink>
         </Typography>
       )
     }

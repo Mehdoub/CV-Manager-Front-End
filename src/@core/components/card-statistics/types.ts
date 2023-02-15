@@ -16,13 +16,15 @@ export type CardStatsHorizontalProps = {
 
 export type CardStatsVerticalProps = {
   title: string
-  stats: string
+  stats: string | number
   icon: ReactNode
   chipText: string
   color?: ThemeColor
-  trendNumber: string
+  trendNumber: string | number
   trend?: 'positive' | 'negative'
   optionsMenuProps?: OptionsMenuType
+  statsData?: any
+  type?: string
 }
 
 export type CardStatsCharacterProps = {

@@ -1,7 +1,9 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ApiRequest from "src/helpers/ApiRequest";
+import { defaultFulfilledStatesValue, defaultPendingStatesValue, defaultRejectedStatesValue, sliceInitialStateWithData, sliceInitialStateWithStatus } from "src/helpers/functions";
 import { CompanyFormData } from "src/views/pages/company/list/AddCompanyDrawer";
 import { CompanyEditData } from "src/views/pages/company/view/CompanyEditDialog";
+
 
 export const getCompanies: any = createAsyncThunk(
   'getCompanies',
@@ -20,25 +22,17 @@ export const getCompanies: any = createAsyncThunk(
 
 const companiesListSlice = createSlice({
   name: 'companiesList',
-  initialState: {
-    loading: false,
-    errors: [],
-    data: {},
-  },
+  initialState: sliceInitialStateWithData,
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getCompanies.pending, state => {
-      state.loading = true
+      defaultPendingStatesValue(state)
     })
     builder.addCase(getCompanies.fulfilled, (state, action) => {
-      state.loading = false
-      state.errors = []
-      state.data = action.payload.data.data[0]
+      defaultFulfilledStatesValue(state, action, true)
     })
     builder.addCase(getCompanies.rejected, (state, action) => {
-      state.loading = false
-      state.errors = action.payload
-      state.data = {}
+      defaultRejectedStatesValue(state, action)
     })
   }
 })
@@ -59,27 +53,17 @@ export const getCompany: any = createAsyncThunk(
 
 const companySlice = createSlice({
   name: 'company',
-  initialState: {
-    loading: false,
-    errors: [],
-    data: {},
-  },
+  initialState: sliceInitialStateWithData,
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getCompany.pending, state => {
-      state.loading = true
-      state.errors = []
-      state.data = {}
+      defaultPendingStatesValue(state)
     })
     builder.addCase(getCompany.fulfilled, (state, action) => {
-      state.loading = false
-      state.errors = []
-      state.data = action.payload.data.data[0]
+      defaultFulfilledStatesValue(state, action, true)
     })
     builder.addCase(getCompany.rejected, (state, action) => {
-      state.loading = false
-      state.errors = action.payload
-      state.data = {}
+      defaultRejectedStatesValue(state, action)
     })
   }
 })
@@ -100,27 +84,17 @@ export const getCompanyManagers: any = createAsyncThunk(
 
 const companyManagersSlice = createSlice({
   name: 'companyManagers',
-  initialState: {
-    loading: false,
-    errors: {},
-    data: {},
-  },
+  initialState: sliceInitialStateWithData,
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getCompanyManagers.pending, state => {
-      state.loading = true
-      state.errors = []
-      state.data = {}
+      defaultPendingStatesValue(state)
     })
     builder.addCase(getCompanyManagers.fulfilled, (state, action) => {
-      state.loading = false
-      state.errors = []
-      state.data = action.payload.data.data
+      defaultFulfilledStatesValue(state, action)
     })
     builder.addCase(getCompanyManagers.rejected, (state, action) => {
-      state.loading = false
-      state.errors = action.payload
-      state.data = {}
+      defaultRejectedStatesValue(state, action)
     })
   }
 })
@@ -141,27 +115,17 @@ export const getCompanyProjects: any = createAsyncThunk(
 
 const companyProjectsSlice = createSlice({
   name: 'companyProjects',
-  initialState: {
-    loading: false,
-    errors: {},
-    data: {},
-  },
+  initialState: sliceInitialStateWithData,
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getCompanyProjects.pending, state => {
-      state.loading = true
-      state.errors = []
-      state.data = {}
+      defaultPendingStatesValue(state)
     })
     builder.addCase(getCompanyProjects.fulfilled, (state, action) => {
-      state.loading = false
-      state.errors = []
-      state.data = action.payload.data.data
+      defaultFulfilledStatesValue(state, action)
     })
     builder.addCase(getCompanyProjects.rejected, (state, action) => {
-      state.loading = false
-      state.errors = action.payload
-      state.data = {}
+      defaultRejectedStatesValue(state, action)
     })
   }
 })
@@ -181,27 +145,17 @@ export const getCompanyResumes: any = createAsyncThunk(
 
 const companyResumesSlice = createSlice({
   name: 'companyResumes',
-  initialState: {
-    loading: false,
-    errors: {},
-    data: {},
-  },
+  initialState: sliceInitialStateWithData,
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(getCompanyResumes.pending, state => {
-      state.loading = true
-      state.errors = []
-      state.data = {}
+      defaultPendingStatesValue(state)
     })
     builder.addCase(getCompanyResumes.fulfilled, (state, action) => {
-      state.loading = false
-      state.errors = []
-      state.data = action.payload.data.data
+      defaultFulfilledStatesValue(state, action)
     })
     builder.addCase(getCompanyResumes.rejected, (state, action) => {
-      state.loading = false
-      state.errors = action.payload
-      state.data = {}
+      defaultRejectedStatesValue(state, action)
     })
   }
 })
@@ -227,11 +181,7 @@ export const addCompanyManager: any = createAsyncThunk(
 
 const addCompanyManagerSlice = createSlice({
   name: 'addCompanyManager',
-  initialState: {
-    loading: false,
-    errors: [],
-    status: false,
-  },
+  initialState: sliceInitialStateWithStatus,
   reducers: {
     clearAddCompanyManager: (state) => {
       state.loading = false
@@ -241,19 +191,13 @@ const addCompanyManagerSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(addCompanyManager.pending, state => {
-      state.loading = true
-      state.status = false
-      state.errors = []
+      defaultPendingStatesValue(state)
     })
-    builder.addCase(addCompanyManager.fulfilled, (state, action) => {
-      state.loading = false
-      state.errors = []
-      state.status = true
+    builder.addCase(addCompanyManager.fulfilled, (state) => {
+      defaultFulfilledStatesValue(state)
     })
     builder.addCase(addCompanyManager.rejected, (state, action) => {
-      state.loading = false
-      state.errors = action.payload
-      state.status = false
+      defaultRejectedStatesValue(state, action)
     })
   }
 })
@@ -280,11 +224,7 @@ export const removeCompanyManager: any = createAsyncThunk(
 
 const removeCompanyManagerSlice = createSlice({
   name: 'removeCompanyManager',
-  initialState: {
-    loading: false,
-    errors: [],
-    status: false,
-  },
+  initialState: sliceInitialStateWithStatus,
   reducers: {
     clearRemoveCompanyManager: (state) => {
       state.loading = false
@@ -294,19 +234,13 @@ const removeCompanyManagerSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(removeCompanyManager.pending, state => {
-      state.loading = true
-      state.status = false
-      state.errors = []
+      defaultPendingStatesValue(state)
     })
     builder.addCase(removeCompanyManager.fulfilled, (state, action) => {
-      state.loading = false
-      state.errors = []
-      state.status = true
+      defaultFulfilledStatesValue(state)
     })
     builder.addCase(removeCompanyManager.rejected, (state, action) => {
-      state.loading = false
-      state.errors = action.payload
-      state.status = false
+      defaultRejectedStatesValue(state, action)
     })
   }
 })
@@ -343,11 +277,7 @@ export const createCompany: any = createAsyncThunk(
 
 const createCompanySlice = createSlice({
   name: 'createCompany',
-  initialState: {
-    loading: false,
-    errors: [],
-    status: false,
-  },
+  initialState: sliceInitialStateWithStatus,
   reducers: {
     clearCreateCompany: (state) => {
       state.loading = false
@@ -357,19 +287,13 @@ const createCompanySlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(createCompany.pending, state => {
-      state.loading = true
-      state.status = false
-      state.errors = []
+      defaultPendingStatesValue(state)
     })
     builder.addCase(createCompany.fulfilled, (state) => {
-      state.loading = false
-      state.status = true
-      state.errors = []
+      defaultFulfilledStatesValue(state)
     })
     builder.addCase(createCompany.rejected, (state, action) => {
-      state.loading = false
-      state.status = false
-      state.errors = action.payload
+      defaultRejectedStatesValue(state, action)
     })
   }
 })
@@ -392,11 +316,7 @@ export const editCompany: any = createAsyncThunk(
 
 const editCompanySlice = createSlice({
   name: 'editCompany',
-  initialState: {
-    loading: false,
-    errors: [],
-    status: false,
-  },
+  initialState: sliceInitialStateWithStatus,
   reducers: {
     clearEditCompany: (state) => {
       state.loading = false
@@ -406,19 +326,13 @@ const editCompanySlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(editCompany.pending, state => {
-      state.loading = true
-      state.status = false
-      state.errors = []
+      defaultPendingStatesValue(state)
     })
     builder.addCase(editCompany.fulfilled, (state) => {
-      state.loading = false
-      state.status = true
-      state.errors = []
+      defaultFulfilledStatesValue(state)
     })
     builder.addCase(editCompany.rejected, (state, action) => {
-      state.loading = false
-      state.status = false
-      state.errors = action.payload
+      defaultRejectedStatesValue(state, action)
     })
   }
 })
@@ -438,33 +352,23 @@ export const deactiveCompany: any = createAsyncThunk(
 
 const companyDeactiveSlice = createSlice({
   name: 'companyDeactive',
-  initialState: {
-    loading: false,
-    errors: {},
-    status: false,
-  },
+  initialState: sliceInitialStateWithStatus,
   reducers: {
     clearDeactiveCompany: (state) => {
       state.loading = false
       state.status = false
-      state.errors = {}
+      state.errors = []
     }
   },
   extraReducers: (builder) => {
     builder.addCase(deactiveCompany.pending, state => {
-      state.loading = true
-      state.status = false
-      state.errors = {}
+      defaultPendingStatesValue(state)
     })
     builder.addCase(deactiveCompany.fulfilled, (state) => {
-      state.loading = false
-      state.errors = {}
-      state.status = true
+      defaultFulfilledStatesValue(state)
     })
     builder.addCase(deactiveCompany.rejected, (state, action) => {
-      state.loading = false
-      state.errors = action.payload
-      state.status = false
+      defaultRejectedStatesValue(state, action)
     })
   }
 })
@@ -484,33 +388,52 @@ export const activeCompany: any = createAsyncThunk(
 
 const companyActiveSlice = createSlice({
   name: 'companyActive',
-  initialState: {
-    loading: false,
-    errors: {},
-    status: false,
-  },
+  initialState: sliceInitialStateWithStatus,
   reducers: {
     clearActiveCompany: (state) => {
       state.loading = false
       state.status = false
-      state.errors = {}
+      state.errors = []
     }
   },
   extraReducers: (builder) => {
     builder.addCase(activeCompany.pending, state => {
-      state.loading = true
-      state.status = false
-      state.errors = {}
+      defaultPendingStatesValue(state)
     })
     builder.addCase(activeCompany.fulfilled, (state) => {
-      state.loading = false
-      state.errors = {}
-      state.status = true
+      defaultFulfilledStatesValue(state)
     })
     builder.addCase(activeCompany.rejected, (state, action) => {
-      state.loading = false
-      state.errors = action.payload
-      state.status = false
+      defaultRejectedStatesValue(state, action)
+    })
+  }
+})
+
+
+export const getCompanyResumeStatistics: any = createAsyncThunk('getCompanyResumeStatistics', async (_, { rejectWithValue, getState }) => {
+  try {
+    const { company: { data } } = getState() as any
+    const response = ApiRequest.builder().auth().request('get', `companies/${data?.id}/statistics/resumes`)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const companyStatisticsResumesSlice = createSlice({
+  name: 'companyStatisticsResumes',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(getCompanyResumeStatistics.pending, (state) => {
+      defaultPendingStatesValue(state)
+    })
+    builder.addCase(getCompanyResumeStatistics.fulfilled, (state, action) => {
+      defaultFulfilledStatesValue(state, action, true)
+    })
+    builder.addCase(getCompanyResumeStatistics.rejected, (state, action) => {
+      defaultRejectedStatesValue(state, action)
     })
   }
 })
@@ -532,3 +455,4 @@ export const addCompanyManagerReducer = addCompanyManagerSlice.reducer
 export const removeCompanyManagerReducer = removeCompanyManagerSlice.reducer
 export const companyDeactiveReducer = companyDeactiveSlice.reducer
 export const companyActiveReducer = companyActiveSlice.reducer
+export const companyStatisticsResumesReducer = companyStatisticsResumesSlice.reducer
