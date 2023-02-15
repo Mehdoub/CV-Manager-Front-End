@@ -410,7 +410,7 @@ const companyActiveSlice = createSlice({
 })
 
 
-export const getCompanyResumeStatistics = createAsyncThunk('getCompanyResumeStatistics', async (_, { rejectWithValue, getState }) => {
+export const getCompanyResumeStatistics: any = createAsyncThunk('getCompanyResumeStatistics', async (_, { rejectWithValue, getState }) => {
   try {
     const { company: { data } } = getState() as any
     const response = ApiRequest.builder().auth().request('get', `companies/${data?.id}/statistics/resumes`)
@@ -429,8 +429,8 @@ const companyStatisticsResumesSlice = createSlice({
     builder.addCase(getCompanyResumeStatistics.pending, (state) => {
       defaultPendingStatesValue(state)
     })
-    builder.addCase(getCompanyResumeStatistics.fulfilled, (state) => {
-      defaultFulfilledStatesValue(state)
+    builder.addCase(getCompanyResumeStatistics.fulfilled, (state, action) => {
+      defaultFulfilledStatesValue(state, action, true)
     })
     builder.addCase(getCompanyResumeStatistics.rejected, (state, action) => {
       defaultRejectedStatesValue(state, action)

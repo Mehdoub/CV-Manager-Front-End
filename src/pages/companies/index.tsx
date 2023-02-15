@@ -36,7 +36,7 @@ import { Stack } from '@mui/system'
 import { getCompanies } from 'src/store/company'
 import CompanyEditDialog from 'src/views/pages/company/view/CompanyEditDialog'
 import AddCompanyDrawer from 'src/views/pages/company/list/AddCompanyDrawer'
-import { getImagePath } from 'src/helpers/functions'
+import { getFullName, getImagePath } from 'src/helpers/functions'
 import { useTranslation } from 'react-i18next'
 
 const statusColors: any = {
@@ -211,9 +211,7 @@ const CompanyList = () => {
       renderCell: ({ row }: any) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            <StyledLink href={`/users/view/${row?.created_by?.id}/overview`}>
-              {row?.created_by?.firstname} {row?.created_by?.lastname}
-            </StyledLink>
+            <StyledLink href={`/users/view/${row?.created_by?.id}/overview`}>{getFullName(row?.created_by)}</StyledLink>
           </Typography>
         )
       }

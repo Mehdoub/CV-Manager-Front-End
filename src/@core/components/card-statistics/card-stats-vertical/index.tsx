@@ -16,7 +16,17 @@ import { CardStatsVerticalProps } from 'src/@core/components/card-statistics/typ
 
 const CardStatsVertical = (props: CardStatsVerticalProps) => {
   // ** Props
-  const { title, color, icon, stats, chipText, trendNumber, trend = 'positive' } = props
+  let { title, color, icon, stats, chipText, trendNumber, trend = 'positive', type, statsData } = props
+
+  if (statsData && type) {
+    const lastMonth = Number(statsData[type]['last_month'])
+    const recentMonth = Number(statsData[type]['resent_month'])
+    stats = recentMonth + lastMonth
+    const growthDiff = recentMonth - lastMonth
+    trend = growthDiff < 0 ? 'negative' : 'positive'
+    trendNumber = (growthDiff / (stats > 0 ? stats : 1)) * 100
+    trendNumber = String(trendNumber) + '%'
+  }
 
   return (
     <Card>

@@ -12,6 +12,11 @@ export const sliceInitialStateWithStatus = {
   status: false
 }
 
+export const statusColors: any = {
+  active: 'success',
+  inactive: 'error'
+}
+
 
 export const toastError = (msg: string, duration: number = 5000, position: ToastPosition = 'bottom-left') => {
   if (msg?.length > 0) toast.error(msg, { duration, position, style: { maxWidth: '650px' } })

@@ -8,14 +8,15 @@ import { DataGrid } from '@mui/x-data-grid'
 import { styled } from '@mui/material/styles'
 import CardHeader from '@mui/material/CardHeader'
 import Typography from '@mui/material/Typography'
+import CustomChip from 'src/@core/components/mui/chip'
 
-// ** Type Imports
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { renderClient } from 'src/pages/projects'
 import Link from 'next/link'
 import { Grid, Skeleton } from '@mui/material'
 import { getCompanyProjects } from 'src/store/company'
+import { getFullName, statusColors } from 'src/helpers/functions'
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -44,6 +45,44 @@ const columns = [
             <StyledLink href={`/projects/view/${id}/overview/`}>{name}</StyledLink>
           </Box>
         </Box>
+      )
+    }
+  },
+  {
+    flex: 0.15,
+    minWidth: 120,
+    headerName: 'Status',
+    field: 'is_active',
+    renderCell: ({ row }: any) => {
+      return (
+        <CustomChip
+          skin='light'
+          size='small'
+          label={row?.is_active ? 'active' : 'inactive'}
+          color={statusColors[row?.is_active ? 'active' : 'inactive']}
+          sx={{
+            height: 20,
+            fontWeight: 500,
+            fontSize: '0.75rem',
+            borderRadius: '5px',
+            textTransform: 'capitalize'
+          }}
+        />
+      )
+    }
+  },
+  {
+    flex: 0.15,
+    minWidth: 120,
+    headerName: 'User Create',
+    field: 'created_by',
+    renderCell: ({ row }: any) => {
+      return (
+        <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
+          <StyledLink href={`/users/view/${row?.created_by?.id}/overview`}>
+            {getFullName(row?.created_by)}
+          </StyledLink>
+        </Typography>
       )
     }
   },
