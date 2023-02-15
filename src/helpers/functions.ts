@@ -60,9 +60,8 @@ export const defaultPendingStatesValue = (state: any) => {
 export const defaultFulfilledStatesValue = (state: any, action: any = {}, zeroIndex: boolean = false) => {
   state.loading = false
   state.errors = {}
-  if (action)
-    if (zeroIndex) state.data = action.payload.data.data[0]
-    else state.data = action.payload.data.data
+  if (action?.type && zeroIndex) state.data = action.payload.data.data[0]
+  else if (action?.type) state.data = action.payload.data.data
   else state.status = true
 }
 
