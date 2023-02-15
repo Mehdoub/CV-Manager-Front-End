@@ -72,6 +72,7 @@ interface Props {
 
 export interface CompanyEditData extends CompanyFormData {
   companyId?: string
+  logo?: any
 }
 
 const CompanyEditDialog = (props: Props) => {
@@ -160,7 +161,10 @@ const CompanyEditDialog = (props: Props) => {
   }
 
   const onSubmit = (data: CompanyFormData) => {
-    const editCompanyData: CompanyEditData = { ...data, companyId: company?.id }
+    let editCompanyData: CompanyEditData = { ...data, companyId: company?.id }
+    if (files[0]) {
+      editCompanyData = {...editCompanyData, logo: files[0]}
+    }
     dispatch(editCompany(editCompanyData))
     reset()
   }

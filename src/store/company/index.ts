@@ -306,7 +306,21 @@ export const editCompany: any = createAsyncThunk(
     try {
       const { companyId } = data
       delete data.companyId
+      let companyLogo: any
+
+      if (data?.logo) {
+        companyLogo = data?.logo
+        delete data.logo
+      }
+
       const response = await ApiRequest.builder().auth().request('patch', `companies/${companyId}`, data)
+
+      if (companyLogo) {
+        await ApiRequest.builder()
+          .auth()
+          .contentType('multipart/form-data')
+          .request('patch', `companies/${companyId}/logo`, { logo: companyLogo })
+      }
 
       return response
     } catch (err: any) {
