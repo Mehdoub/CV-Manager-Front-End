@@ -89,8 +89,8 @@ const ProjectViewLeft = ({ projectId }: Props) => {
   const { data: project, loading } = store
 
   useEffect(() => {
-    dispatch(getProject(projectId))
-  }, [])
+    if (projectId) dispatch(getProject(projectId))
+  }, [projectId])
 
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 1,
