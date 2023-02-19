@@ -27,8 +27,9 @@ import { useDropzone } from 'react-dropzone'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { clearCreateProject, createProject, getProjects } from 'src/store/project'
-import { getCompanyProjects } from 'src/store/company'
-import { setServerValidationErrors } from 'src/helpers/functions'
+import { getCompanies, getCompanyProjects } from 'src/store/company'
+import { getImagePath, setServerValidationErrors } from 'src/helpers/functions'
+import { Autocomplete, Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material'
 
 interface FileProp {
   name: string
@@ -71,13 +72,12 @@ const Header = styled(Box)<BoxProps>(({ theme }) => ({
 
 const schema = yup.object().shape({
   name: yup.string().min(3).required(),
-  company_id: yup.string().optional(),
   description: yup.string().min(10).max(100).required()
 })
 
 export interface ProjectFormData {
   name: string
-  company_id: string,
+  company_id: string
   description: string
   logo?: any
 }
@@ -92,10 +92,15 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
   // ** Props
   const { open, toggle, companyId, dispatchCompanyProjects } = props
 
-  const dispatch = useDispatch()
-  const store = useSelector((state: any) => state.createProject)
-  const { status, errors: createErrors } = store
+  // ** State
+  const [files, setFiles] = useState<File[]>([])
+  const [company, setCompany] = useState<any>({})
+  const [companyErr, setCompanyErr] = useState<string>('')
 
+  const dispatch = useDispatch()
+  const { status, errors: createErrors } = useSelector((state: any) => state.createProject)
+
+  const { data: companies } = useSelector((state: any) => state.companiesList)
 
   const {
     reset,
@@ -123,17 +128,15 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
   }, [status, createErrors])
 
   const onSubmit = (data: ProjectFormData) => {
-    const company = companyId ? companyId : data?.company_id
-    dispatch(createProject({ name: data?.name, company_id: company, description: data?.description }))
+    const newCompany = companyId ?? company?.id
+    if (!newCompany) setCompanyErr('Company Cannot Be Empty!')
+    else dispatch(createProject({ name: data?.name, company_id: newCompany, description: data?.description }))
   }
 
   const handleClose = () => {
     toggle()
     dispatch(clearCreateProject())
   }
-
-  // ** State
-  const [files, setFiles] = useState<File[]>([])
 
   // ** Hooks
   const { getRootProps, getInputProps } = useDropzone({
@@ -166,6 +169,11 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
     }
   }
 
+  const searchCompanies = (value: any) => {
+    const query = value?.target?.value
+    if (query?.length > 0) dispatch(getCompanies({ query }))
+  }
+
   return (
     <Drawer
       open={open}
@@ -193,7 +201,12 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
                 {files[0] ? (
                   renderFilePreview(files[0])
                 ) : (
-                  <Img width={150} alt='Upload img' src='/images/logos/datalogo2.avif' sx={{ borderRadius: '50%', border: '1px solid black' }} />
+                  <Img
+                    width={150}
+                    alt='Upload img'
+                    src='/images/logos/datalogo2.avif'
+                    sx={{ borderRadius: '50%', border: '1px solid black' }}
+                  />
                 )}
                 <Box
                   sx={{
@@ -232,24 +245,33 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
             {errors.name && <FormHelperText sx={{ color: 'error.main' }}>{errors.name.message}</FormHelperText>}
           </FormControl>
           {!companyId && (
-          <FormControl fullWidth sx={{ mb: 6 }}>
-            <Controller
-              name='company_id'
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange, onBlur } }) => (
-                <TextField
-                  value={value}
-                  label='Company'
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  placeholder='Company PVT LTD'
-                  error={Boolean(errors.company_id)}
-                />
-              )}
-            />
-            {errors.company_id && <FormHelperText sx={{ color: 'error.main' }}>{errors.company_id.message}</FormHelperText>}
-          </FormControl>
+            <FormControl fullWidth sx={{ mb: 6 }}>
+              <Autocomplete
+                autoHighlight
+                options={companies?.docs ?? []}
+                onChange={(e, newValue) => setCompany(newValue)}
+                getOptionLabel={(company: any) => company?.name}
+                ListboxComponent={List}
+                renderInput={params => (
+                  <TextField
+                    {...params}
+                    onChange={searchCompanies}
+                    size='small'
+                    placeholder='Company: Search For Companies ...'
+                    error={!!companyErr}
+                  />
+                )}
+                renderOption={(props, company) => (
+                  <ListItem {...props}>
+                    <ListItemAvatar>
+                      <Avatar src={getImagePath(company?.logo)} alt={company?.name} sx={{ height: 28, width: 28 }} />
+                      <ListItemText primary={company?.name} />
+                    </ListItemAvatar>
+                  </ListItem>
+                )}
+              />
+              {companyErr && <FormHelperText sx={{ color: 'error.main' }}>{companyErr}</FormHelperText>}
+            </FormControl>
           )}
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller

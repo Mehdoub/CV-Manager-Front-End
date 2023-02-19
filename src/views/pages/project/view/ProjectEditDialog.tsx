@@ -1,4 +1,6 @@
 import {
+  Autocomplete,
+  Avatar,
   Button,
   Dialog,
   DialogActions,
@@ -8,6 +10,10 @@ import {
   FormControl,
   FormHelperText,
   Grid,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
   TextField
 } from '@mui/material'
 import * as yup from 'yup'
@@ -24,14 +30,13 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useDispatch } from 'react-redux'
 import { ProjectFormData } from '../list/AddProjectDrawer'
 import { clearProjectEdit, editProject, getProject, getProjects } from 'src/store/project'
+import { getImagePath } from 'src/helpers/functions'
+import { getCompanies } from 'src/store/company'
 
-const schema = yup.object().shape(
-  {
-    name: yup.string().label('Name').required().min(3),
-    company_id: yup.string().label('Company').optional(),
-    description: yup.string().label('Description').min(10).max(100).required(),
-  }
-)
+const schema = yup.object().shape({
+  name: yup.string().label('Name').required().min(3),
+  description: yup.string().label('Description').min(10).max(100).required()
+})
 
 export interface ProjectEditData extends ProjectFormData {
   projectId?: string
@@ -39,7 +44,6 @@ export interface ProjectEditData extends ProjectFormData {
 
 const defaultValues = {
   name: '',
-  company_id: '',
   description: ''
 }
 
@@ -55,7 +59,16 @@ const ProjectEditDialog = (props: Props) => {
   const [files, setFiles] = useState<File[]>([])
   const [project, setProject] = useState<any>({})
 
+  const [company, setCompany] = useState<any>({})
+  const [companyErr, setCompanyErr] = useState<string>('')
+  const { data: companies } = useSelector((state: any) => state.companiesList)
+
   const dispatch = useDispatch()
+
+  const searchCompanies = (value: any) => {
+    const query = value?.target?.value
+    if (query?.length > 0) dispatch(getCompanies({ query }))
+  }
 
   const { status } = useSelector((state: any) => state.projectEdit)
   const { data: projectDataFromView } = useSelector((state: any) => state.projectFind)
@@ -89,13 +102,12 @@ const ProjectEditDialog = (props: Props) => {
 
   useEffect(() => {
     setValue('name', project?.name)
-    setValue('company_id', project?.company_id?.id)
     setValue('description', project?.description)
+    setCompany(project?.company_id)
   }, [project])
 
   const clearInputs = () => {
     setValue('name', '')
-    setValue('company_id', '')
     setValue('description', '')
   }
 
@@ -129,13 +141,17 @@ const ProjectEditDialog = (props: Props) => {
     }
   }
 
-  const onSubmit = (data: ProjectFormData) => {
-    let projectEditData: ProjectEditData = { ...data, projectId: project?.id }
-    if (files[0]) {
-      projectEditData = { ...projectEditData, logo: files[0] }
+  const onSubmit = (data: any) => {
+    if (!company?.id) {
+      setCompanyErr('Company cannot be empty!')
+    } else {
+      let projectEditData: ProjectEditData = { ...data, projectId: project?.id, company_id: company?.id }
+      if (files[0]) {
+        projectEditData = { ...projectEditData, logo: files[0] }
+      }
+      dispatch(editProject(projectEditData))
+      reset()
     }
-    dispatch(editProject(projectEditData))
-    reset()
   }
 
   return (
@@ -223,22 +239,33 @@ const ProjectEditDialog = (props: Props) => {
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={6}>
-              <FormControl>
-                <Controller
-                  name='company_id'
-                  control={control}
-                  render={({ field: { value, onBlur, onChange } }) => (
+              <FormControl fullWidth sx={{ mb: 6 }}>
+                <Autocomplete
+                  autoHighlight
+                  options={companies?.docs ?? []}
+                  onChange={(e, newValue) => setCompany(newValue)}
+                  getOptionLabel={(company: any) => company?.name}
+                  ListboxComponent={List}
+                  defaultValue={{ name: company?.name, manufacturer: company?.id }}
+                  renderInput={params => (
                     <TextField
-                      label='Company'
-                      placeholder='02188651256'
-                      value={value}
-                      onChange={onChange}
-                      onBlur={onBlur}
-                      error={Boolean(errors.company_id)}
+                      {...params}
+                      onChange={searchCompanies}
+                      size='small'
+                      placeholder='Company: Search For Companies ...'
+                      error={!!companyErr}
                     />
                   )}
+                  renderOption={(props, company: any) => (
+                    <ListItem {...props}>
+                      <ListItemAvatar>
+                        <Avatar src={getImagePath(company?.logo)} alt={company?.name} sx={{ height: 28, width: 28 }} />
+                        <ListItemText primary={company?.name} />
+                      </ListItemAvatar>
+                    </ListItem>
+                  )}
                 />
-                {errors.company_id && <FormHelperText sx={{ color: 'error.main' }}>{errors.company_id.message}</FormHelperText>}
+                {companyErr && <FormHelperText sx={{ color: 'error.main' }}>{companyErr}</FormHelperText>}
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
