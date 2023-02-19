@@ -1,25 +1,16 @@
 // ** React Imports
-import { Fragment, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import Card from '@mui/material/Card'
 import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
 import Divider from '@mui/material/Divider'
 import { styled } from '@mui/material/styles'
-import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import CardActions from '@mui/material/CardActions'
-import DialogTitle from '@mui/material/DialogTitle'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContentText from '@mui/material/DialogContentText'
-
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
 
 // ** Custom Components
 import CustomChip from 'src/@core/components/mui/chip'
@@ -31,8 +22,6 @@ import { ThemeColor } from 'src/@core/layouts/types'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
-import { useDropzone } from 'react-dropzone'
-import { toast } from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { getProject } from 'src/store/project'
 import { useSelector } from 'react-redux'
@@ -49,15 +38,6 @@ const statusColors: ColorsType = {
   active: 'success',
   inactive: 'error'
 }
-
-const Img = styled('img')(({ theme }) => ({
-  [theme.breakpoints.down('md')]: {
-    marginBottom: theme.spacing(4)
-  },
-  [theme.breakpoints.down('sm')]: {
-    width: 250
-  }
-}))
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -78,7 +58,6 @@ const ProjectViewLeft = ({ projectId }: Props) => {
   // ** States
   const [openEdit, setOpenEdit] = useState<boolean>(false)
   const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
-  const [files, setFiles] = useState<File[]>([])
 
   // Handle Edit dialog
   const handleEditClickOpen = () => setOpenEdit(true)
@@ -91,36 +70,6 @@ const ProjectViewLeft = ({ projectId }: Props) => {
   useEffect(() => {
     if (projectId) dispatch(getProject(projectId))
   }, [projectId])
-
-  const { getRootProps, getInputProps } = useDropzone({
-    maxFiles: 1,
-    maxSize: 2000000,
-    accept: {
-      'image/*': ['.png', '.jpg', '.jpeg', '.gif']
-    },
-    onDrop: (acceptedFiles: File[]) => {
-      setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
-    },
-    onDropRejected: () => {
-      toast.error('You can only upload maximum size of 2 MB.', {
-        duration: 2000
-      })
-    }
-  })
-
-  const renderFilePreview = (file: any) => {
-    if (file.type.startsWith('image')) {
-      return (
-        <img
-          style={{ borderRadius: '50%', width: '150px', height: '150px' }}
-          alt={file.name}
-          src={URL.createObjectURL(file as any)}
-        />
-      )
-    } else {
-      return <Icon icon='mdi:file-document-outline' />
-    }
-  }
 
   return (
     <Grid container spacing={6}>

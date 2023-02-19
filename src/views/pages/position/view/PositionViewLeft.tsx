@@ -94,14 +94,6 @@ const data: any = {
   avatar: '/images/logos/github.png'
 }
 
-const roleColors: ColorsType = {
-  admin: 'error',
-  editor: 'info',
-  author: 'warning',
-  maintainer: 'success',
-  subscriber: 'primary'
-}
-
 interface Props {
   positionId: string
 }

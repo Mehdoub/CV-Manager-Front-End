@@ -104,15 +104,7 @@ const PositionViewRight = ({ tab, positionId }: Props) => {
           <Tab value='interview' label='Interviews' icon={<Icon icon='mdi:virtual-meeting' />} />
           <Tab value='resume' label='Resumes' icon={<Icon icon='pepicons-pop:cv' />} />
           <Tab value='manager' label='Managers' icon={<Icon icon='grommet-icons:user-manager' />} />
-          {activeTab == 'manager' ? (
-            <Button
-              onClick={toggleAddManagerDrawer}
-              sx={{ mb: 2, position: 'absolute', right: '5px', top: '5px' }}
-              variant='outlined'
-            >
-              Add Manager
-            </Button>
-          ) : activeTab == 'resume' ? (
+          {activeTab == 'resume' ? (
             <Button sx={{ mb: 2, position: 'absolute', right: '5px', top: '5px' }} variant='outlined'>
               Add Resume
             </Button>
