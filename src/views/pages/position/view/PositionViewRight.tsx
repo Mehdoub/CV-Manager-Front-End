@@ -33,9 +33,6 @@ import {
   removePositionManager
 } from 'src/store/position'
 
-// ** Types
-// import { InvoiceType } from 'src/types/apps/invoiceTypes'
-
 interface Props {
   tab: string
   positionId: string
@@ -51,7 +48,7 @@ const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   }
 }))
 
-const ViewRight = ({ tab, positionId }: Props) => {
+const PositionViewRight = ({ tab, positionId }: Props) => {
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -166,4 +163,4 @@ const ViewRight = ({ tab, positionId }: Props) => {
   )
 }
 
-export default ViewRight
+export default PositionViewRight

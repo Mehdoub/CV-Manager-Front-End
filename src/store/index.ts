@@ -26,6 +26,7 @@ import {
   projectManagersReducer,
   projectPositionsReducer,
   projectReducer,
+  projectResumesReducer,
   projectsListReducer,
   removeProjectManagerReducer
 } from './project'
@@ -62,6 +63,7 @@ export const store = configureStore({
     addProjectManager: addProjectManagerReducer,
     removeProjectManager: removeProjectManagerReducer,
     projectPositions: projectPositionsReducer,
+    projectResumes: projectResumesReducer,
 
     positionsList: positionsListReducer,
     position: positionReducer,

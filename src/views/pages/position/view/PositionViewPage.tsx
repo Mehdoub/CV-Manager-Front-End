@@ -2,8 +2,8 @@
 import Grid from '@mui/material/Grid'
 
 // ** Demo Components Imports
-import ViewLeft from 'src/views/pages/position/view/ViewLeft'
-import ViewRight from 'src/views/pages/position/view/ViewRight'
+import PositionViewLeft from 'src/views/pages/position/view/PositionViewLeft'
+import PositionViewRight from 'src/views/pages/position/view/PositionViewRight'
 import CardStatisticsVertical from 'src/@core/components/card-statistics/card-stats-vertical'
 import CrmTotalGrowth from 'src/views/statistics/CrmTotalGrowth'
 import CrmTotalProfit from 'src/views/statistics/CrmTotalProfit'
@@ -16,7 +16,7 @@ type Props = {
   positionId: string
 }
 
-const ViewPage = ({ tab, positionId }: Props) => {
+const PositionViewPage = ({ tab, positionId }: Props) => {
   return (
     <ApexChartWrapper>
       <Grid container spacing={6}>
@@ -52,14 +52,14 @@ const ViewPage = ({ tab, positionId }: Props) => {
           </Grid>
         </Grid>
         <Grid item xs={12} md={5} lg={4}>
-          <ViewLeft positionId={positionId} />
+          <PositionViewLeft positionId={positionId} />
         </Grid>
         <Grid item xs={12} md={7} lg={8}>
-          <ViewRight tab={tab} positionId={positionId} />
+          <PositionViewRight tab={tab} positionId={positionId} />
         </Grid>
       </Grid>
     </ApexChartWrapper>
   )
 }
 
-export default ViewPage
+export default PositionViewPage

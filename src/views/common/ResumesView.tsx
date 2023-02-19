@@ -10,10 +10,8 @@ import Typography from '@mui/material/Typography'
 
 // ** Type Imports
 import { useDispatch } from 'react-redux'
-import { useSelector } from 'react-redux'
 import Link from 'next/link'
-import { Grid } from '@mui/material'
-import { getCompanyResumes } from 'src/store/company'
+import { Grid, Skeleton } from '@mui/material'
 import { getFullName } from 'src/helpers/functions'
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -96,43 +94,51 @@ const columns = [
 ]
 
 interface Props {
-  companyId: string
+  entityStore: any
+  entityResumesStore: any
+  getEntityResumesAction: any
 }
 
-const CompanyViewResumes = (props: Props) => {
-  const { companyId } = props
+const ResumesView = (props: Props) => {
+  const { entityStore, entityResumesStore, getEntityResumesAction } = props
   // ** State
   const [pageSize, setPageSize] = useState<number>(7)
 
   const dispatch = useDispatch<any>()
 
-  const companyResumesStore = useSelector((state: any) => state.companyResumes)
-  const { data: latestResumes } = companyResumesStore
+  const { data: latestResumes, loading } = entityResumesStore
+  const { data: entity } = entityStore
+
+  const entityId = entity?.id
 
   useEffect(() => {
-    if (companyId) {
-      dispatch(getCompanyResumes(companyId))
+    if (entityId) {
+      dispatch(getEntityResumesAction(entityId))
     }
-  }, [companyId])
+  }, [entityId])
 
   return (
     <Grid container spacing={6}>
       <Grid item md={12}>
         <Card sx={{ marginTop: '20px' }}>
           <CardHeader title='Latest Resumes' />
-          <DataGrid
-            autoHeight
-            rows={latestResumes}
-            columns={columns}
-            pageSize={pageSize}
-            disableSelectionOnClick
-            rowsPerPageOptions={[7, 10, 25, 50]}
-            onPageSizeChange={newPageSize => setPageSize(newPageSize)}
-          />
+          {loading ? (
+            <Skeleton variant='rounded' height={350} />
+          ) : (
+            <DataGrid
+              autoHeight
+              rows={latestResumes ?? []}
+              columns={columns}
+              pageSize={pageSize}
+              disableSelectionOnClick
+              rowsPerPageOptions={[10]}
+              onPageSizeChange={newPageSize => setPageSize(newPageSize)}
+            />
+          )}
         </Card>
       </Grid>
     </Grid>
   )
 }
 
-export default CompanyViewResumes
+export default ResumesView

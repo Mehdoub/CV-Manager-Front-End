@@ -171,7 +171,7 @@ const ProjectViewLeft = ({ positionId }: Props) => {
               <CustomAvatar
                 skin='light'
                 variant='rounded'
-                color={data.avatarColor as ThemeColor}
+                color='primary'
                 sx={{ width: 150, height: 150, fontWeight: 600, mb: 4, fontSize: '3rem', borderRadius: '50%' }}
               >
                 {getInitials(position?.title)}

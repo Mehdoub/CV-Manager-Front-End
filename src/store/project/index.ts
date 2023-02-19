@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ApiRequest from "src/helpers/ApiRequest";
+import { defaultFulfilledStatesValue, defaultPendingStatesValue, defaultRejectedStatesValue, sliceInitialStateWithData } from "src/helpers/functions";
 
 export const getProjects: any = createAsyncThunk(
   'getProjects',
@@ -409,6 +410,37 @@ const projectPositionsSlice = createSlice({
   }
 })
 
+export const getProjectResumes: any = createAsyncThunk(
+  'getProjectResumes',
+  async (_,
+    { rejectWithValue, getState }) => {
+    try {
+      const { projectFind: { data } } = getState() as any
+      const response = await ApiRequest.builder().auth().request('get', `projects/${data?.id}/resumes`)
+
+      return response
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const projectResumesSlice = createSlice({
+  name: 'projectResumes',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(getProjectResumes.pending, state => {
+      defaultPendingStatesValue(state)
+    })
+    builder.addCase(getProjectResumes.fulfilled, (state, action) => {
+      defaultFulfilledStatesValue(state, action)
+    })
+    builder.addCase(getProjectResumes.rejected, (state, action) => {
+      defaultRejectedStatesValue(state, action)
+    })
+  }
+})
+
 
 
 export const { clearCreateProject } = createProjectSlice.actions
@@ -425,3 +457,4 @@ export const projectManagersReducer = projectManagersSlice.reducer
 export const addProjectManagerReducer = addProjectManagerSlice.reducer
 export const removeProjectManagerReducer = removeProjectManagerSlice.reducer
 export const projectPositionsReducer = projectPositionsSlice.reducer
+export const projectResumesReducer = projectResumesSlice.reducer

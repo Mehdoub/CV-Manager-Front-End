@@ -29,6 +29,7 @@ import { useDispatch } from 'react-redux'
 import { clearPositionCreate, createPosition, getPositions } from 'src/store/position'
 import { setServerValidationErrors } from 'src/helpers/functions'
 import { useSelector } from 'react-redux'
+import { getProjectPositions } from 'src/store/project'
 
 interface FileProp {
   name: string
@@ -56,10 +57,10 @@ const HeadingTypography = styled(Typography)<TypographyProps>(({ theme }) => ({
   }
 }))
 
-interface SidebarAddPositionType {
+interface AddPositionDrawerType {
   open: boolean
   toggle: () => void
-  projectId?: string
+  dispatchProjectPositionsList?: boolean
 }
 
 const Header = styled(Box)<BoxProps>(({ theme }) => ({
@@ -72,7 +73,7 @@ const Header = styled(Box)<BoxProps>(({ theme }) => ({
 
 const schema = yup.object().shape({
   title: yup.string().label('Title').min(3).max(50).required(),
-  project: yup.string().label('Project').required(),
+  project: yup.string().label('Project').optional(),
   level: yup.string().label('Level').oneOf(levelOptions),
   description: yup.string().label('Description').min(10).max(100).required()
 })
@@ -84,14 +85,18 @@ const defaultValues = {
   description: ''
 }
 
-const SidebarAddPosition = (props: SidebarAddPositionType) => {
+const AddPositionDrawer = (props: AddPositionDrawerType) => {
   // ** Props
-  const { open, toggle, projectId } = props
+  const { open, toggle, dispatchProjectPositionsList } = props
 
   const dispatch = useDispatch()
 
   const positionCreateStore = useSelector((state: any) => state.positionCreate)
   const { status, errors: createErrors } = positionCreateStore
+
+  const { data: project } = useSelector((state: any) => state.projectFind)
+
+  const projectId = dispatchProjectPositionsList && project?.id ? project?.id : null
 
   const {
     reset,
@@ -107,7 +112,8 @@ const SidebarAddPosition = (props: SidebarAddPositionType) => {
 
   useEffect(() => {
     if (status) {
-      dispatch(getPositions())
+      if (dispatchProjectPositionsList) dispatch(getProjectPositions())
+      else dispatch(getPositions())
       dispatch(clearPositionCreate())
       toggle()
       reset()
@@ -119,7 +125,7 @@ const SidebarAddPosition = (props: SidebarAddPositionType) => {
   }, [status, createErrors])
 
   const onSubmit = (data: any) => {
-    const project = projectId ? projectId : data?.project
+    const project = projectId ?? data?.project
     dispatch(
       createPosition({ title: data?.title, project_id: project, level: data?.level, description: data?.description })
     )
@@ -132,7 +138,6 @@ const SidebarAddPosition = (props: SidebarAddPositionType) => {
 
   // ** State
   const [files, setFiles] = useState<File[]>([])
-  const [level, setLevel] = useState<string>('')
 
   // ** Hooks
   const { getRootProps, getInputProps } = useDropzone({
@@ -229,23 +234,25 @@ const SidebarAddPosition = (props: SidebarAddPositionType) => {
             />
             {errors.title && <FormHelperText sx={{ color: 'error.main' }}>{errors.title.message}</FormHelperText>}
           </FormControl>
-          <FormControl fullWidth sx={{ mb: 6 }}>
-            <Controller
-              name='project'
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange } }) => (
-                <TextField
-                  value={value}
-                  label='Project'
-                  onChange={onChange}
-                  placeholder='BPM'
-                  error={Boolean(errors.project)}
-                />
-              )}
-            />
-            {errors.project && <FormHelperText sx={{ color: 'error.main' }}>{errors.project.message}</FormHelperText>}
-          </FormControl>
+          {!projectId && (
+            <FormControl fullWidth sx={{ mb: 6 }}>
+              <Controller
+                name='project'
+                control={control}
+                rules={{ required: true }}
+                render={({ field: { value, onChange } }) => (
+                  <TextField
+                    value={value}
+                    label='Project'
+                    onChange={onChange}
+                    placeholder='BPM'
+                    error={Boolean(errors.project)}
+                  />
+                )}
+              />
+              {errors.project && <FormHelperText sx={{ color: 'error.main' }}>{errors.project.message}</FormHelperText>}
+            </FormControl>
+          )}
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
               name='level'
@@ -309,4 +316,4 @@ const SidebarAddPosition = (props: SidebarAddPositionType) => {
   )
 }
 
-export default SidebarAddPosition
+export default AddPositionDrawer

@@ -104,11 +104,11 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
 
   useEffect(() => {
     if (status) {
-      dispatch(getProjects())
+      if (dispatchCompanyProjects) dispatch(getCompanyProjects(companyId))
+      else dispatch(getProjects())
       dispatch(clearCreateProject())
       toggle()
       reset()
-      if (dispatchCompanyProjects) dispatch(getCompanyProjects(companyId))
     } else if (createErrors) {
       const validationErrors = createErrors?.data?.errors[0]
       setServerValidationErrors(validationErrors, setError)

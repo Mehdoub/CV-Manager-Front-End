@@ -20,8 +20,12 @@ import Icon from 'src/@core/components/icon'
 // ** Demo Components Imports
 import ProjectViewManagers from 'src/views/pages/project/view/ProjectViewManagers'
 import ProjectViewOverview from 'src/views/pages/project/view/ProjectViewOverview'
-import ProjectViewResumes from 'src/views/pages/project/view/ProjectViewResumes'
 import ProjectViewPositions from 'src/views/pages/project/view/ProjectViewPositions'
+import { Button } from '@mui/material'
+import AddPositionDrawer from '../../position/list/AddPositionDrawer'
+import ResumesView from 'src/views/common/ResumesView'
+import { useSelector } from 'react-redux'
+import { getProjectResumes } from 'src/store/project'
 
 // ** Types
 // import { InvoiceType } from 'src/types/apps/invoiceTypes'
@@ -45,9 +49,15 @@ const ProjectViewRight = ({ tab, projectId }: Props) => {
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [addPositionOpen, setaddPositionOpen] = useState<boolean>(false)
+
+  const toggleAddPositionDrawer = () => setaddPositionOpen(!addPositionOpen)
 
   // ** Hooks
   const router = useRouter()
+
+  const projectStore = useSelector((state: any) => state.projectFind)
+  const projectResumesStore = useSelector((state: any) => state.projectResumes)
 
   const handleChange = (event: SyntheticEvent, value: string) => {
     setIsLoading(true)
@@ -74,43 +84,61 @@ const ProjectViewRight = ({ tab, projectId }: Props) => {
   }, [projectId])
 
   return (
-    <TabContext value={activeTab}>
-      <TabList
-        variant='scrollable'
-        scrollButtons='auto'
-        onChange={handleChange}
-        aria-label='forced scroll tabs example'
-        sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
-      >
-        <Tab value='overview' label='Overview' icon={<Icon icon='mdi:account-outline' />} />
-        <Tab value='position' label='Positions' icon={<Icon icon='ic:baseline-work-outline' />} />
-        <Tab value='resume' label='Resumes' icon={<Icon icon='pepicons-pop:cv' />} />
-        <Tab value='manager' label='Managers' icon={<Icon icon='grommet-icons:user-manager' />} />
-      </TabList>
-      <Box sx={{ mt: 6 }}>
-        {isLoading ? (
-          <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
-            <CircularProgress sx={{ mb: 4 }} />
-            <Typography>Loading...</Typography>
-          </Box>
-        ) : (
-          <>
-            <TabPanel sx={{ p: 0 }} value='overview'>
-              <ProjectViewOverview />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='position'>
-              <ProjectViewPositions />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='resume'>
-              <ProjectViewResumes />
-            </TabPanel>
-            <TabPanel sx={{ p: 0 }} value='manager'>
-              <ProjectViewManagers />
-            </TabPanel>
-          </>
-        )}
-      </Box>
-    </TabContext>
+    <>
+      <TabContext value={activeTab}>
+        <TabList
+          variant='scrollable'
+          scrollButtons='auto'
+          onChange={handleChange}
+          aria-label='forced scroll tabs example'
+          sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
+        >
+          <Tab value='overview' label='Overview' icon={<Icon icon='mdi:account-outline' />} />
+          <Tab value='position' label='Positions' icon={<Icon icon='ic:baseline-work-outline' />} />
+          <Tab value='resume' label='Resumes' icon={<Icon icon='pepicons-pop:cv' />} />
+          <Tab value='manager' label='Managers' icon={<Icon icon='grommet-icons:user-manager' />} />
+          {activeTab == 'position' ? (
+            <Button
+              sx={{ mb: 2, position: 'absolute', right: '5px', top: '5px' }}
+              onClick={toggleAddPositionDrawer}
+              variant='outlined'
+            >
+              Add Position
+            </Button>
+          ) : (
+            ''
+          )}
+        </TabList>
+        <Box sx={{ mt: 6 }}>
+          {isLoading ? (
+            <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+              <CircularProgress sx={{ mb: 4 }} />
+              <Typography>Loading...</Typography>
+            </Box>
+          ) : (
+            <>
+              <TabPanel sx={{ p: 0 }} value='overview'>
+                <ProjectViewOverview />
+              </TabPanel>
+              <TabPanel sx={{ p: 0 }} value='position'>
+                <ProjectViewPositions />
+              </TabPanel>
+              <TabPanel sx={{ p: 0 }} value='resume'>
+                <ResumesView
+                  entityStore={projectStore}
+                  entityResumesStore={projectResumesStore}
+                  getEntityResumesAction={getProjectResumes}
+                />
+              </TabPanel>
+              <TabPanel sx={{ p: 0 }} value='manager'>
+                <ProjectViewManagers />
+              </TabPanel>
+            </>
+          )}
+        </Box>
+      </TabContext>
+      <AddPositionDrawer open={addPositionOpen} toggle={toggleAddPositionDrawer} dispatchProjectPositionsList={true} />
+    </>
   )
 }
 
