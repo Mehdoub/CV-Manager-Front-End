@@ -71,13 +71,20 @@ const Header = styled(Box)<BoxProps>(({ theme }) => ({
 
 const schema = yup.object().shape({
   name: yup.string().min(3).required(),
-  company: yup.string().optional(),
-  description: yup.string().min(10).required()
+  company_id: yup.string().optional(),
+  description: yup.string().min(10).max(100).required()
 })
+
+export interface ProjectFormData {
+  name: string
+  company_id: string,
+  description: string
+  logo?: any
+}
 
 const defaultValues = {
   name: '',
-  company: '',
+  company_id: '',
   description: ''
 }
 
@@ -115,8 +122,8 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
     }
   }, [status, createErrors])
 
-  const onSubmit = (data: any) => {
-    const company = companyId ? companyId : data?.company
+  const onSubmit = (data: ProjectFormData) => {
+    const company = companyId ? companyId : data?.company_id
     dispatch(createProject({ name: data?.name, company_id: company, description: data?.description }))
   }
 
@@ -227,7 +234,7 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
           {!companyId && (
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
-              name='company'
+              name='company_id'
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange, onBlur } }) => (
@@ -237,11 +244,11 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
                   onChange={onChange}
                   onBlur={onBlur}
                   placeholder='Company PVT LTD'
-                  error={Boolean(errors.company)}
+                  error={Boolean(errors.company_id)}
                 />
               )}
             />
-            {errors.company && <FormHelperText sx={{ color: 'error.main' }}>{errors.company.message}</FormHelperText>}
+            {errors.company_id && <FormHelperText sx={{ color: 'error.main' }}>{errors.company_id.message}</FormHelperText>}
           </FormControl>
           )}
           <FormControl fullWidth sx={{ mb: 6 }}>

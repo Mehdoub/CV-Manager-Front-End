@@ -14,10 +14,11 @@ const successHandler = ({ }) => (next: any) => async (action: any) => {
     'createPosition/fulfilled',
     'addPositionManager/fulfilled',
     'removePositionManager/fulfilled',
+    'editProject/fulfilled',
   ]
 
   if (isFulfilled(action) && showTypesArr.includes(action.type)) {
-    toastSuccess(action?.payload?.message)
+    toastSuccess(action?.payload?.data?.message)
   }
 
   return next(action)

@@ -35,18 +35,15 @@ import CardStatisticsHorizontal from 'src/@core/components/card-statistics/card-
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
-
-import { fetchData } from 'src/store/apps/project'
-import { CardStatsHorizontalProps } from 'src/@core/components/card-statistics/types'
-
 // ** Custom Table Components Imports
 import TableHeader from 'src/views/pages/project/list/TableHeader'
 import AddProjectDrawer from 'src/views/pages/project/list/AddProjectDrawer'
 import { AvatarGroup, Stack } from '@mui/material'
 import { BootstrapTooltip } from '../companies'
 import { getProjects } from 'src/store/project'
+import ProjectEditDialog from 'src/views/pages/project/view/ProjectEditDialog'
 
-const statusColors : any = {
+const statusColors: any = {
   active: 'success',
   inactive: 'error'
 }
@@ -114,7 +111,9 @@ const ProjectList = () => {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [pageSize, setPageSize] = useState<number>(10)
   const [page, setPage] = useState<number>(0)
-  const [addProjectOpen, setaddProjectOpen] = useState<boolean>(false)
+  const [project, setProject] = useState<any>({})
+  const [addProjectOpen, setAddProjectOpen] = useState<boolean>(false)
+  const [editProjectOpen, setEditProjectOpen] = useState<boolean>(false)
 
   // ** Hooks
   const dispatch = useDispatch<any>()
@@ -135,7 +134,8 @@ const ProjectList = () => {
     dispatch(getProjects({ query: val, size: pageSize }))
   }, [])
 
-  const toggleAddProjectDrawer = () => setaddProjectOpen(!addProjectOpen)
+  const toggleAddProjectDrawer = () => setAddProjectOpen(!addProjectOpen)
+  const toggleEditProjectDialog = () => setEditProjectOpen(!editProjectOpen)
 
   const columns = [
     {
@@ -225,7 +225,9 @@ const ProjectList = () => {
       renderCell: ({ row }: any) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            <StyledLink href={`/users/view/${row?.created_by?.id}/overview`}>{row?.created_by?.firstname} {row?.created_by?.lastname}</StyledLink>
+            <StyledLink href={`/users/view/${row?.created_by?.id}/overview`}>
+              {row?.created_by?.firstname} {row?.created_by?.lastname}
+            </StyledLink>
           </Typography>
         )
       }
@@ -257,7 +259,13 @@ const ProjectList = () => {
             </StyledLink>
           </BootstrapTooltip>
           <BootstrapTooltip title='edit' placement='top'>
-            <div style={{ cursor: 'pointer' }} onClick={toggleAddProjectDrawer}>
+            <div
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                setProject(row)
+                toggleEditProjectDialog()
+              }}
+            >
               <Icon icon='mdi:pencil-outline' fontSize={20} />
             </div>
           </BootstrapTooltip>
@@ -271,7 +279,7 @@ const ProjectList = () => {
       <Grid item xs={12}>
         {apiData && (
           <Grid container spacing={6}>
-            {apiData.statsHorizontal.map((item: CardStatsHorizontalProps, index: number) => {
+            {apiData.statsHorizontal.map((item: any, index: number) => {
               return (
                 <Grid item xs={12} md={3} sm={6} key={index}>
                   <CardStatisticsHorizontal {...item} icon={<Icon icon={item.icon as string} />} />
@@ -303,7 +311,7 @@ const ProjectList = () => {
           )}
         </Card>
       </Grid>
-
+      <ProjectEditDialog open={editProjectOpen} closeHandler={toggleEditProjectDialog} project={project} />
       <AddProjectDrawer open={addProjectOpen} toggle={toggleAddProjectDrawer} />
     </Grid>
   )

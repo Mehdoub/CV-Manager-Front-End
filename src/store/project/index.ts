@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ApiRequest from "src/helpers/ApiRequest";
-import { defaultFulfilledStatesValue, defaultPendingStatesValue, defaultRejectedStatesValue, sliceInitialStateWithData } from "src/helpers/functions";
+import { defaultFulfilledStatesValue, defaultPendingStatesValue, defaultRejectedStatesValue, sliceInitialStateWithData, sliceInitialStateWithStatus } from "src/helpers/functions";
+import { ProjectEditData } from "src/views/pages/project/view/ProjectEditDialog";
 
 export const getProjects: any = createAsyncThunk(
   'getProjects',
@@ -442,12 +443,65 @@ const projectResumesSlice = createSlice({
 })
 
 
+export const editProject: any = createAsyncThunk(
+  'editProject',
+  async (data: ProjectEditData,
+    { rejectWithValue }) => {
+    try {
+      const projectId = data.projectId
+      delete data.projectId
+      let projectLogo: any
+
+      if (data?.logo) {
+        projectLogo = data?.logo
+        delete data.logo
+      }
+
+      const response = await ApiRequest.builder().auth().request('patch', `projects/${projectId}`, data)
+
+      if (projectLogo) {
+        await ApiRequest.builder()
+          .auth()
+          .contentType('multipart/form-data')
+          .request('patch', `projects/${projectId}/logo`, { logo: projectLogo })
+      }
+
+      return response
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const projectEditSlice = createSlice({
+  name: 'projectEdit',
+  initialState: sliceInitialStateWithStatus,
+  reducers: {
+    clearProjectEdit: (state) => {
+      state.loading = false
+      state.status = false
+      state.errors = []
+    }
+  },
+  extraReducers: (builder) => {
+    builder.addCase(editProject.pending, state => {
+      defaultPendingStatesValue(state)
+    })
+    builder.addCase(editProject.fulfilled, (state) => {
+      defaultFulfilledStatesValue(state)
+    })
+    builder.addCase(editProject.rejected, (state, action) => {
+      defaultRejectedStatesValue(state, action)
+    })
+  }
+})
+
 
 export const { clearCreateProject } = createProjectSlice.actions
 export const { clearDeactiveProject } = projectDeactiveSlice.actions
 export const { clearActiveProject } = projectActiveSlice.actions
 export const { clearRemoveProjectManager } = removeProjectManagerSlice.actions
 export const { clearAddProjectManager } = addProjectManagerSlice.actions
+export const { clearProjectEdit } = projectEditSlice.actions
 export const projectDeactiveReducer = projectDeactiveSlice.reducer
 export const projectsListReducer = projectsListSlice.reducer
 export const projectReducer = projectSlice.reducer
@@ -458,3 +512,4 @@ export const addProjectManagerReducer = addProjectManagerSlice.reducer
 export const removeProjectManagerReducer = removeProjectManagerSlice.reducer
 export const projectPositionsReducer = projectPositionsSlice.reducer
 export const projectResumesReducer = projectResumesSlice.reducer
+export const projectEditReducer = projectEditSlice.reducer

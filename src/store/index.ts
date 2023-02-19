@@ -23,6 +23,7 @@ import {
   createProjectReducer,
   projectActiveReducer,
   projectDeactiveReducer,
+  projectEditReducer,
   projectManagersReducer,
   projectPositionsReducer,
   projectReducer,
@@ -64,6 +65,7 @@ export const store = configureStore({
     removeProjectManager: removeProjectManagerReducer,
     projectPositions: projectPositionsReducer,
     projectResumes: projectResumesReducer,
+    projectEdit: projectEditReducer,
 
     positionsList: positionsListReducer,
     position: positionReducer,
