@@ -60,13 +60,26 @@ export const defaultPendingStatesValue = (state: any) => {
 export const defaultFulfilledStatesValue = (state: any, action: any = {}, zeroIndex: boolean = false) => {
   state.loading = false
   state.errors = {}
-  if (action?.type && zeroIndex) state.data = action.payload.data.data[0]
-  else if (action?.type) state.data = action.payload.data.data
+  if (action?.type && zeroIndex) state.data = action?.payload?.data?.data[0]
+  else if (action?.type) state.data = action?.payload?.data?.data
   else state.status = true
 }
 
 export const defaultRejectedStatesValue = (state: any, action: any) => {
   state.loading = false
-  state.errors = action.payload
+  state.errors = action?.payload
   state.status = false
+}
+
+export const createExtraReducers = (builder: any, actionFunc: any, hasData: boolean = false, zeroIndex: boolean = false) => {
+  builder.addCase(actionFunc.pending, (state: any) => {
+    defaultPendingStatesValue(state)
+  })
+  builder.addCase(actionFunc.fulfilled, (state: any, action: any) => {
+    if (hasData) defaultFulfilledStatesValue(state, action, zeroIndex)
+    else defaultFulfilledStatesValue(state)
+  })
+  builder.addCase(actionFunc.rejected, (state: any, action: any) => {
+    defaultRejectedStatesValue(state, action)
+  })
 }

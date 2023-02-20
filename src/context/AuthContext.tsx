@@ -10,6 +10,8 @@ import authConfig from 'src/configs/auth'
 // ** Types
 import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType } from './types'
 import ApiRequest from 'src/helpers/ApiRequest'
+import { useDispatch } from 'react-redux'
+import { getConstants } from 'src/store/common'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -35,6 +37,7 @@ const AuthProvider = ({ children }: Props) => {
 
   // ** Hooks
   const router = useRouter()
+  const dispatch = useDispatch()
 
   const clearLogin = () => {
     setLoading(false)
@@ -56,6 +59,7 @@ const AuthProvider = ({ children }: Props) => {
         const userData = { ...result.data.data[0], role: 'admin' }
         setUser(userData)
         localStorage.setItem('userData', JSON.stringify(userData))
+        dispatch(getConstants())
       } catch (err) {
         clearLogin()
       }
