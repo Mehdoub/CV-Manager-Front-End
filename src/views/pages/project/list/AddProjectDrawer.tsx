@@ -29,7 +29,7 @@ import { useSelector } from 'react-redux'
 import { clearCreateProject, createProject, getProjects } from 'src/store/project'
 import { getCompanies, getCompanyProjects } from 'src/store/company'
 import { getImagePath, setServerValidationErrors } from 'src/helpers/functions'
-import { Autocomplete, Avatar, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material'
+import { Autocomplete, Avatar, CircularProgress, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material'
 
 interface FileProp {
   name: string
@@ -100,7 +100,7 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
   const dispatch = useDispatch()
   const { status, errors: createErrors } = useSelector((state: any) => state.createProject)
 
-  const { data: companies } = useSelector((state: any) => state.companiesList)
+  const { data: companies, loading: loadingSearchCompanies } = useSelector((state: any) => state.companiesList)
 
   const {
     reset,
@@ -119,6 +119,8 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
       if (dispatchCompanyProjects) dispatch(getCompanyProjects(companyId))
       else dispatch(getProjects())
       dispatch(clearCreateProject())
+      setCompany({})
+      setCompanyErr('')
       toggle()
       reset()
     } else if (createErrors) {
@@ -248,6 +250,7 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
             <FormControl fullWidth sx={{ mb: 6 }}>
               <Autocomplete
                 autoHighlight
+                loading={loadingSearchCompanies}
                 options={companies?.docs ?? []}
                 onChange={(e, newValue) => setCompany(newValue)}
                 getOptionLabel={(company: any) => company?.name}
@@ -255,18 +258,28 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
                 renderInput={params => (
                   <TextField
                     {...params}
+                    label='Company'
                     onChange={searchCompanies}
-                    size='small'
-                    placeholder='Company: Search For Companies ...'
+                    size='medium'
+                    placeholder='Search For Companies ...'
                     error={!!companyErr}
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <Fragment>
+                          {loadingSearchCompanies ? <CircularProgress color='inherit' size={20} /> : null}
+                          {params.InputProps.endAdornment}
+                        </Fragment>
+                      )
+                    }}
                   />
                 )}
                 renderOption={(props, company) => (
                   <ListItem {...props}>
                     <ListItemAvatar>
                       <Avatar src={getImagePath(company?.logo)} alt={company?.name} sx={{ height: 28, width: 28 }} />
-                      <ListItemText primary={company?.name} />
                     </ListItemAvatar>
+                    <ListItemText primary={company?.name} />
                   </ListItem>
                 )}
               />

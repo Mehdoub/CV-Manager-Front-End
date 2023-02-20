@@ -2,6 +2,7 @@ import {
   Autocomplete,
   Avatar,
   Button,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -61,7 +62,7 @@ const ProjectEditDialog = (props: Props) => {
 
   const [company, setCompany] = useState<any>({})
   const [companyErr, setCompanyErr] = useState<string>('')
-  const { data: companies } = useSelector((state: any) => state.companiesList)
+  const { data: companies, loading: loadingSearchCompanies } = useSelector((state: any) => state.companiesList)
 
   const dispatch = useDispatch()
 
@@ -101,14 +102,18 @@ const ProjectEditDialog = (props: Props) => {
   })
 
   useEffect(() => {
-    setValue('name', project?.name)
-    setValue('description', project?.description)
-    setCompany(project?.company_id)
+    if (project?.id) {
+      setValue('name', project?.name)
+      setValue('description', project?.description)
+      setCompany(project?.company_id)
+    }
   }, [project])
 
   const clearInputs = () => {
     setValue('name', '')
     setValue('description', '')
+    setCompany({})
+    setCompanyErr('')
   }
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -243,29 +248,43 @@ const ProjectEditDialog = (props: Props) => {
                 <Autocomplete
                   autoHighlight
                   options={companies?.docs ?? []}
+                  loading={loadingSearchCompanies}
                   onChange={(e, newValue) => setCompany(newValue)}
                   getOptionLabel={(company: any) => company?.name}
                   ListboxComponent={List}
-                  defaultValue={{ name: company?.name, manufacturer: company?.id }}
+                  defaultValue={{ name: projectDataFromList?.company_id?.name ?? company?.name }}
                   renderInput={params => (
                     <TextField
+                      label='Company'
                       {...params}
                       onChange={searchCompanies}
-                      size='small'
-                      placeholder='Company: Search For Companies ...'
+                      size='medium'
+                      placeholder='Search For Companies ...'
                       error={!!companyErr}
+                      InputProps={{
+                        ...params.InputProps,
+                        endAdornment: (
+                          <Fragment>
+                            {loadingSearchCompanies ? <CircularProgress color='inherit' size={20} /> : null}
+                            {params.InputProps.endAdornment}
+                          </Fragment>
+                        )
+                      }}
                     />
                   )}
                   renderOption={(props, company: any) => (
                     <ListItem {...props}>
                       <ListItemAvatar>
                         <Avatar src={getImagePath(company?.logo)} alt={company?.name} sx={{ height: 28, width: 28 }} />
-                        <ListItemText primary={company?.name} />
                       </ListItemAvatar>
+                      <ListItemText primary={company?.name} />
                     </ListItem>
                   )}
                 />
                 {companyErr && <FormHelperText sx={{ color: 'error.main' }}>{companyErr}</FormHelperText>}
+                {errors.name && <FormHelperText sx={{ color: 'error.main' }}>{errors.name.message}</FormHelperText>}
+
+                {/* {companyErr && <FormHelperText sx={{ color: 'error.main' }}>{companyErr}</FormHelperText>} */}
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={12} md={12}>

@@ -38,7 +38,7 @@ import { getInitials } from 'src/@core/utils/get-initials'
 // ** Custom Table Components Imports
 import TableHeader from 'src/views/pages/project/list/TableHeader'
 import AddProjectDrawer from 'src/views/pages/project/list/AddProjectDrawer'
-import { AvatarGroup, Stack } from '@mui/material'
+import { AvatarGroup, Skeleton, Stack } from '@mui/material'
 import { BootstrapTooltip } from '../companies'
 import { getProjects } from 'src/store/project'
 import ProjectEditDialog from 'src/views/pages/project/view/ProjectEditDialog'
@@ -117,8 +117,7 @@ const ProjectList = () => {
 
   // ** Hooks
   const dispatch = useDispatch<any>()
-  const store = useSelector((state: any) => state.projectsList)
-  const { data: projects, loading } = store
+  const { data: projects, loading: projectsListLoading } = useSelector((state: any) => state.projectsList)
 
   const handlePageChange = (newPage: number) => {
     setPage(newPage++)
@@ -292,7 +291,7 @@ const ProjectList = () => {
       <Grid item xs={12}>
         <Card>
           <TableHeader searchQuery={searchQuery} handleFilter={handleFilter} toggle={toggleAddProjectDrawer} />
-          {!loading && projects?.docs?.length > 0 && (
+          {projectsListLoading ? <Skeleton variant='rounded' height={600} /> : (
             <DataGrid
               autoHeight
               rows={projects?.docs ?? []}
