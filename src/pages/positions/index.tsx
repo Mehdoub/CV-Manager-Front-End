@@ -56,9 +56,9 @@ const statusColors : any = {
 }
 
 // ** renders client column
-export const renderClient = (row: any, field = 'logo') => {
-  if (row[field]?.length) {
-    return <CustomAvatar src={row[field]} sx={{ mr: 3, width: 34, height: 34 }} />
+export const renderClient = (row: any, imgField = 'logo', nameField = 'name') => {
+  if (row[imgField]?.length) {
+    return <CustomAvatar src={row[imgField]} sx={{ mr: 3, width: 34, height: 34 }} />
   } else {
     return (
       <CustomAvatar
@@ -66,7 +66,7 @@ export const renderClient = (row: any, field = 'logo') => {
         color={'primary'}
         sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}
       >
-        {getInitials(row?.title ?? 'John Doe')}
+        {getInitials(row[nameField] ?? 'John Doe')}
       </CustomAvatar>
     )
   }
@@ -144,7 +144,7 @@ const PositionList = () => {
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {renderClient(row)}
+            {renderClient(row, 'logo', 'title')}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <StyledLink href={`/positions/view/${id}/overview/`}>{title}</StyledLink>
             </Box>
@@ -164,7 +164,7 @@ const PositionList = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(project_id)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href={`/projects/view/${project_id}/overview/`}>{project_id}</StyledLink>
+              <StyledLink href={`/projects/view/${project_id?.id}/overview/`}>{project_id?.name}</StyledLink>
             </Box>
           </Box>
         )
@@ -182,7 +182,7 @@ const PositionList = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(company_id)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href={`/companies/view/${company_id}/overview/`}>{company_id}</StyledLink>
+              <StyledLink href={`/companies/view/${company_id?.id}/overview/`}>{company_id?.name}</StyledLink>
             </Box>
           </Box>
         )
