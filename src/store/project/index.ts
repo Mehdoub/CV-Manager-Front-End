@@ -93,7 +93,23 @@ export const createProject: any = createAsyncThunk(
   async (data: any,
     { rejectWithValue }) => {
     try {
+      let projectLogo: any
+
+      if (data?.logo) {
+        projectLogo = data?.logo
+        delete data.logo
+      }
+
       const response = await ApiRequest.builder().auth().request('post', 'projects', data)
+
+      const newProjectId = response?.data?.data[0]?.id
+
+      if (projectLogo && newProjectId) {
+        await ApiRequest.builder()
+          .auth()
+          .contentType('multipart/form-data')
+          .request('patch', `projects/${newProjectId}/logo`, { logo: projectLogo })
+      }
 
       return response
     } catch (err: any) {

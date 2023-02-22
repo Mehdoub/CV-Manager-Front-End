@@ -121,6 +121,7 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
       dispatch(clearCreateProject())
       setCompany({})
       setCompanyErr('')
+      setFiles([])
       toggle()
       reset()
     } else if (createErrors) {
@@ -131,8 +132,12 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
 
   const onSubmit = (data: ProjectFormData) => {
     const newCompany = companyId ?? company?.id
+    let dataToSent : ProjectFormData = { name: data?.name, company_id: newCompany, description: data?.description }
     if (!newCompany) setCompanyErr('Company Cannot Be Empty!')
-    else dispatch(createProject({ name: data?.name, company_id: newCompany, description: data?.description }))
+    else {
+      if (files[0]) dataToSent = {...dataToSent, logo: files[0]}
+      dispatch(createProject(dataToSent))
+    }
   }
 
   const handleClose = () => {
