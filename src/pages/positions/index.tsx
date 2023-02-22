@@ -38,6 +38,7 @@ import AddPositionDrawer from 'src/views/pages/position/list/AddPositionDrawer'
 import { AvatarGroup, Stack } from '@mui/material'
 import { BootstrapTooltip } from '../companies'
 import { getPositions } from 'src/store/position'
+import PositionEditDialog from 'src/views/pages/position/view/PositionEditDialog'
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -50,7 +51,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
   }
 }))
 
-const statusColors : any = {
+const statusColors: any = {
   active: 'success',
   inactive: 'error'
 }
@@ -61,11 +62,7 @@ export const renderClient = (row: any, imgField = 'logo', nameField = 'name') =>
     return <CustomAvatar src={row[imgField]} sx={{ mr: 3, width: 34, height: 34 }} />
   } else {
     return (
-      <CustomAvatar
-        skin='light'
-        color={'primary'}
-        sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}
-      >
+      <CustomAvatar skin='light' color={'primary'} sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}>
         {getInitials(row[nameField] ?? 'John Doe')}
       </CustomAvatar>
     )
@@ -111,7 +108,9 @@ const PositionList = () => {
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [pageSize, setPageSize] = useState<number>(10)
   const [page, setPage] = useState<number>(0)
-  const [addPositionOpen, setaddPositionOpen] = useState<boolean>(false)
+  const [position, setPosition] = useState<any>({})
+  const [addPositionOpen, setAddPositionOpen] = useState<boolean>(false)
+  const [editPositionOpen, setEditPositionOpen] = useState<boolean>(false)
 
   // ** Hooks
   const dispatch = useDispatch<any>()
@@ -131,7 +130,8 @@ const PositionList = () => {
     dispatch(getPositions({ query: val, size: pageSize }))
   }, [])
 
-  const toggleAddPositionDrawer = () => setaddPositionOpen(!addPositionOpen)
+  const toggleAddPositionDrawer = () => setAddPositionOpen(!addPositionOpen)
+  const toggleEditPositionDialog = () => setEditPositionOpen(!editPositionOpen)
 
   const columns = [
     {
@@ -277,7 +277,13 @@ const PositionList = () => {
             </StyledLink>
           </BootstrapTooltip>
           <BootstrapTooltip title='edit' placement='top'>
-            <div style={{ cursor: 'pointer' }} onClick={toggleAddPositionDrawer}>
+            <div
+              style={{ cursor: 'pointer' }}
+              onClick={() => {
+                setPosition(row)
+                toggleEditPositionDialog()
+              }}
+            >
               <Icon icon='mdi:pencil-outline' fontSize={20} />
             </div>
           </BootstrapTooltip>
@@ -325,6 +331,7 @@ const PositionList = () => {
       </Grid>
 
       <AddPositionDrawer open={addPositionOpen} toggle={toggleAddPositionDrawer} />
+      <PositionEditDialog open={editPositionOpen} closeHandler={toggleEditPositionDialog} position={position} />
     </Grid>
   )
 }

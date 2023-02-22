@@ -83,3 +83,10 @@ export const createExtraReducers = (builder: any, actionFunc: any, hasData: bool
     defaultRejectedStatesValue(state, action)
   })
 }
+
+export const clearStatesAction = (state: any, hasData: boolean = false) => {
+  state.loading = false
+  if (hasData) state.data = {}
+  else state.status = false
+  state.errors = []
+}

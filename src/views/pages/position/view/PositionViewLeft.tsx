@@ -46,6 +46,7 @@ import { getImagePath } from 'src/helpers/functions'
 import { Skeleton } from '@mui/material'
 import Link from 'next/link'
 import Translations from 'src/layouts/components/Translations'
+import PositionEditDialog from './PositionEditDialog'
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -227,70 +228,7 @@ const ProjectViewLeft = ({ positionId }: Props) => {
             )}
           </CardActions>
 
-          <Dialog
-            open={openEdit}
-            onClose={handleEditClose}
-            aria-labelledby='user-view-edit'
-            sx={{ '& .MuiPaper-root': { width: '100%', maxWidth: 650, p: [2, 10] } }}
-            aria-describedby='user-view-edit-description'
-          >
-            <DialogTitle id='user-view-edit' sx={{ textAlign: 'center', fontSize: '1.5rem !important' }}>
-              Edit Project Information
-            </DialogTitle>
-            <DialogContent>
-              <DialogContentText variant='body2' id='user-view-edit-description' sx={{ textAlign: 'center', mb: 7 }}>
-                Updating project details will receive a privacy audit.
-              </DialogContentText>
-              <form>
-                <Fragment>
-                  <div {...getRootProps({ className: 'dropzone' })}>
-                    <input {...getInputProps()} />
-                    <Box sx={{ textAlign: 'center' }}>
-                      {files[0] ? (
-                        renderFilePreview(files[0])
-                      ) : (
-                        <Img
-                          width={140}
-                          alt='Upload img'
-                          src='/images/logos/facebook-round.png'
-                          sx={{ borderRadius: '50%', marginBottom: '25px' }}
-                        />
-                      )}
-                    </Box>
-                  </div>
-                </Fragment>
-                <Grid container spacing={6}>
-                  <Grid item xs={12} sm={6}>
-                    <TextField fullWidth label='Name' defaultValue={data.fullName} />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField fullWidth label='Phone' defaultValue={`+98 ${data.contact}`} />
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <TextField fullWidth label='Company' defaultValue={data.company} />
-                  </Grid>
-                  <Grid item xs={12} sm={12} md={12}>
-                    <TextField
-                      fullWidth
-                      defaultValue={`${data.description}`}
-                      multiline
-                      rows={4}
-                      label='Description'
-                      placeholder='Project Description Shuould Be Here ...'
-                    />
-                  </Grid>
-                </Grid>
-              </form>
-            </DialogContent>
-            <DialogActions sx={{ justifyContent: 'center' }}>
-              <Button variant='contained' sx={{ mr: 1 }} onClick={handleEditClose}>
-                Submit
-              </Button>
-              <Button variant='outlined' color='secondary' onClick={handleEditClose}>
-                Cancel
-              </Button>
-            </DialogActions>
-          </Dialog>
+          <PositionEditDialog open={openEdit} closeHandler={handleEditClose} />
 
           <SuspendDialog
             open={suspendDialogOpen}

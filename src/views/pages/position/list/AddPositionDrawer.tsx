@@ -73,16 +73,24 @@ const Header = styled(Box)<BoxProps>(({ theme }) => ({
 
 const schema = yup.object().shape({
   title: yup.string().label('Title').min(3).max(50).required(),
-  project: yup.string().label('Project').optional(),
+  // project: yup.string().label('Project').optional(),
   level: yup.string().label('Level').oneOf(levelOptions),
   description: yup.string().label('Description').min(10).max(100).required()
 })
 
 const defaultValues = {
   title: '',
-  project: '',
+  // project: '',
   level: '',
   description: ''
+}
+
+export interface PositionFormData {
+  title: string
+  project_id?: string
+  description: string
+  level: string
+  logo?: any
 }
 
 const AddPositionDrawer = (props: AddPositionDrawerType) => {

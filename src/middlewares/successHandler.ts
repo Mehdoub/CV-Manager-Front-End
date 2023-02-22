@@ -12,6 +12,7 @@ const successHandler = ({ }) => (next: any) => async (action: any) => {
     'addProjectManager/fulfilled',
     'removeProjectManager/fulfilled',
     'createPosition/fulfilled',
+    'editPosition/fulfilled',
     'addPositionManager/fulfilled',
     'removePositionManager/fulfilled',
     'editProject/fulfilled',

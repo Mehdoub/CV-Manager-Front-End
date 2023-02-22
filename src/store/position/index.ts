@@ -1,5 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ApiRequest from "src/helpers/ApiRequest";
+import { clearStatesAction, createExtraReducers, sliceInitialStateWithStatus } from "src/helpers/functions";
+import { PositionEditData } from "src/views/pages/position/view/PositionEditDialog";
 
 
 export const getPositions: any = createAsyncThunk(
@@ -359,6 +361,48 @@ const positionManagerRemoveSlice = createSlice({
   }
 })
 
+export const editPosition: any = createAsyncThunk(
+  'editPosition',
+  async (data: PositionEditData,
+    { rejectWithValue }) => {
+    try {
+      const positionId = data.positionId
+      delete data.positionId
+      let positionLogo: any
+
+      if (data?.logo) {
+        positionLogo = data?.logo
+        delete data.logo
+      }
+
+      const response = await ApiRequest.builder().auth().request('patch', `positions/${positionId}`, data)
+
+      if (positionLogo) {
+        await ApiRequest.builder()
+          .auth()
+          .contentType('multipart/form-data')
+          .request('patch', `positions/${positionId}/logo`, { logo: positionLogo })
+      }
+
+      return response
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const positionEditSlice = createSlice({
+  name: 'positionEdit',
+  initialState: sliceInitialStateWithStatus,
+  reducers: {
+    clearPositionEdit: (state) => {
+      clearStatesAction(state)
+    }
+  },
+  extraReducers: (builder) => {
+    createExtraReducers(builder, editPosition)
+  }
+})
+
 
 
 export const { clearPositionCreate } = positionCreateSlice.actions
@@ -366,6 +410,7 @@ export const { clearPositionDeactive } = positionDeactiveSlice.actions
 export const { clearPositionActive } = positionActiveSlice.actions
 export const { clearPositionManagerRemove } = positionManagerRemoveSlice.actions
 export const { clearPositionManagerAdd } = positionManagerAddSlice.actions
+export const { clearPositionEdit } = positionEditSlice.actions
 export const positionsListReducer = positionsListSlice.reducer
 export const positionReducer = positionSlice.reducer
 export const positionCreateReducer = positionCreateSlice.reducer
@@ -374,3 +419,4 @@ export const positionActiveReducer = positionActiveSlice.reducer
 export const positionManagersReducer = positionManagersSlice.reducer
 export const positionManagerAddReducer = positionManagerAddSlice.reducer
 export const positionManagerRemoveReducer = positionManagerRemoveSlice.reducer
+export const positionEditReducer = positionEditSlice.reducer
