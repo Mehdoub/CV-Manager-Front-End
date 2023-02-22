@@ -24,12 +24,12 @@ import Icon from 'src/@core/components/icon'
 // ** Third Party Components
 import toast from 'react-hot-toast'
 import { useDropzone } from 'react-dropzone'
-import { InputLabel, MenuItem, Select } from '@mui/material'
+import { Autocomplete, Avatar, CircularProgress, InputLabel, List, ListItem, ListItemAvatar, ListItemText, MenuItem, Select } from '@mui/material'
 import { useDispatch } from 'react-redux'
 import { clearPositionCreate, createPosition, getPositions } from 'src/store/position'
-import { setServerValidationErrors } from 'src/helpers/functions'
+import { getImagePath, setServerValidationErrors } from 'src/helpers/functions'
 import { useSelector } from 'react-redux'
-import { getProjectPositions } from 'src/store/project'
+import { getProjectPositions, getProjects } from 'src/store/project'
 
 interface FileProp {
   name: string
@@ -89,12 +89,17 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
   // ** Props
   const { open, toggle, dispatchProjectPositionsList } = props
 
+  const [positionProject, setPositionProject] = useState<any>({})
+  const [projectErr, setProjectErr] = useState<string>('')
+
   const dispatch = useDispatch()
 
   const positionCreateStore = useSelector((state: any) => state.positionCreate)
   const { status, errors: createErrors } = positionCreateStore
 
   const { data: project } = useSelector((state: any) => state.projectFind)
+
+  const { data: projects, loading: loadingSearchProjects } = useSelector((state: any) => state.projectsList)
 
   const projectId = dispatchProjectPositionsList && project?.id ? project?.id : null
 
@@ -115,6 +120,8 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
       if (dispatchProjectPositionsList) dispatch(getProjectPositions())
       else dispatch(getPositions())
       dispatch(clearPositionCreate())
+      setProjectErr('')
+      setPositionProject({})
       toggle()
       reset()
     }
@@ -125,9 +132,10 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
   }, [status, createErrors])
 
   const onSubmit = (data: any) => {
-    const project = projectId ?? data?.project
-    dispatch(
-      createPosition({ title: data?.title, project_id: project, level: data?.level, description: data?.description })
+    const newProject = projectId ?? positionProject?.id
+    if (!newProject) setProjectErr('Project Cannot Be Empty!')
+    else dispatch(
+      createPosition({ title: data?.title, project_id: newProject, level: data?.level, description: data?.description })
     )
   }
 
@@ -169,6 +177,12 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
       return <Icon icon='mdi:file-document-outline' />
     }
   }
+
+  const searchProjects = (value: any) => {
+    const query = value?.target?.value
+    if (query?.length > 0) dispatch(getProjects({ query }))
+  }
+
 
   return (
     <Drawer
@@ -236,21 +250,42 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
           </FormControl>
           {!projectId && (
             <FormControl fullWidth sx={{ mb: 6 }}>
-              <Controller
-                name='project'
-                control={control}
-                rules={{ required: true }}
-                render={({ field: { value, onChange } }) => (
+              <Autocomplete
+                autoHighlight
+                loading={loadingSearchProjects}
+                options={projects?.docs ?? []}
+                onChange={(e, newValue) => setPositionProject(newValue)}
+                getOptionLabel={(projectItem: any) => projectItem?.name}
+                ListboxComponent={List}
+                renderInput={params => (
                   <TextField
-                    value={value}
+                    {...params}
                     label='Project'
-                    onChange={onChange}
-                    placeholder='BPM'
-                    error={Boolean(errors.project)}
+                    onChange={searchProjects}
+                    size='medium'
+                    placeholder='Search For Projects ...'
+                    error={!!projectErr}
+                    InputProps={{
+                      ...params.InputProps,
+                      endAdornment: (
+                        <Fragment>
+                          {loadingSearchProjects ? <CircularProgress color='inherit' size={20} /> : null}
+                          {params.InputProps.endAdornment}
+                        </Fragment>
+                      )
+                    }}
                   />
                 )}
+                renderOption={(props, projectItem) => (
+                  <ListItem {...props}>
+                    <ListItemAvatar>
+                      <Avatar src={getImagePath(projectItem?.logo)} alt={projectItem?.name} sx={{ height: 28, width: 28 }} />
+                    </ListItemAvatar>
+                    <ListItemText primary={projectItem?.name} />
+                  </ListItem>
+                )}
               />
-              {errors.project && <FormHelperText sx={{ color: 'error.main' }}>{errors.project.message}</FormHelperText>}
+              {projectErr && <FormHelperText sx={{ color: 'error.main' }}>{projectErr}</FormHelperText>}
             </FormControl>
           )}
           <FormControl fullWidth sx={{ mb: 6 }}>
