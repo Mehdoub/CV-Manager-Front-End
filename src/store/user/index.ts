@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import ApiRequest from "src/helpers/ApiRequest"
+import { createExtraReducers, sliceInitialStateWithData } from "src/helpers/functions"
 
 export const getUsers: any = createAsyncThunk(
   'getUsers',
@@ -41,4 +42,24 @@ const usersListSlice = createSlice({
   }
 })
 
+export const getUser : any = createAsyncThunk('getUser', async (userId: string, { rejectWithValue }) => {
+  try {
+    const response = await ApiRequest.builder().auth().request('get', `users/${userId}`)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const userSlice = createSlice({
+  name: 'user',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    createExtraReducers(builder, getUser, true, true)
+  }
+})
+
 export const usersListReducer = usersListSlice.reducer
+export const userReducer = userSlice.reducer

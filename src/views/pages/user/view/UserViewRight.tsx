@@ -106,7 +106,7 @@ const UserViewRight = ({ tab, userId }: any) => {
           ) : (
             <>
               <TabPanel sx={{ p: 0 }} value='overview'>
-                <UserViewOverview userId={userId} />
+                <UserViewOverview />
               </TabPanel>
               <TabPanel sx={{ p: 0 }} value='project'>
                 <UserViewProject />

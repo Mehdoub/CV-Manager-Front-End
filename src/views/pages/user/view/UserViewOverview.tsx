@@ -14,14 +14,6 @@ import TimelineSeparator from '@mui/lab/TimelineSeparator'
 import TimelineConnector from '@mui/lab/TimelineConnector'
 import MuiTimeline, { TimelineProps } from '@mui/lab/Timeline'
 
-// ** Types
-// import { InvoiceType } from 'src/types/apps/invoiceTypes'
-
-// ** Demo Component Imports
-
-interface Props {
-  userId: string
-}
 
 // Styled Timeline component
 const Timeline = styled(MuiTimeline)<TimelineProps>(({ theme }) => ({
@@ -38,13 +30,13 @@ const Timeline = styled(MuiTimeline)<TimelineProps>(({ theme }) => ({
   }
 }))
 
-const UserViewOverview = ({ userId }: Props) => {
+const UserViewOverview = () => {
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <CardHeader title='User Activity Timeline' />
-          <CardContent>
+          <CardHeader title='User Activity Timeline (Comming Soon ...)' />
+          <CardContent sx={{filter: 'blur(3px)'}}>
             <Timeline>
               <TimelineItem>
                 <TimelineSeparator>

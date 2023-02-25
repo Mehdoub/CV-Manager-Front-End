@@ -31,7 +31,7 @@ import {
   projectsListReducer,
   removeProjectManagerReducer
 } from './project'
-import { usersListReducer } from './user'
+import { userReducer, usersListReducer } from './user'
 import successHandler from 'src/middlewares/successHandler'
 import { usernameCheckReducer } from './auth'
 import errorHandler from 'src/middlewares/errorHandler'
@@ -41,7 +41,7 @@ import { constantsReducer } from './common'
 export const store = configureStore({
   reducer: {
     project,
-    user,
+    userfind: user,
 
     companiesList: companiesListReducer,
     company: companyReducer,
@@ -79,6 +79,7 @@ export const store = configureStore({
     positionEdit: positionEditReducer,
 
     usersList: usersListReducer,
+    user: userReducer,
 
     usernameCheck: usernameCheckReducer,
 
