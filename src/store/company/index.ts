@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ApiRequest from "src/helpers/ApiRequest";
-import { defaultFulfilledStatesValue, defaultPendingStatesValue, defaultRejectedStatesValue, sliceInitialStateWithData, sliceInitialStateWithStatus } from "src/helpers/functions";
+import { createExtraReducers, defaultFulfilledStatesValue, defaultPendingStatesValue, defaultRejectedStatesValue, sliceInitialStateWithData, sliceInitialStateWithStatus } from "src/helpers/functions";
 import { CompanyFormData } from "src/views/pages/company/list/AddCompanyDrawer";
 import { CompanyEditData } from "src/views/pages/company/view/CompanyEditDialog";
 
@@ -424,10 +424,10 @@ const companyActiveSlice = createSlice({
 })
 
 
-export const getCompanyResumeStatistics: any = createAsyncThunk('getCompanyResumeStatistics', async (_, { rejectWithValue, getState }) => {
+export const getCompanyStatisticsResumeByStates: any = createAsyncThunk('getCompanyStatisticsResumeByStates', async (_, { rejectWithValue, getState }) => {
   try {
     const { company: { data } } = getState() as any
-    const response = ApiRequest.builder().auth().request('get', `companies/${data?.id}/statistics/resumes`)
+    const response = await ApiRequest.builder().auth().request('get', `companies/${data?.id}/statistics/resume-by-states`)
 
     return response
   } catch (err: any) {
@@ -435,20 +435,32 @@ export const getCompanyResumeStatistics: any = createAsyncThunk('getCompanyResum
   }
 })
 
-const companyStatisticsResumesSlice = createSlice({
-  name: 'companyStatisticsResumes',
+const companyStatisticsResumeByStatesSlice = createSlice({
+  name: 'companyStatisticsResumeByStates',
   initialState: sliceInitialStateWithData,
   reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(getCompanyResumeStatistics.pending, (state) => {
-      defaultPendingStatesValue(state)
-    })
-    builder.addCase(getCompanyResumeStatistics.fulfilled, (state, action) => {
-      defaultFulfilledStatesValue(state, action, true)
-    })
-    builder.addCase(getCompanyResumeStatistics.rejected, (state, action) => {
-      defaultRejectedStatesValue(state, action)
-    })
+    createExtraReducers(builder, getCompanyStatisticsResumeByStates, true)
+  }
+})
+
+export const getCompanyStatisticsResumeStatesInLastMonth: any = createAsyncThunk('getCompanyStatisticsResumeStatesInLastMonth', async (_, { rejectWithValue, getState }) => {
+  try {
+    const { company: { data } } = getState() as any
+    const response = await ApiRequest.builder().auth().request('get', `companies/${data?.id}/statistics/resume-state-in-last-month`)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const companyStatisticsResumeStatesInLastMonthSlice = createSlice({
+  name: 'companyStatisticsResumeStatesInLastMonth',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    createExtraReducers(builder, getCompanyStatisticsResumeStatesInLastMonth, true, true)
   }
 })
 
@@ -469,4 +481,5 @@ export const addCompanyManagerReducer = addCompanyManagerSlice.reducer
 export const removeCompanyManagerReducer = removeCompanyManagerSlice.reducer
 export const companyDeactiveReducer = companyDeactiveSlice.reducer
 export const companyActiveReducer = companyActiveSlice.reducer
-export const companyStatisticsResumesReducer = companyStatisticsResumesSlice.reducer
+export const companyStatisticsResumeByStatesReducer = companyStatisticsResumeByStatesSlice.reducer
+export const companyStatisticsResumeStatesInLastMonthReducer = companyStatisticsResumeStatesInLastMonthSlice.reducer

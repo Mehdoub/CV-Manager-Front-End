@@ -13,7 +13,7 @@ import { useSelector } from 'react-redux'
 import { Skeleton } from '@mui/material'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { getCompanyResumeStatistics } from 'src/store/company'
+import { getCompanyStatisticsResumeByStates, getCompanyStatisticsResumeStatesInLastMonth } from 'src/store/company'
 
 type Props = {
   tab: string
@@ -24,10 +24,18 @@ const CompanyView = ({ tab, companyId }: Props) => {
   const dispatch = useDispatch()
 
   const { data: company } = useSelector((state: any) => state.company)
-  const { loading: resumeStatisticsLoading, data: resumeStatistics } = useSelector((state: any) => state.companyStatisticsResumes)
+  const { loading: statisticsResumeByStatesLoading, data: statisticsResumeByStates } = useSelector(
+    (state: any) => state.companyStatisticsResumeByStates
+  )
+  const { loading: statisticsResumeStatesInLastMonthLoading, data: statisticsResumeStatesInLastMonth } = useSelector(
+    (state: any) => state.companyStatisticsResumeStatesInLastMonth
+  )
 
   useEffect(() => {
-    if (company?.id) dispatch(getCompanyResumeStatistics())
+    if (company?.id) {
+      dispatch(getCompanyStatisticsResumeByStates())
+      dispatch(getCompanyStatisticsResumeStatesInLastMonth())
+    }
   }, [company?.id])
 
   return (
@@ -35,10 +43,10 @@ const CompanyView = ({ tab, companyId }: Props) => {
       <Grid container spacing={6}>
         <Grid item container spacing={6} className='match-height'>
           <Grid item xs={6} sm={3} md={4}>
-            {resumeStatisticsLoading ? <Skeleton variant='rounded' height={200} /> : <CrmAward />}
+            {statisticsResumeByStatesLoading ? <Skeleton variant='rounded' height={200} /> : <CrmAward />}
           </Grid>
           <Grid item xs={6} sm={3} md={2}>
-            {resumeStatisticsLoading ? (
+            {statisticsResumeStatesInLastMonthLoading ? (
               <Skeleton variant='rounded' height={200} />
             ) : (
               <CardStatisticsVertical
@@ -48,13 +56,13 @@ const CompanyView = ({ tab, companyId }: Props) => {
                 title='Total Received Resumes'
                 chipText='Last Month'
                 icon={<Icon icon='material-symbols:quick-reference-all-outline-rounded' />}
-                statsData={resumeStatistics?.resume_state_in_last_month}
+                statsData={statisticsResumeStatesInLastMonth}
                 type='received'
               />
             )}
           </Grid>
           <Grid item xs={6} sm={3} md={2}>
-            {resumeStatisticsLoading ? (
+            {statisticsResumeStatesInLastMonthLoading ? (
               <Skeleton variant='rounded' height={200} />
             ) : (
               <CardStatisticsVertical
@@ -64,13 +72,13 @@ const CompanyView = ({ tab, companyId }: Props) => {
                 title='Rejected Resumes'
                 chipText='Last Month'
                 icon={<Icon icon='mdi:account-cancel' />}
-                statsData={resumeStatistics?.resume_state_in_last_month}
+                statsData={statisticsResumeStatesInLastMonth}
                 type='rejected'
               />
             )}
           </Grid>
           <Grid item xs={6} sm={3} md={2}>
-            {resumeStatisticsLoading ? (
+            {statisticsResumeStatesInLastMonthLoading ? (
               <Skeleton variant='rounded' height={200} />
             ) : (
               <CardStatisticsVertical
@@ -80,13 +88,17 @@ const CompanyView = ({ tab, companyId }: Props) => {
                 title='Hired Resumes'
                 chipText='Last Month'
                 icon={<Icon icon='mdi:user-check' />}
-                statsData={resumeStatistics?.resume_state_in_last_month}
-                type='hired'
+                statsData={statisticsResumeStatesInLastMonth}
+                type='pending'
               />
             )}
           </Grid>
           <Grid item xs={6} sm={3} md={2}>
-            {resumeStatisticsLoading ? <Skeleton variant='rounded' height={200} /> : <CrmTotalGrowth statsData={resumeStatistics?.total_resume_by_states} />}
+            {statisticsResumeByStatesLoading ? (
+              <Skeleton variant='rounded' height={200} />
+            ) : (
+              <CrmTotalGrowth statsData={statisticsResumeByStates?.total_resume_by_states} />
+            )}
           </Grid>
         </Grid>
         <Grid item xs={12} md={5} lg={4}>

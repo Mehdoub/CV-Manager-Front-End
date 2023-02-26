@@ -16,7 +16,8 @@ import {
   editCompanyReducer,
   removeCompanyManagerReducer,
   companyActiveReducer,
-  companyStatisticsResumesReducer
+  companyStatisticsResumeByStatesReducer,
+  companyStatisticsResumeStatesInLastMonthReducer
 } from './company'
 import {
   addProjectManagerReducer,
@@ -54,7 +55,8 @@ export const store = configureStore({
     removeCompanyManager: removeCompanyManagerReducer,
     companyDeactive: companyDeactiveReducer,
     companyActive: companyActiveReducer,
-    companyStatisticsResumes: companyStatisticsResumesReducer,
+    companyStatisticsResumeByStates: companyStatisticsResumeByStatesReducer,
+    companyStatisticsResumeStatesInLastMonth: companyStatisticsResumeStatesInLastMonthReducer,
 
     projectsList: projectsListReducer,
     projectFind: projectReducer,

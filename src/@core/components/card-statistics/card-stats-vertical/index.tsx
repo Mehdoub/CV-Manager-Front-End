@@ -18,9 +18,9 @@ const CardStatsVertical = (props: CardStatsVerticalProps) => {
   // ** Props
   let { title, color, icon, stats, chipText, trendNumber, trend = 'positive', type, statsData } = props
 
-  if (statsData && type) {
-    const lastMonth = Number(statsData[type]['last_month'])
-    const recentMonth = Number(statsData[type]['resent_month'])
+  if (statsData && type && statsData[type]) {
+    const lastMonth = Number(statsData[type][0]['last_month'])
+    const recentMonth = Number(statsData[type][0]['resent_month'])
     stats = recentMonth + lastMonth
     const growthDiff = recentMonth - lastMonth
     trend = growthDiff < 0 ? 'negative' : 'positive'
