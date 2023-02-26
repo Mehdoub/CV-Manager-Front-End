@@ -1,4 +1,5 @@
 import { ToastPosition, toast } from "react-hot-toast"
+import Language from "./Language"
 
 export const sliceInitialStateWithData = {
   loading: false,
@@ -89,4 +90,13 @@ export const clearStatesAction = (state: any, hasData: boolean = false) => {
   if (hasData) state.data = {}
   else state.status = false
   state.errors = []
+}
+
+export const showDate = (date: string) => {
+  let returnVal = ''
+  const lang = Language.builder().getLanguage()
+  if (lang == 'fa') returnVal = new Date(date).toLocaleString('fa-IR')
+  else returnVal = new Date(date).toDateString()
+
+  return returnVal
 }

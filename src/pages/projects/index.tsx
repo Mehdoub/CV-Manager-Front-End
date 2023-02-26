@@ -42,6 +42,7 @@ import { AvatarGroup, Skeleton, Stack } from '@mui/material'
 import { BootstrapTooltip } from '../companies'
 import { getProjects } from 'src/store/project'
 import ProjectEditDialog from 'src/views/pages/project/view/ProjectEditDialog'
+import { showDate } from 'src/helpers/functions'
 
 const statusColors: any = {
   active: 'success',
@@ -239,7 +240,7 @@ const ProjectList = () => {
       renderCell: ({ row }: any) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {new Date(row.createdAt).toDateString()}
+            {showDate(row?.createdAt)}
           </Typography>
         )
       }

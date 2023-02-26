@@ -39,6 +39,7 @@ import { AvatarGroup, Skeleton, Stack } from '@mui/material'
 import { BootstrapTooltip } from '../companies'
 import { getPositions } from 'src/store/position'
 import PositionEditDialog from 'src/views/pages/position/view/PositionEditDialog'
+import { showDate } from 'src/helpers/functions'
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -258,7 +259,7 @@ const PositionList = () => {
       renderCell: ({ row }: any) => {
         return (
           <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-            {new Date(row?.createdAt).toDateString()}
+            {showDate(row?.createdAt)}
           </Typography>
         )
       }

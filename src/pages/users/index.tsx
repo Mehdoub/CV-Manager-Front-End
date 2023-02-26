@@ -34,7 +34,7 @@ import AddUserDrawer from 'src/views/pages/user/list/AddUserDrawer'
 import { Skeleton, Stack } from '@mui/material'
 import { BootstrapTooltip } from '../companies'
 import { getUsers } from 'src/store/user'
-import { showIsActiveColor } from 'src/helpers/functions'
+import { showDate, showIsActiveColor } from 'src/helpers/functions'
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -140,7 +140,7 @@ const columns = [
     renderCell: ({ row }: any) => {
       return (
         <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-          {new Date(row.createdAt).toDateString()}
+          {showDate(row?.createdAt)}
         </Typography>
       )
     }
