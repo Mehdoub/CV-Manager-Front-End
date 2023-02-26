@@ -14,7 +14,8 @@ const FallbackSpinner = ({ sx }: { sx?: BoxProps['sx'] }) => {
 
   useEffect(() => {
     if (auth.user) {
-      router.replace('/home')
+      const destination = router?.query?.returnUrl ?? '/home'
+      router.replace(destination as string)
     }
   }, [router, auth])
 

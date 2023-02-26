@@ -47,7 +47,12 @@ const AuthProvider = ({ children }: Props) => {
     localStorage.removeItem('accessToken')
 
     setUser(null)
-    router.replace('/login')
+    const completePath = window.location.href
+    const originPath = window.location.origin
+    const returnUrl = completePath.split(originPath)[1]
+    let routerObj: any = { pathname: '/login' }
+    if (!['/login', '/register', '/forgot-password'].includes(router.pathname)) routerObj.query = { returnUrl }
+    router.replace(routerObj)
   }
 
   const getUserData = async () => {
