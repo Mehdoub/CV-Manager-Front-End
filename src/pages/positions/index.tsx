@@ -35,7 +35,7 @@ import { getInitials } from 'src/@core/utils/get-initials'
 // ** Custom Table Components Imports
 import TableHeader from 'src/views/pages/position/list/TableHeader'
 import AddPositionDrawer from 'src/views/pages/position/list/AddPositionDrawer'
-import { AvatarGroup, Stack } from '@mui/material'
+import { AvatarGroup, Skeleton, Stack } from '@mui/material'
 import { BootstrapTooltip } from '../companies'
 import { getPositions } from 'src/store/position'
 import PositionEditDialog from 'src/views/pages/position/view/PositionEditDialog'
@@ -310,7 +310,7 @@ const PositionList = () => {
       <Grid item xs={12}>
         <Card>
           <TableHeader value={searchQuery} handleFilter={handleFilter} toggle={toggleAddPositionDrawer} />
-          {!loading && positions?.docs?.length > 0 && (
+          {!loading && positions?.docs ? (
             <DataGrid
               autoHeight
               rows={positions?.docs ?? []}
@@ -326,6 +326,8 @@ const PositionList = () => {
               page={page}
               onPageChange={newPage => handlePageChange(newPage)}
             />
+          ) : (
+            <Skeleton variant='rounded' height={650} />
           )}
         </Card>
       </Grid>

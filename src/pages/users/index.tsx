@@ -31,11 +31,10 @@ import { AppDispatch } from 'src/store'
 // ** Custom Table Components Imports
 import TableHeader from 'src/views/pages/user/list/TableHeader'
 import AddUserDrawer from 'src/views/pages/user/list/AddUserDrawer'
-import { Stack } from '@mui/material'
+import { Skeleton, Stack } from '@mui/material'
 import { BootstrapTooltip } from '../companies'
 import { getUsers } from 'src/store/user'
 import { showIsActiveColor } from 'src/helpers/functions'
-
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -179,7 +178,7 @@ const UserList = () => {
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
 
-  const { data: users } = useSelector((state: any) => state.usersList)
+  const { data: users, loading } = useSelector((state: any) => state.usersList)
 
   useEffect(() => {
     dispatch(getUsers({ page, size: pageSize, query: searchQuery }))
@@ -202,7 +201,7 @@ const UserList = () => {
       <Grid item xs={12}>
         <Card>
           <TableHeader value={searchQuery} toggle={toggleAddUserDrawer} handleFilter={handleFilter} />
-          {users?.docs?.length > 0 && (
+          {users?.docs && !loading ? (
             <DataGrid
               autoHeight
               rows={users?.docs ?? []}
@@ -218,6 +217,8 @@ const UserList = () => {
               page={page}
               onPageChange={newPage => handlePageChange(newPage)}
             />
+          ) : (
+            <Skeleton variant='rounded' height={600} />
           )}
         </Card>
       </Grid>
