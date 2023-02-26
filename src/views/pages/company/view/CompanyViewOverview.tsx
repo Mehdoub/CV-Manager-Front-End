@@ -10,29 +10,49 @@ import CrmMonthlyBudget from 'src/views/statistics/CrmMonthlyBudget'
 import { Skeleton } from '@mui/material'
 import { useSelector } from 'react-redux'
 import AnalyticsWeeklySales from 'src/views/statistics/AnalyticsWeeklySales'
+import { useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import { getCompanyStatisticsResumeCountByProjects, getCompanyStatisticsResumeCountFromMonth } from 'src/store/company'
+import Skelet from 'src/@core/components/loading/Skelet'
 
 const CompanyViewOverview = () => {
-  const store = useSelector((state: any) => state.company)
-  const { loading } = store
+  const { data: company } = useSelector((state: any) => state.company)
+  const { data: statisticsResumeCountByProjects, loading: loadingStatisticsResumeCountByProjects } = useSelector(
+    (state: any) => state.companyStatisticsResumeCountByProjects
+  )
+  const { data: statisticsResumeCountFromMonth, loading: loadingStatisticsResumeCountFromMonth } = useSelector(
+    (state: any) => state.companyStatisticsResumeCountFromMonth
+  )
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (company?.id) {
+      dispatch(getCompanyStatisticsResumeCountByProjects())
+      dispatch(getCompanyStatisticsResumeCountFromMonth())
+    }
+  }, [company?.id])
   return (
     <Grid container spacing={6} className='match-height'>
       <Grid item xs={12} sm={6} md={6}>
-        {loading ? (
-          <Skeleton variant='rounded' height={425} />
-        ) : (
-          <AnalyticsSalesCountry
-            categories={['BPM', 'PSP', 'Google', 'DigiKala', 'Pelazio']}
-            title="Projects' Resumes Number"
-          />
-        )}
+        <Skelet
+          loading={loadingStatisticsResumeCountByProjects}
+          height={425}
+          component={
+            <AnalyticsSalesCountry
+              categories={['BPM', 'PSP', 'Google', 'DigiKala', 'Pelazio']}
+              title="Projects' Resumes Number"
+            />
+          }
+        />
       </Grid>
       <Grid item xs={12} sm={6} md={6}>
-        {loading ? <Skeleton variant='rounded' height={425} /> : <AnalyticsWeeklySales />}
+        <Skelet loading={loadingStatisticsResumeCountFromMonth} height={425} component={<AnalyticsWeeklySales />} />
       </Grid>
       <Grid item xs={12} sm={6} md={6}>
         <Grid container spacing={6}>
           <Grid item xs={6}>
-            {loading ? (
+            {loadingStatisticsResumeCountByProjects ? (
               <Skeleton variant='rounded' height={200} />
             ) : (
               <CardStatisticsVertical
@@ -46,22 +66,31 @@ const CompanyViewOverview = () => {
             )}
           </Grid>
           <Grid item xs={6}>
-            {loading ? <Skeleton variant='rounded' height={200} /> : <AnalyticsOverview />}
+            {loadingStatisticsResumeCountByProjects ? (
+              <Skeleton variant='rounded' height={200} />
+            ) : (
+              <AnalyticsOverview />
+            )}
           </Grid>
           <Grid item xs={6}>
-            {loading ? <Skeleton variant='rounded' height={200} /> : <AnalyticsTotalRevenue />}
+            {loadingStatisticsResumeCountByProjects ? (
+              <Skeleton variant='rounded' height={200} />
+            ) : (
+              <AnalyticsTotalRevenue />
+            )}
           </Grid>
           <Grid item xs={6}>
-            {loading ? <Skeleton variant='rounded' height={200} /> : <AnalyticsSessions />}
+            {loadingStatisticsResumeCountByProjects ? (
+              <Skeleton variant='rounded' height={200} />
+            ) : (
+              <AnalyticsSessions />
+            )}
           </Grid>
         </Grid>
       </Grid>
       <Grid item xs={12} sm={6} md={6}>
-        {loading ? <Skeleton variant='rounded' height={425} /> : <CrmMonthlyBudget />}
+        {loadingStatisticsResumeCountByProjects ? <Skeleton variant='rounded' height={425} /> : <CrmMonthlyBudget />}
       </Grid>
-      {/* <Grid item xs={12} sm={6} md={6}>
-        {loading ? <Skeleton variant='rounded' /> : <CrmMeetingSchedule />}
-      </Grid> */}
     </Grid>
   )
 }

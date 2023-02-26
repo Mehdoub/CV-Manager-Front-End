@@ -444,6 +444,7 @@ const companyStatisticsResumeByStatesSlice = createSlice({
   }
 })
 
+
 export const getCompanyStatisticsResumeStatesInLastMonth: any = createAsyncThunk('getCompanyStatisticsResumeStatesInLastMonth', async (_, { rejectWithValue, getState }) => {
   try {
     const { company: { data } } = getState() as any
@@ -461,6 +462,48 @@ const companyStatisticsResumeStatesInLastMonthSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     createExtraReducers(builder, getCompanyStatisticsResumeStatesInLastMonth, true, true)
+  }
+})
+
+
+export const getCompanyStatisticsResumeCountByProjects: any = createAsyncThunk('getCompanyStatisticsResumeCountByProjects', async (_, { rejectWithValue, getState }) => {
+  try {
+    const { company: { data } } = getState() as any
+    const response = await ApiRequest.builder().auth().request('get', `companies/${data?.id}/statistics/resume-count-by-projects`)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const companyStatisticsResumeCountByProjectsSlice = createSlice({
+  name: 'companyStatisticsResumeCountByProjects',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    createExtraReducers(builder, getCompanyStatisticsResumeCountByProjects, true, true)
+  }
+})
+
+
+export const getCompanyStatisticsResumeCountFromMonth: any = createAsyncThunk('getCompanyStatisticsResumeCountFromMonth', async (_, { rejectWithValue, getState }) => {
+  try {
+    const { company: { data } } = getState() as any
+    const response = await ApiRequest.builder().auth().request('get', `companies/${data?.id}/statistics/resume-count-from-month`)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const companyStatisticsResumeCountFromMonthSlice = createSlice({
+  name: 'companyStatisticsResumeCountFromMonth',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    createExtraReducers(builder, getCompanyStatisticsResumeCountFromMonth, true, true)
   }
 })
 
@@ -483,3 +526,5 @@ export const companyDeactiveReducer = companyDeactiveSlice.reducer
 export const companyActiveReducer = companyActiveSlice.reducer
 export const companyStatisticsResumeByStatesReducer = companyStatisticsResumeByStatesSlice.reducer
 export const companyStatisticsResumeStatesInLastMonthReducer = companyStatisticsResumeStatesInLastMonthSlice.reducer
+export const companyStatisticsResumeCountByProjectsReducer = companyStatisticsResumeCountByProjectsSlice.reducer
+export const companyStatisticsResumeCountFromMonthReducer = companyStatisticsResumeCountFromMonthSlice.reducer
