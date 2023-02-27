@@ -8,6 +8,7 @@ const errorHandler = ({ }) => (next: any) => async (action: any) => {
   ]
 
   if (isRejected(action) && !showTypesArr.includes(action.type)) {
+    if (action?.payload?.status == 404) location.href = '/404'
     toastError(action?.payload?.data?.message)
   }
 
