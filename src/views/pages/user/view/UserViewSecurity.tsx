@@ -1,21 +1,18 @@
 // ** React Imports
-import { ChangeEvent, MouseEvent, useState, SyntheticEvent } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import Grid from '@mui/material/Grid'
-import Link from '@mui/material/Link'
 import Alert from '@mui/material/Alert'
 import Table from '@mui/material/Table'
 import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
 import Divider from '@mui/material/Divider'
 import TableRow from '@mui/material/TableRow'
 import TableHead from '@mui/material/TableHead'
 import TableCell from '@mui/material/TableCell'
 import TableBody from '@mui/material/TableBody'
-import TextField from '@mui/material/TextField'
 import CardHeader from '@mui/material/CardHeader'
 import AlertTitle from '@mui/material/AlertTitle'
 import InputLabel from '@mui/material/InputLabel'
@@ -23,15 +20,18 @@ import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import FormControl from '@mui/material/FormControl'
-import DialogTitle from '@mui/material/DialogTitle'
 import OutlinedInput from '@mui/material/OutlinedInput'
-import DialogContent from '@mui/material/DialogContent'
 import InputAdornment from '@mui/material/InputAdornment'
 import TableContainer from '@mui/material/TableContainer'
-
-// ** Icon Imports
 import Icon from 'src/@core/components/icon'
 import UserRemoveSessionDialog from './UserRemoveSessionDialog'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Controller, useForm } from 'react-hook-form'
+import { FormHelperText } from '@mui/material'
+import { useDispatch } from 'react-redux'
+import { ChangePasswordParams, changePassword, clearChangePassword } from 'src/store/user'
+import { useSelector } from 'react-redux'
 
 interface State {
   newPassword: string
@@ -74,53 +74,62 @@ const data: DataType[] = [
   }
 ]
 
+const schema = yup.object().shape({
+  old_password: yup.string().label('Old Password').min(8).max(10).required(),
+  password: yup.string().label('New Password').min(8).max(10).required(),
+  repeat_password: yup.string().label('Repeat Password').min(8).max(10).required()
+})
+
+const defaultValues = {
+  old_password: '',
+  password: '',
+  repeat_password: ''
+}
+
 const UserViewSecurity = () => {
   // ** States
-  const [defaultValues, setDefaultValues] = useState<any>({ mobile: '+1(968) 819-2547' })
-  const [mobileNumber, setMobileNumber] = useState<string>(defaultValues.mobile)
-  const [openEditMobileNumber, setOpenEditMobileNumber] = useState<boolean>(false)
   const [removeSessionDialogOpen, setRemoveSessionDialogOpen] = useState<boolean>(false)
-  const [values, setValues] = useState<State>({
-    newPassword: '',
-    showNewPassword: false,
-    confirmNewPassword: '',
-    showConfirmNewPassword: false
+
+  const [showPassword, setShowPassword] = useState<boolean>(false)
+  const [showRepeatPassword, setShowRepeatPassword] = useState<boolean>(false)
+  const [showOldPassword, setShowOldPassword] = useState<boolean>(false)
+
+  const dispatch = useDispatch()
+
+  const { data: user } = useSelector((state: any) => state.user)
+  const { status } = useSelector((state: any) => state.userChangePassword)
+
+  useEffect(() => {
+    if (status) {
+      dispatch(clearChangePassword())
+      reset()
+    }
+  }, [status])
+
+  const {
+    control,
+    reset,
+    setError,
+    handleSubmit,
+    formState: { errors }
+  } = useForm({
+    defaultValues,
+    mode: 'onBlur',
+    resolver: yupResolver(schema)
   })
 
-  // Handle Password
-  const handleNewPasswordChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
-  }
-  const handleClickShowNewPassword = () => {
-    setValues({ ...values, showNewPassword: !values.showNewPassword })
-  }
-  const handleMouseDownNewPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-  }
-
-  // Handle Confirm Password
-  const handleConfirmNewPasswordChange = (prop: keyof State) => (event: ChangeEvent<HTMLInputElement>) => {
-    setValues({ ...values, [prop]: event.target.value })
-  }
-  const handleClickShowConfirmNewPassword = () => {
-    setValues({ ...values, showConfirmNewPassword: !values.showConfirmNewPassword })
-  }
-  const handleMouseDownConfirmNewPassword = (event: MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault()
-  }
-
-  // Handle edit mobile number dialog
-  const handleEditMobileNumberClickOpen = () => setOpenEditMobileNumber(true)
-  const handleEditMobileNumberClose = () => setOpenEditMobileNumber(false)
-
-  // Handle button click inside the dialog
-  const handleCancelClick = () => {
-    setMobileNumber(defaultValues.mobile)
-    handleEditMobileNumberClose()
-  }
-  const handleSubmitClick = () => {
-    setDefaultValues({ ...defaultValues, mobile: mobileNumber })
-    handleEditMobileNumberClose()
+  const submitHandler = (data: any) => {
+    const { password, repeat_password } = data
+    if (password !== repeat_password) {
+      setError('repeat_password', {
+        type: 'manual',
+        message: 'New Password and Repeat New Password should be the same'
+      })
+    } else if (user?.id) {
+      delete data.repeat_password
+      const submitData: ChangePasswordParams = { ...data, user_id: user?.id }
+      dispatch(changePassword(submitData))
+    }
   }
 
   return (
@@ -133,61 +142,125 @@ const UserViewSecurity = () => {
               <AlertTitle sx={{ fontWeight: 600, mb: theme => `${theme.spacing(1)} !important` }}>
                 Ensure that these requirements are met
               </AlertTitle>
-              Minimum 8 characters long, uppercase & symbol
+              Minimum 8 and maximum 10 characters long
             </Alert>
 
-            <form onSubmit={e => e.preventDefault()}>
+            <form onSubmit={handleSubmit(submitHandler)}>
               <Grid container spacing={6}>
                 <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth>
-                    <InputLabel htmlFor='user-view-security-new-password'>New Password</InputLabel>
-                    <OutlinedInput
-                      label='New Password'
-                      value={values.newPassword}
-                      id='user-view-security-new-password'
-                      onChange={handleNewPasswordChange('newPassword')}
-                      type={values.showNewPassword ? 'text' : 'password'}
-                      endAdornment={
-                        <InputAdornment position='end'>
-                          <IconButton
-                            edge='end'
-                            onClick={handleClickShowNewPassword}
-                            aria-label='toggle password visibility'
-                            onMouseDown={handleMouseDownNewPassword}
-                          >
-                            <Icon icon={values.showNewPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
-                          </IconButton>
-                        </InputAdornment>
-                      }
+                  <FormControl fullWidth sx={{ mb: 4 }}>
+                    <InputLabel htmlFor='auth-login-v2-password' error={Boolean(errors.password)}>
+                      New Password
+                    </InputLabel>
+                    <Controller
+                      name='password'
+                      control={control}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <OutlinedInput
+                          value={value}
+                          onBlur={onBlur}
+                          onChange={onChange}
+                          label='New Password'
+                          error={Boolean(errors.password)}
+                          type={showPassword ? 'text' : 'password'}
+                          endAdornment={
+                            <InputAdornment position='end'>
+                              <IconButton
+                                edge='end'
+                                tabIndex={-1}
+                                onMouseDown={e => e.preventDefault()}
+                                onClick={() => setShowPassword(!showPassword)}
+                              >
+                                <Icon icon={showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                        />
+                      )}
                     />
+                    {errors.password && (
+                      <FormHelperText sx={{ color: 'error.main' }} id=''>
+                        {errors.password.message}
+                      </FormHelperText>
+                    )}
                   </FormControl>
                 </Grid>
-
                 <Grid item xs={12} sm={6}>
-                  <FormControl fullWidth>
-                    <InputLabel htmlFor='user-view-security-confirm-new-password'>Confirm New Password</InputLabel>
-                    <OutlinedInput
-                      label='Confirm New Password'
-                      value={values.confirmNewPassword}
-                      id='user-view-security-confirm-new-password'
-                      type={values.showConfirmNewPassword ? 'text' : 'password'}
-                      onChange={handleConfirmNewPasswordChange('confirmNewPassword')}
-                      endAdornment={
-                        <InputAdornment position='end'>
-                          <IconButton
-                            edge='end'
-                            aria-label='toggle password visibility'
-                            onClick={handleClickShowConfirmNewPassword}
-                            onMouseDown={handleMouseDownConfirmNewPassword}
-                          >
-                            <Icon icon={values.showConfirmNewPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
-                          </IconButton>
-                        </InputAdornment>
-                      }
+                  <FormControl fullWidth sx={{ mb: 4 }}>
+                    <InputLabel htmlFor='auth-login-v2-password' error={Boolean(errors.repeat_password)}>
+                      Repeat New Password
+                    </InputLabel>
+                    <Controller
+                      name='repeat_password'
+                      control={control}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <OutlinedInput
+                          value={value}
+                          onBlur={onBlur}
+                          onChange={onChange}
+                          label='Repeat New Password'
+                          error={Boolean(errors.repeat_password)}
+                          type={showRepeatPassword ? 'text' : 'password'}
+                          endAdornment={
+                            <InputAdornment position='end'>
+                              <IconButton
+                                edge='end'
+                                tabIndex={-1}
+                                onMouseDown={e => e.preventDefault()}
+                                onClick={() => setShowRepeatPassword(!showRepeatPassword)}
+                              >
+                                <Icon icon={showRepeatPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                        />
+                      )}
                     />
+                    {errors.repeat_password && (
+                      <FormHelperText sx={{ color: 'error.main' }} id=''>
+                        {errors.repeat_password.message}
+                      </FormHelperText>
+                    )}
                   </FormControl>
                 </Grid>
-
+                <Grid item xs={12} sm={6}>
+                  <FormControl fullWidth sx={{ mb: 4 }}>
+                    <InputLabel htmlFor='auth-login-v2-password' error={Boolean(errors.old_password)}>
+                      Old Password
+                    </InputLabel>
+                    <Controller
+                      name='old_password'
+                      control={control}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <OutlinedInput
+                          value={value}
+                          onBlur={onBlur}
+                          onChange={onChange}
+                          label='Old Password'
+                          error={Boolean(errors.old_password)}
+                          type={showOldPassword ? 'text' : 'password'}
+                          endAdornment={
+                            <InputAdornment position='end'>
+                              <IconButton
+                                edge='end'
+                                tabIndex={-1}
+                                onMouseDown={e => e.preventDefault()}
+                                onClick={() => setShowOldPassword(!showOldPassword)}
+                              >
+                                <Icon icon={showOldPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                        />
+                      )}
+                    />
+                    {errors.old_password && (
+                      <FormHelperText sx={{ color: 'error.main' }} id=''>
+                        {errors.old_password.message}
+                      </FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
                 <Grid item xs={12}>
                   <Button type='submit' variant='contained'>
                     Change Password
@@ -202,7 +275,12 @@ const UserViewSecurity = () => {
         <Card>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
             <CardHeader title='Recent Devices' />
-            <Button sx={{ mt: 2, mr: 5 }} variant='contained' color='error' onClick={() => setRemoveSessionDialogOpen(true)}>
+            <Button
+              sx={{ mt: 2, mr: 5 }}
+              variant='contained'
+              color='error'
+              onClick={() => setRemoveSessionDialogOpen(true)}
+            >
               Remove All Other Sessions
             </Button>
           </Box>

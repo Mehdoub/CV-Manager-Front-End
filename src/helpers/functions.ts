@@ -55,7 +55,7 @@ export const setServerValidationErrors = (errors: object, setError: any) => {
 export const defaultPendingStatesValue = (state: any) => {
   state.loading = true
   state.status = false
-  state.errors = {}
+  state.errors = []
 }
 
 export const defaultFulfilledStatesValue = (state: any, action: any = {}, zeroIndex: boolean = false) => {

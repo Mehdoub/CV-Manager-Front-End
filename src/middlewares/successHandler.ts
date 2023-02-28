@@ -16,6 +16,7 @@ const successHandler = ({ }) => (next: any) => async (action: any) => {
     'addPositionManager/fulfilled',
     'removePositionManager/fulfilled',
     'editProject/fulfilled',
+    'changePassword/fulfilled',
   ]
 
   if (isFulfilled(action) && showTypesArr.includes(action.type)) {

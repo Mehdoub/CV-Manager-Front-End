@@ -88,6 +88,38 @@ const userBanSlice = createSlice({
   }
 })
 
+
+export interface ChangePasswordParams {
+  user_id: string
+  old_password: string
+  password: string
+}
+export const changePassword: any = createAsyncThunk('changePassword', async (data: ChangePasswordParams, { rejectWithValue }) => {
+  try {
+    const response = await ApiRequest.builder().auth().request('patch', 'users/change-password', data)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const userChangePasswordSlice = createSlice({
+  name: 'userChangePassword',
+  initialState: sliceInitialStateWithStatus,
+  reducers: {
+    clearChangePassword: (state) => {
+      clearStatesAction(state)
+    }
+  },
+  extraReducers: (builder) => {
+    createExtraReducers(builder, changePassword)
+  }
+})
+
+export const { clearUserBan } = userBanSlice.actions
+export const { clearChangePassword } = userChangePasswordSlice.actions
 export const usersListReducer = usersListSlice.reducer
 export const userReducer = userSlice.reducer
 export const userBanReducer = userBanSlice.reducer
+export const userChangePasswordReducer = userChangePasswordSlice.reducer
