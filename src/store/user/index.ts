@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import ApiRequest from "src/helpers/ApiRequest"
-import { createExtraReducers, sliceInitialStateWithData } from "src/helpers/functions"
+import { clearStatesAction, createExtraReducers, sliceInitialStateWithData, sliceInitialStateWithStatus } from "src/helpers/functions"
 
 export const getUsers: any = createAsyncThunk(
   'getUsers',
@@ -42,7 +42,7 @@ const usersListSlice = createSlice({
   }
 })
 
-export const getUser : any = createAsyncThunk('getUser', async (userId: string, { rejectWithValue }) => {
+export const getUser: any = createAsyncThunk('getUser', async (userId: string, { rejectWithValue }) => {
   try {
     const response = await ApiRequest.builder().auth().request('get', `users/${userId}`)
 
@@ -61,5 +61,33 @@ const userSlice = createSlice({
   }
 })
 
+
+export const banUser = createAsyncThunk(
+  'banUser',
+  async (_, { rejectWithValue, getState }) => {
+    try {
+      const { user: { data: user } } = getState() as any
+      const response = await ApiRequest.builder().auth().request('post', `users/${user?.id}/ban`)
+
+      return response
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const userBanSlice = createSlice({
+  name: 'userBan',
+  initialState: sliceInitialStateWithStatus,
+  reducers: {
+    clearUserBan: (state) => {
+      clearStatesAction(state)
+    }
+  },
+  extraReducers: (builder) => {
+    createExtraReducers(builder, banUser)
+  }
+})
+
 export const usersListReducer = usersListSlice.reducer
 export const userReducer = userSlice.reducer
+export const userBanReducer = userBanSlice.reducer
