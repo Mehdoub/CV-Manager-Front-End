@@ -27,6 +27,20 @@ const navigation = (): HorizontalNavItemsType => [
     path: '/positions',
     icon: 'ic:baseline-work-outline',
   },
+  {
+    title: 'sidebar.roles_permissions',
+    icon: 'mdi:shield-outline',
+    children: [
+      {
+        title: 'sidebar.roles',
+        path: '/roles',
+      },
+      {
+        title: 'sidebar.permissions',
+        path: '/permissions',
+      },
+    ],
+  },
 ]
 
 export default navigation

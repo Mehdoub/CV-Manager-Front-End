@@ -4,7 +4,10 @@
       "users": "کاربران",
       "companies": "شرکت ها",
       "projects": "پروژه ها",
-      "positions": "پوزیشن ها"
+      "positions": "پوزیشن ها",
+      "roles_permissions": "نقش ها و دسترسی ها",
+      "roles": "نقش ها",
+      "permissions": "دسترسی ها"
     },
     "companies": {
       "list": {

@@ -4,7 +4,10 @@
       "users": "Users",
       "companies": "Companies",
       "projects": "Projects",
-      "positions": "Positions"
+      "positions": "Positions",
+      "roles_permissions": "Roles & Permissions",
+      "roles": "Roles",
+      "permissions": "Permissions"
     },
     "companies": {
       "list": {
