@@ -6,7 +6,6 @@ import Typography from '@mui/material/Typography'
 import PageHeader from 'src/@core/components/page-header'
 
 // ** Demo Components Imports
-import Table from 'src/views/pages/roles/Table'
 import RoleCards from 'src/views/pages/roles/RoleCards'
 
 const RolesComponent = () => {
@@ -23,17 +22,6 @@ const RolesComponent = () => {
       />
       <Grid item xs={12} sx={{ mb: 5 }}>
         <RoleCards />
-      </Grid>
-      <PageHeader
-        title={<Typography variant='h5'>Total users with their roles</Typography>}
-        subtitle={
-          <Typography variant='body2'>
-            Find all of your company’s administrator accounts and their associate roles.
-          </Typography>
-        }
-      />
-      <Grid item xs={12}>
-        <Table />
       </Grid>
     </Grid>
   )
