@@ -100,3 +100,9 @@ export const showDate = (date: string) => {
 
   return returnVal
 }
+
+export const uppercaseFirstLetters = (text: string) => {
+  let returnVal = ''
+  text.split(' ').map((item: string) => returnVal += item.substring(0, 1).toUpperCase() + item.substring(1).toLowerCase() + ' ')
+  return returnVal.trim()
+}
