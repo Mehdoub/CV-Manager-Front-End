@@ -117,9 +117,31 @@ const userChangePasswordSlice = createSlice({
   }
 })
 
+
+export const getUserLoginHistory : any = createAsyncThunk('getUserLoginHistory', async (_, { rejectWithValue, getState }) => {
+  try {
+    const { user: { data: user } } = getState() as any
+    const response = await ApiRequest.builder().auth().request('get', `users/${user?.id}/login-history`)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const userLoginHistorySlice = createSlice({
+  name: 'userLoginHistory',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: builder => {
+    createExtraReducers(builder, getUserLoginHistory, true, true)
+  }
+})
+
 export const { clearUserBan } = userBanSlice.actions
 export const { clearChangePassword } = userChangePasswordSlice.actions
 export const usersListReducer = usersListSlice.reducer
 export const userReducer = userSlice.reducer
 export const userBanReducer = userBanSlice.reducer
 export const userChangePasswordReducer = userChangePasswordSlice.reducer
+export const userLoginHistoryReducer = userLoginHistorySlice.reducer

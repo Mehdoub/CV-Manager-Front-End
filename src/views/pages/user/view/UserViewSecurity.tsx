@@ -30,8 +30,10 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { Controller, useForm } from 'react-hook-form'
 import { FormHelperText } from '@mui/material'
 import { useDispatch } from 'react-redux'
-import { ChangePasswordParams, changePassword, clearChangePassword } from 'src/store/user'
+import { ChangePasswordParams, changePassword, clearChangePassword, getUserLoginHistory } from 'src/store/user'
 import { useSelector } from 'react-redux'
+import Skelet from 'src/@core/components/loading/Skelet'
+import { showDate } from 'src/helpers/functions'
 
 interface State {
   newPassword: string
@@ -98,6 +100,11 @@ const UserViewSecurity = () => {
 
   const { data: user } = useSelector((state: any) => state.user)
   const { status } = useSelector((state: any) => state.userChangePassword)
+  const { data: loginHistories, loading: loadingLoginHistory } = useSelector((state: any) => state.userLoginHistory)
+
+  useEffect(() => {
+    if (user?.id) dispatch(getUserLoginHistory())
+  }, [user?.id])
 
   useEffect(() => {
     if (status) {
@@ -273,7 +280,15 @@ const UserViewSecurity = () => {
       </Grid>
       <Grid item xs={12}>
         <Card>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
+
+
+          <TableContainer>
+            <Skelet
+              loading={loadingLoginHistory}
+              height={400}
+              component={
+                <>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
             <CardHeader title='Recent Devices' />
             <Button
               sx={{ mt: 2, mr: 5 }}
@@ -286,36 +301,41 @@ const UserViewSecurity = () => {
           </Box>
 
           <Divider sx={{ m: '0 !important' }} />
+                <Table sx={{ minWidth: 500 }}>
+                  <TableHead
+                    sx={{
+                      backgroundColor: theme => (theme.palette.mode === 'light' ? 'grey.50' : 'background.default')
+                    }}
+                  >
+                    <TableRow>
+                      <TableCell>Browser</TableCell>
+                      <TableCell>OS</TableCell>
+                      <TableCell>IP</TableCell>
+                      <TableCell>Logged In At</TableCell>
+                    </TableRow>
+                  </TableHead>
 
-          <TableContainer>
-            <Table sx={{ minWidth: 500 }}>
-              <TableHead
-                sx={{ backgroundColor: theme => (theme.palette.mode === 'light' ? 'grey.50' : 'background.default') }}
-              >
-                <TableRow>
-                  <TableCell>Browser</TableCell>
-                  <TableCell>Device</TableCell>
-                  <TableCell>Location</TableCell>
-                  <TableCell>Recent Activity</TableCell>
-                </TableRow>
-              </TableHead>
-
-              <TableBody>
-                {data.map((item: DataType, index: number) => (
-                  <TableRow hover key={index} sx={{ '&:last-of-type td': { border: 0 } }}>
-                    <TableCell>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <img width='22' height='22' alt='Chrome' src='/images/logos/chrome.png' />
-                        <Typography sx={{ ml: 2, fontWeight: 500, fontSize: '0.875rem' }}>{item.browser}</Typography>
-                      </Box>
-                    </TableCell>
-                    <TableCell>{item.device}</TableCell>
-                    <TableCell>{item.location}</TableCell>
-                    <TableCell>{item.recentActivity}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                  <TableBody>
+                    {loginHistories?.docs?.map((item: any, index: number) => (
+                      <TableRow hover key={index} sx={{ '&:last-of-type td': { border: 0 } }}>
+                        <TableCell>
+                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                            <img width='22' height='22' alt='Chrome' src='/images/logos/chrome.png' />
+                            <Typography sx={{ ml: 2, fontWeight: 500, fontSize: '0.875rem' }}>
+                              {item.browser}
+                            </Typography>
+                          </Box>
+                        </TableCell>
+                        <TableCell>{item?.os}</TableCell>
+                        <TableCell>{item?.ip4}</TableCell>
+                        <TableCell>{showDate(item?.createdAt)}</TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+                </>
+              }
+            />
           </TableContainer>
         </Card>
       </Grid>
