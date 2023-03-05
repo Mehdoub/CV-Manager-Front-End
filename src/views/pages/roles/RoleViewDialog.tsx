@@ -25,7 +25,7 @@ import {
 } from '@mui/material'
 import { useState } from 'react'
 import Icon from 'src/@core/components/icon'
-import { uppercaseFirstLetters } from 'src/helpers/functions'
+import { shuffle, uppercaseFirstLetters } from 'src/helpers/functions'
 
 interface RoleViewDialogProps {
   open: boolean
@@ -44,15 +44,46 @@ const rolesArr: string[] = [
   'View Detail'
 ]
 
-const entities = ['company', 'project', 'position', 'user', 'interview', 'resume', 'other']
-const entityIcons = [
-  'carbon:location-company',
-  'pajamas:project',
-  'ic:baseline-work-outline',
-  'mdi:users-outline',
-  'mdi:virtual-meeting',
-  'pepicons-pop:cv',
-  'mdi:shield-outline'
+// const entities = ['company', 'project', 'position', 'user', 'interview', 'resume', 'other']
+// const entityIcons = [
+//   'carbon:location-company',
+//   'pajamas:project',
+//   'ic:baseline-work-outline',
+//   'mdi:users-outline',
+//   'mdi:virtual-meeting',
+//   'pepicons-pop:cv',
+//   'mdi:shield-outline'
+// ]
+
+const entities = [
+  {
+    entity: 'company',
+    icon: 'carbon:location-company'
+  },
+  {
+    entity: 'project',
+    icon: 'pajamas:project'
+  },
+  {
+    entity: 'position',
+    icon: 'ic:baseline-work-outline'
+  },
+  {
+    entity: 'user',
+    icon: 'mdi:users-outline'
+  },
+  {
+    entity: 'interview',
+    icon: 'mdi:virtual-meeting'
+  },
+  {
+    entity: 'resume',
+    icon: 'pepicons-pop:cv'
+  },
+  {
+    entity: 'other',
+    icon: 'mdi:shield-outline'
+  }
 ]
 
 const renderPermissions = ({ label, permissionId }: { label: string; permissionId: string }) => {
@@ -71,23 +102,6 @@ const renderPermissions = ({ label, permissionId }: { label: string; permissionI
       />
     </Grid>
   )
-}
-
-function shuffle(array: any): any {
-  let currentIndex = array.length,
-    randomIndex
-
-  // While there remain elements to shuffle.
-  while (currentIndex != 0) {
-    // Pick a remaining element.
-    randomIndex = Math.floor(Math.random() * currentIndex)
-    currentIndex--
-
-    // And swap it with the current element.
-    ;[array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]]
-  }
-
-  return array
 }
 
 const RoleViewDialog = ({ open, toggle, dialogTitle }: RoleViewDialogProps) => {
@@ -144,19 +158,20 @@ const RoleViewDialog = ({ open, toggle, dialogTitle }: RoleViewDialogProps) => {
             aria-label='forced scroll tabs example'
             sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
           >
-            <Tab value='company' label='Company' icon={<Icon icon='carbon:location-company' />} />
-            <Tab value='project' label='Project' icon={<Icon icon='pajamas:project' />} />
-            <Tab value='position' label='Position' icon={<Icon icon='ic:baseline-work-outline' />} />
-            <Tab value='user' label='User' icon={<Icon icon='mdi:users-outline' />} />
-            <Tab value='interview' label='Interview' icon={<Icon icon='mdi:virtual-meeting' />} />
-            <Tab value='resume' label='Resume' icon={<Icon icon='pepicons-pop:cv' />} />
-            <Tab value='other' label='Other' icon={<Icon icon='mdi:shield-outline' />} />
+            {entities.map((item: any, index: number) => (
+              <Tab
+                key={`${item.entity}-${index}`}
+                value={item.entity}
+                label={uppercaseFirstLetters(item.entity)}
+                icon={<Icon icon={item.icon} />}
+              />
+            ))}
           </TabList>
           <Box sx={{ mt: 6 }}>
-            {entities.map((item: string, index: number) => (
-              <TabPanel sx={{ p: 0 }} value={item} key={`${item}-${index}`}>
+            {entities.map(({ entity }: any, index: number) => (
+              <TabPanel sx={{ p: 0 }} value={entity} key={`${entity}-${index}`}>
                 <Typography sx={{ mb: 6 }} variant='h5'>
-                  {uppercaseFirstLetters(`role permissions for ${item} actions`)}
+                  {uppercaseFirstLetters(`role permissions for ${entity} actions`)}
                 </Typography>
                 <Grid container md={12}>
                   {shuffle(rolesArr).map((permissionName: string, permissionIndex: number) =>
