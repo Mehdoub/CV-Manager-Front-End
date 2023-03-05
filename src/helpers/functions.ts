@@ -100,3 +100,23 @@ export const showDate = (date: string) => {
 
   return returnVal
 }
+
+export const uppercaseFirstLetters = (text: string) => {
+  let returnVal = ''
+  text.split(' ').map((item: string) => returnVal += item.substring(0, 1).toUpperCase() + item.substring(1).toLowerCase() + ' ')
+  return returnVal.trim()
+}
+
+export const shuffle = (array: any): any => {
+  let currentIndex = array.length,
+    randomIndex
+
+  while (currentIndex != 0) {
+    randomIndex = Math.floor(Math.random() * currentIndex)
+    currentIndex--
+
+    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]]
+  }
+
+  return array
+}
