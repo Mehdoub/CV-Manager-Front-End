@@ -123,7 +123,7 @@ const RolesCards = () => {
   const renderCards = () =>
     roles?.docs?.length > 0 &&
     roles?.docs?.map((item: any, index: number) => (
-      <Grid item xs={12} sm={6} lg={4} key={index}>
+      <Grid item xs={12} sm={6} lg={4} key={index} sx={{ minHeight: '150px' }}>
         <Card>
           <CardContent>
             {/* <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -165,14 +165,14 @@ const RolesCards = () => {
     <Grid container spacing={6} className='match-height'>
       {loadingRoles ? (
         <>
-          <Grid item xs={12} sm={6} lg={4}>
-            <Skeleton height={160} />
+          <Grid style={{ paddingTop: 0 }} item xs={12} sm={6} lg={4}>
+            <Skeleton height={200} />
           </Grid>
-          <Grid item xs={12} sm={6} lg={4}>
-            <Skeleton height={160} />
+          <Grid style={{ paddingTop: 0 }} item xs={12} sm={6} lg={4}>
+            <Skeleton height={200} />
           </Grid>
-          <Grid item xs={12} sm={6} lg={4}>
-            <Skeleton height={160} />
+          <Grid style={{ paddingTop: 0 }} item xs={12} sm={6} lg={4}>
+            <Skeleton height={200} />
           </Grid>
         </>
       ) : (
