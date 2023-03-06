@@ -67,6 +67,7 @@ const RolesCards = () => {
   // ** States
   const [open, setOpen] = useState<boolean>(false)
   const [dialogTitle, setDialogTitle] = useState<'Add' | 'Edit'>('Add')
+  const [editRoleData, setEditRoleData] = useState<any>({})
   const [selectedCheckbox, setSelectedCheckbox] = useState<string[]>([])
   const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = useState<boolean>(false)
 
@@ -143,8 +144,9 @@ const RolesCards = () => {
                   sx={{ color: 'primary.main' }}
                   onClick={(e: SyntheticEvent) => {
                     e.preventDefault()
-                    handleClickOpen()
                     setDialogTitle('Edit')
+                    setEditRoleData(item)
+                    handleClickOpen()
                   }}
                 >
                   Edit Role
@@ -183,8 +185,9 @@ const RolesCards = () => {
                     variant='contained'
                     sx={{ mb: 2.5, whiteSpace: 'nowrap' }}
                     onClick={() => {
-                      handleClickOpen()
                       setDialogTitle('Add')
+                      setEditRoleData({})
+                      handleClickOpen()
                     }}
                   >
                     Add Role
@@ -196,7 +199,7 @@ const RolesCards = () => {
           </Grid>
         </Card>
       </Grid>
-      <RoleViewDialog open={open} toggle={handleClose} dialogTitle={dialogTitle} />
+      <RoleViewDialog open={open} toggle={handleClose} dialogTitle={dialogTitle} editRoleData={editRoleData} />
     </Grid>
   )
 }

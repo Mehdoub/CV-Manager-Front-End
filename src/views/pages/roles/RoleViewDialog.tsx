@@ -1,6 +1,6 @@
-import TabContext from '@mui/lab/TabContext/TabContext'
-import TabList from '@mui/lab/TabList/TabList'
-import TabPanel from '@mui/lab/TabPanel/TabPanel'
+import TabContext from '@mui/lab/TabContext'
+import TabList from '@mui/lab/TabList'
+import TabPanel from '@mui/lab/TabPanel'
 import {
   Box,
   Button,
@@ -29,15 +29,16 @@ import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import Icon from 'src/@core/components/icon'
 import { getEntityIcon, shuffle, uppercaseFirstLetters } from 'src/helpers/functions'
-import { clearCreateRole, createRole } from 'src/store/role'
+import { clearCreateRole, clearEditRole, createRole, editRole, getRoles } from 'src/store/role'
 
 interface RoleViewDialogProps {
   open: boolean
   toggle: () => void
   dialogTitle: string
+  editRoleData: any
 }
 
-const RoleViewDialog = ({ open, toggle, dialogTitle }: RoleViewDialogProps) => {
+const RoleViewDialog = ({ open, toggle, dialogTitle, editRoleData }: RoleViewDialogProps) => {
   const [activeTab, setActiveTab] = useState<string>('roles')
   const [roleName, setRoleName] = useState<string>('')
   const [roleNameErr, setRoleNameErr] = useState<string>('')
@@ -47,22 +48,40 @@ const RoleViewDialog = ({ open, toggle, dialogTitle }: RoleViewDialogProps) => {
   const dispatch = useDispatch()
 
   const { data: entities } = useSelector((state: any) => state.permissionsGrouped)
-  const { status } = useSelector((state: any) => state.roleCreate)
+  const { status: statusCreate } = useSelector((state: any) => state.roleCreate)
+  const { status: statusEdit } = useSelector((state: any) => state.roleEdit)
 
   useEffect(() => {
-    if (status) {
+    if (statusCreate) {
       clearCreateRole()
+      dispatch(getRoles())
       toggle()
     }
-  }, [status])
+    if (statusEdit) {
+      clearEditRole()
+      dispatch(getRoles())
+      toggle()
+    }
+  }, [statusCreate, statusEdit])
+
+  useEffect(() => {
+    if (dialogTitle == 'Edit') {
+      setRoleName(editRoleData?.name)
+      setSelectedPermissions(editRoleData?.permissions)
+    } else {
+      setRoleName('')
+      setSelectedPermissions([])
+    }
+  }, [editRoleData, dialogTitle])
 
   const togglePermission = (id: string) => {
-    const arr = selectedPermissions
+    let arr = selectedPermissions
+    console.log(arr)
     if (selectedPermissions.includes(id)) {
       arr.splice(arr.indexOf(id), 1)
       setSelectedPermissions([...arr])
     } else {
-      arr.push(id)
+      arr =[...arr, id]
       setSelectedPermissions([...arr])
     }
   }
@@ -77,7 +96,9 @@ const RoleViewDialog = ({ open, toggle, dialogTitle }: RoleViewDialogProps) => {
               size='small'
               id={permission?._id}
               onChange={() => togglePermission(permission?._id)}
-              checked={selectedPermissions.includes(permission?._id)}
+              checked={
+                selectedPermissions.includes(permission?._id)
+              }
             />
           }
         />
@@ -107,7 +128,9 @@ const RoleViewDialog = ({ open, toggle, dialogTitle }: RoleViewDialogProps) => {
       setRoleNameErr('Role Name Cannot Be Empty')
     } else {
       setRoleNameErr('')
-      dispatch(createRole({name: roleName, permissions: selectedPermissions}))
+      let sendData = { name: roleName, permissions: selectedPermissions }
+      if (dialogTitle == 'Add') dispatch(createRole(sendData))
+      else dispatch(editRole({ ...sendData, id: editRoleData?.id }))
     }
   }
 
@@ -119,7 +142,7 @@ const RoleViewDialog = ({ open, toggle, dialogTitle }: RoleViewDialogProps) => {
         </Typography>
         <Typography variant='body2'>Set Role Permissions</Typography>
       </DialogTitle>
-      <DialogContent sx={{ p: { xs: 6, sm: 12 } }}>
+      <DialogContent sx={{ p: { xs: 6, sm: 12 }, minHeight: '450px' }}>
         <Box sx={{ my: 4 }}>
           <FormControl fullWidth>
             <TextField
