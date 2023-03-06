@@ -34,8 +34,8 @@ import RoleViewDialog from './RoleViewDialog'
 import { useDispatch } from 'react-redux'
 import { getRoles } from 'src/store/role'
 import { useSelector } from 'react-redux'
-import Skelet from 'src/@core/components/loading/Skelet'
 import { getPermissionsGrouped } from 'src/store/permission'
+import { Skeleton } from '@mui/material'
 
 interface CardDataType {
   title: string
@@ -163,7 +163,21 @@ const RolesCards = () => {
 
   return (
     <Grid container spacing={6} className='match-height'>
-      <Skelet sx={{mt: 6}} width='33%' height={130} loading={loadingRoles} component={renderCards()} />
+      {loadingRoles ? (
+        <>
+          <Grid item xs={12} sm={6} lg={4}>
+            <Skeleton height={160} />
+          </Grid>
+          <Grid item xs={12} sm={6} lg={4}>
+            <Skeleton height={160} />
+          </Grid>
+          <Grid item xs={12} sm={6} lg={4}>
+            <Skeleton height={160} />
+          </Grid>
+        </>
+      ) : (
+        renderCards()
+      )}
       <Grid item xs={12} sm={6} lg={4}>
         <Card
           sx={{ cursor: 'pointer' }}
