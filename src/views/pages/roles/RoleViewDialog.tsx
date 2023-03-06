@@ -11,6 +11,7 @@ import {
   DialogTitle,
   FormControl,
   FormControlLabel,
+  FormHelperText,
   Grid,
   Tab,
   Table,
@@ -23,9 +24,12 @@ import {
   Tooltip,
   Typography
 } from '@mui/material'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
 import Icon from 'src/@core/components/icon'
-import { shuffle, uppercaseFirstLetters } from 'src/helpers/functions'
+import { getEntityIcon, shuffle, uppercaseFirstLetters } from 'src/helpers/functions'
+import { clearCreateRole, createRole } from 'src/store/role'
 
 interface RoleViewDialogProps {
   open: boolean
@@ -33,107 +37,78 @@ interface RoleViewDialogProps {
   dialogTitle: string
 }
 
-const rolesArr: string[] = [
-  'Create',
-  'Edit',
-  'Suspend',
-  'Activate',
-  'Add Manager',
-  'Remove Manager',
-  'View List',
-  'View Detail'
-]
-
-// const entities = ['company', 'project', 'position', 'user', 'interview', 'resume', 'other']
-// const entityIcons = [
-//   'carbon:location-company',
-//   'pajamas:project',
-//   'ic:baseline-work-outline',
-//   'mdi:users-outline',
-//   'mdi:virtual-meeting',
-//   'pepicons-pop:cv',
-//   'mdi:shield-outline'
-// ]
-
-const entities = [
-  {
-    entity: 'company',
-    icon: 'carbon:location-company'
-  },
-  {
-    entity: 'project',
-    icon: 'pajamas:project'
-  },
-  {
-    entity: 'position',
-    icon: 'ic:baseline-work-outline'
-  },
-  {
-    entity: 'user',
-    icon: 'mdi:users-outline'
-  },
-  {
-    entity: 'interview',
-    icon: 'mdi:virtual-meeting'
-  },
-  {
-    entity: 'resume',
-    icon: 'pepicons-pop:cv'
-  },
-  {
-    entity: 'other',
-    icon: 'mdi:shield-outline'
-  }
-]
-
-const renderPermissions = ({ label, permissionId }: { label: string; permissionId: string }) => {
-  return (
-    <Grid md={4} item>
-      <FormControlLabel
-        label={label}
-        control={
-          <Checkbox
-            size='small'
-            id={permissionId}
-            // onChange={() => togglePermission(`${id}-read`)}
-            // checked={selectedCheckbox.includes(`${id}-read`)}
-          />
-        }
-      />
-    </Grid>
-  )
-}
-
 const RoleViewDialog = ({ open, toggle, dialogTitle }: RoleViewDialogProps) => {
-  const [activeTab, setActiveTab] = useState<string>('company')
-  const [selectedCheckbox, setSelectedCheckbox] = useState<string[]>([])
+  const [activeTab, setActiveTab] = useState<string>('roles')
+  const [roleName, setRoleName] = useState<string>('')
+  const [roleNameErr, setRoleNameErr] = useState<string>('')
+  const [selectedPermissions, setSelectedPermissions] = useState<string[]>([])
   const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = useState<boolean>(false)
+
+  const dispatch = useDispatch()
+
+  const { data: entities } = useSelector((state: any) => state.permissionsGrouped)
+  const { status } = useSelector((state: any) => state.roleCreate)
+
+  useEffect(() => {
+    if (status) {
+      clearCreateRole()
+      toggle()
+    }
+  }, [status])
+
   const togglePermission = (id: string) => {
-    const arr = selectedCheckbox
-    if (selectedCheckbox.includes(id)) {
+    const arr = selectedPermissions
+    if (selectedPermissions.includes(id)) {
       arr.splice(arr.indexOf(id), 1)
-      setSelectedCheckbox([...arr])
+      setSelectedPermissions([...arr])
     } else {
       arr.push(id)
-      setSelectedCheckbox([...arr])
+      setSelectedPermissions([...arr])
     }
   }
 
-  const handleSelectAllCheckbox = () => {
-    if (isIndeterminateCheckbox) {
-      setSelectedCheckbox([])
-    } else {
-      rolesArr.forEach(row => {
-        const id = row.toLowerCase().split(' ').join('-')
-        togglePermission(`${id}-read`)
-        togglePermission(`${id}-write`)
-        togglePermission(`${id}-create`)
-      })
-    }
+  const renderPermissions = (permission: any) => {
+    return (
+      <Grid md={4} item key={permission?._id}>
+        <FormControlLabel
+          label={permission?.name}
+          control={
+            <Checkbox
+              size='small'
+              id={permission?._id}
+              onChange={() => togglePermission(permission?._id)}
+              checked={selectedPermissions.includes(permission?._id)}
+            />
+          }
+        />
+      </Grid>
+    )
   }
+
+  // const handleSelectAllCheckbox = () => {
+  //   if (isIndeterminateCheckbox) {
+  //     setSelectedPermissions([])
+  //   } else {
+  //     rolesArr.forEach(row => {
+  //       const id = row.toLowerCase().split(' ').join('-')
+  //       togglePermission(`${id}-read`)
+  //       togglePermission(`${id}-write`)
+  //       togglePermission(`${id}-create`)
+  //     })
+  //   }
+  // }
 
   const handleTabChange = (e: any, value: string) => {
     setActiveTab(value)
+  }
+
+  const handleSubmit = () => {
+    if (!roleName.trim().length) {
+      setRoleNameErr('Role Name Cannot Be Empty')
+    } else {
+      setRoleNameErr('')
+      dispatch(createRole({name: roleName, permissions: selectedPermissions}))
+    }
   }
 
   return (
@@ -147,7 +122,14 @@ const RoleViewDialog = ({ open, toggle, dialogTitle }: RoleViewDialogProps) => {
       <DialogContent sx={{ p: { xs: 6, sm: 12 } }}>
         <Box sx={{ my: 4 }}>
           <FormControl fullWidth>
-            <TextField label='Role Name' placeholder='Enter Role Name' />
+            <TextField
+              value={roleName}
+              onChange={e => setRoleName(e.target.value)}
+              label='Role Name'
+              placeholder='Enter Role Name'
+              error={!!roleNameErr}
+            />
+            {roleNameErr && <FormHelperText sx={{ color: 'error.main' }}>{roleNameErr}</FormHelperText>}
           </FormControl>
         </Box>
         <TabContext value={activeTab}>
@@ -158,28 +140,31 @@ const RoleViewDialog = ({ open, toggle, dialogTitle }: RoleViewDialogProps) => {
             aria-label='forced scroll tabs example'
             sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
           >
-            {entities.map((item: any, index: number) => (
-              <Tab
-                key={`${item.entity}-${index}`}
-                value={item.entity}
-                label={uppercaseFirstLetters(item.entity)}
-                icon={<Icon icon={item.icon} />}
-              />
-            ))}
+            {entities.length > 0 &&
+              entities?.map(
+                (item: any, index: number) =>
+                  item?.entity?.length > 0 && (
+                    <Tab
+                      key={`${item?.entity}-${index}`}
+                      value={item?.entity}
+                      label={uppercaseFirstLetters(item?.entity)}
+                      icon={<Icon icon={getEntityIcon(item?.entity)} />}
+                    />
+                  )
+              )}
           </TabList>
           <Box sx={{ mt: 6 }}>
-            {entities.map(({ entity }: any, index: number) => (
-              <TabPanel sx={{ p: 0 }} value={entity} key={`${entity}-${index}`}>
-                <Typography sx={{ mb: 6 }} variant='h5'>
-                  {uppercaseFirstLetters(`role permissions for ${entity} actions`)}
-                </Typography>
-                <Grid container md={12}>
-                  {shuffle(rolesArr).map((permissionName: string, permissionIndex: number) =>
-                    renderPermissions({ label: permissionName, permissionId: permissionIndex.toString() })
-                  )}
-                </Grid>
-              </TabPanel>
-            ))}
+            {entities.length > 0 &&
+              entities?.map(({ entity, permissions }: any, index: number) => (
+                <TabPanel sx={{ p: 0 }} value={entity} key={`${entity}-${index}`}>
+                  <Typography sx={{ mb: 6 }} variant='h5'>
+                    {uppercaseFirstLetters(`role permissions for ${entity} actions`)}
+                  </Typography>
+                  <Grid container md={12}>
+                    {permissions?.map((permission: any, permissionIndex: number) => renderPermissions(permission))}
+                  </Grid>
+                </TabPanel>
+              ))}
           </Box>
         </TabContext>
         {/* <Typography variant='h6'>Role Permissions</Typography>
@@ -215,7 +200,7 @@ const RoleViewDialog = ({ open, toggle, dialogTitle }: RoleViewDialogProps) => {
                         size='small'
                         onChange={handleSelectAllCheckbox}
                         indeterminate={isIndeterminateCheckbox}
-                        checked={selectedCheckbox.length === rolesArr.length * 3}
+                        checked={selectedPermissions.length === rolesArr.length * 3}
                       />
                     }
                   />
@@ -245,7 +230,7 @@ const RoleViewDialog = ({ open, toggle, dialogTitle }: RoleViewDialogProps) => {
                             size='small'
                             id={`${id}-read`}
                             onChange={() => togglePermission(`${id}-read`)}
-                            checked={selectedCheckbox.includes(`${id}-read`)}
+                            checked={selectedPermissions.includes(`${id}-read`)}
                           />
                         }
                       />
@@ -258,7 +243,7 @@ const RoleViewDialog = ({ open, toggle, dialogTitle }: RoleViewDialogProps) => {
                             size='small'
                             id={`${id}-write`}
                             onChange={() => togglePermission(`${id}-write`)}
-                            checked={selectedCheckbox.includes(`${id}-write`)}
+                            checked={selectedPermissions.includes(`${id}-write`)}
                           />
                         }
                       />
@@ -271,7 +256,7 @@ const RoleViewDialog = ({ open, toggle, dialogTitle }: RoleViewDialogProps) => {
                             size='small'
                             id={`${id}-create`}
                             onChange={() => togglePermission(`${id}-create`)}
-                            checked={selectedCheckbox.includes(`${id}-create`)}
+                            checked={selectedPermissions.includes(`${id}-create`)}
                           />
                         }
                       />
@@ -285,7 +270,7 @@ const RoleViewDialog = ({ open, toggle, dialogTitle }: RoleViewDialogProps) => {
       </DialogContent>
       <DialogActions sx={{ pt: 0, display: 'flex', justifyContent: 'center' }}>
         <Box className='demo-space-x'>
-          <Button size='large' type='submit' variant='contained' onClick={toggle}>
+          <Button size='large' type='submit' variant='contained' onClick={() => handleSubmit()}>
             Submit
           </Button>
           <Button size='large' color='secondary' variant='outlined' onClick={toggle}>

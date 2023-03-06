@@ -33,9 +33,6 @@ import TableHeader from 'src/views/pages/permissions/TableHeader'
 // ** Types Imports
 import { RootState, AppDispatch } from 'src/store'
 
-// ** Actions Imports
-import { fetchData } from 'src/store/apps/permissions'
-
 // ** Types
 import { ThemeColor } from 'src/@core/layouts/types'
 
@@ -107,15 +104,6 @@ const PermissionsTable = () => {
 
   // ** Hooks
   const dispatch = useDispatch<AppDispatch>()
-  const store = useSelector((state: RootState) => state.permissions)
-
-  useEffect(() => {
-    dispatch(
-      fetchData({
-        q: value
-      })
-    )
-  }, [dispatch, value])
 
   const handleFilter = useCallback((val: string) => {
     setValue(val)
@@ -172,7 +160,7 @@ const PermissionsTable = () => {
             <TableHeader value={value} handleFilter={handleFilter} />
             <DataGrid
               autoHeight
-              rows={store.data}
+              rows={[]}
               columns={columns}
               pageSize={pageSize}
               disableSelectionOnClick

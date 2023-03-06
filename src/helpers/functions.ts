@@ -120,3 +120,16 @@ export const shuffle = (array: any): any => {
 
   return array
 }
+
+export const getEntityIcon = (entity: string) => {
+  const entityIcons : any = {
+    companies: 'carbon:location-company',
+    projects: 'pajamas:project',
+    positions: 'ic:baseline-work-outline',
+    users: 'mdi:users-outline',
+    interviews: 'mdi:virtual-meeting',
+    resumes: 'pepicons-pop:cv',
+  }
+
+  return Object.keys(entityIcons).includes(entity) ? entityIcons[entity] : 'mdi:shield-outline'
+}

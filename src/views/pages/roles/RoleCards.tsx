@@ -31,6 +31,11 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
 import RoleViewDialog from './RoleViewDialog'
+import { useDispatch } from 'react-redux'
+import { getRoles } from 'src/store/role'
+import { useSelector } from 'react-redux'
+import Skelet from 'src/@core/components/loading/Skelet'
+import { getPermissionsGrouped } from 'src/store/permission'
 
 interface CardDataType {
   title: string
@@ -64,6 +69,15 @@ const RolesCards = () => {
   const [dialogTitle, setDialogTitle] = useState<'Add' | 'Edit'>('Add')
   const [selectedCheckbox, setSelectedCheckbox] = useState<string[]>([])
   const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = useState<boolean>(false)
+
+  const dispatch = useDispatch()
+
+  const { data: roles, loading: loadingRoles } = useSelector((state: any) => state.roles)
+
+  useEffect(() => {
+    dispatch(getRoles())
+    dispatch(getPermissionsGrouped())
+  }, [])
 
   const handleClickOpen = () => setOpen(true)
 
@@ -106,21 +120,22 @@ const RolesCards = () => {
   }, [selectedCheckbox])
 
   const renderCards = () =>
-    cardData.map((item, index: number) => (
+    roles?.docs?.length > 0 &&
+    roles?.docs?.map((item: any, index: number) => (
       <Grid item xs={12} sm={6} lg={4} key={index}>
         <Card>
           <CardContent>
-            <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            {/* <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Typography variant='body2'>{`Total ${item.totalUsers} users`}</Typography>
               <AvatarGroup max={4} sx={{ '& .MuiAvatar-root': { width: 40, height: 40, fontSize: '0.875rem' } }}>
-                {item.avatars.map((img, index: number) => (
+                {item.avatars.map((img: any, index: number) => (
                   <Avatar key={index} alt={item.title} src={`/images/avatars/${img}`} />
                 ))}
               </AvatarGroup>
-            </Box>
+            </Box> */}
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant='h6'>{item.title}</Typography>
+                <Typography variant='h6'>{item?.name}</Typography>
                 <Typography
                   href='/'
                   variant='body2'
@@ -146,7 +161,7 @@ const RolesCards = () => {
 
   return (
     <Grid container spacing={6} className='match-height'>
-      {renderCards()}
+      <Skelet sx={{mt: 6}} width='33%' height={130} loading={loadingRoles} component={renderCards()} />
       <Grid item xs={12} sm={6} lg={4}>
         <Card
           sx={{ cursor: 'pointer' }}

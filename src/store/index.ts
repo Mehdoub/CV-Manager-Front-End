@@ -40,7 +40,8 @@ import { usernameCheckReducer } from './auth'
 import errorHandler from 'src/middlewares/errorHandler'
 import { positionActiveReducer, positionCreateReducer, positionDeactiveReducer, positionEditReducer, positionManagerAddReducer, positionManagerRemoveReducer, positionManagersReducer, positionReducer, positionsListReducer } from './position'
 import { constantsReducer } from './common'
-import permissions from './apps/permissions'
+import { roleCreateReducer, rolesReducer } from './role'
+import { permissionsGroupedReducer } from './permission'
 
 export const store = configureStore({
   reducer: {
@@ -95,7 +96,10 @@ export const store = configureStore({
 
     constants: constantsReducer,
 
-    permissions: permissions,
+    roles: rolesReducer,
+    roleCreate: roleCreateReducer,
+
+    permissionsGrouped: permissionsGroupedReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
