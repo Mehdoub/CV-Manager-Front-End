@@ -39,7 +39,7 @@ import { AvatarGroup, Skeleton, Stack } from '@mui/material'
 import { BootstrapTooltip } from '../companies'
 import { getPositions } from 'src/store/position'
 import PositionEditDialog from 'src/views/pages/position/view/PositionEditDialog'
-import { showDate } from 'src/helpers/functions'
+import { getFullName, showDate } from 'src/helpers/functions'
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -245,7 +245,7 @@ const PositionList = () => {
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href={`/users/view/${created_by}/overview/`}>{created_by}</StyledLink>
+              <StyledLink href={`/users/view/${created_by?.id}/overview/`}>{getFullName(created_by)}</StyledLink>
             </Box>
           </Box>
         )

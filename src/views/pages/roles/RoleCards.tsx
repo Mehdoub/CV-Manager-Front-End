@@ -36,6 +36,8 @@ import { getRoles } from 'src/store/role'
 import { useSelector } from 'react-redux'
 import { getPermissionsGrouped } from 'src/store/permission'
 import { Skeleton } from '@mui/material'
+import { getFullName, getImagePath } from 'src/helpers/functions'
+import { BootstrapTooltip } from 'src/pages/companies'
 
 interface CardDataType {
   title: string
@@ -121,31 +123,39 @@ const RolesCards = () => {
   }, [selectedCheckbox])
 
   const renderCards = () =>
-    roles?.docs?.length > 0 &&
-    roles?.docs?.map((item: any, index: number) => (
-      <Grid item xs={12} sm={6} lg={4} key={index} sx={{ minHeight: '150px' }}>
+    roles?.length > 0 &&
+    roles?.map((role: any, index: number) => (
+      <Grid item xs={12} sm={6} lg={4} key={index} sx={{ minHeight: '170px' }}>
         <Card>
           <CardContent>
-            {/* <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <Typography variant='body2'>{`Total ${item.totalUsers} users`}</Typography>
-              <AvatarGroup max={4} sx={{ '& .MuiAvatar-root': { width: 40, height: 40, fontSize: '0.875rem' } }}>
-                {item.avatars.map((img: any, index: number) => (
-                  <Avatar key={index} alt={item.title} src={`/images/avatars/${img}`} />
-                ))}
+            <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <Typography variant='body2'>{`Total ${role?.usersCount} user(s)`}</Typography>
+              <AvatarGroup className='pull-up' max={4} sx={{ '& .MuiAvatar-root': { width: 40, height: 40, fontSize: '0.875rem' } }}>
+                {role?.users?.length > 0 ? role?.users?.map((user: any, index: number) => (
+                  <BootstrapTooltip
+                  key={index}
+                  title={getFullName(user)}
+                  placement='top'
+                >
+                  <Avatar key={index} alt={getFullName(user)} src={getImagePath(user?.avatar)} />
+                </BootstrapTooltip>
+                )) : (
+                  <Skeleton variant='circular' animation={false} width={40} height={40} />
+                )}
               </AvatarGroup>
-            </Box> */}
+            </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant='h6'>{item?.name}</Typography>
+                <Typography variant='h6'>{role?.name}</Typography>
                 <Typography
                   href='/'
                   variant='body2'
                   component={Link}
-                  sx={{ color: 'primary.main', mt: 2 }}
+                  sx={{ color: 'primary.main' }}
                   onClick={(e: SyntheticEvent) => {
                     e.preventDefault()
                     setDialogTitle('Edit')
-                    setEditRoleData(item)
+                    setEditRoleData(role)
                     handleClickOpen()
                   }}
                 >

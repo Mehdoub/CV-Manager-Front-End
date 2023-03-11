@@ -48,7 +48,7 @@ const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   }
 }))
 
-const PositionViewRight = ({ tab, positionId }: Props) => {
+const PositionViewRight : any = ({ tab, positionId }: Props) => {
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -125,7 +125,7 @@ const PositionViewRight = ({ tab, positionId }: Props) => {
           ) : (
             <>
               <TabPanel sx={{ p: 0 }} value='overview'>
-                <ViewOverview />
+                <ViewOverview positionId={positionId} />
               </TabPanel>
               <TabPanel sx={{ p: 0 }} value='interview'>
                 <ViewInterviews />

@@ -5,7 +5,7 @@ import { clearStatesAction, createExtraReducers, sliceInitialStateWithData, slic
 
 export const getRoles: any = createAsyncThunk('getRoles', async (_, { rejectWithValue }) => {
   try {
-    const response = await ApiRequest.builder().auth().request('get', 'roles')
+    const response = await ApiRequest.builder().auth().request('get', 'roles/permissions/rbac')
 
     return response
   } catch (err: any) {
@@ -18,7 +18,7 @@ const rolesSlice = createSlice({
   initialState: sliceInitialStateWithData,
   reducers: {},
   extraReducers: (builder) => {
-    createExtraReducers(builder, getRoles, true, true)
+    createExtraReducers(builder, getRoles, true)
   }
 })
 

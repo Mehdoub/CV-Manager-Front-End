@@ -2,7 +2,6 @@
 import Grid from '@mui/material/Grid'
 
 // ** Demo Components Imports
-import PositionViewLeft from 'src/views/pages/position/view/PositionViewLeft'
 import PositionViewRight from 'src/views/pages/position/view/PositionViewRight'
 import CardStatisticsVertical from 'src/@core/components/card-statistics/card-stats-vertical'
 import CrmTotalGrowth from 'src/views/statistics/CrmTotalGrowth'
@@ -51,10 +50,8 @@ const PositionViewPage = ({ tab, positionId }: Props) => {
             <CrmTotalGrowth />
           </Grid>
         </Grid>
-        <Grid item xs={12} md={5} lg={4}>
-          <PositionViewLeft positionId={positionId} />
-        </Grid>
-        <Grid item xs={12} md={7} lg={8}>
+
+        <Grid item xs={12} md={12} lg={12}>
           <PositionViewRight tab={tab} positionId={positionId} />
         </Grid>
       </Grid>
