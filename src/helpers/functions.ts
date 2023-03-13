@@ -122,7 +122,7 @@ export const shuffle = (array: any): any => {
 }
 
 export const getEntityIcon = (entity: string) => {
-  const entityIcons : any = {
+  const entityIcons: any = {
     companies: 'carbon:location-company',
     projects: 'pajamas:project',
     positions: 'ic:baseline-work-outline',
@@ -132,4 +132,21 @@ export const getEntityIcon = (entity: string) => {
   }
 
   return Object.keys(entityIcons).includes(entity) ? entityIcons[entity] : 'mdi:shield-outline'
+}
+
+export const getColorCodes = (color: string) => {
+  const colorCodes: any = {
+    success: '#72E128',
+    error: '#FF4D49',
+    info: '#26C6F9',
+    warning: '#FDB528',
+    primary: '#666CFF',
+  }
+
+  return colorCodes[color] ?? colorCodes.error
+}
+
+export const getMaxTextLen = (text: string, maxLen = 15) : string => {
+  const dots = text.length > maxLen ? '...' : ''
+  return text.substring(0, maxLen) + dots
 }

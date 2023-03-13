@@ -21,29 +21,69 @@ import CustomChip from 'src/@core/components/mui/chip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import { getInitials } from 'src/@core/utils/get-initials'
 import { BootstrapTooltip } from 'src/pages/companies'
+import { getColorCodes, getMaxTextLen, uppercaseFirstLetters } from 'src/helpers/functions'
 
 const itemsArr = ['New', 'Reviewd', 'Call Interview', 'Technical Test', 'Hired', 'Rejected']
 
 const cards = [
   {
     id: 1,
-    title: 'Mahdi Mehrjoo'
+    title: 'Mahdi Mehrjoo',
+    label: 'Laravel Developer',
+    color: 'info',
+    interview: 'tomorrow 15:00',
+    interviewColor: 'success',
+    tags: [
+      {
+        text: 'test',
+        color: 'warning'
+      },
+      {
+        text: 'hot',
+        color: 'error'
+      }
+    ],
+    moreTags: 2
   },
   {
     id: 2,
-    title: 'Ali Hamzehei'
+    title: 'Ali Hamzehei Tabrizi',
+    label: 'Laravel Developer',
+    color: 'info',
+    interview: 'right now',
+    interviewColor: 'error',
+    tags: [],
+    moreTags: 0
   },
   {
     id: 3,
-    title: 'Amin Paapi'
+    title: 'Amin Paapi',
+    label: 'Information',
+    color: 'info',
+    interview: 'right now',
+    interviewColor: 'error',
+    tags: [],
+    moreTags: 0
   },
   {
     id: 4,
-    title: 'Aliakbar Rezaei'
+    title: 'Aliakbar Rezaei',
+    label: 'Information',
+    color: 'info',
+    interview: 'yesterday 11:00',
+    interviewColor: 'warning',
+    tags: [],
+    moreTags: 0
   },
   {
     id: 5,
-    title: 'Mahdi Amereh'
+    title: 'Mahdi Amereh',
+    label: 'Information',
+    color: 'info',
+    interview: 'yesterday 11:00',
+    interviewColor: 'warning',
+    tags: [],
+    moreTags: 0
   }
 ]
 
@@ -65,14 +105,6 @@ const asignees = [
     title: 'Aliakbar Rezaei'
   }
 ]
-
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary
-}))
 
 const ProjectViewResumes = () => {
   return (
@@ -144,39 +176,76 @@ const ProjectViewResumes = () => {
                         mb: 3
                       }}
                     >
-                      <CustomChip rounded size='small' label='Information' skin='light' color='info' />
+                      <CustomChip
+                        rounded
+                        size='small'
+                        label={card.label}
+                        skin='light'
+                        color={card.color as any}
+                        sx={{ fontSize: 10, height: 19 }}
+                      />
                       <Rating readOnly value={3} name='read-only' size='small' />
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       <CustomAvatar
                         skin='light'
                         color='primary'
-                        sx={{ mr: 3, width: 39, height: 39, fontSize: '1rem' }}
+                        sx={{ mr: 3, width: 35, height: 35, fontSize: '0.85rem' }}
                       >
                         {getInitials(card.title)}
                       </CustomAvatar>
                       <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                        {card.title}
-
-                        {/* <Typography noWrap variant='caption'>
-                          3 Days Ago
-                        </Typography> */}
+                        <BootstrapTooltip title={card.title} placement='top'>
+                          <Typography fontSize={13} fontWeight={500}>
+                            {getMaxTextLen(card.title)}
+                          </Typography>
+                        </BootstrapTooltip>
+                        <Stack direction='row' spacing={1} ml={-2}>
+                          {card?.tags?.length > 0 &&
+                            card?.tags?.map(
+                              (tag, index) =>
+                                index < 2 && (
+                                  <CustomChip
+                                    size='small'
+                                    label={tag.text}
+                                    skin='light'
+                                    color={tag.color as any}
+                                    sx={{ fontSize: 10, height: 17, borderBottomLeftRadius: 0, borderTopLeftRadius: 0 }}
+                                  />
+                                )
+                            )}
+                          {card.moreTags > 0 && (
+                            <CustomChip
+                              size='small'
+                              label={`+${card.moreTags}`}
+                              skin='light'
+                              color='info'
+                              sx={{ fontSize: 10, height: 17, borderBottomLeftRadius: 0, borderTopLeftRadius: 0 }}
+                            />
+                          )}
+                        </Stack>
                       </Box>
                     </Box>
                     <Chip
                       variant='outlined'
                       size='small'
-                      label='Tomorrow 15:00'
-                      color='success'
-                      sx={{ backgroundColor: '#fff', position: 'absolute', bottom: 40 }}
+                      label={`${uppercaseFirstLetters(card.interview)}`}
+                      color={card.interviewColor as any}
+                      sx={{ backgroundColor: '#fff', position: 'absolute', bottom: 40, fontSize: 10, height: 20 }}
                       avatar={
-                        <Avatar sx={{ backgroundColor: '#fff' }}>
-                          <Icon
-                            style={{ color: '#72E128', backgroundColor: '#fff' }}
-                            icon='fluent:device-meeting-room-remote-16-filled'
-                            fontSize={15}
-                          />
-                        </Avatar>
+                        card.interview == 'right now' ? (
+                          <svg height='18' width='18' className='blinking'>
+                            <circle cx='9' cy='9' r='5' fill={getColorCodes('error')} />
+                          </svg>
+                        ) : (
+                          <Avatar sx={{ backgroundColor: '#fff' }}>
+                            <Icon
+                              style={{ color: getColorCodes(card.interviewColor), backgroundColor: '#fff' }}
+                              icon='fluent:device-meeting-room-remote-16-filled'
+                              fontSize={15}
+                            />
+                          </Avatar>
+                        )
                       }
                     />
 
@@ -223,7 +292,13 @@ const ProjectViewResumes = () => {
                           }
                         />
                       </Stack>
-                      <AvatarGroup className='pull-up' max={3}>
+                      <AvatarGroup
+                        className='pull-up'
+                        max={3}
+                        sx={{
+                          '& .MuiAvatar-root': { width: 30, height: 30, fontSize: 15 }
+                        }}
+                      >
                         {asignees.map((asignee: any, index: any) => (
                           <BootstrapTooltip key={index} title={asignee.title} placement='top'>
                             <CustomAvatar src={asignee.id} sx={{ height: 26, width: 26 }} />
