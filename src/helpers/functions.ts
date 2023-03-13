@@ -141,6 +141,7 @@ export const getColorCodes = (color: string) => {
     info: '#26C6F9',
     warning: '#FDB528',
     primary: '#666CFF',
+    secondary: '#6D788D',
   }
 
   return colorCodes[color] ?? colorCodes.error

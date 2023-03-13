@@ -1,21 +1,4 @@
-import Grid from '@mui/material/Grid'
-import ProjectResumeListTable from './ResumeListTable'
-import { DragDropContext, Droppable } from 'react-beautiful-dnd'
-import {
-  Avatar,
-  AvatarGroup,
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Chip,
-  Paper,
-  Rating,
-  Stack,
-  Typography,
-  styled
-} from '@mui/material'
+import { Avatar, AvatarGroup, Box, Card, Chip, Rating, Stack, Typography } from '@mui/material'
 import Icon from 'src/@core/components/icon'
 import CustomChip from 'src/@core/components/mui/chip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
@@ -23,7 +6,32 @@ import { getInitials } from 'src/@core/utils/get-initials'
 import { BootstrapTooltip } from 'src/pages/companies'
 import { getColorCodes, getMaxTextLen, uppercaseFirstLetters } from 'src/helpers/functions'
 
-const itemsArr = ['New', 'Reviewd', 'Call Interview', 'Technical Test', 'Hired', 'Rejected']
+const itemsObj = [
+  {
+    title: 'New',
+    color: 'primary'
+  },
+  {
+    title: 'Reviewd',
+    color: 'info'
+  },
+  {
+    title: 'Call Interview',
+    color: 'warning'
+  },
+  {
+    title: 'Technical Test',
+    color: 'secondary'
+  },
+  {
+    title: 'Hired',
+    color: 'success'
+  },
+  {
+    title: 'Rejected',
+    color: 'error'
+  }
+]
 
 const cards = [
   {
@@ -43,7 +51,10 @@ const cards = [
         color: 'error'
       }
     ],
-    moreTags: 2
+    moreTags: 2,
+    date: '14 March 03:00 P.M',
+    rate: 5,
+    rateText: 'Excellent!'
   },
   {
     id: 2,
@@ -53,7 +64,10 @@ const cards = [
     interview: 'right now',
     interviewColor: 'error',
     tags: [],
-    moreTags: 0
+    moreTags: 0,
+    date: '14 March 03:00 P.M',
+    rate: 4,
+    rateText: 'Awesome'
   },
   {
     id: 3,
@@ -63,7 +77,10 @@ const cards = [
     interview: 'right now',
     interviewColor: 'error',
     tags: [],
-    moreTags: 0
+    moreTags: 0,
+    date: '14 March 03:00 P.M',
+    rate: 3,
+    rateText: 'Good'
   },
   {
     id: 4,
@@ -73,7 +90,10 @@ const cards = [
     interview: 'yesterday 11:00',
     interviewColor: 'warning',
     tags: [],
-    moreTags: 0
+    moreTags: 0,
+    date: '14 March 03:00 P.M',
+    rate: 3,
+    rateText: 'Good'
   },
   {
     id: 5,
@@ -83,7 +103,10 @@ const cards = [
     interview: 'yesterday 11:00',
     interviewColor: 'warning',
     tags: [],
-    moreTags: 0
+    moreTags: 0,
+    date: '14 March 03:00 P.M',
+    rate: 3,
+    rateText: 'Good'
   }
 ]
 
@@ -109,14 +132,9 @@ const asignees = [
 const ProjectViewResumes = () => {
   return (
     <>
-      {/* <Typography variant='h5' sx={{ mb: 1, ml: 6 }}>
-        Resumes For This Position
-      </Typography> */}
-      {/* <Grid container spacing={6} sx={{ overflowX: 'scroll' }}> */}
       <Stack direction='row' spacing={-3} sx={{ overflowX: 'scroll', pr: 3, pb: 20, pt: 0, pl: 0 }}>
-        {itemsArr.map(item => (
+        {itemsObj.map(item => (
           <>
-            {/* #F7F7F9 rgba(76, 78, 100, 0.05) */}
             <Card
               className='hide-scrollbar'
               sx={{
@@ -126,7 +144,6 @@ const ProjectViewResumes = () => {
                 overflowY: 'scroll',
                 boxShadow: 'none',
                 position: 'relative'
-                // borderRight: '1px solid rgba(76, 78, 100, 0.12)'
               }}
             >
               <Typography
@@ -137,16 +154,20 @@ const ProjectViewResumes = () => {
                   p: 5,
                   pb: 0,
                   pt: 0,
-                  // color: '#000',
-                  top: '0',
+                  top: 0,
                   position: 'sticky',
-                  height: '30px',
-                  backgroundColor: '#F7F7F9',
+                  height: '42px',
+                  margin: '0 16px',
+                  borderRadius: '10px 10px 3px 3px',
+                  backgroundColor: '#fff',
+                  display: 'flex',
+                  alignItems: 'center',
+                  boxShadow: '0px 2px 10px 0px rgb(76 78 100 / 22%)',
+                  borderTop: '2px solid ' + getColorCodes(item.color),
                   zIndex: 100
-                  // borderBottom: '1px solid rgba(76, 78, 100, 0.12)'
                 }}
               >
-                {item}
+                {item.title}
               </Typography>
               {cards.map(card => (
                 <Card
@@ -164,7 +185,6 @@ const ProjectViewResumes = () => {
                       fontWeight: 500,
                       textAlign: 'left',
                       p: 3
-                      // color: '#000',
                     }}
                   >
                     <Box
@@ -176,15 +196,23 @@ const ProjectViewResumes = () => {
                         mb: 3
                       }}
                     >
-                      <CustomChip
-                        rounded
-                        size='small'
-                        label={card.label}
-                        skin='light'
-                        color={card.color as any}
-                        sx={{ fontSize: 10, height: 19 }}
-                      />
-                      <Rating readOnly value={3} name='read-only' size='small' />
+                      <BootstrapTooltip placement='top' title={card.label}>
+                        <div>
+                          <CustomChip
+                            rounded
+                            size='small'
+                            label={getMaxTextLen(card.label)}
+                            skin='light'
+                            color={card.color as any}
+                            sx={{ fontSize: 10, height: 19 }}
+                          />
+                        </div>
+                      </BootstrapTooltip>
+                      <BootstrapTooltip placement='top' title={card.rateText}>
+                        <div>
+                          <Rating readOnly value={card.rate} name='read-only' size='small' />
+                        </div>
+                      </BootstrapTooltip>
                     </Box>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                       <CustomAvatar
@@ -205,92 +233,112 @@ const ProjectViewResumes = () => {
                             card?.tags?.map(
                               (tag, index) =>
                                 index < 2 && (
-                                  <CustomChip
-                                    size='small'
-                                    label={tag.text}
-                                    skin='light'
-                                    color={tag.color as any}
-                                    sx={{ fontSize: 10, height: 17, borderBottomLeftRadius: 0, borderTopLeftRadius: 0 }}
-                                  />
+                                  <BootstrapTooltip placement='top' title={tag.text}>
+                                    <div>
+                                      <CustomChip
+                                        size='small'
+                                        label={getMaxTextLen(tag.text)}
+                                        skin='light'
+                                        color={tag.color as any}
+                                        sx={{
+                                          fontSize: 10,
+                                          height: 17,
+                                          borderBottomLeftRadius: 0,
+                                          borderTopLeftRadius: 0
+                                        }}
+                                      />
+                                    </div>
+                                  </BootstrapTooltip>
                                 )
                             )}
                           {card.moreTags > 0 && (
-                            <CustomChip
-                              size='small'
-                              label={`+${card.moreTags}`}
-                              skin='light'
-                              color='info'
-                              sx={{ fontSize: 10, height: 17, borderBottomLeftRadius: 0, borderTopLeftRadius: 0 }}
-                            />
+                            <BootstrapTooltip placement='top' title={`+${card.moreTags}`}>
+                              <div>
+                                <CustomChip
+                                  size='small'
+                                  label={`+${card.moreTags}`}
+                                  skin='light'
+                                  color='info'
+                                  sx={{ fontSize: 10, height: 17, borderBottomLeftRadius: 0, borderTopLeftRadius: 0 }}
+                                />
+                              </div>
+                            </BootstrapTooltip>
                           )}
                         </Stack>
                       </Box>
                     </Box>
-                    <Chip
-                      variant='outlined'
-                      size='small'
-                      label={`${uppercaseFirstLetters(card.interview)}`}
-                      color={card.interviewColor as any}
-                      sx={{ backgroundColor: '#fff', position: 'absolute', bottom: 40, fontSize: 10, height: 20 }}
-                      avatar={
-                        card.interview == 'right now' ? (
-                          <svg height='18' width='18' className='blinking'>
-                            <circle cx='9' cy='9' r='5' fill={getColorCodes('error')} />
-                          </svg>
-                        ) : (
-                          <Avatar sx={{ backgroundColor: '#fff' }}>
-                            <Icon
-                              style={{ color: getColorCodes(card.interviewColor), backgroundColor: '#fff' }}
-                              icon='fluent:device-meeting-room-remote-16-filled'
-                              fontSize={15}
-                            />
-                          </Avatar>
-                        )
-                      }
-                    />
+                    <BootstrapTooltip placement='top' title={card.date}>
+                      <Chip
+                        variant='outlined'
+                        size='small'
+                        label={`${getMaxTextLen(uppercaseFirstLetters(card.interview))}`}
+                        color={card.interviewColor as any}
+                        sx={{ backgroundColor: '#fff', position: 'absolute', bottom: 40, fontSize: 10, height: 20 }}
+                        avatar={
+                          card.interview == 'right now' ? (
+                            <svg height='18' width='18' className='blinking'>
+                              <circle cx='9' cy='9' r='5' fill={getColorCodes('error')} />
+                            </svg>
+                          ) : (
+                            <Avatar sx={{ backgroundColor: '#fff' }}>
+                              <Icon
+                                style={{ color: getColorCodes(card.interviewColor), backgroundColor: '#fff' }}
+                                icon='fluent:device-meeting-room-remote-16-filled'
+                                fontSize={15}
+                              />
+                            </Avatar>
+                          )
+                        }
+                      />
+                    </BootstrapTooltip>
 
                     <Box
                       sx={{
                         mt: 5,
                         gap: 2,
                         display: 'flex',
-                        // flexWrap: 'wrap',
                         justifyContent: 'space-between',
                         alignItems: 'flex-end',
                         flexDirection: 'row'
                       }}
                     >
                       <Stack direction='row' spacing={1}>
-                        <Chip
-                          size='small'
-                          label='3'
-                          sx={{ fontSize: 10, height: 19, width: 41 }}
-                          avatar={
-                            <Avatar>
-                              <Icon icon='ri:attachment-2' fontSize={15} />
-                            </Avatar>
-                          }
-                        />
-                        <Chip
-                          size='small'
-                          label='2'
-                          sx={{ fontSize: 10, height: 19, width: 41 }}
-                          avatar={
-                            <Avatar>
-                              <Icon icon='ic:baseline-call' fontSize={15} />
-                            </Avatar>
-                          }
-                        />
-                        <Chip
-                          size='small'
-                          label='4'
-                          sx={{ fontSize: 10, height: 19, width: 41 }}
-                          avatar={
-                            <Avatar>
-                              <Icon icon='material-symbols:chat-outline-rounded' fontSize={15} />
-                            </Avatar>
-                          }
-                        />
+                        <BootstrapTooltip placement='top' title='File Attachments'>
+                          <Chip
+                            size='small'
+                            label='3'
+                            sx={{ fontSize: 10, height: 19, width: 41 }}
+                            avatar={
+                              <Avatar>
+                                <Icon icon='ri:attachment-2' fontSize={15} />
+                              </Avatar>
+                            }
+                          />
+                        </BootstrapTooltip>
+                        <BootstrapTooltip placement='top' title='Call History'>
+                          <Chip
+                            size='small'
+                            label='2'
+                            sx={{ fontSize: 10, height: 19, width: 41 }}
+                            avatar={
+                              <Avatar>
+                                <Icon icon='ic:baseline-call' fontSize={15} />
+                              </Avatar>
+                            }
+                          />
+                        </BootstrapTooltip>
+                        <BootstrapTooltip placement='top' title='Comments'>
+                          <Chip
+                            size='small'
+                            label='4'
+                            sx={{ fontSize: 10, height: 19, width: 41 }}
+                            avatar={
+                              <Avatar>
+                                <Icon icon='material-symbols:chat-outline-rounded' fontSize={15} />
+                              </Avatar>
+                            }
+                          />
+                        </BootstrapTooltip>
                       </Stack>
                       <AvatarGroup
                         className='pull-up'
@@ -313,7 +361,6 @@ const ProjectViewResumes = () => {
           </>
         ))}
       </Stack>
-      {/* </Grid> */}
     </>
   )
 }
