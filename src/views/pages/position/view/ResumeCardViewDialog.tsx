@@ -9,6 +9,7 @@ import {
   Button,
   Checkbox,
   Chip,
+  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -40,6 +41,8 @@ import { getInitials } from 'src/@core/utils/get-initials'
 import { getEntityIcon, getMaxTextLen, shuffle, uppercaseFirstLetters } from 'src/helpers/functions'
 import { BootstrapTooltip } from 'src/pages/companies'
 import { clearCreateRole, clearEditRole, createRole, editRole, getRoles } from 'src/store/role'
+import { useRouter } from 'next/router'
+import ViewOverview from './ViewOverview'
 
 interface ResumeCardViewDialogProps {
   open: boolean
@@ -63,16 +66,19 @@ const tags = [
 ]
 
 const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialogProps) => {
-  const [activeTab, setActiveTab] = useState<string>('roles')
+  const [activeTab, setActiveTab] = useState<string>('details')
   const [roleName, setRoleName] = useState<string>('')
   const [roleNameErr, setRoleNameErr] = useState<string>('')
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([])
+  const [isLoading, setIsLoading] = useState<boolean>(false)
 
   const dispatch = useDispatch()
 
   const { data: entities } = useSelector((state: any) => state.permissionsGrouped)
   const { status: statusCreate } = useSelector((state: any) => state.roleCreate)
   const { status: statusEdit } = useSelector((state: any) => state.roleEdit)
+
+  const router = useRouter()
 
   useEffect(() => {
     if (statusCreate) {
@@ -129,6 +135,12 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
   //     })
   //   }
   // }
+
+  const handleChange = (event: any, value: string) => {
+    setIsLoading(true)
+    setActiveTab(value)
+    setIsLoading(false)
+  }
 
   const handleTabChange = (e: any, value: string) => {
     setActiveTab(value)
@@ -220,29 +232,25 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
             <Stack direction='row' spacing={1} mt={2}>
               <Chip
                 sx={{ ml: -1 }}
-                label='Howard Paul'
+                label='Mani Mohammadi'
                 avatar={<Avatar src='/images/avatars/7.png' alt='User Avatar' />}
               />
-              <Chip
-                sx={{ ml: -1 }}
-                label='Howard Paul'
-                avatar={<Avatar src='/images/avatars/8.png' alt='User Avatar' />}
-              />
             </Stack>
-            <Typography sx={{mt: 7}} variant='body2'>Interviewer(s):</Typography>
+            <Typography sx={{ mt: 7 }} variant='body2'>
+              Interviewer(s):
+            </Typography>
             <Stack direction='row' spacing={1} mt={2}>
               <Chip
                 sx={{ ml: -1 }}
-                label='Howard Paul'
-                avatar={<Avatar src='/images/avatars/7.png' alt='User Avatar' />}
+                label='Mahdi Amereh'
+                avatar={<Avatar src='/images/avatars/5.png' alt='User Avatar' />}
               />
               <Chip
                 sx={{ ml: -1 }}
-                label='Howard Paul'
-                avatar={<Avatar src='/images/avatars/8.png' alt='User Avatar' />}
+                label='Ali Akbar Rezaei'
+                avatar={<Avatar src='/images/avatars/3.png' alt='User Avatar' />}
               />
             </Stack>
-
           </DialogTitle>
         </Grid>
       </Grid>
@@ -256,7 +264,43 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
       >
         <Grid container>
           <Grid xs item>
-            <h1>Hi Left</h1>
+            <TabContext value={activeTab}>
+              <TabList
+                variant='scrollable'
+                scrollButtons='auto'
+                onChange={handleChange}
+                aria-label='forced scroll tabs example'
+                sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}`, mt: 7 }}
+              >
+                <Tab value='details' label='Details' icon={<Icon icon='mdi:account-outline' />} />
+                <Tab value='file' label='File' icon={<Icon icon='pepicons-pop:cv' />} />
+                <Tab value='interview' label='Interviews' icon={<Icon icon='mdi:virtual-meeting' />} />
+                <Tab value='call' label='Calls' icon={<Icon icon='material-symbols:call' />} />
+              </TabList>
+              <Box sx={{ mt: 6 }}>
+                {isLoading ? (
+                  <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
+                    <CircularProgress sx={{ mb: 4 }} />
+                    <Typography>Loading...</Typography>
+                  </Box>
+                ) : (
+                  <>
+                    <TabPanel sx={{ p: 0 }} value='details'>
+                      <h5>There Is Nothing To Show Details ...</h5>
+                    </TabPanel>
+                    <TabPanel sx={{ p: 0 }} value='file'>
+                      <h5>There Is Nothing To Show File ...</h5>
+                    </TabPanel>
+                    <TabPanel sx={{ p: 0 }} value='interview'>
+                      <h5>There Is Nothing To Show Interview ...</h5>
+                    </TabPanel>
+                    <TabPanel sx={{ p: 0 }} value='call'>
+                      <h5>There Is Nothing To Show Calls ...</h5>
+                    </TabPanel>
+                  </>
+                )}
+              </Box>
+            </TabContext>
           </Grid>
           <Divider sx={{ minHeight: '600px', m: '0px 15px' }} orientation='vertical' flexItem />
           <Grid xs item>
