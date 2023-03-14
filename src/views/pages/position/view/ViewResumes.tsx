@@ -1,10 +1,13 @@
 import { Avatar, AvatarGroup, Box, Card, Chip, Rating, Stack, Typography } from '@mui/material'
 import Icon from 'src/@core/components/icon'
 import CustomChip from 'src/@core/components/mui/chip'
-import CustomAvatar from 'src/@core/components/mui/avatar'
+  import CustomAvatar from 'src/@core/components/mui/avatar'
 import { getInitials } from 'src/@core/utils/get-initials'
 import { BootstrapTooltip } from 'src/pages/companies'
 import { getColorCodes, getMaxTextLen, uppercaseFirstLetters } from 'src/helpers/functions'
+import { useScrollContainer } from 'react-indiana-drag-scroll'
+import ResumeCardViewDialog from './ResumeCardViewDialog'
+import { useState } from 'react'
 
 const itemsObj = [
   {
@@ -130,9 +133,17 @@ const asignees = [
 ]
 
 const ProjectViewResumes = () => {
+  const [open, setOpen] = useState<boolean>(false)
+  const handleClose = () => setOpen(false)
+  const scrollContainer = useScrollContainer()
   return (
     <>
-      <Stack direction='row' spacing={-3} sx={{ overflowX: 'scroll', pr: 3, pb: 20, pt: 0, pl: 0 }}>
+      <Stack
+        ref={scrollContainer.ref}
+        direction='row'
+        spacing={-3}
+        sx={{ overflowX: 'scroll', pr: 3, pb: 20, pt: 0, pl: 0 }}
+      >
         {itemsObj.map(item => (
           <>
             <Card
@@ -178,6 +189,7 @@ const ProjectViewResumes = () => {
                     boxShadow: 'none',
                     position: 'relative'
                   }}
+                  onClick={() => setOpen(true)}
                 >
                   <Typography
                     sx={{
@@ -361,6 +373,7 @@ const ProjectViewResumes = () => {
           </>
         ))}
       </Stack>
+      <ResumeCardViewDialog open={open} toggle={handleClose} resumeData={{}} />
     </>
   )
 }
