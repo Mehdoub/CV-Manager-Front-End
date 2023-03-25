@@ -4,7 +4,8 @@ import {
   useEffect,
 
   //  MouseEvent,
-  useCallback
+  useCallback,
+  useRef
 } from 'react'
 
 // ** Next Imports
@@ -129,9 +130,14 @@ const ProjectList = () => {
     dispatch(getProjects({ size: pageSize, query: searchQuery, page }))
   }, [])
 
+  const clearTimerRef : any = useRef();
   const handleFilter = useCallback((val: string) => {
     setSearchQuery(val)
-    dispatch(getProjects({ query: val, size: pageSize }))
+    clearTimeout(clearTimerRef.current)
+    const serachTimeout = setTimeout(() => {
+      dispatch(getProjects({ query: val, size: pageSize }))
+    }, 1500)
+    clearTimerRef.current = serachTimeout
   }, [])
 
   const toggleAddProjectDrawer = () => setAddProjectOpen(!addProjectOpen)

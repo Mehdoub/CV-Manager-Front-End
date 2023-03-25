@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 
 // ** Next Imports
 import Link from 'next/link'
@@ -191,9 +191,14 @@ const UserList = () => {
     dispatch(getUsers({ page: newPage, size: pageSize, query: searchQuery }))
   }
 
+  const clearTimerRef : any = useRef();
   const handleFilter = useCallback((val: string) => {
     setSearchQuery(val)
-    dispatch(getUsers({ query: val, size: pageSize }))
+    clearTimeout(clearTimerRef.current)
+    const serachTimeout = setTimeout(() => {
+      dispatch(getUsers({ query: val, size: pageSize }))
+    }, 1500)
+    clearTimerRef.current = serachTimeout
   }, [])
 
   return (

@@ -4,7 +4,8 @@ import {
   useEffect,
 
   //  MouseEvent,
-  useCallback
+  useCallback,
+  useRef
 } from 'react'
 
 // ** Next Imports
@@ -126,9 +127,14 @@ const PositionList = () => {
     setPage(newPage++)
     dispatch(getPositions({ page: newPage, size: pageSize, query: searchQuery }))
   }
+  const clearTimerRef : any = useRef();
   const handleFilter = useCallback((val: string) => {
     setSearchQuery(val)
-    dispatch(getPositions({ query: val, size: pageSize }))
+    clearTimeout(clearTimerRef.current)
+    const serachTimeout = setTimeout(() => {
+      dispatch(getPositions({ query: val, size: pageSize }))
+    }, 1500)
+    clearTimerRef.current = serachTimeout
   }, [])
 
   const toggleAddPositionDrawer = () => setAddPositionOpen(!addPositionOpen)
