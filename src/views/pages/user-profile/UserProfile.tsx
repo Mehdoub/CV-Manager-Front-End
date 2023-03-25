@@ -101,10 +101,6 @@ const UserProfile = ({ tab, data }: { tab: string; data: any }) => {
 
   const tabContentList: { [key: string]: ReactElement } = {
     profile: <Profile data={data as any} />
-
-    // teams: <Teams data={data?.teamsTech} />,
-    // projects: <Projects data={data as any} />,
-    // connections: <Connections data={data as any} />
   }
 
   return (
@@ -116,51 +112,6 @@ const UserProfile = ({ tab, data }: { tab: string; data: any }) => {
         <Grid item xs={12}>
           <TabContext value={activeTab}>
             <Grid container spacing={6}>
-              {/* <Grid item xs={12}>
-                <TabList
-                  variant='scrollable'
-                  scrollButtons='auto'
-                  onChange={handleChange}
-                  aria-label='customized tabs example'
-                >
-                  <Tab
-                    value='profile'
-                    label={
-                      <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 2 } }) }}>
-                        <Icon icon='mdi:account-outline' />
-                        {!hideText && 'Profile'}
-                      </Box>
-                    }
-                  />
-                  <Tab
-                    value='teams'
-                    label={
-                      <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 2 } }) }}>
-                        <Icon icon='mdi:account-multiple-outline' />
-                        {!hideText && 'Teams'}
-                      </Box>
-                    }
-                  />
-                  <Tab
-                    value='projects'
-                    label={
-                      <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 2 } }) }}>
-                        <Icon icon='mdi:view-grid-outline' />
-                        {!hideText && 'Projects'}
-                      </Box>
-                    }
-                  />
-                  <Tab
-                    value='connections'
-                    label={
-                      <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 2 } }) }}>
-                        <Icon icon='mdi:link-variant' />
-                        {!hideText && 'Connections'}
-                      </Box>
-                    }
-                  />
-                </TabList>
-              </Grid> */}
               <Grid item xs={12}>
                 {isLoading ? (
                   <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>

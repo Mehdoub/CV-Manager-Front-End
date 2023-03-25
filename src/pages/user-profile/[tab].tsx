@@ -23,7 +23,7 @@ any) => {
     setUserData({
       about: [
         { property: 'Full Name', value: `${jsonData?.firstname} ${jsonData?.lastname}`, icon: 'mdi:account-outline' },
-        { property: 'Status', value: 'active', icon: 'mdi:check' },
+        // { property: 'Status', value: 'active', icon: 'mdi:check' },
         { property: 'Role', value: jsonData?.role, icon: 'mdi:star-outline' },
         { property: 'Country', value: 'Iran', icon: 'mdi:flag-outline' },
         { property: 'Language', value: lang, icon: 'mdi:translate' }
@@ -86,7 +86,6 @@ any) => {
         { isFriend: false, connections: '1.2k', name: 'Eugenia Moore', avatar: '/images/avatars/8.png' }
       ]
     })
-    console.log(tab)
   }, [tab])
 
   return <UserProfile tab={tab} data={userData} />

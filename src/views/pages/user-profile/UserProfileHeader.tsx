@@ -10,6 +10,7 @@ import { styled } from '@mui/material/styles'
 import CardMedia from '@mui/material/CardMedia'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
+import CustomChip from 'src/@core/components/mui/chip'
 
 // ** Third Party Imports
 // import axios from 'axios'
@@ -21,6 +22,11 @@ import { UserDataType } from 'src/context/types'
 
 // ** Types
 // import { ProfileHeaderType } from 'src/@fake-db/types'
+
+const statusColors: any = {
+  active: 'success',
+  inactive: 'error'
+}
 
 const ProfilePicture = styled('img')(({ theme }) => ({
   width: 120,
@@ -76,6 +82,19 @@ const UserProfileHeader = () => {
           <Box sx={{ mb: [6, 0], display: 'flex', flexDirection: 'column', alignItems: ['center', 'flex-start'] }}>
             <Typography variant='h5' sx={{ mb: 4, fontSize: '1.375rem' }}>
               {`${data?.firstname} ${data?.lastname}`}
+              <CustomChip
+                skin='light'
+                size='small'
+                label={data?.is_banned ? 'inactive' : 'active'}
+                color={statusColors[data?.is_banned ? 'inactive' : 'active']}
+                sx={{
+                  height: 20,
+                  fontWeight: 500,
+                  fontSize: '0.75rem',
+                  borderRadius: '5px',
+                  textTransform: 'capitalize'
+                }}
+              />
             </Typography>
             <Box
               sx={{
@@ -94,7 +113,9 @@ const UserProfileHeader = () => {
               </Box>
               <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}>
                 <Icon icon='mdi:calendar-blank-outline' />
-                <Typography sx={{ color: 'text.secondary', fontWeight: 600 }}>Joined At {new Date(data?.createdAt as string).toDateString()}</Typography>
+                <Typography sx={{ color: 'text.secondary', fontWeight: 600 }}>
+                  Joined At {new Date(data?.createdAt as string).toDateString()}
+                </Typography>
               </Box>
             </Box>
           </Box>
