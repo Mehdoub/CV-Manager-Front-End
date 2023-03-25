@@ -92,7 +92,8 @@ const UserProfileHeader = () => {
                   fontWeight: 500,
                   fontSize: '0.75rem',
                   borderRadius: '5px',
-                  textTransform: 'capitalize'
+                  textTransform: 'capitalize',
+                  ml: 2
                 }}
               />
             </Typography>
