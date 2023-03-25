@@ -20,28 +20,49 @@ import ReactApexcharts from 'src/@core/components/react-apexcharts'
 
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
+import { useSelector } from 'react-redux'
 
-const series = [
-  {
-    type: 'column',
-    name: 'Hired',
-    data: [90, 52, 67, 45, 75, 55, 48]
-  },
-  {
-    type: 'column',
-    name: 'Rejected',
-    data: [-53, -29, -67, -84, -60, -40, -77]
-  },
-  // {
-  //   type: 'line',
-  //   name: 'Average',
-  //   data: [73, 20, 50, -20, 58, 15, 31]
-  // }
-]
 
 const AnalyticsWeeklySales = () => {
   // ** Hook
   const theme = useTheme()
+
+  let series : any = [
+    {
+      type: 'column',
+      name: 'Received',
+      data: []
+    },
+    // {
+    //   type: 'column',
+    //   name: 'Rejected',
+    //   data: [-53, -29, -67, -84, -60, -40, -77]
+    // }
+    // {
+    //   type: 'line',
+    //   name: 'Average',
+    //   data: [73, 20, 50, -20, 58, 15, 31]
+    // }
+  ]
+  
+  const { data: statisticsResumeCountFromMonth } = useSelector(
+    (state: any) => state.companyStatisticsResumeCountFromMonth
+  )
+
+  let categories = []
+  let totalResumesNumber = 0
+
+  if (statisticsResumeCountFromMonth?.data) {
+    for (let [date, count] of Object.entries(statisticsResumeCountFromMonth?.data)) {
+      if (categories.length <= 7) {
+        categories.push(date)
+        series[0].data.push(count)
+        totalResumesNumber += count as number
+      }
+    }
+  }
+
+  const receivingRate = totalResumesNumber > 0 ? totalResumesNumber / (categories.length ?? 1) : 0
 
   const options: ApexOptions = {
     chart: {
@@ -95,14 +116,14 @@ const AnalyticsWeeklySales = () => {
     xaxis: {
       axisTicks: { show: false },
       axisBorder: { show: false },
-      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
+      categories: categories,
       labels: {
         style: { colors: theme.palette.text.disabled }
       }
     },
     yaxis: {
       max: 100,
-      min: -90,
+      min: 0,
       show: false
     }
   }
@@ -110,16 +131,16 @@ const AnalyticsWeeklySales = () => {
   return (
     <Card>
       <CardHeader
-        title='Monthly Received Resumes'
-        subheader='Total 854 Resumes'
+        title='Monthly Received Resume(s)'
+        subheader={`Total ${totalResumesNumber} Resume(s)`}
         subheaderTypographyProps={{ sx: { lineHeight: 1.429 } }}
         titleTypographyProps={{ sx: { letterSpacing: '0.15px' } }}
-        action={
-          <OptionsMenu
-            options={['Refresh', 'Edit', 'Share']}
-            iconButtonProps={{ size: 'small', className: 'card-more-options' }}
-          />
-        }
+        // action={
+        //   <OptionsMenu
+        //     options={['Refresh', 'Edit', 'Share']}
+        //     iconButtonProps={{ size: 'small', className: 'card-more-options' }}
+        //   />
+        // }
       />
       <CardContent
         sx={{
@@ -134,19 +155,8 @@ const AnalyticsWeeklySales = () => {
                 <Icon icon='mdi:trending-up' />
               </CustomAvatar>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant='caption'>Hiration Rate</Typography>
-                <Typography sx={{ fontWeight: 600 }}>43</Typography>
-              </Box>
-            </Box>
-          </Grid>
-          <Grid item xs={6}>
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <CustomAvatar skin='light' sx={{ mr: 4 }} color='error' variant='rounded'>
-                <Icon icon='mdi:cancel-circle-outline' />
-              </CustomAvatar>
-              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography variant='caption'>Rejection Rate</Typography>
-                <Typography sx={{ fontWeight: 600 }}>225</Typography>
+                <Typography variant='caption'>Receiving Rate</Typography>
+                <Typography sx={{ fontWeight: 600 }}>{receivingRate}</Typography>
               </Box>
             </Box>
           </Grid>

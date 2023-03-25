@@ -14,16 +14,28 @@ import ReactApexcharts from 'src/@core/components/react-apexcharts'
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 
-const series = [
-  {
-    name: 'Resumes',
-    data: [171, 138, 123, 95, 78]
-  }
-]
-
-const AnalyticsSalesCountry = ({ title, categories }: { title: string; categories: string[] }) => {
+const ResumesPerProjectsStats = ({ title, projects }: { title: string; projects: any }) => {
   // ** Hook
   const theme = useTheme()
+
+  let categories: any = []
+  let series = [
+    {
+      name: 'Resumes',
+      data: [] as any
+    }
+  ]
+  let totalResumesNumber = 0
+
+  if (projects && projects.length > 0) {
+    projects.map((item: any, index: number) => {
+      if (index < 5) {
+        categories.push(item?.project?.name)
+        series[0].data.push(item?.count)
+        totalResumesNumber += item?.count
+      }
+    })
+  }
 
   const options: ApexOptions = {
     chart: {
@@ -83,11 +95,7 @@ const AnalyticsSalesCountry = ({ title, categories }: { title: string; categorie
       axisBorder: { show: false },
       categories: categories,
       labels: {
-        formatter: val => `${Number(val)}`,
-        style: {
-          fontSize: '0.875rem',
-          colors: theme.palette.text.disabled
-        }
+        show: false
       }
     },
     yaxis: {
@@ -106,15 +114,15 @@ const AnalyticsSalesCountry = ({ title, categories }: { title: string; categorie
     <Card>
       <CardHeader
         title={title}
-        subheader='Total 452 Resumes'
+        subheader={`Total ${totalResumesNumber} Resume(s)`}
         subheaderTypographyProps={{ sx: { lineHeight: 1.429 } }}
         titleTypographyProps={{ sx: { letterSpacing: '0.15px' } }}
-        action={
-          <OptionsMenu
-            options={['Last 28 Days', 'Last Month', 'Last Year']}
-            iconButtonProps={{ size: 'small', className: 'card-more-options' }}
-          />
-        }
+        // action={
+        //   <OptionsMenu
+        //     options={['Last 28 Days', 'Last Month', 'Last Year']}
+        //     iconButtonProps={{ size: 'small', className: 'card-more-options' }}
+        //   />
+        // }
       />
       <CardContent
         sx={{
@@ -134,4 +142,4 @@ const AnalyticsSalesCountry = ({ title, categories }: { title: string; categorie
   )
 }
 
-export default AnalyticsSalesCountry
+export default ResumesPerProjectsStats

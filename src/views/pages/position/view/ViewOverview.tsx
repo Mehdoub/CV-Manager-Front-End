@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid'
-import AnalyticsSalesCountry from 'src/views/statistics/AnalyticsSalesCountry'
+import ResumesPerProjectsStats from 'src/views/statistics/ResumesPerProjectsStats'
 import Icon from 'src/@core/components/icon'
 import CardStatisticsVertical from 'src/@core/components/card-statistics/card-stats-vertical'
 import AnalyticsTotalRevenue from 'src/views/statistics/AnalyticsTotalRevenue'

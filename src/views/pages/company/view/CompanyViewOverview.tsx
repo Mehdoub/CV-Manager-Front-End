@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid'
-import AnalyticsSalesCountry from 'src/views/statistics/AnalyticsSalesCountry'
+import ResumesPerProjectsStats from 'src/views/statistics/ResumesPerProjectsStats'
 import Icon from 'src/@core/components/icon'
 import CardStatisticsVertical from 'src/@core/components/card-statistics/card-stats-vertical'
 import AnalyticsTotalRevenue from 'src/views/statistics/AnalyticsTotalRevenue'
@@ -39,10 +39,7 @@ const CompanyViewOverview = () => {
           loading={loadingStatisticsResumeCountByProjects}
           height={425}
           component={
-            <AnalyticsSalesCountry
-              categories={['BPM', 'PSP', 'Google', 'DigiKala', 'Pelazio']}
-              title="Projects' Resumes Number"
-            />
+            <ResumesPerProjectsStats projects={statisticsResumeCountByProjects} title="Projects' Resumes Number" />
           }
         />
       </Grid>

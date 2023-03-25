@@ -482,7 +482,7 @@ const companyStatisticsResumeCountByProjectsSlice = createSlice({
   initialState: sliceInitialStateWithData,
   reducers: {},
   extraReducers: (builder) => {
-    createExtraReducers(builder, getCompanyStatisticsResumeCountByProjects, true, true)
+    createExtraReducers(builder, getCompanyStatisticsResumeCountByProjects, true)
   }
 })
 

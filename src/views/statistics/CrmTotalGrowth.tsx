@@ -19,30 +19,23 @@ const CrmTotalGrowth = ({ statsData }: TotalGrothStatsProps) => {
   // ** Hook
   const theme = useTheme()
 
-  let statsLabels = []
+  let statsLabels : any = []
   let statsNumbers: Array<number> = []
   let totalNumber = 0
 
-  if (statsData) {
-    for (let [label, value] of Object.entries(statsData)) {
-      totalNumber += value as number
-      statsLabels.push(label)
-      statsNumbers.push(value as number)
-    }
+  if (statsData.length > 0) {
+    statsData.map((item:any, index:number) => {
+      totalNumber += item?.count as number
+      statsLabels.push(item?.state)
+      statsNumbers.push(item?.count as number)
+    })
     statsNumbers = statsNumbers.map(item => item / (totalNumber > 0 ? totalNumber : 1) * 100)
   } else {
     statsLabels = [
-      'Pending',
-      'Hired',
-      'Rejected',
-      'Call Review',
-      'Tech Review',
-      'Wait Review',
-      'Wait Reject',
-      'Wait Hire'
+      ''
     ]
-    statsNumbers = [35, 30, 65, 20, 40, 45, 50, 30]
-    totalNumber = 2796
+    statsNumbers = [0]
+    totalNumber = 0
   }
 
   const options: ApexOptions = {

@@ -27,9 +27,8 @@ const CompanyView = ({ tab, companyId }: Props) => {
   const { loading: statisticsResumeByStatesLoading, data: statisticsResumeByStates } = useSelector(
     (state: any) => state.companyStatisticsResumeByStates
   )
-  const { loading: statisticsResumeStatesInLastMonthLoading, data: statisticsResumeStatesInLastMonth } = useSelector(
-    (state: any) => state.companyStatisticsResumeStatesInLastMonth
-  )
+  const { loading: statisticsResumeStatesInLastMonthLoading, data: statisticsResumeStatesInLastMonth }: any =
+    useSelector((state: any) => state.companyStatisticsResumeStatesInLastMonth)
 
   useEffect(() => {
     if (company?.id) {
@@ -50,9 +49,9 @@ const CompanyView = ({ tab, companyId }: Props) => {
               <Skeleton variant='rounded' height={200} />
             ) : (
               <CardStatisticsVertical
-                stats='924'
+                stats='0'
                 color='primary'
-                trendNumber='+73%'
+                trendNumber='0%'
                 title='Total Received Resumes'
                 chipText='Last Month'
                 icon={<Icon icon='material-symbols:quick-reference-all-outline-rounded' />}
@@ -66,9 +65,9 @@ const CompanyView = ({ tab, companyId }: Props) => {
               <Skeleton variant='rounded' height={200} />
             ) : (
               <CardStatisticsVertical
-                stats='568'
+                stats='0'
                 color='error'
-                trendNumber='+38%'
+                trendNumber='0%'
                 title='Rejected Resumes'
                 chipText='Last Month'
                 icon={<Icon icon='mdi:account-cancel' />}
@@ -82,14 +81,14 @@ const CompanyView = ({ tab, companyId }: Props) => {
               <Skeleton variant='rounded' height={200} />
             ) : (
               <CardStatisticsVertical
-                stats='142'
+                stats='0'
                 color='success'
-                trendNumber='+22%'
+                trendNumber='0%'
                 title='Hired Resumes'
                 chipText='Last Month'
                 icon={<Icon icon='mdi:user-check' />}
                 statsData={statisticsResumeStatesInLastMonth}
-                type='pending'
+                type='hired'
               />
             )}
           </Grid>
@@ -97,7 +96,7 @@ const CompanyView = ({ tab, companyId }: Props) => {
             {statisticsResumeByStatesLoading ? (
               <Skeleton variant='rounded' height={200} />
             ) : (
-              <CrmTotalGrowth statsData={statisticsResumeByStates?.total_resume_by_states} />
+              <CrmTotalGrowth statsData={statisticsResumeByStates} />
             )}
           </Grid>
         </Grid>
