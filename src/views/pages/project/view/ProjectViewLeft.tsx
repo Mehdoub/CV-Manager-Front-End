@@ -65,7 +65,11 @@ const ProjectViewLeft = ({ projectId }: Props) => {
 
   const dispatch = useDispatch()
   const store = useSelector((state: any) => state.projectFind)
-  const { data: project, loading } = store
+  const { data: project, loading, errors } = store
+
+  useEffect(() => {
+    if ([404, 400].includes(errors?.status)) location.href = '/404'
+  }, [errors])
 
   useEffect(() => {
     if (projectId) dispatch(getProject(projectId))

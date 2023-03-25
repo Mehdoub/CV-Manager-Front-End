@@ -52,13 +52,17 @@ const CompanyViewLeft = ({ companyId }: Props) => {
 
   const dispatch = useDispatch()
   const store = useSelector((state: any) => state.company)
-  const { data: company, loading } = store
+  const { data: company, loading, errors } = store
 
   useEffect(() => {
     if (companyId) {
       dispatch(getCompany(companyId))
     }
   }, [companyId])
+
+  useEffect(() => {
+    if ([404, 400].includes(errors?.status)) location.href = '/404'
+  }, [errors])
 
   // Handle Edit dialog
   const handleEditClickOpen = () => setOpenEdit(true)

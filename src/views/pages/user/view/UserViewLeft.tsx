@@ -91,7 +91,11 @@ const UserViewLeft = ({ userId }: Props) => {
 
   const dispatch = useDispatch()
 
-  const { data: user, loading } = useSelector((state: any) => state.user)
+  const { data: user, loading, errors } = useSelector((state: any) => state.user)
+
+  useEffect(() => {
+    if ([404].includes(errors?.status)) location.href = '/404'
+  }, [errors])
 
   useEffect(() => {
     if (userId) dispatch(getUser(userId))
