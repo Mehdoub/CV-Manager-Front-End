@@ -17,7 +17,7 @@ import Link from 'next/link'
 import { AvatarGroup, Button, Grid, Skeleton } from '@mui/material'
 import { BootstrapTooltip } from 'src/pages/companies'
 import { getProjectPositions } from 'src/store/project'
-import { getFullName } from 'src/helpers/functions'
+import { getFullName, getImagePath } from 'src/helpers/functions'
 import { getInitials } from 'src/@core/utils/get-initials'
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -33,7 +33,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 
 const renderClient = (row: any, field = 'logo') => {
   if (row[field]?.length) {
-    return <CustomAvatar src={row[field]} sx={{ mr: 3, width: 34, height: 34 }} />
+    return <CustomAvatar src={getImagePath(row[field])} sx={{ mr: 3, width: 34, height: 34 }} />
   } else {
     return (
       <CustomAvatar skin='light' color='primary' sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}>

@@ -198,7 +198,7 @@ const PositionEditDialog = (props: Props) => {
                   renderFilePreview(files[0])
                 ) : position?.logo ? (
                   <CustomAvatar
-                    src={position?.logo}
+                    src={getImagePath(position?.logo)}
                     variant='rounded'
                     alt={position?.name}
                     sx={{

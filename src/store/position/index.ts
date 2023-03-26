@@ -94,7 +94,23 @@ export const createPosition: any = createAsyncThunk(
   async (data: any,
     { rejectWithValue }) => {
     try {
+      let positionLogo: any
+
+      if (data?.logo) {
+        positionLogo = data?.logo
+        delete data.logo
+      }
+
       const response = await ApiRequest.builder().auth().request('post', 'positions', data)
+
+      const newPositionId = response?.data?.data[0]?.id
+
+      if (positionLogo && newPositionId) {
+        await ApiRequest.builder()
+          .auth()
+          .contentType('multipart/form-data')
+          .request('patch', `positions/${newPositionId}/logo`, { logo: positionLogo })
+      }
 
       return response
     } catch (err: any) {

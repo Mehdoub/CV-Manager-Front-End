@@ -24,7 +24,18 @@ import Icon from 'src/@core/components/icon'
 // ** Third Party Components
 import toast from 'react-hot-toast'
 import { useDropzone } from 'react-dropzone'
-import { Autocomplete, Avatar, CircularProgress, InputLabel, List, ListItem, ListItemAvatar, ListItemText, MenuItem, Select } from '@mui/material'
+import {
+  Autocomplete,
+  Avatar,
+  CircularProgress,
+  InputLabel,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  MenuItem,
+  Select
+} from '@mui/material'
 import { useDispatch } from 'react-redux'
 import { clearPositionCreate, createPosition, getPositions } from 'src/store/position'
 import { getImagePath, setServerValidationErrors } from 'src/helpers/functions'
@@ -145,10 +156,11 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
 
   const onSubmit = (data: any) => {
     const newProject = projectId ?? positionProject?.id
+    if (files[0]) {
+      data = { ...data, logo: files[0] }
+    }
     if (!newProject) setProjectErr('Project Cannot Be Empty!')
-    else dispatch(
-      createPosition({ title: data?.title, project_id: newProject, level: data?.level, description: data?.description })
-    )
+    else dispatch(createPosition({ ...data, project_id: newProject }))
   }
 
   const handleClose = () => {
@@ -194,7 +206,6 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
     const query = value?.target?.value
     if (query?.length > 0) dispatch(getProjects({ query }))
   }
-
 
   return (
     <Drawer
@@ -294,7 +305,11 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
                 renderOption={(props, projectItem) => (
                   <ListItem {...props}>
                     <ListItemAvatar>
-                      <Avatar src={getImagePath(projectItem?.logo)} alt={projectItem?.name} sx={{ height: 28, width: 28 }} />
+                      <Avatar
+                        src={getImagePath(projectItem?.logo)}
+                        alt={projectItem?.name}
+                        sx={{ height: 28, width: 28 }}
+                      />
                     </ListItemAvatar>
                     <ListItemText primary={projectItem?.name} />
                   </ListItem>

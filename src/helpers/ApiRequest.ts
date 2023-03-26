@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse, CancelTokenSource } from 'axi
 import authConfig from 'src/configs/auth'
 import { toastError } from './functions'
 
-interface requestConfig {
+interface RequestConfig {
   header: {
     'Content-Type': string
     authorization?: string | null
@@ -20,7 +20,7 @@ export default class ApiRequest {
   private accessToken: string
   private refreshToken: string
   private baseUrl: string
-  private defaultConf: requestConfig
+  private defaultConf: RequestConfig
   private needAuth: boolean = false
   private pageNumber: number | null = null
   private responseSize: number | null = null
