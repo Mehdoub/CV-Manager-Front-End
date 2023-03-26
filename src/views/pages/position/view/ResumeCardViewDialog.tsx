@@ -36,283 +36,137 @@ import ChatLog from './ChatLog'
 const previousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
 const dayBeforePreviousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 2)
 
-const data: { chats: ChatsObj[]; contacts: ContactType[]; profileUser: ProfileUserType } = {
-  profileUser: {
-    id: 11,
-    avatar: '/images/avatars/1.png',
-    fullName: 'John Doe',
-    role: 'admin',
-    about:
-      'Dessert chocolate cake lemon drops jujubes. Biscuit cupcake ice cream bear claw brownie brownie marshmallow.',
-    status: 'online',
-    settings: {
-      isTwoStepAuthVerificationEnabled: true,
-      isNotificationsOn: false
+const renderMsgFeedback = (isSender: boolean, feedback: any) => {
+  if (isSender) {
+    if (feedback.isSent && !feedback.isDelivered) {
+      return (
+        <Box component='span' sx={{ display: 'inline-flex', '& svg': { mr: 2, color: 'text.secondary' } }}>
+          <Icon icon='mdi:check' fontSize='1rem' />
+        </Box>
+      )
+    } else if (feedback.isSent && feedback.isDelivered) {
+      return (
+        <Box
+          component='span'
+          sx={{
+            display: 'inline-flex',
+            '& svg': { mr: 2, color: feedback.isSeen ? 'success.main' : 'text.secondary' }
+          }}
+        >
+          <Icon icon='mdi:check-all' fontSize='1rem' />
+        </Box>
+      )
+    } else {
+      return null
     }
-  },
-  contacts: [
+  }
+}
+
+const cahtExample = {
+  id: 1,
+  userId: 1,
+  unseenMsgs: 1,
+  chat: [
     {
-      id: 1,
-      fullName: 'Felecia Rower',
-      role: 'Frontend Developer',
-      about: 'Cake pie jelly jelly beans. Marzipan lemon drops halvah cake. Pudding cookie lemon drops icing',
-      avatar: '/images/avatars/2.png',
-      status: 'offline'
+      message: "How can we help? We're here for you!",
+      time: '14 mins',
+      senderId: 11,
+      feedback: {
+        isSent: true,
+        isDelivered: true,
+        isSeen: true
+      }
     },
     {
-      id: 2,
-      fullName: 'Adalberto Granzin',
-      role: 'UI/UX Designer',
-      avatarColor: 'primary',
-      about:
-        'Toffee caramels jelly-o tart gummi bears cake I love ice cream lollipop. Sweet liquorice croissant candy danish dessert icing. Cake macaroon gingerbread toffee sweet.',
-      status: 'busy'
+      message:
+        'Hey John, I am looking for the best admin template. Could you please help me to find it out? Hey John, I am looking for the best admin template. Could you please help me to find it out?',
+      time: '1 hour',
+      senderId: 1,
+      feedback: {
+        isSent: true,
+        isDelivered: true,
+        isSeen: true
+      }
     },
     {
-      id: 3,
-      fullName: 'Joaquina Weisenborn',
-      role: 'Town planner',
-      about:
-        'Soufflé soufflé caramels sweet roll. Jelly lollipop sesame snaps bear claw jelly beans sugar plum sugar plum.',
-      avatar: '/images/avatars/8.png',
-      status: 'busy'
+      message: 'It should be MUI v5 compatible.',
+      time: '3 hours',
+      senderId: 1,
+      feedback: {
+        isSent: true,
+        isDelivered: true,
+        isSeen: true
+      }
     },
     {
-      id: 4,
-      fullName: 'Verla Morgano',
-      role: 'Data scientist',
-      about:
-        'Chupa chups candy canes chocolate bar marshmallow liquorice muffin. Lemon drops oat cake tart liquorice tart cookie. Jelly-o cookie tootsie roll halvah.',
-      avatar: '/images/avatars/3.png',
-      status: 'online'
+      message: 'Absolutely!',
+      time: '7 hours',
+      senderId: 11,
+      feedback: {
+        isSent: true,
+        isDelivered: true,
+        isSeen: true
+      }
     },
     {
-      id: 5,
-      fullName: 'Margot Henschke',
-      role: 'Dietitian',
-      avatarColor: 'success',
-      about: 'Cake pie jelly jelly beans. Marzipan lemon drops halvah cake. Pudding cookie lemon drops icing',
-      status: 'busy'
+      message: 'This admin template is built with MUI!',
+      time: 'yesterday',
+      senderId: 11,
+      feedback: {
+        isSent: true,
+        isDelivered: true,
+        isSeen: true
+      }
     },
     {
-      id: 6,
-      fullName: 'Sal Piggee',
-      role: 'Marketing executive',
-      about:
-        'Toffee caramels jelly-o tart gummi bears cake I love ice cream lollipop. Sweet liquorice croissant candy danish dessert icing. Cake macaroon gingerbread toffee sweet.',
-      avatar: '/images/avatars/5.png',
-      status: 'online'
+      message: 'Looks clean and fresh UI. 😍',
+      time: 'yesterday',
+      senderId: 1,
+      feedback: {
+        isSent: true,
+        isDelivered: true,
+        isSeen: true
+      }
     },
     {
-      id: 7,
-      fullName: 'Miguel Guelff',
-      role: 'Special educational needs teacher',
-      about:
-        'Biscuit powder oat cake donut brownie ice cream I love soufflé. I love tootsie roll I love powder tootsie roll.',
-      avatar: '/images/avatars/7.png',
-      status: 'online'
+      message: "It's perfect for my next project.",
+      time: 'yesterday',
+      senderId: 1,
+      feedback: {
+        isSent: true,
+        isDelivered: true,
+        isSeen: true
+      }
     },
     {
-      id: 8,
-      fullName: 'Mauro Elenbaas',
-      role: 'Advertising copywriter',
-      about:
-        'Bear claw ice cream lollipop gingerbread carrot cake. Brownie gummi bears chocolate muffin croissant jelly I love marzipan wafer.',
-      avatar: '/images/avatars/6.png',
-      status: 'away'
+      message: 'How can I purchase it?',
+      time: 'yesterday',
+      senderId: 1,
+      feedback: {
+        isSent: true,
+        isDelivered: true,
+        isSeen: true
+      }
     },
     {
-      id: 9,
-      avatarColor: 'warning',
-      fullName: 'Bridgett Omohundro',
-      role: 'Designer, television/film set',
-      about:
-        'Gummies gummi bears I love candy icing apple pie I love marzipan bear claw. I love tart biscuit I love candy canes pudding chupa chups liquorice croissant.',
-      status: 'offline'
+      message: 'Thanks, From our official site  😇',
+      time: '2 days',
+      senderId: 11,
+      feedback: {
+        isSent: true,
+        isDelivered: true,
+        isSeen: true
+      }
     },
     {
-      id: 10,
-      avatarColor: 'error',
-      fullName: 'Zenia Jacobs',
-      role: 'Building surveyor',
-      about: 'Cake pie jelly jelly beans. Marzipan lemon drops halvah cake. Pudding cookie lemon drops icing',
-      status: 'away'
-    }
-  ],
-  chats: [
-    {
-      id: 1,
-      userId: 1,
-      unseenMsgs: 1,
-      chat: [
-        {
-          message: "How can we help? We're here for you!",
-          time: 'Mon Dec 10 2018 07:45:00 GMT+0000 (GMT)',
-          senderId: 11,
-          feedback: {
-            isSent: true,
-            isDelivered: true,
-            isSeen: true
-          }
-        },
-        {
-          message: 'Hey John, I am looking for the best admin template. Could you please help me to find it out?',
-          time: 'Mon Dec 10 2018 07:45:23 GMT+0000 (GMT)',
-          senderId: 1,
-          feedback: {
-            isSent: true,
-            isDelivered: true,
-            isSeen: true
-          }
-        },
-        {
-          message: 'It should be MUI v5 compatible.',
-          time: 'Mon Dec 10 2018 07:45:55 GMT+0000 (GMT)',
-          senderId: 1,
-          feedback: {
-            isSent: true,
-            isDelivered: true,
-            isSeen: true
-          }
-        },
-        {
-          message: 'Absolutely!',
-          time: 'Mon Dec 10 2018 07:46:00 GMT+0000 (GMT)',
-          senderId: 11,
-          feedback: {
-            isSent: true,
-            isDelivered: true,
-            isSeen: true
-          }
-        },
-        {
-          message: 'This admin template is built with MUI!',
-          time: 'Mon Dec 10 2018 07:46:05 GMT+0000 (GMT)',
-          senderId: 11,
-          feedback: {
-            isSent: true,
-            isDelivered: true,
-            isSeen: true
-          }
-        },
-        {
-          message: 'Looks clean and fresh UI. 😍',
-          time: 'Mon Dec 10 2018 07:46:23 GMT+0000 (GMT)',
-          senderId: 1,
-          feedback: {
-            isSent: true,
-            isDelivered: true,
-            isSeen: true
-          }
-        },
-        {
-          message: "It's perfect for my next project.",
-          time: 'Mon Dec 10 2018 07:46:33 GMT+0000 (GMT)',
-          senderId: 1,
-          feedback: {
-            isSent: true,
-            isDelivered: true,
-            isSeen: true
-          }
-        },
-        {
-          message: 'How can I purchase it?',
-          time: 'Mon Dec 10 2018 07:46:43 GMT+0000 (GMT)',
-          senderId: 1,
-          feedback: {
-            isSent: true,
-            isDelivered: true,
-            isSeen: true
-          }
-        },
-        {
-          message: 'Thanks, From our official site  😇',
-          time: 'Mon Dec 10 2018 07:46:53 GMT+0000 (GMT)',
-          senderId: 11,
-          feedback: {
-            isSent: true,
-            isDelivered: true,
-            isSeen: true
-          }
-        },
-        {
-          message: 'I will purchase it for sure. 👍',
-          time: previousDay,
-          senderId: 1,
-          feedback: {
-            isSent: true,
-            isDelivered: true,
-            isSeen: true
-          }
-        }
-      ]
-    },
-    {
-      id: 2,
-      userId: 2,
-      unseenMsgs: 0,
-      chat: [
-        {
-          message: 'Hi',
-          time: 'Mon Dec 10 2018 07:45:00 GMT+0000 (GMT)',
-          senderId: 11,
-          feedback: {
-            isSent: true,
-            isDelivered: true,
-            isSeen: true
-          }
-        },
-        {
-          message: 'Hello. How can I help You?',
-          time: 'Mon Dec 11 2018 07:45:15 GMT+0000 (GMT)',
-          senderId: 2,
-          feedback: {
-            isSent: true,
-            isDelivered: true,
-            isSeen: true
-          }
-        },
-        {
-          message: 'Can I get details of my last transaction I made last month? 🤔',
-          time: 'Mon Dec 11 2018 07:46:10 GMT+0000 (GMT)',
-          senderId: 11,
-          feedback: {
-            isSent: true,
-            isDelivered: true,
-            isSeen: true
-          }
-        },
-        {
-          message: 'We need to check if we can provide you such information.',
-          time: 'Mon Dec 11 2018 07:45:15 GMT+0000 (GMT)',
-          senderId: 2,
-          feedback: {
-            isSent: true,
-            isDelivered: true,
-            isSeen: true
-          }
-        },
-        {
-          message: 'I will inform you as I get update on this.',
-          time: 'Mon Dec 11 2018 07:46:15 GMT+0000 (GMT)',
-          senderId: 2,
-          feedback: {
-            isSent: true,
-            isDelivered: true,
-            isSeen: true
-          }
-        },
-        {
-          message: 'If it takes long you can mail me at my mail address.',
-          time: dayBeforePreviousDay,
-          senderId: 11,
-          feedback: {
-            isSent: true,
-            isDelivered: false,
-            isSeen: false
-          }
-        }
-      ]
+      message: 'I will purchase it for sure. 👍',
+      time: '3 days',
+      senderId: 1,
+      feedback: {
+        isSent: true,
+        isDelivered: true,
+        isSeen: true
+      }
     }
   ]
 }
@@ -353,6 +207,7 @@ const tags = [
 ]
 
 const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialogProps) => {
+  const isSender = false
   const [activeTab, setActiveTab] = useState<string>('details')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [msg, setMsg] = useState<string>('')
@@ -367,6 +222,8 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
   const handleChange = (e: any, value: string) => {
     setActiveTab(value)
   }
+
+  let avatarId = 3
 
   return (
     <Dialog fullWidth maxWidth='90%' scroll='body' onClose={toggle} open={open}>
@@ -516,9 +373,99 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
             </TabContext>
           </Grid>
           <Divider sx={{ minHeight: '600px', m: '0px' }} orientation='vertical' flexItem />
-          <Grid xs item sx={{ backgroundColor: '#4c4e640d', display: 'flex', alignItems: 'end' }}>
-            <ChatLog hidden={false} data={data} />
-            <Grid md={12}>
+          <Grid xs item container sx={{ backgroundColor: '#4c4e640d', display: 'flex', alignItems: 'end' }}>
+            <Grid md={12} item className='chat-body' sx={{ maxHeight: '500px', overflowY: 'scroll', p: 4 }}>
+              {cahtExample.chat.map((chat: any, index: number, { length }: { length: number }) => {
+                avatarId = avatarId == 3 ? 5 : 3
+                return (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: !isSender ? 'row' : 'row-reverse',
+                      p: 2
+                    }}
+                  >
+                    <div>
+                      <CustomAvatar
+                        skin='light'
+                        color={'error'}
+                        sx={{
+                          width: '2.45rem',
+                          height: '2.45rem',
+                          fontSize: '0.875rem',
+                          ml: isSender ? 4 : undefined,
+                          mr: !isSender ? 4 : undefined
+                        }}
+                        {...{
+                          src: `/images/avatars/${avatarId}.png`,
+                          alt: 'John Doe'
+                        }}
+                      >
+                        {getInitials('John Doe')}
+                      </CustomAvatar>
+                    </div>
+                    <Box
+                      key={index}
+                      sx={{
+                        '&:not(:last-of-type)': { mb: 3.5 },
+                        width: '100%',
+                        border: 'solid rgba(76, 78, 100, 0.12) 1px',
+                        borderRadius: 1,
+                        backgroundColor: 'background.paper',
+                        color: 'text.primary'
+                      }}
+                    >
+                      <div>
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between'
+                          }}
+                        >
+                          <Typography
+                            sx={{
+                              fontSize: '0.875rem',
+                              p: theme => theme.spacing(3, 4),
+                              color: 'primary.main'
+                              // backgroundColor: 'primary.main',
+                            }}
+                          >
+                            Mahdi Amereh
+                          </Typography>
+                          <Typography variant='caption' sx={{ color: 'text.disabled', mr: 2 }}>
+                            {chat.time}
+                          </Typography>
+                        </div>
+                        <Typography
+                          sx={{
+                            fontSize: '0.875rem',
+                            fontWeight: 500,
+                            p: theme => theme.spacing(3, 4)
+                            // color: 'common.white',
+                            // backgroundColor: 'primary.main',
+                          }}
+                        >
+                          {chat.message}
+                        </Typography>
+                      </div>
+                      <Box
+                        sx={{
+                          mt: 1,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: isSender ? 'flex-end' : 'flex-start'
+                        }}
+                      >
+                        {renderMsgFeedback(isSender, chat.feedback)}
+                      </Box>
+                    </Box>
+                  </Box>
+                )
+              })}
+            </Grid>
+
+            <Grid md={12} item>
               <Form onSubmit={handleSendMsg}>
                 <ChatFormWrapper>
                   <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
