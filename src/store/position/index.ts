@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ApiRequest from "src/helpers/ApiRequest";
-import { clearStatesAction, createExtraReducers, sliceInitialStateWithStatus } from "src/helpers/functions";
+import { clearStatesAction, createExtraReducers, popObjectItemByKey, sliceInitialStateWithStatus } from "src/helpers/functions";
 import { PositionEditData } from "src/views/pages/position/view/PositionEditDialog";
 
 
@@ -94,12 +94,7 @@ export const createPosition: any = createAsyncThunk(
   async (data: any,
     { rejectWithValue }) => {
     try {
-      let positionLogo: any
-
-      if (data?.logo) {
-        positionLogo = data?.logo
-        delete data.logo
-      }
+      let positionLogo = popObjectItemByKey(data, 'logo')
 
       const response = await ApiRequest.builder().auth().request('post', 'positions', data)
 
@@ -382,14 +377,8 @@ export const editPosition: any = createAsyncThunk(
   async (data: PositionEditData,
     { rejectWithValue }) => {
     try {
-      const positionId = data.positionId
-      delete data.positionId
-      let positionLogo: any
-
-      if (data?.logo) {
-        positionLogo = data?.logo
-        delete data.logo
-      }
+      const positionId = popObjectItemByKey(data, 'positionId')
+      const positionLogo = popObjectItemByKey(data, 'logo')
 
       const response = await ApiRequest.builder().auth().request('patch', `positions/${positionId}`, data)
 

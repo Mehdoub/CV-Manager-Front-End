@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ApiRequest from "src/helpers/ApiRequest";
-import { createExtraReducers, defaultFulfilledStatesValue, defaultPendingStatesValue, defaultRejectedStatesValue, sliceInitialStateWithData, sliceInitialStateWithStatus } from "src/helpers/functions";
+import { createExtraReducers, defaultFulfilledStatesValue, defaultPendingStatesValue, defaultRejectedStatesValue, popObjectItemByKey, sliceInitialStateWithData, sliceInitialStateWithStatus } from "src/helpers/functions";
 import { CompanyFormData } from "src/views/pages/company/list/AddCompanyDrawer";
 import { CompanyEditData } from "src/views/pages/company/view/CompanyEditDialog";
 
@@ -251,12 +251,7 @@ export const createCompany: any = createAsyncThunk(
   async (data: CompanyFormData,
     { rejectWithValue }) => {
     try {
-      let companyLogo: any
-
-      if (data?.logo) {
-        companyLogo = data?.logo
-        delete data.logo
-      }
+      const companyLogo = popObjectItemByKey(data, 'logo')
 
       const response = await ApiRequest.builder().auth().request('post', 'companies', data)
 
@@ -304,14 +299,8 @@ export const editCompany: any = createAsyncThunk(
   async (data: CompanyEditData,
     { rejectWithValue }) => {
     try {
-      const { companyId } = data
-      delete data.companyId
-      let companyLogo: any
-
-      if (data?.logo) {
-        companyLogo = data?.logo
-        delete data.logo
-      }
+      const companyId = popObjectItemByKey(data, 'companyId')
+      const companyLogo = popObjectItemByKey(data, 'logo')
 
       const response = await ApiRequest.builder().auth().request('patch', `companies/${companyId}`, data)
 

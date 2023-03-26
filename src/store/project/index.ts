@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ApiRequest from "src/helpers/ApiRequest";
-import { defaultFulfilledStatesValue, defaultPendingStatesValue, defaultRejectedStatesValue, sliceInitialStateWithData, sliceInitialStateWithStatus } from "src/helpers/functions";
+import { defaultFulfilledStatesValue, defaultPendingStatesValue, defaultRejectedStatesValue, popObjectItemByKey, sliceInitialStateWithData, sliceInitialStateWithStatus } from "src/helpers/functions";
 import { ProjectEditData } from "src/views/pages/project/view/ProjectEditDialog";
 
 export const getProjects: any = createAsyncThunk(
@@ -93,12 +93,7 @@ export const createProject: any = createAsyncThunk(
   async (data: any,
     { rejectWithValue }) => {
     try {
-      let projectLogo: any
-
-      if (data?.logo) {
-        projectLogo = data?.logo
-        delete data.logo
-      }
+      const projectLogo = popObjectItemByKey(data, 'logo')
 
       const response = await ApiRequest.builder().auth().request('post', 'projects', data)
 
@@ -464,14 +459,8 @@ export const editProject: any = createAsyncThunk(
   async (data: ProjectEditData,
     { rejectWithValue }) => {
     try {
-      const projectId = data.projectId
-      delete data.projectId
-      let projectLogo: any
-
-      if (data?.logo) {
-        projectLogo = data?.logo
-        delete data.logo
-      }
+      const projectId = popObjectItemByKey(data, 'projectId')
+      const projectLogo = popObjectItemByKey(data, 'logo')
 
       const response = await ApiRequest.builder().auth().request('patch', `projects/${projectId}`, data)
 

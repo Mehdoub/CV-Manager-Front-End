@@ -147,7 +147,13 @@ export const getColorCodes = (color: string) => {
   return colorCodes[color] ?? colorCodes.error
 }
 
-export const getMaxTextLen = (text: string, maxLen = 15) : string => {
+export const getMaxTextLen = (text: string, maxLen = 15): string => {
   const dots = text.length > maxLen ? '...' : ''
   return text.substring(0, maxLen) + dots
+}
+
+export const popObjectItemByKey = (subjectObj: any, key: string) => {
+  const value = subjectObj[key]
+  delete subjectObj[key]
+  return value
 }
