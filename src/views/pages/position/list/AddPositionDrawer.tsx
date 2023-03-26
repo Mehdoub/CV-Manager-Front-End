@@ -124,6 +124,10 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
   })
 
   useEffect(() => {
+    if (!projects?.page) dispatch(getProjects())
+  }, [])
+
+  useEffect(() => {
     if (status) {
       if (dispatchProjectPositionsList) dispatch(getProjectPositions())
       else dispatch(getPositions())
@@ -262,7 +266,10 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
                 autoHighlight
                 loading={loadingSearchProjects}
                 options={projects?.docs ?? []}
-                onChange={(e, newValue) => setPositionProject(newValue)}
+                onChange={(e, newValue) => {
+                  setProjectErr('')
+                  setPositionProject(newValue)
+                }}
                 getOptionLabel={(projectItem: any) => projectItem?.name}
                 ListboxComponent={List}
                 renderInput={params => (

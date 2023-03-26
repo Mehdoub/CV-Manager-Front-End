@@ -102,6 +102,10 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
 
   const { data: companies, loading: loadingSearchCompanies } = useSelector((state: any) => state.companiesList)
 
+  useEffect(() => {
+    if (!companies?.page) dispatch(getCompanies())
+  }, [])
+
   const {
     reset,
     control,
@@ -257,7 +261,10 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
                 autoHighlight
                 loading={loadingSearchCompanies}
                 options={companies?.docs ?? []}
-                onChange={(e, newValue) => setCompany(newValue)}
+                onChange={(e, newValue) => {
+                  setCompanyErr('')
+                  setCompany(newValue)
+                }}
                 getOptionLabel={(company: any) => company?.name}
                 ListboxComponent={List}
                 renderInput={params => (
