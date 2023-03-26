@@ -227,7 +227,7 @@ const App = (props: ExtendedAppProps) => {
                       </Guard>
                     </WindowWrapper>
                     <ReactHotToast>
-                      <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} />
+                      <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} containerStyle={{zIndex: '10000 !important'}} />
                     </ReactHotToast>
                   </ThemeComponent>
                 )
