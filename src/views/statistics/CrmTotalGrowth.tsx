@@ -23,7 +23,7 @@ const CrmTotalGrowth = ({ statsData }: TotalGrothStatsProps) => {
   let statsNumbers: Array<number> = []
   let totalNumber = 0
 
-  if (statsData.length > 0) {
+  if (statsData?.length > 0) {
     statsData.map((item:any, index:number) => {
       totalNumber += item?.count as number
       statsLabels.push(item?.state)

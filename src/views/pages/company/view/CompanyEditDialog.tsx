@@ -24,6 +24,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { CompanyFormData } from '../list/AddCompanyDrawer'
 import { useDispatch } from 'react-redux'
 import { clearEditCompany, editCompany, getCompanies, getCompany } from 'src/store/company'
+import { getImagePath } from 'src/helpers/functions'
 
 const schema = yup.object().shape(
   {
@@ -201,7 +202,7 @@ const CompanyEditDialog = (props: Props) => {
                   renderFilePreview(files[0])
                 ) : company?.logo ? (
                   <CustomAvatar
-                    src={company?.logo}
+                    src={getImagePath(company?.logo)}
                     variant='rounded'
                     alt={company?.name}
                     sx={{

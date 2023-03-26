@@ -191,7 +191,7 @@ const ProjectEditDialog = (props: Props) => {
                   renderFilePreview(files[0])
                 ) : project?.logo ? (
                   <CustomAvatar
-                    src={project?.logo}
+                    src={getImagePath(project?.logo)}
                     variant='rounded'
                     alt={project?.name}
                     sx={{

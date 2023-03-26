@@ -200,7 +200,7 @@ const CompanyList = () => {
           <AvatarGroup className='pull-up'>
             {row?.projects?.map((item: any, index: any) => (
               <BootstrapTooltip key={index} title={`${item?.name}`} placement='top'>
-                <CustomAvatar src={item?.logo} sx={{ height: 26, width: 26 }} />
+                <CustomAvatar src={getImagePath(item?.logo)} sx={{ height: 26, width: 26 }} />
               </BootstrapTooltip>
             ))}
           </AvatarGroup>

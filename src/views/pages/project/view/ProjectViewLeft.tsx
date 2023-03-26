@@ -29,6 +29,7 @@ import { Skeleton } from '@mui/material'
 import Translations from 'src/layouts/components/Translations'
 import Link from 'next/link'
 import ProjectEditDialog from './ProjectEditDialog'
+import { getImagePath } from 'src/helpers/functions'
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -82,7 +83,7 @@ const ProjectViewLeft = ({ projectId }: Props) => {
           <CardContent sx={{ pt: 15, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
             {project?.logo?.length ? (
               <CustomAvatar
-                src={project?.logo}
+                src={getImagePath(project?.logo)}
                 variant='rounded'
                 alt={project?.name}
                 sx={{ width: 150, height: 150, fontWeight: 600, mb: 4, fontSize: '3rem', borderRadius: '50%' }}

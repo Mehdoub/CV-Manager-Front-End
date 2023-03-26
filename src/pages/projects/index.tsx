@@ -43,7 +43,7 @@ import { AvatarGroup, Skeleton, Stack } from '@mui/material'
 import { BootstrapTooltip } from '../companies'
 import { getProjects } from 'src/store/project'
 import ProjectEditDialog from 'src/views/pages/project/view/ProjectEditDialog'
-import { showDate } from 'src/helpers/functions'
+import { getImagePath, showDate } from 'src/helpers/functions'
 
 const statusColors: any = {
   active: 'success',
@@ -64,7 +64,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
 // ** renders client column
 export const renderClient = (row: any, field = 'logo') => {
   if (row[field]?.length) {
-    return <CustomAvatar src={row[field]} sx={{ mr: 3, width: 34, height: 34 }} />
+    return <CustomAvatar src={getImagePath(row[field])} sx={{ mr: 3, width: 34, height: 34 }} />
   } else {
     return (
       <CustomAvatar skin='light' color='primary' sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}>

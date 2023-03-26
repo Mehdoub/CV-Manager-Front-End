@@ -40,7 +40,7 @@ import { AvatarGroup, Skeleton, Stack } from '@mui/material'
 import { BootstrapTooltip } from '../companies'
 import { getPositions } from 'src/store/position'
 import PositionEditDialog from 'src/views/pages/position/view/PositionEditDialog'
-import { getFullName, showDate } from 'src/helpers/functions'
+import { getFullName, getImagePath, showDate } from 'src/helpers/functions'
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -61,7 +61,7 @@ const statusColors: any = {
 // ** renders client column
 export const renderClient = (row: any, imgField = 'logo', nameField = 'name') => {
   if (row[imgField]?.length) {
-    return <CustomAvatar src={row[imgField]} sx={{ mr: 3, width: 34, height: 34 }} />
+    return <CustomAvatar src={getImagePath(row[imgField])} sx={{ mr: 3, width: 34, height: 34 }} />
   } else {
     return (
       <CustomAvatar skin='light' color={'primary'} sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}>
