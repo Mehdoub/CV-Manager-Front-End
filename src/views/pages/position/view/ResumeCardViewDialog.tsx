@@ -23,15 +23,12 @@ import {
   Typography,
   styled
 } from '@mui/material'
-import { SyntheticEvent, useEffect, useState } from 'react'
+import { SyntheticEvent, useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { useSelector } from 'react-redux'
 import Icon from 'src/@core/components/icon'
 import { getInitials } from 'src/@core/utils/get-initials'
-import { getEntityIcon, getMaxTextLen, shuffle, uppercaseFirstLetters } from 'src/helpers/functions'
+import { getMaxTextLen } from 'src/helpers/functions'
 import { BootstrapTooltip } from 'src/pages/companies'
-import { ChatsObj, ContactType, ProfileUserType } from 'src/types/apps/chatTypes'
-import ChatLog from './ChatLog'
 
 const previousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
 const dayBeforePreviousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 2)
@@ -171,19 +168,37 @@ const cahtExample = {
   ]
 }
 
-const ChatFormWrapper = styled(Box)<BoxProps>(({ theme }) => ({
+const ChatFormWrapper = styled(Grid)<BoxProps>(({ theme }) => ({
   display: 'flex',
-  borderRadius: 8,
+  // borderRadius: 8,
+  position: 'relative',
   alignItems: 'center',
-  boxShadow: theme.shadows[1],
-  padding: theme.spacing(1.25, 4),
+  flexDirection: 'row-reverse',
+  height: '65px',
+  boxShadow: '10px 0 10px 10px rgb(76 78 100 / 14%)',
+  // padding: theme.spacing(1.25, 4),
   justifyContent: 'space-between',
   backgroundColor: theme.palette.background.paper
 }))
 
 const Form = styled('form')(({ theme }) => ({
-  padding: theme.spacing(0, 5, 5)
+  // padding: theme.spacing(0, 5, 5)
 }))
+
+const useOutsideBox = (ref: any, setState: any, setMsgRow:any) => {
+  useEffect(() => {
+    const handleClickOutside = (event: any) => {
+      if (ref.current && !ref.current.contains(event.target)) {
+        setState('')
+        setMsgRow(1)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [ref])
+}
 
 interface ResumeCardViewDialogProps {
   open: boolean
@@ -211,6 +226,11 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
   const [activeTab, setActiveTab] = useState<string>('details')
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const [msg, setMsg] = useState<string>('')
+  const [msgRow, setMsgRow] = useState<number>(1)
+  const [commentClass, setCommentClass] = useState<string>('')
+
+  const wrapperRef = useRef(null)
+  useOutsideBox(wrapperRef, setCommentClass, setMsgRow)
 
   const dispatch = useDispatch()
 
@@ -339,12 +359,12 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
                   scrollButtons='auto'
                   onChange={handleChange}
                   aria-label='forced scroll tabs example'
-                  sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
+                  sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}`, width: '360px' }}
                 >
-                  <Tab value='details' label='Details' icon={<Icon icon='mdi:account-outline' />} />
-                  <Tab value='file' label='File' icon={<Icon icon='pepicons-pop:cv' />} />
-                  <Tab value='interview' label='Interviews' icon={<Icon icon='mdi:virtual-meeting' />} />
-                  <Tab value='call' label='Calls' icon={<Icon icon='material-symbols:call' />} />
+                  <Tab value='details' icon={<Icon icon='mdi:account-outline' />} />
+                  <Tab value='file' icon={<Icon icon='pepicons-pop:cv' />} />
+                  <Tab value='interview' icon={<Icon icon='mdi:virtual-meeting' />} />
+                  <Tab value='call' icon={<Icon icon='material-symbols:call' />} />
                 </TabList>
                 <Box sx={{ mt: 6 }}>
                   {isLoading ? (
@@ -374,7 +394,7 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
           </Grid>
           <Divider sx={{ minHeight: '600px', m: '0px' }} orientation='vertical' flexItem />
           <Grid xs item container sx={{ backgroundColor: '#4c4e640d', display: 'flex', alignItems: 'end' }}>
-            <Grid md={12} item className='chat-body' sx={{ maxHeight: '500px', overflowY: 'scroll', p: 4 }}>
+            <Grid md={12} item className='chat-body' sx={{ maxHeight: '600px', overflowY: 'scroll', p: 4 }}>
               {cahtExample.chat.map((chat: any, index: number, { length }: { length: number }) => {
                 avatarId = avatarId == 3 ? 5 : 3
                 return (
@@ -465,36 +485,104 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
               })}
             </Grid>
 
-            <Grid md={12} item>
+            <Grid md={12} item sx={{ width: '100%' }}>
               <Form onSubmit={handleSendMsg}>
-                <ChatFormWrapper>
-                  <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center' }}>
+                <ChatFormWrapper
+                  ref={wrapperRef}
+                  onClick={() => {
+                    setMsgRow(4)
+                    setCommentClass('comment-box')
+                  }}
+                  className={commentClass}
+                  tabIndex={1}
+                  container
+                >
+                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 3, mr: 3 }}>
+                    <IconButton className='chat-icon' size='small' sx={{ mr: 1.5, color: 'rgb(76 78 100 / 14%)' }}>
+                      <Icon icon='mdi:comment' fontSize='2.25rem' />
+                    </IconButton>
+                  </Box>
+                  <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', p: 3, maxHeight: '100px' }}>
                     <TextField
                       fullWidth
                       value={msg}
                       size='small'
                       placeholder='Type your message here…'
                       onChange={e => setMsg(e.target.value)}
+                      multiline
+                      rows={msgRow}
                       sx={{ '& .MuiOutlinedInput-input': { pl: 0 }, '& fieldset': { border: '0 !important' } }}
                     />
                   </Box>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <IconButton size='small' sx={{ mr: 1.5, color: 'text.primary' }}>
-                      <Icon icon='mdi:microphone' fontSize='1.375rem' />
-                    </IconButton>
-                    <IconButton
-                      size='small'
-                      component='label'
-                      htmlFor='upload-img'
-                      sx={{ mr: 2.75, color: 'text.primary' }}
-                    >
-                      <Icon icon='mdi:attachment' fontSize='1.375rem' />
-                      <input hidden type='file' id='upload-img' />
-                    </IconButton>
+                  <Grid item md={12} sx={{ mb: 12 }}>
+                    <Divider sx={{ width: '100%', m: '0px !important' }} />
+                  </Grid>
+                  <Grid
+                    item
+                    md={12}
+                    sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '97%', mr: 4 }}
+                    className='comment-btn-send'
+                  >
+                    <div>
+                      <BootstrapTooltip placement='top' title='Mention Someone'>
+                        <IconButton
+                          size='small'
+                          component='label'
+                          htmlFor='upload-img'
+                          sx={{ mr: 2.75, color: 'text.secondary' }}
+                        >
+                          <Icon icon='material-symbols:alternate-email' fontSize='1.375rem' />
+                        </IconButton>
+                      </BootstrapTooltip>
+                      <BootstrapTooltip placement='top' title='Attach File'>
+                        <IconButton
+                          size='small'
+                          component='label'
+                          htmlFor='upload-img'
+                          sx={{ mr: 2.75, color: 'text.secondary' }}
+                        >
+                          <Icon icon='majesticons:attachment-line' fontSize='1.375rem' />
+                          <input hidden type='file' id='upload-img' />
+                        </IconButton>
+                      </BootstrapTooltip>
+                      <BootstrapTooltip placement='top' title='Add Emoji'>
+                        <IconButton
+                          size='small'
+                          component='label'
+                          htmlFor='upload-img'
+                          sx={{ mr: 2.75, color: 'text.secondary' }}
+                        >
+                          <Icon icon='ic:round-emoji-emotions' fontSize='1.375rem' />
+                          <input hidden type='file' id='upload-img' />
+                        </IconButton>
+                      </BootstrapTooltip>
+                      <BootstrapTooltip placement='top' title='Record Voice'>
+                        <IconButton
+                          size='small'
+                          component='label'
+                          htmlFor='upload-img'
+                          sx={{ mr: 2.75, color: 'text.secondary' }}
+                        >
+                          <Icon icon='material-symbols:auto-detect-voice' fontSize='1.375rem' />
+                          <input hidden type='file' id='upload-img' />
+                        </IconButton>
+                      </BootstrapTooltip>
+                      <BootstrapTooltip placement='top' title='Mention A Task'>
+                        <IconButton
+                          size='small'
+                          component='label'
+                          htmlFor='upload-img'
+                          sx={{ mr: 2.75, color: 'text.secondary' }}
+                        >
+                          <Icon icon='fluent:document-mention-16-regular' fontSize='1.375rem' />
+                          <input hidden type='file' id='upload-img' />
+                        </IconButton>
+                      </BootstrapTooltip>
+                    </div>
                     <Button type='submit' variant='contained'>
                       Send
                     </Button>
-                  </Box>
+                  </Grid>
                 </ChatFormWrapper>
               </Form>
             </Grid>

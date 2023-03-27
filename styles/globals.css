@@ -113,3 +113,21 @@ code[class*='language-'] {
   }
 }
 
+.comment-box {
+  height: 200px !important;
+  align-items: start;
+}
+
+.comment-box .chat-icon {
+  display: none;
+}
+
+.comment-btn-send {
+  display: none !important
+}
+
+.comment-box .comment-btn-send {
+  display: flex !important;
+  position: absolute;
+  bottom: 10px;
+}
