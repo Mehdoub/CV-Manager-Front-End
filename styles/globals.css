@@ -123,11 +123,19 @@ code[class*='language-'] {
 }
 
 .comment-btn-send {
-  display: none !important
+  display: none !important;
 }
 
 .comment-box .comment-btn-send {
   display: flex !important;
   position: absolute;
   bottom: 10px;
+}
+
+.resume-tab {
+  font-weight: 400 !important;
+}
+
+.resume-active-tab {
+  font-weight: 900 !important;
 }

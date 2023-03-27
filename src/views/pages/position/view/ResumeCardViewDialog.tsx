@@ -29,6 +29,7 @@ import Icon from 'src/@core/components/icon'
 import { getInitials } from 'src/@core/utils/get-initials'
 import { getMaxTextLen } from 'src/helpers/functions'
 import { BootstrapTooltip } from 'src/pages/companies'
+import ResumeDetailsTab from './ResumeDetailsTab'
 
 const previousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
 const dayBeforePreviousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 2)
@@ -185,7 +186,7 @@ const Form = styled('form')(({ theme }) => ({
   // padding: theme.spacing(0, 5, 5)
 }))
 
-const useOutsideBox = (ref: any, setState: any, setMsgRow:any) => {
+const useOutsideBox = (ref: any, setState: any, setMsgRow: any) => {
   useEffect(() => {
     const handleClickOutside = (event: any) => {
       if (ref.current && !ref.current.contains(event.target)) {
@@ -313,7 +314,7 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
             </Stack>
           </DialogTitle>
         </Grid>
-        <Divider sx={{ m: '0px 15px' }} orientation='vertical' flexItem />
+        <Divider sx={{ m: '0px' }} orientation='vertical' flexItem />
         <Grid xs item>
           <DialogTitle sx={{ textAlign: 'left' }}>
             <Typography variant='body2'>Asignee(s):</Typography>
@@ -340,9 +341,9 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
               />
             </Stack>
           </DialogTitle>
+          <Divider sx={{ m: '0px !important' }} />
         </Grid>
       </Grid>
-      <Divider sx={{ m: '0px !important' }} />
       <DialogContent
         sx={{
           p: 0,
@@ -351,7 +352,11 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
         }}
       >
         <Grid container>
-          <Grid xs item>
+          <Grid
+            xs
+            item
+            // sx={{backgroundColor: '#4c4e640d'}}
+          >
             <TabContext value={activeTab}>
               <div style={{ padding: '15px' }}>
                 <TabList
@@ -359,12 +364,35 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
                   scrollButtons='auto'
                   onChange={handleChange}
                   aria-label='forced scroll tabs example'
-                  sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}`, width: '360px' }}
+                  sx={{
+                    borderBottom: theme => `1px solid ${theme.palette.divider}`
+                    // , width: '360px'
+                  }}
                 >
-                  <Tab value='details' icon={<Icon icon='mdi:account-outline' />} />
-                  <Tab value='file' icon={<Icon icon='pepicons-pop:cv' />} />
-                  <Tab value='interview' icon={<Icon icon='mdi:virtual-meeting' />} />
-                  <Tab value='call' icon={<Icon icon='material-symbols:call' />} />
+                  <Tab
+                    value='details'
+                    label='Details'
+                    className={`${activeTab == 'details' ? 'resume-active-tab' : ''} resume-tab`}
+                    // icon={<Icon icon='mdi:account-outline' />}
+                  />
+                  <Tab
+                    value='file'
+                    label='Interview'
+                    className={`${activeTab == 'file' ? 'resume-active-tab' : ''} resume-tab`}
+                    // icon={<Icon icon='pepicons-pop:cv' />}
+                  />
+                  <Tab
+                    value='interview'
+                    label='File'
+                    className={`${activeTab == 'interview' ? 'resume-active-tab' : ''} resume-tab`}
+                    // icon={<Icon icon='mdi:virtual-meeting' />}
+                  />
+                  <Tab
+                    value='call'
+                    label='Call'
+                    className={`${activeTab == 'call' ? 'resume-active-tab' : ''} resume-tab`}
+                    // icon={<Icon icon='material-symbols:call' />}
+                  />
                 </TabList>
                 <Box sx={{ mt: 6 }}>
                   {isLoading ? (
@@ -375,7 +403,7 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
                   ) : (
                     <>
                       <TabPanel sx={{ p: 0 }} value='details'>
-                        <h5>There Is Nothing To Show Details ...</h5>
+                        <ResumeDetailsTab />
                       </TabPanel>
                       <TabPanel sx={{ p: 0 }} value='file'>
                         <h5>There Is Nothing To Show File ...</h5>
@@ -393,8 +421,13 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
             </TabContext>
           </Grid>
           <Divider sx={{ minHeight: '600px', m: '0px' }} orientation='vertical' flexItem />
-          <Grid xs item container sx={{ backgroundColor: '#4c4e640d', display: 'flex', alignItems: 'end' }}>
-            <Grid md={12} item className='chat-body' sx={{ maxHeight: '600px', overflowY: 'scroll', p: 4 }}>
+          <Grid
+            xs
+            item
+            container
+            sx={{ backgroundColor: '#4c4e640d', display: 'flex', alignItems: 'end', position: 'relative' }}
+          >
+            <Grid md={12} item className='chat-body' sx={{ maxHeight: '730px', overflowY: 'scroll', p: 4 }}>
               {cahtExample.chat.map((chat: any, index: number, { length }: { length: number }) => {
                 avatarId = avatarId == 3 ? 5 : 3
                 return (
@@ -485,7 +518,7 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
               })}
             </Grid>
 
-            <Grid md={12} item sx={{ width: '100%' }}>
+            <Grid sm={12} md={12} item sx={{ width: '100%', position: 'absolute' }}>
               <Form onSubmit={handleSendMsg}>
                 <ChatFormWrapper
                   ref={wrapperRef}
