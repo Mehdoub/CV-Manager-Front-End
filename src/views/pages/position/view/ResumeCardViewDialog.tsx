@@ -30,6 +30,7 @@ import { getInitials } from 'src/@core/utils/get-initials'
 import { getMaxTextLen } from 'src/helpers/functions'
 import { BootstrapTooltip } from 'src/pages/companies'
 import ResumeDetailsTab from './ResumeDetailsTab'
+import ResumeCallsTab from './ResumeCallsTab'
 
 const previousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
 const dayBeforePreviousDay = new Date(new Date().getTime() - 24 * 60 * 60 * 1000 * 2)
@@ -371,7 +372,7 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
             // sx={{backgroundColor: '#4c4e640d'}}
           >
             <TabContext value={activeTab}>
-              <div style={{ padding: '0 15px' }}>
+              <div style={{ padding: '0' }}>
                 <TabList
                   variant='scrollable'
                   scrollButtons='auto'
@@ -407,7 +408,7 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
                     // icon={<Icon icon='material-symbols:call' />}
                   />
                 </TabList>
-                <Box sx={{ mt: 6 }}>
+                <Box>
                   {isLoading ? (
                     <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
                       <CircularProgress sx={{ mb: 4 }} />
@@ -415,7 +416,7 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
                     </Box>
                   ) : (
                     <>
-                      <TabPanel sx={{ p: 0 }} value='details'>
+                      <TabPanel sx={{ p: 0, mt: 6 }} value='details'>
                         <ResumeDetailsTab />
                       </TabPanel>
                       <TabPanel sx={{ p: 0 }} value='file'>
@@ -425,7 +426,7 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
                         <h5>There Is Nothing To Show Interview ...</h5>
                       </TabPanel>
                       <TabPanel sx={{ p: 0 }} value='call'>
-                        <h5>There Is Nothing To Show Calls ...</h5>
+                        <ResumeCallsTab />
                       </TabPanel>
                     </>
                   )}
