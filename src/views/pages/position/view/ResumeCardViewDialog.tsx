@@ -247,11 +247,22 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
   let avatarId = 3
 
   return (
-    <Dialog fullWidth maxWidth='90%' scroll='body' onClose={toggle} open={open}>
+    <Dialog
+      maxWidth='80%'
+      fullWidth
+      scroll='body'
+      onClose={toggle}
+      open={open}
+      sx={{ maxHeight: '980px', margin: '0 100px' }}
+      PaperProps={{ style: { margin: '0', marginTop: '20px' } }}
+    >
       <Grid container>
-        <Grid xs item>
-          <DialogTitle sx={{ textAlign: 'left' }}>
-            <Stack direction={'row'} sx={{ justifyContent: 'space-between' }}>
+        <IconButton size='small' onClick={toggle} sx={{ position: 'absolute', right: '1rem', top: '1rem' }}>
+          <Icon icon='mdi:close' />
+        </IconButton>
+        <Grid xs item sx={{ display: 'flex', flexDirection: 'column-reverse' }}>
+          <div style={{ textAlign: 'left', padding: '0 15px' }}>
+            <Stack direction={'row'} sx={{ justifyContent: 'space-between', mb: 4 }}>
               <span>
                 <IconButton aria-label='capture screenshot'>
                   <Icon icon='material-symbols:arrow-back-ios-new-rounded' />
@@ -267,52 +278,54 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
                 <Icon style={{ fontSize: 30 }} icon='ic:round-more-horiz' />
               </IconButton>
             </Stack>
-            <Box sx={{ display: 'flex', alignItems: 'center', mt: 1 }}>
-              <CustomAvatar skin='light' color='primary' sx={{ mr: 3, width: 55, height: 55, fontSize: '1rem' }}>
-                {getInitials('Mahdi Mehrjoo')}
-              </CustomAvatar>
-              <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <Typography fontSize={18} fontWeight={500}>
-                  Mahdi Mehrjoo
-                </Typography>
-                <Typography variant='body2'>Favin • BPM</Typography>
+            <div style={{ padding: '0 20px' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+                <CustomAvatar skin='light' color='primary' sx={{ mr: 3, width: 55, height: 55, fontSize: '1rem' }}>
+                  {getInitials('Mahdi Mehrjoo')}
+                </CustomAvatar>
+                <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+                  <Typography fontSize={18} fontWeight={500}>
+                    Mahdi Mehrjoo
+                  </Typography>
+                  <Typography variant='body2'>Favin • BPM</Typography>
+                </Box>
               </Box>
-            </Box>
-            <Stack direction='row' sx={{ justifyContent: 'space-between' }}>
-              <Stack direction='row' spacing={1} mt={2}>
-                {tags?.length > 0 &&
-                  tags?.map((tag, index) => (
-                    <>
-                      <BootstrapTooltip placement='top' title={tag.text}>
-                        <div>
-                          <CustomChip
-                            size='small'
-                            label={getMaxTextLen(tag.text)}
-                            skin='light'
-                            color={tag.color as any}
-                            sx={{
-                              fontSize: 12,
-                              height: 22,
-                              borderBottomLeftRadius: 0,
-                              borderTopLeftRadius: 0
-                            }}
-                          />
-                        </div>
-                      </BootstrapTooltip>
-                      {tags?.length == index + 1 && (
-                        <IconButton
-                          aria-label='capture screenshot'
-                          sx={{ border: '1px dashed gray', width: '35px', height: '35px' }}
-                        >
-                          <Icon icon='mdi:tag-plus' />
-                        </IconButton>
-                      )}
-                    </>
-                  ))}
+              <Stack direction='row' sx={{ justifyContent: 'space-between' }}>
+                <Stack direction='row' spacing={1} mt={2}>
+                  {tags?.length > 0 &&
+                    tags?.map((tag, index) => (
+                      <>
+                        <BootstrapTooltip placement='top' title={tag.text}>
+                          <div>
+                            <CustomChip
+                              size='small'
+                              label={getMaxTextLen(tag.text)}
+                              skin='light'
+                              color={tag.color as any}
+                              sx={{
+                                fontSize: 12,
+                                height: 22,
+                                borderBottomLeftRadius: 0,
+                                borderTopLeftRadius: 0
+                              }}
+                            />
+                          </div>
+                        </BootstrapTooltip>
+                        {tags?.length == index + 1 && (
+                          <IconButton
+                            aria-label='capture screenshot'
+                            sx={{ border: '1px dashed gray', width: '35px', height: '35px' }}
+                          >
+                            <Icon icon='mdi:tag-plus' />
+                          </IconButton>
+                        )}
+                      </>
+                    ))}
+                </Stack>
+                <Rating readOnly value={4} sx={{ marginTop: 5 }} name='read-only' size='small' />
               </Stack>
-              <Rating readOnly value={4} sx={{ marginTop: 5 }} name='read-only' size='small' />
-            </Stack>
-          </DialogTitle>
+            </div>
+          </div>
         </Grid>
         <Divider sx={{ m: '0px' }} orientation='vertical' flexItem />
         <Grid xs item>
@@ -358,7 +371,7 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
             // sx={{backgroundColor: '#4c4e640d'}}
           >
             <TabContext value={activeTab}>
-              <div style={{ padding: '15px' }}>
+              <div style={{ padding: '0 15px' }}>
                 <TabList
                   variant='scrollable'
                   scrollButtons='auto'
@@ -427,7 +440,7 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
             container
             sx={{ backgroundColor: '#4c4e640d', display: 'flex', alignItems: 'end', position: 'relative' }}
           >
-            <Grid md={12} item className='chat-body' sx={{ maxHeight: '730px', overflowY: 'scroll', p: 4 }}>
+            <Grid md={12} item className='chat-body' sx={{ maxHeight: '700px', overflowY: 'scroll', p: 4 }}>
               {cahtExample.chat.map((chat: any, index: number, { length }: { length: number }) => {
                 avatarId = avatarId == 3 ? 5 : 3
                 return (
@@ -517,7 +530,7 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
                 )
               })}
             </Grid>
-
+            <Grid item sm={12} md={12} sx={{ height: '64px' }}></Grid>
             <Grid sm={12} md={12} item sx={{ width: '100%', position: 'absolute' }}>
               <Form onSubmit={handleSendMsg}>
                 <ChatFormWrapper
