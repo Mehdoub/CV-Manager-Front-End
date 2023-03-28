@@ -157,3 +157,8 @@ export const popObjectItemByKey = (subjectObj: any, key: string) => {
   delete subjectObj[key]
   return value
 }
+
+Number.prototype.format = function (n: number) {
+  var re = '\\d(?=(\\d{3})+' + (n > 0 ? '\\.' : '$') + ')';
+  return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
+};

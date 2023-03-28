@@ -89,7 +89,7 @@ const ResumeDetailsTab = () => {
   const [open, setOpen] = useState<boolean>(false)
   const [inputValue, setInputValue] = useState<string>('')
   const [userInput, setUserInput] = useState<string>('yes')
-  const [formData, setFormData] = useState<Data>(initialData)
+  const [formData, setFormData] = useState<any>(initialData)
   const [imgSrc, setImgSrc] = useState<string>('/images/avatars/1.png')
   const [secondDialogOpen, setSecondDialogOpen] = useState<boolean>(false)
 
@@ -129,12 +129,18 @@ const ResumeDetailsTab = () => {
     setImgSrc('/images/avatars/1.png')
   }
 
-  const handleFormChange = (field: keyof Data, value: Data[keyof Data]) => {
+  const handleFormChange = (field: any, value: any) => {
     setFormData({ ...formData, [field]: value })
   }
 
+  let years = []
+  for (let year = 1970; year <= new Date().getFullYear(); year++) years.push(year)
+
+  let salaries = []
+  for (let salary = 10; salary <= 50; salary++) salaries.push(salary * 1000000)
+
   return (
-    <Grid container spacing={6} sx={{ maxHeight: '650px', overflowY: 'scroll' }}>
+    <Grid container spacing={6} sx={{ maxHeight: '700px', overflowY: 'scroll' }}>
       {/* Account Details Card */}
       <Grid item xs={12}>
         <>
@@ -162,28 +168,48 @@ const ResumeDetailsTab = () => {
                 </div>
               </Box>
             </CardContent>
-            <Divider />
+            {/* <Divider /> */}
             <CardContent>
               <Grid container spacing={6}>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} mt={5} sm={6}>
                   <TextField
                     fullWidth
                     label='First Name'
                     placeholder='John'
                     value={formData.firstName}
-                    onChange={e => handleFormChange('firstName', e.target.value)}
+                    onChange={e => handleFormChange('firstname', e.target.value)}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} mt={5} sm={6}>
                   <TextField
                     fullWidth
                     label='Last Name'
                     placeholder='Doe'
                     value={formData.lastName}
-                    onChange={e => handleFormChange('lastName', e.target.value)}
+                    onChange={e => handleFormChange('lastname', e.target.value)}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} mt={5} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel>Gender</InputLabel>
+                    <Select label='Gender' value='man' onChange={e => handleFormChange('gender', e.target.value)}>
+                      <MenuItem value='man'>Man</MenuItem>
+                      <MenuItem value='woman'>Woman</MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} mt={5} sm={6}>
+                  <TextField
+                    fullWidth
+                    type='number'
+                    label='Mobile'
+                    value={formData.number}
+                    placeholder='919 123 4567'
+                    onChange={e => handleFormChange('mobile', e.target.value)}
+                    InputProps={{ startAdornment: <InputAdornment position='start'>IR (+98)</InputAdornment> }}
+                  />
+                </Grid>
+                <Grid item xs={12} mt={5} sm={6}>
                   <TextField
                     fullWidth
                     type='email'
@@ -193,131 +219,192 @@ const ResumeDetailsTab = () => {
                     onChange={e => handleFormChange('email', e.target.value)}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    label='Organization'
-                    placeholder='ThemeSelection'
-                    value={formData.organization}
-                    onChange={e => handleFormChange('organization', e.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} mt={5} sm={6}>
                   <TextField
                     fullWidth
                     type='number'
                     label='Phone Number'
                     value={formData.number}
-                    placeholder='202 555 0111'
-                    onChange={e => handleFormChange('number', e.target.value)}
-                    InputProps={{ startAdornment: <InputAdornment position='start'>US (+1)</InputAdornment> }}
+                    placeholder='8846 7889'
+                    onChange={e => handleFormChange('phone', e.target.value)}
+                    InputProps={{ startAdornment: <InputAdornment position='start'>IR (+98)</InputAdornment> }}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    label='Address'
-                    placeholder='Address'
-                    value={formData.address}
-                    onChange={e => handleFormChange('address', e.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    label='State'
-                    placeholder='California'
-                    value={formData.state}
-                    onChange={e => handleFormChange('state', e.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
-                  <TextField
-                    fullWidth
-                    type='number'
-                    label='Zip Code'
-                    placeholder='231465'
-                    value={formData.zipCode}
-                    onChange={e => handleFormChange('zipCode', e.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} mt={5} sm={4}>
                   <FormControl fullWidth>
-                    <InputLabel>Country</InputLabel>
+                    <InputLabel>Birth Year</InputLabel>
                     <Select
-                      label='Country'
-                      value={formData.country}
-                      onChange={e => handleFormChange('country', e.target.value)}
+                      label='Birth Year'
+                      value={2000}
+                      onChange={e => handleFormChange('birth_year', e.target.value)}
                     >
-                      <MenuItem value='australia'>Australia</MenuItem>
-                      <MenuItem value='canada'>Canada</MenuItem>
-                      <MenuItem value='france'>France</MenuItem>
-                      <MenuItem value='united-kingdom'>United Kingdom</MenuItem>
-                      <MenuItem value='united-states'>United States</MenuItem>
+                      {years.map((item: number, index: number) => (
+                        <MenuItem key={index} value={item}>
+                          {item}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} mt={5} sm={4}>
                   <FormControl fullWidth>
-                    <InputLabel>Language</InputLabel>
+                    <InputLabel>Work Started Year</InputLabel>
                     <Select
-                      label='Language'
-                      value={formData.language}
-                      onChange={e => handleFormChange('language', e.target.value)}
+                      label='Work Started Year'
+                      value={2018}
+                      onChange={e => handleFormChange('work_experience', e.target.value)}
                     >
-                      <MenuItem value='arabic'>Arabic</MenuItem>
-                      <MenuItem value='english'>English</MenuItem>
-                      <MenuItem value='french'>French</MenuItem>
-                      <MenuItem value='german'>German</MenuItem>
-                      <MenuItem value='portuguese'>Portuguese</MenuItem>
+                      {years.map(
+                        (item: number, index: number) =>
+                          item >= 1980 && (
+                            <MenuItem key={index} value={item}>
+                              {item}
+                            </MenuItem>
+                          )
+                      )}
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} mt={5} sm={4}>
                   <FormControl fullWidth>
-                    <InputLabel>Timezone</InputLabel>
+                    <InputLabel>Education</InputLabel>
                     <Select
-                      label='Timezone'
-                      value={formData.timezone}
-                      onChange={e => handleFormChange('timezone', e.target.value)}
+                      label='Education'
+                      value={'masters'}
+                      onChange={e => handleFormChange('education', e.target.value)}
                     >
-                      <MenuItem value='gmt-12'>(GMT-12:00) International Date Line West</MenuItem>
-                      <MenuItem value='gmt-11'>(GMT-11:00) Midway Island, Samoa</MenuItem>
-                      <MenuItem value='gmt-10'>(GMT-10:00) Hawaii</MenuItem>
-                      <MenuItem value='gmt-09'>(GMT-09:00) Alaska</MenuItem>
-                      <MenuItem value='gmt-08'>(GMT-08:00) Pacific Time (US & Canada)</MenuItem>
-                      <MenuItem value='gmt-08-baja'>(GMT-08:00) Tijuana, Baja California</MenuItem>
-                      <MenuItem value='gmt-07'>(GMT-07:00) Chihuahua, La Paz, Mazatlan</MenuItem>
-                      <MenuItem value='gmt-07-mt'>(GMT-07:00) Mountain Time (US & Canada)</MenuItem>
-                      <MenuItem value='gmt-06'>(GMT-06:00) Central America</MenuItem>
-                      <MenuItem value='gmt-06-ct'>(GMT-06:00) Central Time (US & Canada)</MenuItem>
-                      <MenuItem value='gmt-06-mc'>(GMT-06:00) Guadalajara, Mexico City, Monterrey</MenuItem>
-                      <MenuItem value='gmt-06-sk'>(GMT-06:00) Saskatchewan</MenuItem>
-                      <MenuItem value='gmt-05'>(GMT-05:00) Bogota, Lima, Quito, Rio Branco</MenuItem>
-                      <MenuItem value='gmt-05-et'>(GMT-05:00) Eastern Time (US & Canada)</MenuItem>
-                      <MenuItem value='gmt-05-ind'>(GMT-05:00) Indiana (East)</MenuItem>
-                      <MenuItem value='gmt-04'>(GMT-04:00) Atlantic Time (Canada)</MenuItem>
-                      <MenuItem value='gmt-04-clp'>(GMT-04:00) Caracas, La Paz</MenuItem>
+                      {[
+                        { value: 'diploma', label: 'Diploma' },
+                        { value: 'bachelors_degree', label: 'Bachelors Degree' },
+                        { value: 'associate_degree', label: 'Associate Degree' },
+                        { value: 'masters', label: 'Masters' },
+                        { value: 'phd', label: 'Phd' }
+                      ].map(({ value, label }: any, index: number) => (
+                        <MenuItem key={index} value={value}>
+                          {label}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12} mt={5} sm={6}>
                   <FormControl fullWidth>
-                    <InputLabel>Currency</InputLabel>
+                    <InputLabel>Marital Status</InputLabel>
                     <Select
-                      label='Currency'
-                      value={formData.currency}
-                      onChange={e => handleFormChange('currency', e.target.value)}
+                      label='Marital Status'
+                      value={'married'}
+                      onChange={e => handleFormChange('marital_status', e.target.value)}
                     >
-                      <MenuItem value='usd'>USD</MenuItem>
-                      <MenuItem value='eur'>EUR</MenuItem>
-                      <MenuItem value='pound'>Pound</MenuItem>
-                      <MenuItem value='bitcoin'>Bitcoin</MenuItem>
+                      {[
+                        { value: 'single', label: 'Single' },
+                        { value: 'married', label: 'Married' },
+                        { value: 'isolated', label: 'Isolated' },
+                        { value: 'unknow', label: 'Unknow' }
+                      ].map(({ value, label }: any, index: number) => (
+                        <MenuItem key={index} value={value}>
+                          {label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} mt={5} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel>Military Status</InputLabel>
+                    <Select
+                      label='Military Status'
+                      value={'exemption-edu'}
+                      onChange={e => handleFormChange('military_status', e.target.value)}
+                    >
+                      {[
+                        { value: 'included', label: 'Included' },
+                        { value: 'end', label: 'End' },
+                        { value: 'exemption-edu', label: 'Exemption-Edu' },
+                        { value: 'exemption-spo', label: 'Exemption-Spo' }
+                      ].map(({ value, label }: any, index: number) => (
+                        <MenuItem key={index} value={value}>
+                          {label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} mt={5} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel>Work City</InputLabel>
+                    <Select
+                      label='Work City'
+                      value={'tehran'}
+                      onChange={e => handleFormChange('Work_city', e.target.value)}
+                    >
+                      {[
+                        { value: 'tehran', label: 'Tehran' },
+                        { value: 'alborz', label: 'Alborz' },
+                        { value: 'qazvin', label: 'Qazvin' },
+                        { value: 'khorasaan_razavi', label: 'Khorasaan Razavi' }
+                      ].map(({ value, label }: any, index: number) => (
+                        <MenuItem key={index} value={value}>
+                          {label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} mt={5} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel>Residence City</InputLabel>
+                    <Select
+                      label='Residence City'
+                      value={'tehran'}
+                      onChange={e => handleFormChange('residence_city', e.target.value)}
+                    >
+                      {[
+                        { value: 'tehran', label: 'Tehran' },
+                        { value: 'alborz', label: 'Alborz' },
+                        { value: 'qazvin', label: 'Qazvin' },
+                        { value: 'khorasaan_razavi', label: 'Khorasaan Razavi' }
+                      ].map(({ value, label }: any, index: number) => (
+                        <MenuItem key={index} value={value}>
+                          {label}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} mt={5} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel>Minimum Requested Salary (Toman)</InputLabel>
+                    <Select
+                      label='Minimum Requested Salary (Toman)'
+                      value={30000000}
+                      onChange={e => handleFormChange('min_salary', e.target.value)}
+                    >
+                      {salaries.map((item: any, index: number) => (
+                        <MenuItem key={index} value={item}>
+                          {item.format()}
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} mt={5} sm={6}>
+                  <FormControl fullWidth>
+                    <InputLabel>Maximum Requested Salary (Toman)</InputLabel>
+                    <Select
+                      label='Maximum Requested Salary (Toman)'
+                      value={35000000}
+                      onChange={e => handleFormChange('max_salary', e.target.value)}
+                    >
+                      {salaries.map((item: any, index: number) => (
+                        <MenuItem key={index} value={item}>
+                          {item.format()}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                 </Grid>
 
-                <Grid item xs={12}>
+                <Grid item xs={12} mt={5}>
                   <Button variant='contained' sx={{ mr: 3 }}>
                     Save Changes
                   </Button>
