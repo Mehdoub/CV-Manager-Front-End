@@ -32,7 +32,7 @@ const Timeline = styled(MuiTimeline)<TimelineProps>({
 
 const ResumeCallsTab = () => {
   return (
-    <Grid sx={{ height: '713px', overflowY: 'scroll', backgroundColor: '#4c4e640d' }}>
+    <Grid sx={{ height: '710px', overflowY: 'scroll', backgroundColor: '#4c4e640d' }}>
       <Grid container p={'10px 40px'}>
         <Timeline sx={{ my: 0, py: 0 }}>
           <TimelineItem>

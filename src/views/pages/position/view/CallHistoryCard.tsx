@@ -67,10 +67,6 @@ const CallHistoryCard = () => {
               of America, before there were coffee houses.
             </Typography>
           </CardContent>
-          <CardActions className='card-action-dense' sx={{ width: '100%' }}>
-            <Button>Edit</Button>
-            <Button>Remove</Button>
-          </CardActions>
         </StyledGrid1>
         <StyledGrid2 item xs={12} lg={3}>
           <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>

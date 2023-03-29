@@ -140,7 +140,7 @@ const ResumeDetailsTab = () => {
   for (let salary = 10; salary <= 50; salary++) salaries.push(salary * 1000000)
 
   return (
-    <Grid container spacing={6} sx={{ maxHeight: '713px', overflowY: 'scroll', p: '0 20px' }}>
+    <Grid container spacing={6} sx={{ height: '710px', overflowY: 'scroll', p: '0 20px' }}>
       {/* Account Details Card */}
       <Grid item xs={12}>
         <>

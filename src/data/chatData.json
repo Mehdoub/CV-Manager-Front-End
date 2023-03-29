@@ -1,0 +1,107 @@
+{
+  "id": 1,
+  "userId": 1,
+  "unseenMsgs": 1,
+  "chat": [
+    {
+      "message": "How can we help? We're here for you!",
+      "time": "14 mins",
+      "senderId": 11,
+      "feedback": {
+        "isSent": true,
+        "isDelivered": true,
+        "isSeen": true
+      }
+    },
+    {
+      "message": "Hey John, I am looking for the best admin template. Could you please help me to find it out? Hey John, I am looking for the best admin template. Could you please help me to find it out?",
+      "time": "1 hour",
+      "senderId": 1,
+      "feedback": {
+        "isSent": true,
+        "isDelivered": true,
+        "isSeen": true
+      }
+    },
+    {
+      "message": "It should be MUI v5 compatible.",
+      "time": "3 hours",
+      "senderId": 1,
+      "feedback": {
+        "isSent": true,
+        "isDelivered": true,
+        "isSeen": true
+      }
+    },
+    {
+      "message": "Absolutely!",
+      "time": "7 hours",
+      "senderId": 11,
+      "feedback": {
+        "isSent": true,
+        "isDelivered": true,
+        "isSeen": true
+      }
+    },
+    {
+      "message": "This admin template is built with MUI!",
+      "time": "yesterday",
+      "senderId": 11,
+      "feedback": {
+        "isSent": true,
+        "isDelivered": true,
+        "isSeen": true
+      }
+    },
+    {
+      "message": "Looks clean and fresh UI. 😍",
+      "time": "yesterday",
+      "senderId": 1,
+      "feedback": {
+        "isSent": true,
+        "isDelivered": true,
+        "isSeen": true
+      }
+    },
+    {
+      "message": "Its perfect for my next project.",
+      "time": "yesterday",
+      "senderId": 1,
+      "feedback": {
+        "isSent": true,
+        "isDelivered": true,
+        "isSeen": true
+      }
+    },
+    {
+      "message": "How can I purchase it?",
+      "time": "yesterday",
+      "senderId": 1,
+      "feedback": {
+        "isSent": true,
+        "isDelivered": true,
+        "isSeen": true
+      }
+    },
+    {
+      "message": "Thanks, From our official site  😇",
+      "time": "2 days",
+      "senderId": 11,
+      "feedback": {
+        "isSent": true,
+        "isDelivered": true,
+        "isSeen": true
+      }
+    },
+    {
+      "message": "I will purchase it for sure. Thanks, From our official site, Thanks, From our official site. I will purchase it for sure. Thanks, From our official site, Thanks, From our official site. . I will purchase it for sure. Thanks, From our official site, Thanks, From our official site. . I will purchase it for sure. Thanks, From our official site, Thanks, From our official site. 👍 ",
+      "time": "3 days",
+      "senderId": 1,
+      "feedback": {
+        "isSent": true,
+        "isDelivered": true,
+        "isSeen": true
+      }
+    }
+  ]
+}
