@@ -62,47 +62,19 @@ const ResumeViewRightDialog = ({ handleClickOpenAddCallDialog, cahtExample }: an
 
   return (
     <>
-      <Grid xs item container sx={{ textAlign: 'left' }}>
-        <Grid container xs={12} sx={{ display: 'flex', justifyContent: 'space-between', p: 5 }}>
-          <Grid item container xs={6}>
-            <Grid item xs={12}>
-              <Typography variant='body2'>Asignee(s):</Typography>
-              <Stack direction='row' spacing={1} mt={2} sx={{ display: 'flex', justifyContent: 'left' }}>
-                <Chip label='Mani Mohammadi' avatar={<Avatar src='/images/avatars/7.png' alt='User Avatar' />} />
-              </Stack>
-            </Grid>
-            <Grid item xs={12}>
-              <Typography sx={{ mt: 7 }} variant='body2'>
-                Interviewer(s):
-              </Typography>
-              <Stack direction='row' spacing={1} mt={2} sx={{ display: 'flex', justifyContent: 'left' }}>
-                <Chip label='Mahdi Amereh' avatar={<Avatar src='/images/avatars/5.png' alt='User Avatar' />} />
-                <Chip label='Ali Akbar Rezaei' avatar={<Avatar src='/images/avatars/3.png' alt='User Avatar' />} />
-              </Stack>
-            </Grid>
-          </Grid>
-          <Grid
-            item
-            xs={4}
-            sx={{ display: 'flex', justifyContent: 'end', alignItems: 'inherit', flexDirection: 'column' }}
-          >
-            <Button
-              onClick={handleClickOpenAddCallDialog}
-              variant='outlined'
-              color='secondary'
-              startIcon={<Icon icon='ic:round-call' />}
-            >
-              Add Call History
-            </Button>
-            <Button sx={{ mt: 3 }} variant='outlined' color='secondary' startIcon={<Icon icon='mdi:virtual-meeting' />}>
-              Add Interview
-            </Button>
-          </Grid>
-        </Grid>
-      </Grid>
-      <Divider sx={{ m: '0px !important' }} />
-      <Grid xs item container sx={{ backgroundColor: '#4c4e640d', display: 'flex', alignItems: 'end' }}>
-        <Grid md={12} item className='chat-body' sx={{ maxHeight: '700px', overflowY: 'scroll', p: 4 }}>
+      <Grid item>
+        <Box
+          className='chat-body'
+          sx={{
+            height: '65vh',
+            overflowY: 'scroll',
+            p: 4,
+            backgroundColor: '#4c4e640d',
+            display: 'flex',
+            alignItems: 'start',
+            flexDirection: 'column'
+          }}
+        >
           {cahtExample.chat.map((chat: any, index: number, { length }: { length: number }) => {
             avatarId = avatarId == 3 ? 5 : 3
             return (
@@ -181,8 +153,9 @@ const ResumeViewRightDialog = ({ handleClickOpenAddCallDialog, cahtExample }: an
               </Box>
             )
           })}
-        </Grid>
-        <Grid sm={12} md={12} item sx={{ width: '100%', position: 'absolute', bottom: 0 }}>
+        </Box>
+        {/* <Grid item xs={12} sx={{ height: '64px' }}></Grid> */}
+        <Box sx={{ width: '100%', position: 'absolute', bottom: 0 }}>
           <form onSubmit={handleSendMsg}>
             <ChatFormWrapper
               ref={wrapperRef}
@@ -288,7 +261,7 @@ const ResumeViewRightDialog = ({ handleClickOpenAddCallDialog, cahtExample }: an
               </Grid>
             </ChatFormWrapper>
           </form>
-        </Grid>
+        </Box>
       </Grid>
     </>
   )

@@ -1,10 +1,11 @@
-import { Dialog, Divider, Grid, IconButton } from '@mui/material'
+import { Dialog, Divider, Grid, IconButton, useMediaQuery } from '@mui/material'
 import { useState } from 'react'
 import Icon from 'src/@core/components/icon'
 import AddCallHistoryDialog from './AddCallHistoryDialog'
 import ResumeViewLeftDialog from './ResumeViewLeftDialog'
 import ResumeViewRightDialog from './ResumeViewRightDialog'
 import cahtExample from 'src/data/chatData.json'
+import ResumeCardHeader from './ResumeCardHeader'
 
 interface ResumeCardViewDialogProps {
   open: boolean
@@ -29,7 +30,10 @@ const tags = [
 
 const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialogProps) => {
   const [activeTab, setActiveTab] = useState<string>('details')
+  const [smActiveTab, setSmActiveTab] = useState<string>('resumedata')
   const [openAddCallDialog, setOpenAddCallDialog] = useState<boolean>(false)
+
+  const isSmallScreen = useMediaQuery((theme: any) => theme.breakpoints.down('lg'))
 
   const handleClickOpenAddCallDialog = () => setOpenAddCallDialog(true)
 
@@ -37,6 +41,10 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
 
   const handleTabChange = (e: any, value: string) => {
     setActiveTab(value)
+  }
+
+  const handleSmTabChange = (e: any, value: string) => {
+    setSmActiveTab(value)
   }
 
   return (
@@ -47,31 +55,42 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
         scroll='body'
         onClose={toggle}
         open={open}
-        sx={{ margin: '0 100px' }}
-        // PaperProps={{ style: { margin: '30px 100px' } }}
+        // sx={{ height: '100vh' }}
+        PaperProps={{ style: { margin: '1.5rem 0' } }}
       >
-        <Grid container xs={12} flexDirection='row'>
-          <IconButton size='small' onClick={toggle} sx={{ position: 'absolute', right: '1rem', top: '1rem' }}>
-            <Icon icon='mdi:close' />
-          </IconButton>
-          <Grid
-            md={6}
-            item
-            sx={{ display: 'flex', flexDirection: 'column', borderRight: '1px solid rgba(76, 78, 100, 0.12)' }}
-          >
-            <ResumeViewLeftDialog
+        <Grid container xs={12} flexDirection='row' sx={{ borderBottom: '1px solid rgba(76, 78, 100, 0.12)' }}>
+          <Grid lg={12} item container sx={{ borderBottom: '1px solid rgba(76, 78, 100, 0.12)' }}>
+            <ResumeCardHeader
               handleClickOpenAddCallDialog={handleClickOpenAddCallDialog}
-              activeTab={activeTab}
               tags={tags}
-              handleTabChange={handleTabChange}
+              closeToggle={toggle}
+              smActiveTab={smActiveTab}
+              handleSmTabChange={handleSmTabChange}
+              isSmallScreen={isSmallScreen}
             />
           </Grid>
-          <Grid md={6} item sx={{ position: 'relative' }}>
-            <ResumeViewRightDialog
-              handleClickOpenAddCallDialog={handleClickOpenAddCallDialog}
-              cahtExample={cahtExample}
-            />
-          </Grid>
+          {(!isSmallScreen || (isSmallScreen && smActiveTab == 'resumedata')) && (
+            <Grid
+              lg={6}
+              item
+              sx={{ display: 'flex', flexDirection: 'column', borderRight: '1px solid rgba(76, 78, 100, 0.12)' }}
+            >
+              <ResumeViewLeftDialog
+                handleClickOpenAddCallDialog={handleClickOpenAddCallDialog}
+                activeTab={activeTab}
+                tags={tags}
+                handleTabChange={handleTabChange}
+              />
+            </Grid>
+          )}
+          {(!isSmallScreen || (isSmallScreen && smActiveTab == 'comment')) && (
+            <Grid lg={6} item sx={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
+              <ResumeViewRightDialog
+                handleClickOpenAddCallDialog={handleClickOpenAddCallDialog}
+                cahtExample={cahtExample}
+              />
+            </Grid>
+          )}
         </Grid>
       </Dialog>
       <AddCallHistoryDialog open={openAddCallDialog} handleClose={handleCloseAddCallDialog} />
