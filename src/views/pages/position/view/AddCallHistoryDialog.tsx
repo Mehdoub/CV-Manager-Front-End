@@ -10,14 +10,25 @@ import DialogContent from '@mui/material/DialogContent'
 import Grid from '@mui/material/Grid'
 import InputAdornment from '@mui/material/InputAdornment'
 
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
+import DatePicker, { DateObject } from 'react-multi-date-picker'
+import TimePicker from 'react-multi-date-picker/plugins/time_picker'
+import persian from 'react-date-object/calendars/persian'
+import persian_fa from 'react-date-object/locales/persian_fa'
 
 import Icon from 'src/@core/components/icon'
-import { Box, FormControl, IconButton, InputLabel, MenuItem, Rating, Select, Typography } from '@mui/material'
+import {
+  Box,
+  FormControl,
+  IconButton,
+  InputLabel,
+  MenuItem,
+  Rating,
+  Select,
+  Typography,
+  useMediaQuery
+} from '@mui/material'
 import { uppercaseFirstLetters } from 'src/helpers/functions'
-import { EventRepeat } from '@mui/icons-material'
+import Language from 'src/helpers/Language'
 
 const ratingLabels: { [index: string]: string } = {
   1: 'Useless',
@@ -34,16 +45,33 @@ interface AddCallHistoryDialogProps {
 const AddCallHistoryDialog = ({ open, handleClose }: AddCallHistoryDialogProps) => {
   const [ratingValue, setRatingValue] = useState<any>(2)
   const [hoverRatingValue, setHoverRatingValue] = useState<any>(1)
+  const [callResult, setCallResult] = useState<string>('')
+  const [callingDate, setCallingDate] = useState<any>('')
+  const [recallDate, setRecallDate] = useState<any>('')
+
+  const language = Language.builder().getLanguage()
+
+  const persianDate = language == 'fa' ? persian : undefined
+  const persianDateFa = language == 'fa' ? persian_fa : undefined
+
+  const isSmallScreen = useMediaQuery((theme: any) => theme.breakpoints.down('lg'))
+  const overflowVisibility = isSmallScreen ? 'scroll' : 'visible'
+
   return (
     <>
-      <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
+      <Dialog
+        open={open}
+        onClose={handleClose}
+        aria-labelledby='form-dialog-title'
+        PaperProps={{ style: { overflowY: overflowVisibility, maxHeight: '100% !important' } }}
+      >
         <IconButton size='small' onClick={handleClose} sx={{ position: 'absolute', right: '1rem', top: '1rem' }}>
           <Icon icon='mdi:close' />
         </IconButton>
         <DialogTitle id='form-dialog-title'>Add Call History</DialogTitle>
-        <DialogContent>
+        <DialogContent sx={{ overflowY: overflowVisibility }}>
           <form onSubmit={e => e.preventDefault()} style={{ marginTop: '15px' }}>
-            <Grid container spacing={5}>
+            <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Box sx={{ display: 'flex', alignItems: 'left', flexDirection: 'column' }}>
                   <Typography sx={{ fontWeight: 500, ml: 1 }}>How Was The Call?</Typography>
@@ -62,10 +90,49 @@ const AddCallHistoryDialog = ({ open, handleClose }: AddCallHistoryDialogProps) 
                   </Box>
                 </Box>
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={6}>
+                <FormControl fullWidth>
+                  <Typography fontSize={14} sx={{ fontWeight: 400, mb: 1, ml: 1, color: 'text.secondary' }}>
+                    {`${uppercaseFirstLetters('Calling Date')}`}
+                  </Typography>
+                  <DatePicker
+                    value={callingDate}
+                    onChange={setCallingDate}
+                    format='MM/DD/YYYY HH:mm:ss'
+                    plugins={[<TimePicker position='bottom' />]}
+                    inputClass='rmdp-input'
+                    placeholder='Click To Select Time'
+                    calendar={persianDate}
+                    locale={persianDateFa}
+                    required
+                  />
+                </FormControl>
+              </Grid>
+              {callResult == 'recall' && (
+                <Grid item xs={6}>
+                  <FormControl fullWidth>
+                    <Typography fontSize={14} sx={{ fontWeight: 400, mb: 1, ml: 1, color: 'text.secondary' }}>
+                      {`${uppercaseFirstLetters('Recall Date')}`}
+                    </Typography>
+                    <DatePicker
+                      value={recallDate}
+                      onChange={setRecallDate}
+                      format='MM/DD/YYYY HH:mm:ss'
+                      plugins={[<TimePicker position='bottom' />]}
+                      inputClass='rmdp-input'
+                      placeholder='Click To Select Time'
+                      minDate={new DateObject()}
+                      calendar={persianDate}
+                      locale={persianDateFa}
+                      required
+                    />
+                  </FormControl>
+                </Grid>
+              )}
+              <Grid item xs={12} mt={5}>
                 <FormControl fullWidth>
                   <InputLabel>Result</InputLabel>
-                  <Select label='Result'>
+                  <Select label='Result' value={callResult} onChange={(e: any) => setCallResult(e.target.value)}>
                     {['rejected', 'answered', 'busy', 'wrong-number', 'recall'].map((item: string, index: number) => (
                       <MenuItem key={`${item}-${index}`} value={item}>
                         {uppercaseFirstLetters(item)}
@@ -74,21 +141,8 @@ const AddCallHistoryDialog = ({ open, handleClose }: AddCallHistoryDialogProps) 
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12}>
-                <FormControl fullWidth>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker label='Calling Date' />
-                  </LocalizationProvider>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
-                <FormControl fullWidth>
-                  <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DatePicker slots={{ openPickerIcon: EventRepeat }} label='Recall Date' />
-                  </LocalizationProvider>
-                </FormControl>
-              </Grid>
-              <Grid item xs={12}>
+
+              <Grid item xs={12} mt={5}>
                 <TextField
                   fullWidth
                   multiline
@@ -105,7 +159,7 @@ const AddCallHistoryDialog = ({ open, handleClose }: AddCallHistoryDialogProps) 
                   }}
                 />
               </Grid>
-              <Grid item xs={12} sx={{ textAlign: 'right' }}>
+              <Grid item xs={12} sx={{ textAlign: 'right', mt: 10 }}>
                 <Button onClick={handleClose} variant='outlined' size='large' color='secondary'>
                   Cancel
                 </Button>

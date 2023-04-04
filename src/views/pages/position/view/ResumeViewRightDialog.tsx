@@ -82,7 +82,8 @@ const ResumeViewRightDialog = ({ handleClickOpenAddCallDialog, cahtExample }: an
                 sx={{
                   display: 'flex',
                   flexDirection: !isSender ? 'row' : 'row-reverse',
-                  p: 2
+                  p: 2,
+                  width: '100%'
                 }}
               >
                 <div>

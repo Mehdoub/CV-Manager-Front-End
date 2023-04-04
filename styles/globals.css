@@ -139,3 +139,22 @@ code[class*='language-'] {
 .resume-active-tab {
   font-weight: 900 !important;
 }
+
+.rmdp-input {
+  padding: 27px 15px !important;
+  border-radius: 8px !important;
+  border-color: rgba(76, 78, 100, 0.22) !important;
+  font-size: 14px !important;
+  color: rgba(76, 78, 100, 0.87) !important;
+  width: 100%;
+}
+
+.rmdp-input:focus {
+  border-color: #666cff !important;
+  border-width: 2px !important;
+}
+
+.rmdp-input::placeholder {
+  color: #b1b1b1 !important;
+  font-size: 15px !important;
+}

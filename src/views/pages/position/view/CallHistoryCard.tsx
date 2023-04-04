@@ -11,6 +11,7 @@ import Grid, { GridProps } from '@mui/material/Grid'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import Icon from 'src/@core/components/icon'
 import { Stack } from '@mui/material'
+import { uppercaseFirstLetters } from 'src/helpers/functions'
 
 // Styled Grid component
 const StyledGrid1 = styled(Grid)<GridProps>(({ theme }) => ({
@@ -66,6 +67,24 @@ const CallHistoryCard = () => {
               Before there was a United States of America, there were coffee houses. Roasters there was a United States
               of America, before there were coffee houses.
             </Typography>
+            <Box
+              sx={{
+                mt: 4,
+                display: 'flex',
+                alignItems: 'center',
+                '&:not(:last-of-type)': { mb: 4 },
+                '& svg': { color: 'text.primary' }
+              }}
+            >
+              <Icon fontSize={24} icon='mdi:alarm-clock' />
+
+              <Typography fontSize={14} sx={{ fontWeight: 600, mr: 2, ml: 1 }}>
+                {`${uppercaseFirstLetters('Recall Time')}:`}
+              </Typography>
+              <Typography fontSize={14} sx={{ color: 'text.secondary' }}>
+                {'12 Jan 2023, 04:30 P.M'}
+              </Typography>
+            </Box>
           </CardContent>
         </StyledGrid1>
         <StyledGrid2 item xs={12} lg={3}>
