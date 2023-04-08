@@ -116,26 +116,41 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                   </Box>
                 </Box>
               </Grid>
-              <Grid item xs={12}>
-                <Grid item md={6} xs={12}>
-                  <FormControl fullWidth>
-                    <Typography fontSize={14} sx={{ fontWeight: 400, mb: 1, ml: 1, color: 'text.secondary' }}>
-                      {`${uppercaseFirstLetters('Event Time')}`}
-                    </Typography>
-                    <DatePicker
-                      value={eventTime}
-                      onChange={setEventTime}
-                      format='MM/DD/YYYY HH:mm:ss'
-                      plugins={[<TimePicker position='bottom' />]}
-                      inputClass='rmdp-input'
-                      placeholder='Click To Select Time'
-                      calendar={persianDate}
-                      locale={persianDateFa}
-                      required
-                      containerStyle={{ marginRight: '8px' }}
-                    />
-                  </FormControl>
-                </Grid>
+              <Grid item md={6} xs={12}>
+                <FormControl fullWidth>
+                  <Typography fontSize={14} sx={{ fontWeight: 400, mb: 1, ml: 1, color: 'text.secondary' }}>
+                    {`${uppercaseFirstLetters('Event Time')}`}
+                  </Typography>
+                  <DatePicker
+                    value={eventTime}
+                    onChange={setEventTime}
+                    format='MM/DD/YYYY HH:mm:ss'
+                    plugins={[<TimePicker position='bottom' />]}
+                    inputClass='rmdp-input'
+                    placeholder='Click To Select Time'
+                    calendar={persianDate}
+                    locale={persianDateFa}
+                    minDate={new DateObject()}
+                    required
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} md={6} sx={{ mt: '26px' }}>
+                <Autocomplete
+                  multiple
+                  options={fakeUsers}
+                  id='autocomplete-size-small-multi'
+                  getOptionLabel={user => getFullName(user)}
+                  renderInput={params => <TextField {...params} label='Contributers' placeholder='Search Users ...' />}
+                  renderOption={(props, user) => (
+                    <ListItem {...props}>
+                      <ListItemAvatar>
+                        <Avatar src={user?.avatar} alt={getFullName(user)} sx={{ height: 28, width: 28 }} />
+                      </ListItemAvatar>
+                      <ListItemText primary={getFullName(user)} />
+                    </ListItem>
+                  )}
+                />
               </Grid>
               <Grid item md={6} xs={12} mt={5}>
                 <FormControl fullWidth>
@@ -189,24 +204,6 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                   </Select>
                 </FormControl>
               </Grid>
-              <Grid item xs={12} mt={5}>
-                <Autocomplete
-                  multiple
-                  options={fakeUsers}
-                  id='autocomplete-size-small-multi'
-                  getOptionLabel={user => getFullName(user)}
-                  renderInput={params => <TextField {...params} label='Contributers' placeholder='Search Users ...' />}
-                  renderOption={(props, user) => (
-                    <ListItem {...props}>
-                      <ListItemAvatar>
-                        <Avatar src={user?.avatar} alt={getFullName(user)} sx={{ height: 28, width: 28 }} />
-                      </ListItemAvatar>
-                      <ListItemText primary={getFullName(user)} />
-                    </ListItem>
-                  )}
-                />
-              </Grid>
-
               <Grid item xs={12} mt={5}>
                 <TextField
                   fullWidth

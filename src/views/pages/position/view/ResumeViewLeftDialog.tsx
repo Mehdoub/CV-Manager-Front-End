@@ -2,11 +2,11 @@ import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
 import { Box, Grid, Tab, styled } from '@mui/material'
-import { useState, MouseEvent } from 'react'
 import ResumeDetailsTab from './ResumeDetailsTab'
 import ResumeCallsTab from './ResumeCallsTab'
 
 import MuiMenu, { MenuProps } from '@mui/material/Menu'
+import ResumeInterviewsTab from './ResumeInterviewsTab'
 
 // Styled Menu component
 const Menu = styled(MuiMenu)<MenuProps>(({ theme }) => ({
@@ -15,7 +15,7 @@ const Menu = styled(MuiMenu)<MenuProps>(({ theme }) => ({
   }
 }))
 
-const ResumeViewLeftDialog = ({ handleClickOpenAddCallDialog, activeTab, tags, handleTabChange }: any) => {
+const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
   return (
     <>
       <Grid xs={12} item>
@@ -38,12 +38,12 @@ const ResumeViewLeftDialog = ({ handleClickOpenAddCallDialog, activeTab, tags, h
               />
               <Tab
                 value='file'
-                label='Interview'
+                label='File'
                 className={`${activeTab == 'file' ? 'resume-active-tab' : ''} resume-tab`}
               />
               <Tab
                 value='interview'
-                label='File'
+                label='Interview'
                 className={`${activeTab == 'interview' ? 'resume-active-tab' : ''} resume-tab`}
               />
               <Tab
@@ -64,7 +64,7 @@ const ResumeViewLeftDialog = ({ handleClickOpenAddCallDialog, activeTab, tags, h
                 </TabPanel>
                 <TabPanel sx={{ p: 0 }} value='interview'>
                   <Grid xs={12} container>
-                    <h5>There Is Nothing To Show Interview ...</h5>
+                    <ResumeInterviewsTab />
                   </Grid>
                 </TabPanel>
                 <TabPanel sx={{ p: 0 }} value='call'>
