@@ -142,7 +142,12 @@ const InterviewCard = () => {
             </Grid>
           </CardContent>
         </StyledGrid1>
-        <StyledGrid2 item xs={12} lg={3} sx={{ flexDirection: 'column', justifyContent: 'start' }}>
+        <StyledGrid2
+          item
+          xs={12}
+          lg={3}
+          sx={{ flexDirection: 'column', justifyContent: 'start', pb: '24px', pr: '20px' }}
+        >
           <Grid sx={{ display: 'flex', justifyContent: 'end', width: '100%' }}>
             <IconButton onClick={() => console.log('clicked')}>
               <Icon icon='material-symbols:more-vert' />

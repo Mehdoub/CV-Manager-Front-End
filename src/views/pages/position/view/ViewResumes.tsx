@@ -1,6 +1,6 @@
 import { Stack } from '@mui/material'
 import { useScrollContainer } from 'react-indiana-drag-scroll'
-import ResumeCardViewDialog from './ResumeCardViewDialog'
+import ResumeCardMainDialog from './ResumeCardMainDialog'
 import { useState } from 'react'
 import ResumeKanbanColumn from './ResumeKanbanColumn'
 import ResumeKanbanCard from './ResumeKanbanCard'
@@ -199,7 +199,7 @@ const cards = [
   }
 ]
 
-const ProjectViewResumes = () => {
+const ViewResumes = () => {
   const [open, setOpen] = useState<boolean>(false)
   const handleClose = () => setOpen(false)
   const scrollContainer = useScrollContainer()
@@ -219,9 +219,9 @@ const ProjectViewResumes = () => {
           </ResumeKanbanColumn>
         ))}
       </Stack>
-      <ResumeCardViewDialog open={open} toggle={handleClose} resumeData={{}} />
+      <ResumeCardMainDialog open={open} toggle={handleClose} resumeData={{}} />
     </>
   )
 }
 
-export default ProjectViewResumes
+export default ViewResumes

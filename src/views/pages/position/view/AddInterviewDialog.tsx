@@ -29,10 +29,9 @@ import {
   MenuItem,
   Rating,
   Select,
-  Typography,
-  useMediaQuery
+  Typography
 } from '@mui/material'
-import { getFullName, getImagePath, uppercaseFirstLetters } from 'src/helpers/functions'
+import { getFullName, uppercaseFirstLetters } from 'src/helpers/functions'
 import Language from 'src/helpers/Language'
 
 const fakeUsers = [

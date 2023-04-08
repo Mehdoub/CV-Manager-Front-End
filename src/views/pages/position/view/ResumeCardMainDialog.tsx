@@ -7,7 +7,7 @@ import cahtExample from 'src/data/chatData.json'
 import ResumeCardHeader from './ResumeCardHeader'
 import AddInterviewDialog from './AddInterviewDialog'
 
-interface ResumeCardViewDialogProps {
+interface ResumeCardMainDialogProps {
   open: boolean
   toggle: () => void
   resumeData: any
@@ -28,7 +28,7 @@ const tags = [
   }
 ]
 
-const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialogProps) => {
+const ResumeCardMainDialog = ({ open, toggle, resumeData }: ResumeCardMainDialogProps) => {
   const [activeTab, setActiveTab] = useState<string>('details')
   const [smActiveTab, setSmActiveTab] = useState<string>('resumedata')
   const [openAddCallDialog, setOpenAddCallDialog] = useState<boolean>(false)
@@ -77,7 +77,12 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
             <Grid
               lg={6}
               item
-              sx={{ display: 'flex', flexDirection: 'column', borderRight: '1px solid rgba(76, 78, 100, 0.12)' }}
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                borderRight: '1px solid rgba(76, 78, 100, 0.12)',
+                position: 'relative'
+              }}
             >
               <ResumeViewLeftDialog
                 handleClickOpenAddCallDialog={handleClickOpenAddCallDialog}
@@ -103,4 +108,4 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
   )
 }
 
-export default ResumeCardViewDialog
+export default ResumeCardMainDialog

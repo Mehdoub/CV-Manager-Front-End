@@ -154,8 +154,8 @@ const ResumeViewRightDialog = ({ handleClickOpenAddCallDialog, cahtExample }: an
               </Box>
             )
           })}
+          <Box sx={{ display: 'flex', p: 6, width: '100%' }}></Box>
         </Box>
-        {/* <Grid item xs={12} sx={{ height: '64px' }}></Grid> */}
         <Box sx={{ width: '100%', position: 'absolute', bottom: 0 }}>
           <form onSubmit={handleSendMsg}>
             <ChatFormWrapper

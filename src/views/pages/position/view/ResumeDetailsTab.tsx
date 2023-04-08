@@ -147,7 +147,6 @@ const ResumeDetailsTab = () => {
         p: '0 20px'
       }}
     >
-      {/* Account Details Card */}
       <Grid item xs={12}>
         <>
           <CardHeader title='Personal Information' />
