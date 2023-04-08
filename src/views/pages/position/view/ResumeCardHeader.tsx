@@ -1,4 +1,20 @@
-import { Avatar, Box, Button, Chip, Grid, IconButton, Rating, Stack, Tab, Typography } from '@mui/material'
+import {
+  Autocomplete,
+  Avatar,
+  Box,
+  Button,
+  Chip,
+  Grid,
+  IconButton,
+  ListItem,
+  Popover,
+  Rating,
+  Stack,
+  Tab,
+  TextField,
+  Typography,
+  createFilterOptions
+} from '@mui/material'
 import { getMaxTextLen } from 'src/helpers/functions'
 import { BootstrapTooltip } from 'src/pages/companies'
 import CustomAvatar from 'src/@core/components/mui/avatar'
@@ -7,6 +23,27 @@ import Icon from 'src/@core/components/icon'
 import { getInitials } from 'src/@core/utils/get-initials'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
+import { useState } from 'react'
+
+const filter = createFilterOptions<any>()
+
+const fakeTags = [
+  {
+    id: 1,
+    title: 'tag number one',
+    color: 'error'
+  },
+  {
+    id: 2,
+    title: 'tag two',
+    color: 'success'
+  },
+  {
+    id: 3,
+    title: 'tag 3',
+    color: 'primary'
+  }
+]
 
 const ResumeCardHeader = ({
   tags,
@@ -17,6 +54,19 @@ const ResumeCardHeader = ({
   handleSmTabChange,
   isSmallScreen
 }: any) => {
+  const [anchorElAddTag, setAnchorElAddTag] = useState<HTMLButtonElement | null>(null)
+  const [newTag, setNewTag] = useState<any>({})
+
+  const handleClickAddTag = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorElAddTag(event.currentTarget)
+  }
+
+  const handleCloseAddTag = () => {
+    setAnchorElAddTag(null)
+  }
+
+  const openAddTag = Boolean(anchorElAddTag)
+
   return (
     <>
       <IconButton size='small' onClick={closeToggle} sx={{ position: 'absolute', right: '0.05rem', top: '0.05rem' }}>
@@ -114,18 +164,109 @@ const ResumeCardHeader = ({
                           fontSize: 12,
                           height: 22,
                           borderBottomLeftRadius: 0,
-                          borderTopLeftRadius: 0
+                          borderTopLeftRadius: 0,
+                          cursor: 'pointer',
+                          '.MuiSvgIcon-root': {
+                            display: 'none'
+                          },
+                          ':hover': {
+                            '.MuiSvgIcon-root': {
+                              display: 'inline-block'
+                            }
+                          }
                         }}
+                        onDelete={() => console.log('deleted')}
                       />
                     </div>
                   </BootstrapTooltip>
                   {tags?.length == index + 1 && (
-                    <IconButton
-                      aria-label='capture screenshot'
-                      sx={{ border: '1px dashed gray', width: '35px', height: '35px' }}
-                    >
-                      <Icon icon='mdi:tag-plus' />
-                    </IconButton>
+                    <>
+                      <BootstrapTooltip placement='top' title='Add Tag'>
+                        <IconButton
+                          aria-label='capture screenshot'
+                          sx={{ border: '1px dashed gray', width: '28px', height: '28px', p: 0 }}
+                          onClick={handleClickAddTag}
+                        >
+                          <Icon fontSize={16} icon='mdi:tag-plus' />
+                        </IconButton>
+                      </BootstrapTooltip>
+                      <Popover
+                        id='add-tag'
+                        open={openAddTag}
+                        anchorEl={anchorElAddTag}
+                        onClose={handleCloseAddTag}
+                        anchorOrigin={{
+                          vertical: 'bottom',
+                          horizontal: 'left'
+                        }}
+                        PaperProps={{
+                          style: {
+                            width: '15%'
+                          }
+                        }}
+                      >
+                        <Grid container xs={12} p={5}>
+                          <Grid item xs={12}>
+                            <Autocomplete
+                              options={fakeTags}
+                              id='autocomplete-size-small-multi'
+                              renderInput={params => (
+                                <TextField {...params} label='Add Tag' placeholder='Search Tags ...' />
+                              )}
+                              renderOption={(props, tag: any) =>
+                                tag.title.includes('Add "') ? (
+                                  <ListItem {...props}>{tag.title}</ListItem>
+                                ) : (
+                                  <ListItem {...props}>
+                                    <CustomChip size='small' label={tag.title} skin='light' color={tag.color as any} />
+                                  </ListItem>
+                                )
+                              }
+                              onChange={(event, newValue) => {
+                                if (typeof newValue === 'string') {
+                                  setNewTag({
+                                    title: newValue
+                                  })
+                                } else if (newValue && newValue.inputValue) {
+                                  setNewTag({
+                                    title: newValue.inputValue
+                                  })
+                                } else {
+                                  setNewTag(newValue)
+                                }
+                              }}
+                              filterOptions={(options, params) => {
+                                const filtered = filter(options, params)
+
+                                const { inputValue } = params
+                                // Suggest the creation of a new value
+                                const isExisting = options.some(option => inputValue === option.title)
+                                if (inputValue !== '' && !isExisting) {
+                                  filtered.push({
+                                    inputValue,
+                                    title: `Add "${inputValue}"`
+                                  })
+                                }
+
+                                return filtered
+                              }}
+                              selectOnFocus
+                              clearOnBlur
+                              handleHomeEndKeys
+                              getOptionLabel={option => {
+                                if (typeof option === 'string') {
+                                  return option
+                                }
+                                if (option.inputValue) {
+                                  return option.inputValue
+                                }
+                                return option.title
+                              }}
+                            />
+                          </Grid>
+                        </Grid>
+                      </Popover>
+                    </>
                   )}
                 </>
               ))}
