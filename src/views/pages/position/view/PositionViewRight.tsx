@@ -22,7 +22,6 @@ import ViewOverview from 'src/views/pages/position/view/ViewOverview'
 import ViewResumes from 'src/views/pages/position/view/ViewResumes'
 import ViewInterviews from 'src/views/pages/position/view/ViewInterviews'
 import { Button } from '@mui/material'
-import AddManagerDrawer from './AddManagerDrawer'
 import ManagersView from 'src/views/common/ManagersView'
 import { useSelector } from 'react-redux'
 import {
@@ -48,13 +47,10 @@ const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   }
 }))
 
-const PositionViewRight : any = ({ tab, positionId }: Props) => {
+const PositionViewRight: any = ({ tab, positionId }: Props) => {
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
-  const [addManagerOpen, setAddManagerOpen] = useState<boolean>(false)
-
-  const toggleAddManagerDrawer = () => setAddManagerOpen(!addManagerOpen)
 
   // ** Hooks
   const router = useRouter()
@@ -149,7 +145,6 @@ const PositionViewRight : any = ({ tab, positionId }: Props) => {
             </>
           )}
         </Box>
-        <AddManagerDrawer open={addManagerOpen} toggle={toggleAddManagerDrawer} />
       </TabContext>
     </>
   )

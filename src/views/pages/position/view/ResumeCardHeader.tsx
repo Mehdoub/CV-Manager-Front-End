@@ -1,19 +1,5 @@
-import {
-  Avatar,
-  Box,
-  Button,
-  Chip,
-  Divider,
-  Grid,
-  IconButton,
-  Rating,
-  Stack,
-  Tab,
-  Typography,
-  useMediaQuery,
-  useTheme
-} from '@mui/material'
-import { getMaxTextLen, useWidth } from 'src/helpers/functions'
+import { Avatar, Box, Button, Chip, Grid, IconButton, Rating, Stack, Tab, Typography } from '@mui/material'
+import { getMaxTextLen } from 'src/helpers/functions'
 import { BootstrapTooltip } from 'src/pages/companies'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import CustomChip from 'src/@core/components/mui/chip'
@@ -21,11 +7,11 @@ import Icon from 'src/@core/components/icon'
 import { getInitials } from 'src/@core/utils/get-initials'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
-import TabPanel from '@mui/lab/TabPanel'
 
 const ResumeCardHeader = ({
   tags,
   handleClickOpenAddCallDialog,
+  handleClickOpenAddInterviewDialog,
   closeToggle,
   smActiveTab,
   handleSmTabChange,
@@ -189,6 +175,7 @@ const ResumeCardHeader = ({
             Add Call History
           </Button>
           <Button
+            onClick={handleClickOpenAddInterviewDialog}
             sx={{ mt: 3, fontSize: '0.75rem', p: 2 }}
             variant='outlined'
             color='secondary'

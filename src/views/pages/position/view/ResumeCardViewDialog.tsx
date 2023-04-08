@@ -1,11 +1,11 @@
-import { Dialog, Divider, Grid, IconButton, useMediaQuery } from '@mui/material'
+import { Dialog, Grid, useMediaQuery } from '@mui/material'
 import { useState } from 'react'
-import Icon from 'src/@core/components/icon'
 import AddCallHistoryDialog from './AddCallHistoryDialog'
 import ResumeViewLeftDialog from './ResumeViewLeftDialog'
 import ResumeViewRightDialog from './ResumeViewRightDialog'
 import cahtExample from 'src/data/chatData.json'
 import ResumeCardHeader from './ResumeCardHeader'
+import AddInterviewDialog from './AddInterviewDialog'
 
 interface ResumeCardViewDialogProps {
   open: boolean
@@ -32,12 +32,15 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
   const [activeTab, setActiveTab] = useState<string>('details')
   const [smActiveTab, setSmActiveTab] = useState<string>('resumedata')
   const [openAddCallDialog, setOpenAddCallDialog] = useState<boolean>(false)
+  const [openAddInterviewDialog, setOpenAddInterviewDialog] = useState<boolean>(false)
 
   const isSmallScreen = useMediaQuery((theme: any) => theme.breakpoints.down('lg'))
 
   const handleClickOpenAddCallDialog = () => setOpenAddCallDialog(true)
+  const handleClickOpenAddInterviewDialog = () => setOpenAddInterviewDialog(true)
 
   const handleCloseAddCallDialog = () => setOpenAddCallDialog(false)
+  const handleCloseAddInterviewDialog = () => setOpenAddInterviewDialog(false)
 
   const handleTabChange = (e: any, value: string) => {
     setActiveTab(value)
@@ -62,6 +65,7 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
           <Grid lg={12} item container sx={{ borderBottom: '1px solid rgba(76, 78, 100, 0.12)' }}>
             <ResumeCardHeader
               handleClickOpenAddCallDialog={handleClickOpenAddCallDialog}
+              handleClickOpenAddInterviewDialog={handleClickOpenAddInterviewDialog}
               tags={tags}
               closeToggle={toggle}
               smActiveTab={smActiveTab}
@@ -94,6 +98,7 @@ const ResumeCardViewDialog = ({ open, toggle, resumeData }: ResumeCardViewDialog
         </Grid>
       </Dialog>
       <AddCallHistoryDialog open={openAddCallDialog} handleClose={handleCloseAddCallDialog} />
+      <AddInterviewDialog open={openAddInterviewDialog} handleClose={handleCloseAddInterviewDialog} />
     </>
   )
 }
