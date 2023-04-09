@@ -31,6 +31,7 @@ import {
   getPositionManagers,
   removePositionManager
 } from 'src/store/position'
+import AddResumeDialog from './AddResumeDialog'
 
 interface Props {
   tab: string
@@ -51,6 +52,9 @@ const PositionViewRight: any = ({ tab, positionId }: Props) => {
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
+  const [openAddResumeDialog, setOpenAddResumeDialog] = useState<boolean>(false)
+
+  const handleCloseAddResumeDialog = () => setOpenAddResumeDialog(false)
 
   // ** Hooks
   const router = useRouter()
@@ -101,7 +105,11 @@ const PositionViewRight: any = ({ tab, positionId }: Props) => {
           <Tab value='resume' label='Resumes' icon={<Icon icon='pepicons-pop:cv' />} />
           <Tab value='manager' label='Managers' icon={<Icon icon='grommet-icons:user-manager' />} />
           {activeTab == 'resume' ? (
-            <Button sx={{ mb: 2, position: 'absolute', right: '5px', top: '5px' }} variant='outlined'>
+            <Button
+              sx={{ mb: 2, position: 'absolute', right: '5px', top: '5px' }}
+              variant='outlined'
+              onClick={() => setOpenAddResumeDialog(true)}
+            >
               Add Resume
             </Button>
           ) : activeTab == 'interview' ? (
@@ -146,6 +154,7 @@ const PositionViewRight: any = ({ tab, positionId }: Props) => {
           )}
         </Box>
       </TabContext>
+      <AddResumeDialog open={openAddResumeDialog} handleClose={handleCloseAddResumeDialog} />
     </>
   )
 }
