@@ -42,6 +42,7 @@ import { positionActiveReducer, positionCreateReducer, positionDeactiveReducer, 
 import { constantsReducer } from './common'
 import { roleCreateReducer, roleEditReducer, rolesReducer } from './role'
 import { permissionsGroupedReducer } from './permission'
+import { resumeCreateReducer } from './resume'
 
 export const store = configureStore({
   reducer: {
@@ -101,6 +102,8 @@ export const store = configureStore({
     roleEdit: roleEditReducer,
 
     permissionsGrouped: permissionsGroupedReducer,
+
+    resumeCreate: resumeCreateReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
