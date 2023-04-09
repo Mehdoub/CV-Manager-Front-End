@@ -68,6 +68,7 @@ const ImgStyled = styled('img')(({ theme }) => ({
 }))
 
 const ButtonStyled = styled(Button)<ButtonProps & { component?: ElementType; htmlFor?: string }>(({ theme }) => ({
+  marginTop: theme.spacing(4),
   [theme.breakpoints.down('sm')]: {
     width: '100%',
     textAlign: 'center'
@@ -75,7 +76,7 @@ const ButtonStyled = styled(Button)<ButtonProps & { component?: ElementType; htm
 }))
 
 const ResetButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
-  marginLeft: theme.spacing(4),
+  marginTop: theme.spacing(4),
   [theme.breakpoints.down('sm')]: {
     width: '100%',
     marginLeft: 0,
@@ -152,9 +153,15 @@ const ResumeDetailsTab = () => {
           <CardHeader title='Personal Information' />
           <form>
             <CardContent sx={{ pt: 0 }}>
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
+              <Grid container sx={{ display: 'flex', alignItems: 'center' }}>
                 <ImgStyled src={imgSrc} alt='Profile Pic' />
-                <div>
+                <Grid
+                  item
+                  xs={12}
+                  md={6}
+                  mt={4}
+                  sx={{ alignItems: 'baseline', display: 'flex', flexDirection: 'column' }}
+                >
                   <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-image'>
                     Upload New Photo
                     <input
@@ -170,8 +177,8 @@ const ResumeDetailsTab = () => {
                     Reset
                   </ResetButtonStyled>
                   <Typography sx={{ mt: 5, color: 'text.disabled' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
-                </div>
-              </Box>
+                </Grid>
+              </Grid>
             </CardContent>
             {/* <Divider /> */}
             <CardContent>
