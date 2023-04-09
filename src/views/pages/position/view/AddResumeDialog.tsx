@@ -96,7 +96,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
         >
           <Grid item xs={12}>
             <>
-              <CardHeader title='Personal Information' />
+              <CardHeader title='Add Resume' />
               <form>
                 <CardContent sx={{ pt: 0 }}>
                   <Grid container sx={{ display: 'flex', alignItems: 'center' }}>

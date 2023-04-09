@@ -138,7 +138,8 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                 <Autocomplete
                   multiple
                   options={fakeUsers}
-                  id='autocomplete-size-small-multi'
+                  limitTags={1}
+                  id='autocomplete-multi-contributers'
                   getOptionLabel={user => getFullName(user)}
                   renderInput={params => <TextField {...params} label='Contributers' placeholder='Search Users ...' />}
                   renderOption={(props, user) => (
