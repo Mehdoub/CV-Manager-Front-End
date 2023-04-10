@@ -162,3 +162,10 @@ Number.prototype.format = function (n: number) {
   var re = '\\d(?=(\\d{3})+' + (n > 0 ? '\\.' : '$') + ')';
   return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
 };
+
+export const mobileHandler = (mobileValue: string, value: string, setValue: any, fieldName: string = 'mobile') => {
+  mobileValue = mobileValue.substring(0, 1) == '0' ? mobileValue.substring(1) : mobileValue
+  mobileValue = mobileValue.substring(0, 2) == '98' ? mobileValue.substring(2) : mobileValue
+  mobileValue = mobileValue.length > 10 ? value : mobileValue
+  setValue(fieldName, mobileValue)
+}

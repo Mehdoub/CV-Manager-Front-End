@@ -19,7 +19,7 @@ import Button, { ButtonProps } from '@mui/material/Button'
 import Icon from 'src/@core/components/icon'
 import { Box, FormHelperText, IconButton } from '@mui/material'
 import * as yup from 'yup'
-import { uppercaseFirstLetters } from 'src/helpers/functions'
+import { mobileHandler, uppercaseFirstLetters } from 'src/helpers/functions'
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useDropzone } from 'react-dropzone'
@@ -35,7 +35,7 @@ interface FileProp {
   size: number
 }
 
-const genderOptions = ['man', 'woman']
+const genderOptions = ['men', 'women']
 const educationOptions = ['diploma', 'bachelors_degree', 'associate_degree', 'masters', 'phd']
 const maritalOptions = ['single', 'married', 'isolated', 'unknow']
 const militaryOptions = ['included', 'end', 'exemption-edu', 'exemption-spo']
@@ -70,7 +70,7 @@ export interface ResumeFormData {
   phone: string
   email: string
   avatar?: any
-  positionId?: any
+  position_id?: any
 }
 
 const defaultValues = {
@@ -107,7 +107,7 @@ const schema = yup.object().shape({
   mobile: yup
     .string()
     .label('Mobile')
-    .matches(/^9[\d]{9}$/, 'Mobile Is Not Valid (example: 9123456789)')
+    .matches(/^[\d]{10}$/, 'Mobile Is Not Valid (example: 912 345 6789)')
     .required(),
   phone: yup
     .string()
@@ -127,23 +127,6 @@ const ImgStyled = styled('img')(({ theme }) => ({
   height: 120,
   marginRight: theme.spacing(5),
   borderRadius: theme.shape.borderRadius
-}))
-
-const ButtonStyled = styled(Button)<ButtonProps & { component?: ElementType; htmlFor?: string }>(({ theme }) => ({
-  [theme.breakpoints.down('sm')]: {
-    width: '100%',
-    textAlign: 'center'
-  }
-}))
-
-const ResetButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
-  marginLeft: theme.spacing(4),
-  [theme.breakpoints.down('sm')]: {
-    width: '100%',
-    marginLeft: 0,
-    textAlign: 'center',
-    marginTop: theme.spacing(4)
-  }
 }))
 
 const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
@@ -196,7 +179,8 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
     reset,
     control,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    setValue
   } = useForm({
     defaultValues,
     mode: 'onBlur',
@@ -204,7 +188,8 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   })
 
   const submitHandler = (data: ResumeFormData) => {
-    data = { ...data, positionId }
+    data = { ...data, position_id: positionId }
+    data.mobile = '98' + data.mobile
     if (files[0]) {
       data = { ...data, avatar: files[0] }
     }
@@ -350,7 +335,10 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                               InputProps={{
                                 startAdornment: <InputAdornment position='start'>IR (+98)</InputAdornment>
                               }}
-                              onChange={onChange}
+                              onChange={e => {
+                                onChange(e)
+                                mobileHandler(e.target.value, value, setValue)
+                              }}
                               onBlur={onBlur}
                               error={Boolean(errors.mobile)}
                             />
@@ -395,7 +383,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                               fullWidth
                               type='number'
                               label='Phone Number'
-                              placeholder='8846 7889'
+                              placeholder='21 8846 7889'
                               InputProps={{
                                 startAdornment: <InputAdornment position='start'>IR (+98)</InputAdornment>
                               }}
