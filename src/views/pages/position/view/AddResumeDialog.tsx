@@ -9,7 +9,7 @@ import Divider from '@mui/material/Divider'
 import { styled } from '@mui/material/styles'
 import MenuItem from '@mui/material/MenuItem'
 import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
+import Typography, { TypographyProps } from '@mui/material/Typography'
 import InputLabel from '@mui/material/InputLabel'
 import CardHeader from '@mui/material/CardHeader'
 import FormControl from '@mui/material/FormControl'
@@ -17,9 +17,9 @@ import CardContent from '@mui/material/CardContent'
 import InputAdornment from '@mui/material/InputAdornment'
 import Button from '@mui/material/Button'
 import Icon from 'src/@core/components/icon'
-import { Box, FormHelperText, IconButton, Slider } from '@mui/material'
+import { Box, FormHelperText, IconButton, Link, List, ListItem, Slider } from '@mui/material'
 import * as yup from 'yup'
-import { mobileHandler, popObjectItemByKey, uppercaseFirstLetters } from 'src/helpers/functions'
+import { mobileHandler, popObjectItemByKey, toastError, uppercaseFirstLetters } from 'src/helpers/functions'
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useDropzone } from 'react-dropzone'
@@ -28,6 +28,12 @@ import { useDispatch } from 'react-redux'
 import { clearCreateResume, createResume } from 'src/store/resume'
 import { useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
+
+interface FileProp {
+  name: string
+  type: string
+  size: number
+}
 
 const genderOptions = ['men', 'women']
 const educationOptions = ['diploma', 'bachelors_degree', 'associate_degree', 'masters', 'phd']
@@ -63,7 +69,7 @@ export interface ResumeFormData {
   phone?: string
   email: string
   avatar?: any
-  resumeFile?: any
+  resumeFiles?: any
   position_id?: any
 }
 
@@ -141,6 +147,18 @@ interface AddResumeDialogProps {
   handleClose: any
 }
 
+const ResumeFilesImg = styled('img')(({ theme }) => ({
+  [theme.breakpoints.up('md')]: {
+    marginRight: theme.spacing(10)
+  },
+  [theme.breakpoints.down('md')]: {
+    marginBottom: theme.spacing(4)
+  },
+  [theme.breakpoints.down('sm')]: {
+    width: 250
+  }
+}))
+
 const ImgStyled = styled('img')(({ theme }) => ({
   width: 120,
   height: 120,
@@ -148,14 +166,22 @@ const ImgStyled = styled('img')(({ theme }) => ({
   borderRadius: theme.shape.borderRadius
 }))
 
+const HeadingTypography = styled(Typography)<TypographyProps>(({ theme }) => ({
+  marginBottom: theme.spacing(5),
+  [theme.breakpoints.down('sm')]: {
+    marginBottom: theme.spacing(4)
+  }
+}))
+
 const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   // ** State
   const [avatar, setAvatar] = useState<File[]>([])
-  const [resumeFile, setResumeFile] = useState<File[]>([])
+  const [resumeFiles, setResumeFiles] = useState<File[]>([])
   const [gender, setGender] = useState<string>('')
   const [salaryRange, setSalaryRange] = useState<any>([9000000, 20000000] || '')
 
   // ** Hooks
+  // Upload Avatar
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 1,
     multiple: false,
@@ -167,26 +193,21 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
       setAvatar(acceptedFiles.map((file: File) => Object.assign(file)))
     },
     onDropRejected: () => {
-      toast.error('You can only upload maximum size of 2 MB.', {
-        duration: 2000
-      })
+      toastError('You can only upload maximum size of 2 MB.')
     }
   })
 
   const { getRootProps: getRootPropsResume, getInputProps: getInputPropsResume } = useDropzone({
-    maxFiles: 1,
-    multiple: false,
-    maxSize: 5000000,
+    maxFiles: 5,
+    maxSize: 9000000,
     accept: {
       'application/*': ['.pdf']
     },
     onDrop: (acceptedFiles: File[]) => {
-      setResumeFile(acceptedFiles.map((file: File) => Object.assign(file)))
+      setResumeFiles(acceptedFiles.map((file: File) => Object.assign(file)))
     },
     onDropRejected: () => {
-      toast.error('You can only upload maximum size of 5 MB.', {
-        duration: 2000
-      })
+      toastError('You can only upload PDF files with maximum size of 9 MB.')
     }
   })
 
@@ -217,6 +238,36 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
     }
   }
 
+  const handleRemoveFile = (file: FileProp) => {
+    const uploadedFiles = resumeFiles
+    const filtered = uploadedFiles.filter((i: FileProp) => i.name !== file.name)
+    setResumeFiles([...filtered])
+  }
+
+  const fileList = resumeFiles.map((file: FileProp) => (
+    <ListItem key={file.name} style={{ border: '1px solid #e2e2e2', borderRadius: '16px', marginTop: '8px' }}>
+      <Grid item xs={1} className='file-preview'>
+        {renderFilePreview(file)}
+      </Grid>
+      <Grid container xs={12}>
+        <Grid item xs={8}>
+          <Typography className='file-name'>{file.name}</Typography>
+          <Typography className='file-size' variant='body2'>
+            {Math.round(file.size / 100) / 10 > 1000
+              ? (Math.round(file.size / 100) / 10000).toFixed(1) + ' MB'
+              : (Math.round(file.size / 100) / 10).toFixed(1)}{' '}
+            KB
+          </Typography>
+        </Grid>
+      </Grid>
+      <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'right' }}>
+        <IconButton onClick={() => handleRemoveFile(file)}>
+          <Icon icon='mdi:close' fontSize={20} />
+        </IconButton>
+      </Grid>
+    </ListItem>
+  ))
+
   const {
     reset,
     control,
@@ -235,8 +286,8 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
     if (avatar[0]) {
       data = { ...data, avatar: avatar[0] }
     }
-    if (resumeFile[0]) {
-      data = { ...data, resumeFile: resumeFile[0] }
+    if (resumeFiles.length > 0) {
+      data = { ...data, resumeFiles: resumeFiles[0] }
     }
     popObjectItemByKey(data, 'work_province')
     popObjectItemByKey(data, 'residence_province')
@@ -740,31 +791,31 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                           style={{ border: '2px dashed #cbcbcb', borderRadius: '16px' }}
                         >
                           <input {...getInputPropsResume()} />
-                          <Grid tabIndex={1} container sx={{ justifyContent: 'center', alignItems: 'center' }}>
-                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                              {resumeFile.length > 0 ? (
-                                <>
-                                  <IconButton size='small' sx={{ mr: 1.5, color: 'text.secondary' }}>
-                                    <Icon icon='mdi:file-document-outline' fontSize='2rem' />
-                                  </IconButton>
-                                  <Typography sx={{ color: 'text.secondary' }}>{resumeFile[0].name}</Typography>
-                                  <IconButton onClick={() => setResumeFile([])}>
-                                    <Icon icon='mdi:close' fontSize={20} />
-                                  </IconButton>
-                                </>
-                              ) : (
-                                <>
-                                  <IconButton size='small' sx={{ mr: 1.5, color: 'text.secondary' }}>
-                                    <Icon icon='ic:round-cloud-upload' fontSize='2.25rem' />
-                                  </IconButton>
-                                  <Typography sx={{ color: 'text.secondary' }}>
-                                    Drop Resume File Or Click To Upload
-                                  </Typography>
-                                </>
-                              )}
+                          <Box
+                            sx={{ display: 'flex', flexDirection: ['column', 'column', 'row'], alignItems: 'center' }}
+                          >
+                            <ResumeFilesImg width={300} alt='Upload img' src='/images/misc/upload.png' />
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                textAlign: ['center', 'center', 'inherit']
+                              }}
+                            >
+                              <HeadingTypography variant='h5'>
+                                Drop Resume Files Here Or Click To Upload.
+                              </HeadingTypography>
+                              <Typography color='textSecondary'>
+                                Drop files here or click{' '}
+                                <Link href='/' onClick={e => e.preventDefault()}>
+                                  browse
+                                </Link>{' '}
+                                thorough your machine
+                              </Typography>
                             </Box>
-                          </Grid>
+                          </Box>
                         </div>
+                        {resumeFiles.length ? <List sx={{ mt: 3 }}>{fileList}</List> : null}
                       </Fragment>
                     </Grid>
                     <Grid item xs={12} mt={3}>
