@@ -55,7 +55,7 @@ interface FormData {
   firstname: string
   lastname: string
   username: string
-  mobile: number
+  mobile: string
   password: string
   repeatpassword: string
 }
@@ -146,13 +146,14 @@ const Register = () => {
   })
 
   const onSubmit = (data: FormData) => {
-    const { firstname, lastname, mobile, password, repeatpassword, username } = data
+    let { firstname, lastname, mobile, password, repeatpassword, username } = data
     if (password !== repeatpassword) {
       setError('repeatpassword', {
         type: 'manual',
         message: 'Password and repeat password should be the same'
       })
     } else if (isAvailable === true) {
+      mobile = '98' + mobile
       register({ firstname, lastname, mobile, password, repeatpassword, username }, (err: any) => {
         const errors = err?.response?.data?.errors[0]
         if (errors) setServerValidationErrors(errors, setError)

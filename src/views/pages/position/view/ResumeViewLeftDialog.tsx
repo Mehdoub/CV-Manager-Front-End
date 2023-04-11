@@ -5,14 +5,13 @@ import { Box, BoxProps, Grid, IconButton, Tab, Typography, styled } from '@mui/m
 import ResumeDetailsTab from './ResumeDetailsTab'
 import ResumeCallsTab from './ResumeCallsTab'
 
-import MuiMenu, { MenuProps } from '@mui/material/Menu'
 import ResumeInterviewsTab from './ResumeInterviewsTab'
 import Icon from 'src/@core/components/icon'
 import { useDropzone } from 'react-dropzone'
 import { toast } from 'react-hot-toast'
 import { Fragment, useState } from 'react'
 
-const ChatFormWrapper = styled(Grid)<BoxProps>(({ theme }) => ({
+const UploadFileWrapper = styled(Grid)<BoxProps>(({ theme }) => ({
   display: 'flex',
   position: 'relative',
   alignItems: 'start',
@@ -105,14 +104,14 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
             <Fragment>
               <div {...getRootProps({ className: 'dropzone' })}>
                 <input {...getInputProps()} />
-                <ChatFormWrapper tabIndex={1} container>
+                <UploadFileWrapper tabIndex={1} container>
                   <Box sx={{ display: 'flex', alignItems: 'center', mt: 3, mr: 3 }}>
-                    <IconButton className='chat-icon' size='small' sx={{ mr: 1.5, color: 'rgb(76 78 100 / 14%)' }}>
+                    <IconButton size='small' sx={{ mr: 1.5, color: 'rgb(76 78 100 / 14%)' }}>
                       <Icon icon='ic:round-cloud-upload' fontSize='2.25rem' />
                     </IconButton>
                     <Typography sx={{ color: 'text.secondary' }}>Drop Resume File Or Click To Upload</Typography>
                   </Box>
-                </ChatFormWrapper>
+                </UploadFileWrapper>
               </div>
             </Fragment>
           </form>

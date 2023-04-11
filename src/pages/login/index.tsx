@@ -86,7 +86,7 @@ const TypographyStyled = styled(Typography)<TypographyProps>(({ theme }) => ({
 }))
 
 interface FormData {
-  mobile: number
+  mobile: string
   password: string
 }
 
@@ -119,7 +119,8 @@ const LoginPage = () => {
   })
 
   const onSubmit = (data: FormData) => {
-    const { mobile, password } = data
+    let { mobile, password } = data
+    mobile = '98' + mobile
     setDisabled(true)
     auth.login({ mobile, password }, (err: any) => {
       const errors = err?.response?.data?.errors[0]

@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, ElementType, ChangeEvent, Fragment, useEffect } from 'react'
+import { useState, Fragment, useEffect } from 'react'
 
 // ** MUI Imports
 import Grid from '@mui/material/Grid'
@@ -15,11 +15,11 @@ import CardHeader from '@mui/material/CardHeader'
 import FormControl from '@mui/material/FormControl'
 import CardContent from '@mui/material/CardContent'
 import InputAdornment from '@mui/material/InputAdornment'
-import Button, { ButtonProps } from '@mui/material/Button'
+import Button from '@mui/material/Button'
 import Icon from 'src/@core/components/icon'
-import { Box, FormHelperText, IconButton } from '@mui/material'
+import { Box, FormHelperText, IconButton, Slider } from '@mui/material'
 import * as yup from 'yup'
-import { mobileHandler, uppercaseFirstLetters } from 'src/helpers/functions'
+import { mobileHandler, popObjectItemByKey, uppercaseFirstLetters } from 'src/helpers/functions'
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useDropzone } from 'react-dropzone'
@@ -28,12 +28,6 @@ import { useDispatch } from 'react-redux'
 import { clearCreateResume, createResume } from 'src/store/resume'
 import { useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
-
-interface FileProp {
-  name: string
-  type: string
-  size: number
-}
 
 const genderOptions = ['men', 'women']
 const educationOptions = ['diploma', 'bachelors_degree', 'associate_degree', 'masters', 'phd']
@@ -50,9 +44,6 @@ const cityValues = cityOptions.map(item => item.value)
 let years: Array<number> = []
 for (let year = 1970; year <= new Date().getFullYear(); year++) years.push(year)
 
-let salaries: Array<number> = []
-for (let salary = 10; salary <= 50; salary++) salaries.push(salary * 1000000)
-
 export interface ResumeFormData {
   firstname: string
   lastname: string
@@ -60,7 +51,9 @@ export interface ResumeFormData {
   education: string
   marital_status: string
   military_status?: string
+  work_province: string
   work_city: string
+  residence_province: string
   residence_city: string
   birth_year: number
   work_experience?: number
@@ -70,6 +63,7 @@ export interface ResumeFormData {
   phone?: string
   email: string
   avatar?: any
+  resumeFile?: any
   position_id?: any
 }
 
@@ -79,13 +73,13 @@ const defaultValues = {
   gender: '',
   education: '',
   marital_status: '',
-  military_status: undefined,
+  military_status: '',
+  work_province: '',
   work_city: '',
+  residence_province: '',
   residence_city: '',
   birth_year: years.at(-1) as number,
-  work_experience: undefined,
-  min_salary: undefined,
-  max_salary: undefined,
+  work_experience: years.at(-1) as number,
   mobile: '',
   phone: '',
   email: ''
@@ -98,33 +92,21 @@ const schema = yup.object().shape(
     gender: yup.string().label('Gender').oneOf(genderOptions).required(),
     education: yup.string().label('Education').oneOf(educationOptions).required(),
     marital_status: yup.string().label('Marital Status').oneOf(maritalOptions).required(),
-    military_status: yup.string().when('military_status', (val: any) => {
-      if (val) {
+    military_status: yup.string().when('gender', (val: any) => {
+      if (val == 'men') {
         return yup.string().label('Military Status').oneOf(militaryOptions).required()
       } else {
         return yup.string().notRequired()
       }
     }),
+    work_province: yup.string().label('Work Province').oneOf(cityValues).required(),
     work_city: yup.string().label('Work City').oneOf(cityValues).required(),
+    residence_province: yup.string().label('Residence Province').oneOf(cityValues).required(),
     residence_city: yup.string().label('Residence City').oneOf(cityValues).required(),
     birth_year: yup.number().label('Birth Year').oneOf(years).required(),
     work_experience: yup.number().when('work_experience', (val: any) => {
       if (val) {
         return yup.number().label('Work Started Year').oneOf(years).required()
-      } else {
-        return yup.number().notRequired()
-      }
-    }),
-    min_salary: yup.number().when('min_salary', (val: any) => {
-      if (val) {
-        return yup.number().label('Minimum Requested Salary').oneOf(salaries).required()
-      } else {
-        return yup.number().notRequired()
-      }
-    }),
-    max_salary: yup.number().when('max_salary', (val: any) => {
-      if (val) {
-        return yup.number().label('Maximum Requested Salary').oneOf(salaries).required()
       } else {
         return yup.number().notRequired()
       }
@@ -150,8 +132,6 @@ const schema = yup.object().shape(
   [
     ['military_status', 'military_status'],
     ['work_experience', 'work_experience'],
-    ['min_salary', 'min_salary'],
-    ['max_salary', 'max_salary'],
     ['phone', 'phone']
   ]
 )
@@ -170,17 +150,21 @@ const ImgStyled = styled('img')(({ theme }) => ({
 
 const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   // ** State
-  const [files, setFiles] = useState<File[]>([])
+  const [avatar, setAvatar] = useState<File[]>([])
+  const [resumeFile, setResumeFile] = useState<File[]>([])
+  const [gender, setGender] = useState<string>('')
+  const [salaryRange, setSalaryRange] = useState<any>([9000000, 20000000] || '')
 
   // ** Hooks
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 1,
+    multiple: false,
     maxSize: 2000000,
     accept: {
       'image/*': ['.png', '.jpg', '.jpeg', '.gif']
     },
     onDrop: (acceptedFiles: File[]) => {
-      setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
+      setAvatar(acceptedFiles.map((file: File) => Object.assign(file)))
     },
     onDropRejected: () => {
       toast.error('You can only upload maximum size of 2 MB.', {
@@ -189,9 +173,26 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
     }
   })
 
+  const { getRootProps: getRootPropsResume, getInputProps: getInputPropsResume } = useDropzone({
+    maxFiles: 1,
+    multiple: false,
+    maxSize: 5000000,
+    accept: {
+      'application/*': ['.pdf']
+    },
+    onDrop: (acceptedFiles: File[]) => {
+      setResumeFile(acceptedFiles.map((file: File) => Object.assign(file)))
+    },
+    onDropRejected: () => {
+      toast.error('You can only upload maximum size of 5 MB.', {
+        duration: 2000
+      })
+    }
+  })
+
   const dispatch = useDispatch()
 
-  const { status: statusResumeCreate } = useSelector((state: any) => state.resumeCreate)
+  const { status: statusResumeCreate, loading: loadingResumeCreate } = useSelector((state: any) => state.resumeCreate)
 
   const {
     query: { positionId }
@@ -202,12 +203,14 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
       reset()
       dispatch(clearCreateResume())
       handleClose()
-      setFiles([])
+      setAvatar([])
+      setGender('')
+      setSalaryRange([9000000, 20000000])
     }
   }, [statusResumeCreate])
 
-  const renderFilePreview = (file: FileProp) => {
-    if (file.type.startsWith('image')) {
+  const renderFilePreview = (file: any) => {
+    if (file?.type?.startsWith('image')) {
       return <ImgStyled alt={file.name} src={URL.createObjectURL(file as any)} />
     } else {
       return <Icon icon='mdi:file-document-outline' />
@@ -219,8 +222,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
     control,
     handleSubmit,
     formState: { errors },
-    setValue,
-    setError
+    setValue
   } = useForm({
     defaultValues,
     mode: 'onBlur',
@@ -228,19 +230,18 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   })
 
   const submitHandler = (data: ResumeFormData) => {
-    if (data?.min_salary && data?.max_salary && data?.min_salary > data?.max_salary) {
-      setError('min_salary', {
-        type: 'manual',
-        message: 'Minimum Requested Salary Cannot Be Greater Than Maximum Requested Salary!'
-      })
-    } else {
-      data = { ...data, position_id: positionId }
-      data.mobile = '98' + data.mobile
-      if (files[0]) {
-        data = { ...data, avatar: files[0] }
-      }
-      dispatch(createResume(data))
+    data = { ...data, position_id: positionId }
+    data.mobile = '98' + data.mobile
+    if (avatar[0]) {
+      data = { ...data, avatar: avatar[0] }
     }
+    if (resumeFile[0]) {
+      data = { ...data, resumeFile: resumeFile[0] }
+    }
+    popObjectItemByKey(data, 'work_province')
+    popObjectItemByKey(data, 'residence_province')
+    ;[data.min_salary, data.max_salary] = salaryRange
+    dispatch(createResume(data))
   }
 
   return (
@@ -267,8 +268,8 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                       <Typography sx={{ marginBottom: '10px', fontWeight: 200 }} variant='h6'>
                         Drop Avatar Here Or Click To Upload
                       </Typography>
-                      {files[0] ? (
-                        renderFilePreview(files[0])
+                      {avatar[0] ? (
+                        renderFilePreview(avatar[0])
                       ) : (
                         <ImgStyled src={'/images/avatars/1.png'} alt='Profile Pic' />
                       )}
@@ -293,7 +294,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                 <Divider />
                 <CardContent>
                   <Grid container spacing={6}>
-                    <Grid item xs={12} mt={5} sm={6}>
+                    <Grid item xs={12} mt={5} md={4}>
                       <FormControl fullWidth>
                         <Controller
                           name='firstname'
@@ -316,7 +317,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} mt={5} sm={6}>
+                    <Grid item xs={12} mt={5} md={4}>
                       <FormControl fullWidth>
                         <Controller
                           name='lastname'
@@ -338,7 +339,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} mt={5} sm={6}>
+                    <Grid item xs={12} mt={5} md={4}>
                       <FormControl fullWidth>
                         <Controller
                           name='gender'
@@ -349,7 +350,10 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                               <Select
                                 label='Gender'
                                 value={value}
-                                onChange={onChange}
+                                onChange={e => {
+                                  onChange(e)
+                                  setGender(e.target.value)
+                                }}
                                 onBlur={onBlur}
                                 error={Boolean(errors.gender)}
                               >
@@ -367,7 +371,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} mt={5} sm={6}>
+                    <Grid item xs={12} mt={5} md={4}>
                       <FormControl fullWidth>
                         <Controller
                           name='mobile'
@@ -376,7 +380,6 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                             <TextField
                               value={value}
                               fullWidth
-                              type='number'
                               label='Mobile'
                               placeholder='919 123 4567'
                               InputProps={{
@@ -396,7 +399,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} mt={5} sm={6}>
+                    <Grid item xs={12} mt={5} md={4}>
                       <FormControl fullWidth>
                         <Controller
                           name='email'
@@ -419,7 +422,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} mt={5} sm={6}>
+                    <Grid item xs={12} mt={5} md={4}>
                       <FormControl fullWidth>
                         <Controller
                           name='phone'
@@ -428,7 +431,6 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                             <TextField
                               value={value}
                               fullWidth
-                              type='number'
                               label='Phone Number'
                               placeholder='21 8846 7889'
                               InputProps={{
@@ -445,7 +447,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} mt={5} sm={4}>
+                    <Grid item xs={12} mt={5} md={6}>
                       <FormControl fullWidth>
                         <Controller
                           name='birth_year'
@@ -474,7 +476,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} mt={5} sm={4}>
+                    <Grid item xs={12} mt={5} md={6}>
                       <FormControl fullWidth>
                         <Controller
                           name='work_experience'
@@ -506,7 +508,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} mt={5} sm={4}>
+                    <Grid item xs={12} mt={5} md={4}>
                       <FormControl fullWidth>
                         <Controller
                           name='education'
@@ -535,7 +537,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} mt={5} sm={6}>
+                    <Grid item xs={12} mt={5} md={4}>
                       <FormControl fullWidth>
                         <Controller
                           name='marital_status'
@@ -564,36 +566,69 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} mt={5} sm={6}>
+                    <Grid item xs={12} mt={5} md={4}>
+                      {gender != 'women' && (
+                        <FormControl fullWidth>
+                          <Controller
+                            name='military_status'
+                            control={control}
+                            render={({ field: { value, onChange, onBlur } }) => (
+                              <>
+                                <InputLabel>Military Status</InputLabel>
+                                <Select
+                                  label='Military Status'
+                                  value={value}
+                                  onChange={onChange}
+                                  onBlur={onBlur}
+                                  error={Boolean(errors.military_status)}
+                                >
+                                  {militaryOptions.map((item: any, index: number) => (
+                                    <MenuItem key={`military-${index}`} value={item}>
+                                      {uppercaseFirstLetters(item)}
+                                    </MenuItem>
+                                  ))}
+                                </Select>
+                              </>
+                            )}
+                          />
+                          {errors.military_status && (
+                            <FormHelperText sx={{ color: 'error.main' }}>
+                              {errors.military_status.message}
+                            </FormHelperText>
+                          )}
+                        </FormControl>
+                      )}
+                    </Grid>
+                    <Grid item xs={12} mt={5} md={6}>
                       <FormControl fullWidth>
                         <Controller
-                          name='military_status'
+                          name='work_province'
                           control={control}
                           render={({ field: { value, onChange, onBlur } }) => (
                             <>
-                              <InputLabel>Military Status</InputLabel>
+                              <InputLabel>Work Province</InputLabel>
                               <Select
-                                label='Military Status'
+                                label='Work Province'
                                 value={value}
                                 onChange={onChange}
                                 onBlur={onBlur}
-                                error={Boolean(errors.military_status)}
+                                error={Boolean(errors.work_province)}
                               >
-                                {militaryOptions.map((item: any, index: number) => (
-                                  <MenuItem key={`military-${index}`} value={item}>
-                                    {uppercaseFirstLetters(item)}
+                                {cityOptions.map(({ value, label }: any, index: number) => (
+                                  <MenuItem key={`work-province-${index}`} value={value}>
+                                    {label}
                                   </MenuItem>
                                 ))}
                               </Select>
                             </>
                           )}
                         />
-                        {errors.military_status && (
-                          <FormHelperText sx={{ color: 'error.main' }}>{errors.military_status.message}</FormHelperText>
+                        {errors.work_province && (
+                          <FormHelperText sx={{ color: 'error.main' }}>{errors.work_province.message}</FormHelperText>
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} mt={5} sm={6}>
+                    <Grid item xs={12} mt={5} md={6}>
                       <FormControl fullWidth>
                         <Controller
                           name='work_city'
@@ -622,7 +657,38 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} mt={5} sm={6}>
+                    <Grid item xs={12} mt={5} md={6}>
+                      <FormControl fullWidth>
+                        <Controller
+                          name='residence_province'
+                          control={control}
+                          render={({ field: { value, onChange, onBlur } }) => (
+                            <>
+                              <InputLabel>Residence Province</InputLabel>
+                              <Select
+                                label='Residence Province'
+                                value={value}
+                                onChange={onChange}
+                                onBlur={onBlur}
+                                error={Boolean(errors.residence_province)}
+                              >
+                                {cityOptions.map(({ value, label }: any, index: number) => (
+                                  <MenuItem key={`residence-province-${index}`} value={value}>
+                                    {label}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </>
+                          )}
+                        />
+                        {errors.residence_province && (
+                          <FormHelperText sx={{ color: 'error.main' }}>
+                            {errors.residence_province.message}
+                          </FormHelperText>
+                        )}
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} mt={5} md={6}>
                       <FormControl fullWidth>
                         <Controller
                           name='residence_city'
@@ -651,70 +717,67 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} mt={5} sm={6}>
-                      <FormControl fullWidth>
-                        <Controller
-                          name='min_salary'
-                          control={control}
-                          render={({ field: { value, onChange, onBlur } }) => (
-                            <>
-                              <InputLabel>Minimum Requested Salary (Toman)</InputLabel>
-                              <Select
-                                label='Minimum Requested Salary (Toman)'
-                                value={value}
-                                onChange={onChange}
-                                onBlur={onBlur}
-                                error={Boolean(errors.min_salary)}
-                              >
-                                {salaries.map((item: any, index: number) => (
-                                  <MenuItem key={`min-salary-${index}`} value={item}>
-                                    {item.format()}
-                                  </MenuItem>
-                                ))}
-                              </Select>
-                            </>
-                          )}
-                        />
-                        {errors.min_salary && (
-                          <FormHelperText sx={{ color: 'error.main' }}>{errors.min_salary.message}</FormHelperText>
-                        )}
-                      </FormControl>
+                    <Grid item xs={12} mt={5} px={7}>
+                      <InputLabel>Requested Salary Range (Toman)</InputLabel>
+                      <Slider
+                        sx={{ mt: 4 }}
+                        defaultValue={[9000000, 20000000]}
+                        value={salaryRange}
+                        onChange={(e, value) => setSalaryRange(value)}
+                        valueLabelDisplay='auto'
+                        aria-labelledby='range-slider'
+                        min={8000000}
+                        max={80000000}
+                        step={1000000}
+                        valueLabelFormat={(value: any) => value.format()}
+                      />
+                      <Typography>{`${salaryRange[0].format()} - ${salaryRange[1].format()} Toman`}</Typography>
                     </Grid>
-                    <Grid item xs={12} mt={5} sm={6}>
-                      <FormControl fullWidth>
-                        <Controller
-                          name='max_salary'
-                          control={control}
-                          render={({ field: { value, onChange, onBlur } }) => (
-                            <>
-                              <InputLabel>Maximum Requested Salary (Toman)</InputLabel>
-                              <Select
-                                label='Maximum Requested Salary (Toman)'
-                                value={value}
-                                onChange={onChange}
-                                onBlur={onBlur}
-                                error={Boolean(errors.max_salary)}
-                              >
-                                {salaries.map((item: any, index: number) => (
-                                  <MenuItem key={`max-salary-${index}`} value={item}>
-                                    {item.format()}
-                                  </MenuItem>
-                                ))}
-                              </Select>
-                            </>
-                          )}
-                        />
-                        {errors.max_salary && (
-                          <FormHelperText sx={{ color: 'error.main' }}>{errors.max_salary.message}</FormHelperText>
-                        )}
-                      </FormControl>
-                    </Grid>
-
                     <Grid item xs={12} mt={5}>
-                      <Button type='submit' variant='contained' sx={{ mr: 3 }}>
+                      <Fragment>
+                        <div
+                          {...getRootPropsResume({ className: 'dropzone' })}
+                          style={{ border: '2px dashed #cbcbcb', borderRadius: '16px' }}
+                        >
+                          <input {...getInputPropsResume()} />
+                          <Grid tabIndex={1} container sx={{ justifyContent: 'center', alignItems: 'center' }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                              {resumeFile.length > 0 ? (
+                                <>
+                                  <IconButton size='small' sx={{ mr: 1.5, color: 'text.secondary' }}>
+                                    <Icon icon='mdi:file-document-outline' fontSize='2rem' />
+                                  </IconButton>
+                                  <Typography sx={{ color: 'text.secondary' }}>{resumeFile[0].name}</Typography>
+                                  <IconButton onClick={() => setResumeFile([])}>
+                                    <Icon icon='mdi:close' fontSize={20} />
+                                  </IconButton>
+                                </>
+                              ) : (
+                                <>
+                                  <IconButton size='small' sx={{ mr: 1.5, color: 'text.secondary' }}>
+                                    <Icon icon='ic:round-cloud-upload' fontSize='2.25rem' />
+                                  </IconButton>
+                                  <Typography sx={{ color: 'text.secondary' }}>
+                                    Drop Resume File Or Click To Upload
+                                  </Typography>
+                                </>
+                              )}
+                            </Box>
+                          </Grid>
+                        </div>
+                      </Fragment>
+                    </Grid>
+                    <Grid item xs={12} mt={3}>
+                      <Button type='submit' variant='contained' sx={{ mr: 3, mt: 2 }} disabled={loadingResumeCreate}>
                         Save Changes
                       </Button>
-                      <Button variant='outlined' color='secondary' onClick={handleClose}>
+                      <Button
+                        variant='outlined'
+                        color='secondary'
+                        onClick={handleClose}
+                        sx={{ mt: 2 }}
+                        disabled={loadingResumeCreate}
+                      >
                         Cancel
                       </Button>
                     </Grid>

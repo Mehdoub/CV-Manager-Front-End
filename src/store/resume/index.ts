@@ -7,7 +7,8 @@ import { ResumeFormData } from "src/views/pages/position/view/AddResumeDialog"
 
 export const createResume: any = createAsyncThunk('createResume', async (data: ResumeFormData, { rejectWithValue }) => {
   try {
-    let resumeLogo = popObjectItemByKey(data, 'avatar')
+    const resumeAvatar = popObjectItemByKey(data, 'avatar')
+    const resumeFile = popObjectItemByKey(data, 'resumeFile')
 
     data.work_city = '643402d32a0d82fd4b1a4273'
     data.residence_city = '643402d32a0d82fd4b1a4273'
@@ -16,11 +17,18 @@ export const createResume: any = createAsyncThunk('createResume', async (data: R
 
     const newResumeId = response?.data?.data[0]?.id
 
-    if (resumeLogo && newResumeId) {
+    if (resumeAvatar && newResumeId) {
       await ApiRequest.builder()
         .auth()
         .contentType('multipart/form-data')
-        .request('patch', `resumes/${newResumeId}/avatar`, { avatar: resumeLogo })
+        .request('patch', `resumes/${newResumeId}/avatar`, { avatar: resumeAvatar })
+    }
+
+    if (resumeFile && newResumeId) {
+      await ApiRequest.builder()
+        .auth()
+        .contentType('multipart/form-data')
+        .request('patch', `resumes/${newResumeId}/file`, { file: resumeFile })
     }
 
     return response
