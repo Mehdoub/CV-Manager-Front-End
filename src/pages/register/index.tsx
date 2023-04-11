@@ -41,7 +41,7 @@ import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 import { useDispatch } from 'react-redux'
 import { checkUsername } from 'src/store/auth'
 import { useSelector } from 'react-redux'
-import { setServerValidationErrors, toastError } from 'src/helpers/functions'
+import { mobileHandler, setServerValidationErrors, toastError } from 'src/helpers/functions'
 
 const defaultValues = {
   firstname: '',
@@ -127,7 +127,7 @@ const Register = () => {
     mobile: yup
       .string()
       .label('Mobile')
-      .matches(/^989[\d]{9}$/, 'Mobile Is Not Valid (example: 989123456789)')
+      .matches(/^9[\d]{9}$/, 'Mobile Is Not Valid (example: 9123456789)')
       .required(),
     password: yup.string().label('Password').min(8).max(12).required(),
     repeatpassword: yup.string().label('Repeat assword').min(8).max(12).required()
@@ -137,7 +137,8 @@ const Register = () => {
     control,
     setError,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    setValue
   } = useForm({
     defaultValues,
     mode: 'onBlur',
@@ -362,19 +363,17 @@ const Register = () => {
                 <Controller
                   name='mobile'
                   control={control}
-                  rules={{
-                    required: true,
-                    minLength: { value: 12, message: 'Mobile is not valid' },
-                    maxLength: { value: 12, message: 'Mobile is not valid' }
-                  }}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <TextField
                       label='Mobile'
                       value={value}
                       onBlur={onBlur}
-                      onChange={onChange}
+                      onChange={e => {
+                        onChange(e)
+                        mobileHandler(e.target.value, value, setValue)
+                      }}
                       error={Boolean(errors.mobile)}
-                      placeholder='989123456789'
+                      placeholder='9123456789'
                     />
                   )}
                 />

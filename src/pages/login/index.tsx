@@ -38,7 +38,7 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 import Translations from 'src/layouts/components/Translations'
-import { setServerValidationErrors, toastError } from 'src/helpers/functions'
+import { mobileHandler, setServerValidationErrors, toastError } from 'src/helpers/functions'
 import { clearUsernameCheck } from 'src/store/auth'
 import { useDispatch } from 'react-redux'
 
@@ -112,7 +112,8 @@ const LoginPage = () => {
     control,
     setError,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
+    setValue
   } = useForm({
     mode: 'onBlur'
   })
@@ -249,8 +250,8 @@ const LoginPage = () => {
                   control={control}
                   rules={{
                     required: 'Mobile cannot be empty',
-                    minLength: { value: 12, message: 'Mobile is not valid' },
-                    maxLength: { value: 12, message: 'Mobile is not valid' }
+                    minLength: { value: 10, message: 'Mobile is not valid' },
+                    maxLength: { value: 10, message: 'Mobile is not valid' }
                   }}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <TextField
@@ -258,9 +259,12 @@ const LoginPage = () => {
                       label='Mobile'
                       value={value}
                       onBlur={onBlur}
-                      onChange={onChange}
+                      onChange={e => {
+                        onChange(e)
+                        mobileHandler(e.target.value, value, setValue)
+                      }}
                       error={Boolean(errors.mobile)}
-                      placeholder='989123456789'
+                      placeholder='9123456789'
                     />
                   )}
                 />

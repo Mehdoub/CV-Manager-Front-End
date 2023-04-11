@@ -59,15 +59,15 @@ export interface ResumeFormData {
   gender: string
   education: string
   marital_status: string
-  military_status: string
+  military_status?: string
   work_city: string
   residence_city: string
   birth_year: number
-  work_experience: number
-  min_salary: number
-  max_salary: number
+  work_experience?: number
+  min_salary?: number
+  max_salary?: number
   mobile: string
-  phone: string
+  phone?: string
   email: string
   avatar?: any
   position_id?: any
@@ -79,43 +79,82 @@ const defaultValues = {
   gender: '',
   education: '',
   marital_status: '',
-  military_status: '',
+  military_status: undefined,
   work_city: '',
   residence_city: '',
   birth_year: years.at(-1) as number,
-  work_experience: years.at(-1) as number,
-  min_salary: salaries[0] as number,
-  max_salary: salaries[0] as number,
+  work_experience: undefined,
+  min_salary: undefined,
+  max_salary: undefined,
   mobile: '',
   phone: '',
   email: ''
 }
 
-const schema = yup.object().shape({
-  firstname: yup.string().label('First name').min(3).required(),
-  lastname: yup.string().label('Last name').min(3).required(),
-  gender: yup.string().label('Gender').oneOf(genderOptions).required(),
-  education: yup.string().label('Education').oneOf(educationOptions).required(),
-  marital_status: yup.string().label('Marital Status').oneOf(maritalOptions).required(),
-  military_status: yup.string().label('Military_Status').oneOf(militaryOptions).required(),
-  work_city: yup.string().label('Work City').oneOf(cityValues).required(),
-  residence_city: yup.string().label('Residence City').oneOf(cityValues).required(),
-  birth_year: yup.number().label('Birth Year').oneOf(years).required(),
-  work_experience: yup.number().label('Work Started Year').oneOf(years).required(),
-  min_salary: yup.number().label('Min Salary').oneOf(salaries).required(),
-  max_salary: yup.number().label('Max Salary').oneOf(salaries).required(),
-  mobile: yup
-    .string()
-    .label('Mobile')
-    .matches(/^[\d]{10}$/, 'Mobile Is Not Valid (example: 912 345 6789)')
-    .required(),
-  phone: yup
-    .string()
-    .label('Phone Number')
-    .matches(/^[\d]{10}$/, 'Phone Number Is Not Valid (example: 21 8844 6623)')
-    .required(),
-  email: yup.string().label('Email').email('Email Is Not Valid!').required()
-})
+const schema = yup.object().shape(
+  {
+    firstname: yup.string().label('First name').min(3).required(),
+    lastname: yup.string().label('Last name').min(3).required(),
+    gender: yup.string().label('Gender').oneOf(genderOptions).required(),
+    education: yup.string().label('Education').oneOf(educationOptions).required(),
+    marital_status: yup.string().label('Marital Status').oneOf(maritalOptions).required(),
+    military_status: yup.string().when('military_status', (val: any) => {
+      if (val) {
+        return yup.string().label('Military Status').oneOf(militaryOptions).required()
+      } else {
+        return yup.string().notRequired()
+      }
+    }),
+    work_city: yup.string().label('Work City').oneOf(cityValues).required(),
+    residence_city: yup.string().label('Residence City').oneOf(cityValues).required(),
+    birth_year: yup.number().label('Birth Year').oneOf(years).required(),
+    work_experience: yup.number().when('work_experience', (val: any) => {
+      if (val) {
+        return yup.number().label('Work Started Year').oneOf(years).required()
+      } else {
+        return yup.number().notRequired()
+      }
+    }),
+    min_salary: yup.number().when('min_salary', (val: any) => {
+      if (val) {
+        return yup.number().label('Minimum Requested Salary').oneOf(salaries).required()
+      } else {
+        return yup.number().notRequired()
+      }
+    }),
+    max_salary: yup.number().when('max_salary', (val: any) => {
+      if (val) {
+        return yup.number().label('Maximum Requested Salary').oneOf(salaries).required()
+      } else {
+        return yup.number().notRequired()
+      }
+    }),
+    mobile: yup
+      .string()
+      .label('Mobile')
+      .matches(/^[\d]{10}$/, 'Mobile Is Not Valid (example: 912 345 6789)')
+      .required(),
+    phone: yup.string().when('phone', (val: any) => {
+      if (val) {
+        return yup
+          .string()
+          .label('Phone Number')
+          .matches(/^[\d]{10}$/, 'Phone Number Is Not Valid (example: 21 8844 6623)')
+          .required()
+      } else {
+        return yup.string().notRequired()
+      }
+    }),
+    email: yup.string().label('Email').email('Email Is Not Valid!').required()
+  },
+  [
+    ['military_status', 'military_status'],
+    ['work_experience', 'work_experience'],
+    ['min_salary', 'min_salary'],
+    ['max_salary', 'max_salary'],
+    ['phone', 'phone']
+  ]
+)
 
 interface AddResumeDialogProps {
   open: boolean
@@ -180,7 +219,8 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
     control,
     handleSubmit,
     formState: { errors },
-    setValue
+    setValue,
+    setError
   } = useForm({
     defaultValues,
     mode: 'onBlur',
@@ -188,12 +228,19 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   })
 
   const submitHandler = (data: ResumeFormData) => {
-    data = { ...data, position_id: positionId }
-    data.mobile = '98' + data.mobile
-    if (files[0]) {
-      data = { ...data, avatar: files[0] }
+    if (data?.min_salary && data?.max_salary && data?.min_salary > data?.max_salary) {
+      setError('min_salary', {
+        type: 'manual',
+        message: 'Minimum Requested Salary Cannot Be Greater Than Maximum Requested Salary!'
+      })
+    } else {
+      data = { ...data, position_id: positionId }
+      data.mobile = '98' + data.mobile
+      if (files[0]) {
+        data = { ...data, avatar: files[0] }
+      }
+      dispatch(createResume(data))
     }
-    dispatch(createResume(data))
   }
 
   return (
