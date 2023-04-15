@@ -21,7 +21,7 @@ import Icon from 'src/@core/components/icon'
 import ViewOverview from 'src/views/pages/position/view/ViewOverview'
 import ViewResumes from 'src/views/pages/position/view/ViewResumes'
 import ViewInterviews from 'src/views/pages/position/view/ViewInterviews'
-import { Button } from '@mui/material'
+import { Button, ButtonProps } from '@mui/material'
 import ManagersView from 'src/views/common/ManagersView'
 import { useSelector } from 'react-redux'
 import {
@@ -45,6 +45,19 @@ const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   '& svg': {
     marginBottom: '0 !important',
     marginRight: theme.spacing(1)
+  }
+}))
+
+const ResponsiveBtn = styled(Button)<ButtonProps>(({ theme }) => ({
+  mb: 2,
+  position: 'absolute',
+  right: '5px',
+  top: '5px',
+  [theme.breakpoints.down('md')]: {
+    position: 'unset',
+    minWidth: 'auto',
+    marginLeft: '35px',
+    marginBottom: '5px'
   }
 }))
 
@@ -105,17 +118,13 @@ const PositionViewRight: any = ({ tab, positionId }: Props) => {
           <Tab value='resume' label='Resumes' icon={<Icon icon='pepicons-pop:cv' />} />
           <Tab value='manager' label='Managers' icon={<Icon icon='grommet-icons:user-manager' />} />
           {activeTab == 'resume' ? (
-            <Button
-              sx={{ mb: 2, position: 'absolute', right: '5px', top: '5px' }}
-              variant='outlined'
-              onClick={() => setOpenAddResumeDialog(true)}
-            >
+            <ResponsiveBtn variant='outlined' onClick={() => setOpenAddResumeDialog(true)}>
               Add Resume
-            </Button>
+            </ResponsiveBtn>
           ) : activeTab == 'interview' ? (
-            <Button sx={{ mb: 2, position: 'absolute', right: '5px', top: '5px' }} variant='outlined'>
+            <ResponsiveBtn sx={{ mb: 2, position: 'absolute', right: '5px', top: '5px' }} variant='outlined'>
               Add Interview
-            </Button>
+            </ResponsiveBtn>
           ) : (
             ''
           )}

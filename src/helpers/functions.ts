@@ -18,6 +18,14 @@ export const statusColors: any = {
   inactive: 'error'
 }
 
+export const ratingTextsObj: any = {
+  1: 'Useless',
+  2: 'Poor',
+  3: 'Ok',
+  4: 'Good',
+  5: 'Excellent!',
+}
+
 
 export const toastError = (msg: string, duration: number = 5000, position: ToastPosition = 'bottom-left') => {
   if (msg?.length > 0) toast.error(msg, { duration, position, style: { maxWidth: '650px' } })
@@ -168,4 +176,10 @@ export const mobileHandler = (mobileValue: string, value: string, setValue: any,
   mobileValue = mobileValue.substring(0, 2) == '98' ? mobileValue.substring(2) : mobileValue
   mobileValue = mobileValue.length > 10 ? value : mobileValue
   setValue(fieldName, mobileValue)
+}
+
+export const getDifferenceDay = (date1: any, date2: any = new Date()) => {
+  const diffTime = date1 - date2
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+  return diffDays
 }
