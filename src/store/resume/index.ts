@@ -24,11 +24,13 @@ export const createResume: any = createAsyncThunk('createResume', async (data: R
         .request('patch', `resumes/${newResumeId}/avatar`, { avatar: resumeAvatar })
     }
 
-    if (resumeFiles.length > 0 && newResumeId) {
-      await ApiRequest.builder()
-        .auth()
-        .contentType('multipart/form-data')
-        .request('patch', `resumes/${newResumeId}/file`, { file: resumeFiles[0] })
+    if (resumeFiles.length && newResumeId) {
+      for (const resumeFile of resumeFiles) {
+        await ApiRequest.builder()
+          .auth()
+          .contentType('multipart/form-data')
+          .request('patch', `resumes/${newResumeId}/file`, { file: resumeFile })
+      }
     }
 
     return response

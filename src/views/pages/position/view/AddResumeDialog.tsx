@@ -204,7 +204,8 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
       'application/*': ['.pdf']
     },
     onDrop: (acceptedFiles: File[]) => {
-      setResumeFiles(acceptedFiles.map((file: File) => Object.assign(file)))
+      let newUploads: any = acceptedFiles.map((file: File) => Object.assign(file))
+      setResumeFiles(newUploads.concat(resumeFiles))
     },
     onDropRejected: () => {
       toastError('You can only upload PDF files with maximum size of 9 MB.')
@@ -225,6 +226,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
       dispatch(clearCreateResume())
       handleClose()
       setAvatar([])
+      setResumeFiles([])
       setGender('')
       setSalaryRange([9000000, 20000000])
     }
@@ -246,19 +248,17 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
 
   const fileList = resumeFiles.map((file: FileProp) => (
     <ListItem key={file.name} style={{ border: '1px solid #e2e2e2', borderRadius: '16px', marginTop: '8px' }}>
-      <Grid item xs={1} className='file-preview'>
+      <Grid item xs={4} sm={1} className='file-preview'>
         {renderFilePreview(file)}
       </Grid>
-      <Grid container xs={12}>
-        <Grid item xs={8}>
-          <Typography className='file-name'>{file.name}</Typography>
-          <Typography className='file-size' variant='body2'>
-            {Math.round(file.size / 100) / 10 > 1000
-              ? (Math.round(file.size / 100) / 10000).toFixed(1) + ' MB'
-              : (Math.round(file.size / 100) / 10).toFixed(1)}{' '}
-            KB
-          </Typography>
-        </Grid>
+      <Grid item xs={12}>
+        <Typography className='file-name'>{file.name}</Typography>
+        <Typography className='file-size' variant='body2'>
+          {Math.round(file.size / 100) / 10 > 1000
+            ? (Math.round(file.size / 100) / 10000).toFixed(1) + ' MB'
+            : (Math.round(file.size / 100) / 10).toFixed(1)}{' '}
+          KB
+        </Typography>
       </Grid>
       <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'right' }}>
         <IconButton onClick={() => handleRemoveFile(file)}>
@@ -286,8 +286,8 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
     if (avatar[0]) {
       data = { ...data, avatar: avatar[0] }
     }
-    if (resumeFiles.length > 0) {
-      data = { ...data, resumeFiles: resumeFiles[0] }
+    if (resumeFiles.length) {
+      data = { ...data, resumeFiles }
     }
     popObjectItemByKey(data, 'work_province')
     popObjectItemByKey(data, 'residence_province')
