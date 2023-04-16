@@ -29,6 +29,8 @@ import { useForm, Controller } from 'react-hook-form'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+import { useSelector } from 'react-redux'
+import { uppercaseFirstLetters } from 'src/helpers/functions'
 
 interface Data {
   email: string
@@ -140,6 +142,17 @@ const ResumeDetailsTab = () => {
   let salaries = []
   for (let salary = 10; salary <= 50; salary++) salaries.push(salary * 1000000)
 
+  const {
+    data: {
+      system: {
+        gender: genderOptions,
+        education: educationOptions,
+        military_status: militaryOptions,
+        marital_status: maritalOptions
+      }
+    }
+  } = useSelector((state: any) => state.constants)
+
   return (
     <Grid
       container
@@ -205,8 +218,11 @@ const ResumeDetailsTab = () => {
                   <FormControl fullWidth>
                     <InputLabel>Gender</InputLabel>
                     <Select label='Gender' value='man' onChange={e => handleFormChange('gender', e.target.value)}>
-                      <MenuItem value='man'>Man</MenuItem>
-                      <MenuItem value='woman'>Woman</MenuItem>
+                      {genderOptions.map((item: any, index: number) => (
+                        <MenuItem key={`gender-${index}`} value={item}>
+                          {uppercaseFirstLetters(item)}
+                        </MenuItem>
+                      ))}
                     </Select>
                   </FormControl>
                 </Grid>
@@ -285,15 +301,9 @@ const ResumeDetailsTab = () => {
                       value={'masters'}
                       onChange={e => handleFormChange('education', e.target.value)}
                     >
-                      {[
-                        { value: 'diploma', label: 'Diploma' },
-                        { value: 'bachelors_degree', label: 'Bachelors Degree' },
-                        { value: 'associate_degree', label: 'Associate Degree' },
-                        { value: 'masters', label: 'Masters' },
-                        { value: 'phd', label: 'Phd' }
-                      ].map(({ value, label }: any, index: number) => (
-                        <MenuItem key={index} value={value}>
-                          {label}
+                      {educationOptions.map((item: any, index: number) => (
+                        <MenuItem key={`education-${index}`} value={item}>
+                          {uppercaseFirstLetters(item)}
                         </MenuItem>
                       ))}
                     </Select>
@@ -307,14 +317,9 @@ const ResumeDetailsTab = () => {
                       value={'married'}
                       onChange={e => handleFormChange('marital_status', e.target.value)}
                     >
-                      {[
-                        { value: 'single', label: 'Single' },
-                        { value: 'married', label: 'Married' },
-                        { value: 'isolated', label: 'Isolated' },
-                        { value: 'unknow', label: 'Unknow' }
-                      ].map(({ value, label }: any, index: number) => (
-                        <MenuItem key={index} value={value}>
-                          {label}
+                      {maritalOptions.map((item: any, index: number) => (
+                        <MenuItem key={`marital-${index}`} value={item}>
+                          {uppercaseFirstLetters(item)}
                         </MenuItem>
                       ))}
                     </Select>
@@ -328,14 +333,9 @@ const ResumeDetailsTab = () => {
                       value={'exemption-edu'}
                       onChange={e => handleFormChange('military_status', e.target.value)}
                     >
-                      {[
-                        { value: 'included', label: 'Included' },
-                        { value: 'end', label: 'End' },
-                        { value: 'exemption-edu', label: 'Exemption-Edu' },
-                        { value: 'exemption-spo', label: 'Exemption-Spo' }
-                      ].map(({ value, label }: any, index: number) => (
-                        <MenuItem key={index} value={value}>
-                          {label}
+                      {militaryOptions.map((item: any, index: number) => (
+                        <MenuItem key={`military-${index}`} value={item}>
+                          {uppercaseFirstLetters(item)}
                         </MenuItem>
                       ))}
                     </Select>

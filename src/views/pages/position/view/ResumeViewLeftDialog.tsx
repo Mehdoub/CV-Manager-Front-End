@@ -10,6 +10,7 @@ import Icon from 'src/@core/components/icon'
 import { useDropzone } from 'react-dropzone'
 import { toast } from 'react-hot-toast'
 import { Fragment, useState } from 'react'
+import { useSelector } from 'react-redux'
 
 const UploadFileWrapper = styled(Grid)<BoxProps>(({ theme }) => ({
   display: 'flex',
@@ -39,6 +40,8 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
       })
     }
   })
+
+  const { data: constants } = useSelector((state: any) => state.constants)
 
   return (
     <>
@@ -79,7 +82,7 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
             <Box sx={{ height: '65vh', overflowY: 'scroll' }}>
               <>
                 <TabPanel sx={{ p: 0, mt: 6 }} value='details'>
-                  <ResumeDetailsTab />
+                  {constants?.system && <ResumeDetailsTab />}
                 </TabPanel>
                 {/* <TabPanel sx={{ p: 0 }} value='file'>
                   <Grid xs={12} container>

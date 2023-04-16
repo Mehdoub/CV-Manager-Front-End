@@ -79,6 +79,8 @@ const PositionViewRight: any = ({ tab, positionId }: Props) => {
   const positionManagerAddStore = useSelector((state: any) => state.positionManagerAdd)
   const positionManagerRemoveStore = useSelector((state: any) => state.positionManagerRemove)
 
+  const { data: constants } = useSelector((state: any) => state.constants)
+
   const handleChange = (event: SyntheticEvent, value: string) => {
     setIsLoading(true)
     setActiveTab(value)
@@ -163,7 +165,9 @@ const PositionViewRight: any = ({ tab, positionId }: Props) => {
           )}
         </Box>
       </TabContext>
-      <AddResumeDialog open={openAddResumeDialog} handleClose={handleCloseAddResumeDialog} />
+      {constants?.system ? (
+        <AddResumeDialog open={openAddResumeDialog} handleClose={handleCloseAddResumeDialog} />
+      ) : null}
     </>
   )
 }

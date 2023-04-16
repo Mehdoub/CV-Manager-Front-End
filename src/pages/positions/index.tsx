@@ -119,6 +119,8 @@ const PositionList = () => {
 
   const { data: positions, loading } = useSelector((state: any) => state.positionsList)
 
+  const { data: constants } = useSelector((state: any) => state.constants)
+
   useEffect(() => {
     dispatch(getPositions({ size: pageSize, query: searchQuery, page }))
   }, [])
@@ -127,7 +129,7 @@ const PositionList = () => {
     setPage(newPage++)
     dispatch(getPositions({ page: newPage, size: pageSize, query: searchQuery }))
   }
-  const clearTimerRef : any = useRef();
+  const clearTimerRef: any = useRef()
   const handleFilter = useCallback((val: string) => {
     setSearchQuery(val)
     clearTimeout(clearTimerRef.current)
@@ -338,9 +340,12 @@ const PositionList = () => {
           )}
         </Card>
       </Grid>
-
-      <AddPositionDrawer open={addPositionOpen} toggle={toggleAddPositionDrawer} />
-      <PositionEditDialog open={editPositionOpen} closeHandler={toggleEditPositionDialog} position={position} />
+      {constants?.position ? (
+        <>
+          <AddPositionDrawer open={addPositionOpen} toggle={toggleAddPositionDrawer} />
+          <PositionEditDialog open={editPositionOpen} closeHandler={toggleEditPositionDialog} position={position} />
+        </>
+      ) : null}
     </Grid>
   )
 }

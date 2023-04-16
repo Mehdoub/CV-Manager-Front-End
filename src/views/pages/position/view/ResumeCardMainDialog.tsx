@@ -6,6 +6,7 @@ import ResumeViewRightDialog from './ResumeViewRightDialog'
 import cahtExample from 'src/data/chatData.json'
 import ResumeCardHeader from './ResumeCardHeader'
 import AddInterviewDialog from './AddInterviewDialog'
+import { useSelector } from 'react-redux'
 
 interface ResumeCardMainDialogProps {
   open: boolean
@@ -33,6 +34,8 @@ const ResumeCardMainDialog = ({ open, toggle, resumeData }: ResumeCardMainDialog
   const [smActiveTab, setSmActiveTab] = useState<string>('resumedata')
   const [openAddCallDialog, setOpenAddCallDialog] = useState<boolean>(false)
   const [openAddInterviewDialog, setOpenAddInterviewDialog] = useState<boolean>(false)
+
+  const { data: constants } = useSelector((state: any) => state.constants)
 
   const isSmallScreen = useMediaQuery((theme: any) => theme.breakpoints.down('lg'))
 
@@ -102,8 +105,12 @@ const ResumeCardMainDialog = ({ open, toggle, resumeData }: ResumeCardMainDialog
           )}
         </Grid>
       </Dialog>
-      <AddCallHistoryDialog open={openAddCallDialog} handleClose={handleCloseAddCallDialog} />
-      <AddInterviewDialog open={openAddInterviewDialog} handleClose={handleCloseAddInterviewDialog} />
+      {constants?.resume && (
+        <>
+          <AddCallHistoryDialog open={openAddCallDialog} handleClose={handleCloseAddCallDialog} />
+          <AddInterviewDialog open={openAddInterviewDialog} handleClose={handleCloseAddInterviewDialog} />
+        </>
+      )}
     </>
   )
 }

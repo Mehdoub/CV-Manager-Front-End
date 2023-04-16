@@ -23,7 +23,6 @@ import { mobileHandler, popObjectItemByKey, toastError, uppercaseFirstLetters } 
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useDropzone } from 'react-dropzone'
-import { toast } from 'react-hot-toast'
 import { useDispatch } from 'react-redux'
 import { clearCreateResume, createResume } from 'src/store/resume'
 import { useSelector } from 'react-redux'
@@ -35,10 +34,6 @@ interface FileProp {
   size: number
 }
 
-const genderOptions = ['men', 'women']
-const educationOptions = ['diploma', 'bachelors_degree', 'associate_degree', 'masters', 'phd']
-const maritalOptions = ['single', 'married', 'isolated', 'unknow']
-const militaryOptions = ['included', 'end', 'exemption-edu', 'exemption-spo']
 const cityOptions = [
   { value: 'tehran', label: 'Tehran' },
   { value: 'alborz', label: 'Alborz' },
@@ -91,57 +86,6 @@ const defaultValues = {
   email: ''
 }
 
-const schema = yup.object().shape(
-  {
-    firstname: yup.string().label('First name').min(3).required(),
-    lastname: yup.string().label('Last name').min(3).required(),
-    gender: yup.string().label('Gender').oneOf(genderOptions).required(),
-    education: yup.string().label('Education').oneOf(educationOptions).required(),
-    marital_status: yup.string().label('Marital Status').oneOf(maritalOptions).required(),
-    military_status: yup.string().when('gender', (val: any) => {
-      if (val == 'men') {
-        return yup.string().label('Military Status').oneOf(militaryOptions).required()
-      } else {
-        return yup.string().notRequired()
-      }
-    }),
-    work_province: yup.string().label('Work Province').oneOf(cityValues).required(),
-    work_city: yup.string().label('Work City').oneOf(cityValues).required(),
-    residence_province: yup.string().label('Residence Province').oneOf(cityValues).required(),
-    residence_city: yup.string().label('Residence City').oneOf(cityValues).required(),
-    birth_year: yup.number().label('Birth Year').oneOf(years).required(),
-    work_experience: yup.number().when('work_experience', (val: any) => {
-      if (val) {
-        return yup.number().label('Work Started Year').oneOf(years).required()
-      } else {
-        return yup.number().notRequired()
-      }
-    }),
-    mobile: yup
-      .string()
-      .label('Mobile')
-      .matches(/^[\d]{10}$/, 'Mobile Is Not Valid (example: 912 345 6789)')
-      .required(),
-    phone: yup.string().when('phone', (val: any) => {
-      if (val) {
-        return yup
-          .string()
-          .label('Phone Number')
-          .matches(/^[\d]{10}$/, 'Phone Number Is Not Valid (example: 21 8844 6623)')
-          .required()
-      } else {
-        return yup.string().notRequired()
-      }
-    }),
-    email: yup.string().label('Email').email('Email Is Not Valid!').required()
-  },
-  [
-    ['military_status', 'military_status'],
-    ['work_experience', 'work_experience'],
-    ['phone', 'phone']
-  ]
-)
-
 interface AddResumeDialogProps {
   open: boolean
   handleClose: any
@@ -179,6 +123,68 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   const [resumeFiles, setResumeFiles] = useState<File[]>([])
   const [gender, setGender] = useState<string>('')
   const [salaryRange, setSalaryRange] = useState<any>([9000000, 20000000] || '')
+
+  const {
+    data: {
+      system: {
+        gender: genderOptions,
+        education: educationOptions,
+        military_status: militaryOptions,
+        marital_status: maritalOptions
+      }
+    }
+  } = useSelector((state: any) => state.constants)
+
+  const schema = yup.object().shape(
+    {
+      firstname: yup.string().label('First name').min(3).required(),
+      lastname: yup.string().label('Last name').min(3).required(),
+      gender: yup.string().label('Gender').oneOf(genderOptions).required(),
+      education: yup.string().label('Education').oneOf(educationOptions).required(),
+      marital_status: yup.string().label('Marital Status').oneOf(maritalOptions).required(),
+      military_status: yup.string().when('gender', (val: any) => {
+        if (val == 'men') {
+          return yup.string().label('Military Status').oneOf(militaryOptions).required()
+        } else {
+          return yup.string().notRequired()
+        }
+      }),
+      work_province: yup.string().label('Work Province').oneOf(cityValues).required(),
+      work_city: yup.string().label('Work City').oneOf(cityValues).required(),
+      residence_province: yup.string().label('Residence Province').oneOf(cityValues).required(),
+      residence_city: yup.string().label('Residence City').oneOf(cityValues).required(),
+      birth_year: yup.number().label('Birth Year').oneOf(years).required(),
+      work_experience: yup.number().when('work_experience', (val: any) => {
+        if (val) {
+          return yup.number().label('Work Started Year').oneOf(years).required()
+        } else {
+          return yup.number().notRequired()
+        }
+      }),
+      mobile: yup
+        .string()
+        .label('Mobile')
+        .matches(/^[\d]{10}$/, 'Mobile Is Not Valid (example: 912 345 6789)')
+        .required(),
+      phone: yup.string().when('phone', (val: any) => {
+        if (val) {
+          return yup
+            .string()
+            .label('Phone Number')
+            .matches(/^[\d]{10}$/, 'Phone Number Is Not Valid (example: 21 8844 6623)')
+            .required()
+        } else {
+          return yup.string().notRequired()
+        }
+      }),
+      email: yup.string().label('Email').email('Email Is Not Valid!').required()
+    },
+    [
+      ['military_status', 'military_status'],
+      ['work_experience', 'work_experience'],
+      ['phone', 'phone']
+    ]
+  )
 
   // ** Hooks
   // Upload Avatar

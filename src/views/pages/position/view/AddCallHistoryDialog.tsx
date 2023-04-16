@@ -30,6 +30,7 @@ import {
 } from '@mui/material'
 import { uppercaseFirstLetters } from 'src/helpers/functions'
 import Language from 'src/helpers/Language'
+import { useSelector } from 'react-redux'
 
 const ratingLabels: { [index: string]: string } = {
   1: 'Useless',
@@ -49,6 +50,12 @@ const AddCallHistoryDialog = ({ open, handleClose }: AddCallHistoryDialogProps) 
   const [callResult, setCallResult] = useState<string>('')
   const [callingDate, setCallingDate] = useState<any>('')
   const [recallDate, setRecallDate] = useState<any>('')
+
+  const {
+    data: {
+      resume: { call_history_status: callHistoryStatusOptions }
+    }
+  } = useSelector((state: any) => state.constants)
 
   const theme = useTheme()
 
@@ -158,7 +165,7 @@ const AddCallHistoryDialog = ({ open, handleClose }: AddCallHistoryDialogProps) 
                 <FormControl fullWidth>
                   <InputLabel>Result</InputLabel>
                   <Select label='Result' value={callResult} onChange={(e: any) => setCallResult(e.target.value)}>
-                    {['rejected', 'answered', 'busy', 'wrong-number', 'recall'].map((item: string, index: number) => (
+                    {callHistoryStatusOptions.map((item: string, index: number) => (
                       <MenuItem key={`${item}-${index}`} value={item}>
                         {uppercaseFirstLetters(item)}
                       </MenuItem>

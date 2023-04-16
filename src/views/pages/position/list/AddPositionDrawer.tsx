@@ -48,8 +48,6 @@ interface FileProp {
   size: number
 }
 
-const levelOptions = ['senior', 'mid', 'junior']
-
 // Styled component for the upload image inside the dropzone area
 const Img = styled('img')(({ theme }) => ({
   [theme.breakpoints.down('md')]: {
@@ -82,13 +80,6 @@ const Header = styled(Box)<BoxProps>(({ theme }) => ({
   backgroundColor: theme.palette.background.default
 }))
 
-const schema = yup.object().shape({
-  title: yup.string().label('Title').min(3).max(50).required(),
-  // project: yup.string().label('Project').optional(),
-  level: yup.string().label('Level').oneOf(levelOptions),
-  description: yup.string().label('Description').min(10).max(100).required()
-})
-
 const defaultValues = {
   title: '',
   // project: '',
@@ -120,7 +111,20 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
 
   const { data: projects, loading: loadingSearchProjects } = useSelector((state: any) => state.projectsList)
 
+  const {
+    data: {
+      position: { level: levelOptions }
+    }
+  } = useSelector((state: any) => state.constants)
+
   const projectId = dispatchProjectPositionsList && project?.id ? project?.id : null
+
+  const schema = yup.object().shape({
+    title: yup.string().label('Title').min(3).max(50).required(),
+    // project: yup.string().label('Project').optional(),
+    level: yup.string().label('Level').oneOf(levelOptions),
+    description: yup.string().label('Description').min(10).max(100).required()
+  })
 
   const {
     reset,
