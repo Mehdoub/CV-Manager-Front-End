@@ -9,7 +9,7 @@ import Grid, { GridProps } from '@mui/material/Grid'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import Icon from 'src/@core/components/icon'
 import { AvatarGroup, Divider, IconButton, Stack } from '@mui/material'
-import { getFullName } from 'src/helpers/functions'
+import { calcInterviewRemainingTime, getFullName, uppercaseFirstLetters } from 'src/helpers/functions'
 import { BootstrapTooltip } from 'src/pages/companies'
 
 const fakeUsers = [
@@ -75,10 +75,13 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
 }))
 
 const InterviewCard = () => {
+  const [interviewDateText, interviewColor, interviewDateString] = calcInterviewRemainingTime(
+    '2023-04-16T09:49:11.498Z',
+    '2023-04-16T12:09:11.498Z'
+  )
+
   return (
-    <Card
-    // sx={{ backgroundColor: '#4c4e640d' }}
-    >
+    <Card>
       <Grid container spacing={6}>
         <StyledGrid1 item xs={12} lg={9}>
           <CardContent sx={{ p: theme => `${theme.spacing(6)} !important` }}>
@@ -154,15 +157,25 @@ const InterviewCard = () => {
             </IconButton>
           </Grid>
           <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Stack direction='column' sx={{ display: 'flex', alignItems: 'center' }}>
-              <CustomAvatar color='primary' variant='rounded' skin='light' sx={{ width: 100, height: 100, mb: 2 }}>
-                <Icon icon='mdi:alarm-clock' fontSize='3rem' />
-              </CustomAvatar>
-              <Typography fontWeight={500}>Tomorrow</Typography>
-              <Typography fontWeight={200} fontSize={14}>
-                03:00 <span style={{ fontWeight: 500 }}>P.M</span>
-              </Typography>
-            </Stack>
+            <BootstrapTooltip placement='top' title={interviewDateString}>
+              <Stack direction='column' sx={{ display: 'flex', alignItems: 'center' }}>
+                <CustomAvatar
+                  color={interviewColor as any}
+                  variant='rounded'
+                  skin='light'
+                  sx={{ width: 100, height: 100, mb: 2 }}
+                >
+                  <Icon
+                    className={interviewDateText == 'right now' ? 'blinking' : ''}
+                    icon='mdi:alarm-clock'
+                    fontSize='3rem'
+                  />
+                </CustomAvatar>
+                <Typography fontWeight={200} fontSize={14}>
+                  {uppercaseFirstLetters(interviewDateText)}
+                </Typography>
+              </Stack>
+            </BootstrapTooltip>
           </CardContent>
           <AvatarGroup className='pull-up'>
             {fakeUsers.map((item: any, index: any) => (

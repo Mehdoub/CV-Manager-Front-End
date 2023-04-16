@@ -178,8 +178,47 @@ export const mobileHandler = (mobileValue: string, value: string, setValue: any,
   setValue(fieldName, mobileValue)
 }
 
-export const getDifferenceDay = (date1: any, date2: any = new Date()) => {
-  const diffTime = date1 - date2
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
-  return diffDays
+export const calcInterviewRemainingTime = (startDate: any, endDate: any) => {
+  const interviewStartDate: any = new Date(startDate)
+  const interviewEndDate: any = new Date(endDate)
+  const now: any = new Date()
+  const diffDays: number = Math.floor((interviewStartDate - now) / (1000 * 60 * 60 * 24))
+
+  let interviewDateText = ''
+  let interviewColor = ''
+
+  if (diffDays > 0) {
+    interviewDateText = diffDays + ' Day(s) Later'
+    interviewColor = 'success'
+  } else if (diffDays < 0 && diffDays !== -1) {
+    interviewDateText = Math.abs(diffDays) + ' Day(s) Ago'
+    interviewColor = 'warning'
+  } else {
+    if (now.getTime() > interviewStartDate.getTime() && now.getTime() < interviewEndDate.getTime()) {
+      interviewDateText = 'right now'
+      interviewColor = 'error'
+    } else {
+      const diffHours = Math.ceil((interviewStartDate - now) / (1000 * 60 * 60))
+      if (diffHours > 0 && diffHours !== 1) {
+        interviewDateText = diffHours + ' Hour(s) Later'
+        interviewColor = 'primary'
+      } else if (diffHours < 0) {
+        interviewDateText = Math.abs(diffHours) + ' Hour(s) Ago'
+        interviewColor = 'secondary'
+      } else {
+        const diffMinutes = Math.ceil((interviewStartDate - now) / (1000 * 60))
+        interviewDateText = Math.abs(diffMinutes) + ' Minute(s) Later'
+        interviewColor = 'primary'
+      }
+    }
+  }
+
+  const interviewDateString =
+    interviewStartDate.toDateString() +
+    ' , ' +
+    interviewStartDate.toLocaleTimeString() +
+    ' To ' +
+    interviewEndDate.toLocaleTimeString()
+
+  return [interviewDateText, interviewColor, interviewDateString]
 }

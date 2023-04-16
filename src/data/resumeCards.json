@@ -19,6 +19,7 @@
         },
         "latest_interview": {
           "interview_date": "2023-09-18T07:09:11.498Z",
+          "interview_end_date": "2023-09-18T11:09:11.498Z",
           "interview_text": "tomorrow 15:00",
           "date": "14 March 03:00 P.M",
           "interview_color": "success"
@@ -73,6 +74,7 @@
         },
         "latest_interview": {
           "interview_date": "2023-07-09T07:09:11.498Z",
+          "interview_end_date": "2023-07-09T11:09:11.498Z",
           "interview_text": "right now",
           "date": "14 March 03:00 P.M",
           "interview_color": "error"
@@ -107,6 +109,7 @@
         },
         "latest_interview": {
           "interview_date": "2023-04-15T07:09:11.498Z",
+          "interview_end_date": "2023-04-15T11:09:11.498Z",
           "interview_text": "yesterday 11:00",
           "date": "14 March 03:00 P.M",
           "interview_color": "warning"
@@ -142,6 +145,7 @@
         },
         "latest_interview": {
           "interview_date": "2023-09-18T07:09:11.498Z",
+          "interview_end_date": "2023-09-18T11:09:11.498Z",
           "interview_text": "tomorrow 15:00",
           "date": "14 March 03:00 P.M",
           "interview_color": "success"
@@ -196,6 +200,7 @@
         },
         "latest_interview": {
           "interview_date": "2023-07-09T07:09:11.498Z",
+          "interview_end_date": "2023-07-09T11:09:11.498Z",
           "interview_text": "right now",
           "date": "14 March 03:00 P.M",
           "interview_color": "error"
@@ -230,6 +235,7 @@
         },
         "latest_interview": {
           "interview_date": "2023-04-15T07:09:11.498Z",
+          "interview_end_date": "2023-04-15T11:09:11.498Z",
           "interview_text": "yesterday 11:00",
           "date": "14 March 03:00 P.M",
           "interview_color": "warning"
@@ -272,6 +278,7 @@
         },
         "latest_interview": {
           "interview_date": "2023-09-12T07:09:11.498Z",
+          "interview_end_date": "2023-09-12T11:09:11.498Z",
           "interview_text": "tomorrow 15:00",
           "date": "14 March 03:00 P.M",
           "interview_color": "success"
@@ -314,6 +321,7 @@
         },
         "latest_interview": {
           "interview_date": "2023-03-14T07:09:11.498Z",
+          "interview_end_date": "2023-03-14T11:09:11.498Z",
           "interview_text": "yesterday 11:00",
           "date": "14 March 03:00 P.M",
           "interview_color": "warning"
@@ -343,7 +351,8 @@
           "color": "info"
         },
         "latest_interview": {
-          "interview_date": "2023-04-15T07:09:11.498Z",
+          "interview_date": "2023-04-16T04:49:11.498Z",
+          "interview_end_date": "2023-04-16T07:09:11.498Z",
           "interview_text": "yesterday 11:00",
           "date": "14 March 03:00 P.M",
           "interview_color": "warning"

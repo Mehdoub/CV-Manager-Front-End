@@ -1,7 +1,7 @@
 import { Avatar, AvatarGroup, Box, Card, Chip, Rating, Stack, Typography } from '@mui/material'
 import {
+  calcInterviewRemainingTime,
   getColorCodes,
-  getDifferenceDay,
   getMaxTextLen,
   ratingTextsObj,
   uppercaseFirstLetters
@@ -18,20 +18,10 @@ interface ResumeKanbanCardProps {
 }
 
 const ResumeKanbanCard = ({ cardData: card, setOpen }: ResumeKanbanCardProps) => {
-  const interviewDate: any = new Date(card.latest_interview.interview_date)
-  const now: any = new Date()
-  const diffDays: number = getDifferenceDay(interviewDate, now)
-
-  const interviewDateText =
-    diffDays > 0
-      ? Math.abs(diffDays) + ' Day(s) Later'
-      : Math.abs(diffDays) == 0
-      ? 'Today'
-      : Math.abs(diffDays) + ' Day(s) Ago'
-
-  const interviewColor = diffDays > 0 ? 'success' : diffDays < 0 ? 'warning' : 'error'
-
-  const interviewDateString = new Date(card.latest_interview.interview_date).toDateString()
+  const [interviewDateText, interviewColor, interviewDateString] = calcInterviewRemainingTime(
+    card.latest_interview.interview_date,
+    card.latest_interview.interview_end_date
+  )
 
   return (
     <Card
@@ -143,15 +133,15 @@ const ResumeKanbanCard = ({ cardData: card, setOpen }: ResumeKanbanCardProps) =>
             variant='outlined'
             size='small'
             label={`${getMaxTextLen(uppercaseFirstLetters(interviewDateText), 20)}`}
-            color={interviewColor}
+            color={interviewColor as any}
             sx={{ backgroundColor: '#fff', position: 'absolute', bottom: 40, fontSize: 10, height: 20 }}
             avatar={
-              diffDays == 0 ? (
+              interviewDateText == 'right now' ? (
                 <svg height='18' width='18' className='blinking'>
                   <circle cx='9' cy='9' r='5' fill={getColorCodes('error')} />
                 </svg>
               ) : (
-                <Avatar sx={{ backgroundColor: '#fff' }}>
+                <Avatar sx={{ backgroundColor: '#fff !important' }}>
                   <Icon
                     style={{
                       color: getColorCodes(interviewColor),

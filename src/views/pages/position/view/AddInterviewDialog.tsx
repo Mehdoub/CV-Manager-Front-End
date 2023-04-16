@@ -121,7 +121,7 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
               <Grid item md={6} xs={12}>
                 <FormControl fullWidth>
                   <Typography fontSize={14} sx={{ fontWeight: 400, mb: 1, ml: 1, color: 'text.secondary' }}>
-                    {`${uppercaseFirstLetters('Event Time')}`}
+                    {`${uppercaseFirstLetters('Event Start Time')}`}
                   </Typography>
                   <DatePicker
                     value={eventTime}
@@ -148,11 +148,41 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                   />
                 </FormControl>
               </Grid>
-              <Grid item xs={12} md={6} sx={{ mt: '26px' }}>
+              <Grid item md={6} xs={12}>
+                <FormControl fullWidth>
+                  <Typography fontSize={14} sx={{ fontWeight: 400, mb: 1, ml: 1, color: 'text.secondary' }}>
+                    {`${uppercaseFirstLetters('Event End Time')}`}
+                  </Typography>
+                  <DatePicker
+                    value={eventTime}
+                    onChange={setEventTime}
+                    format='MM/DD/YYYY HH:mm:ss'
+                    plugins={[<TimePicker position='bottom' />]}
+                    inputClass='rmdp-input'
+                    placeholder='Click To Select Time'
+                    calendar={persianDate}
+                    locale={persianDateFa}
+                    minDate={new DateObject()}
+                    required
+                    style={{
+                      backgroundColor: theme.palette.mode == 'dark' ? '#30334E' : '#F7F7F9',
+                      color:
+                        theme.palette.mode == 'light'
+                          ? 'rgba(76, 78, 100, 0.87) !important'
+                          : theme.palette.secondary.dark,
+                      borderColor:
+                        theme.palette.mode == 'light'
+                          ? 'rgba(76, 78, 100, 0.22) !important'
+                          : theme.palette.secondary.dark
+                    }}
+                  />
+                </FormControl>
+              </Grid>
+              <Grid item xs={12} sx={{ mt: '26px' }}>
                 <Autocomplete
                   multiple
                   options={fakeUsers}
-                  limitTags={1}
+                  limitTags={2}
                   id='autocomplete-multi-contributers'
                   getOptionLabel={user => getFullName(user)}
                   renderInput={params => <TextField {...params} label='Contributers' placeholder='Search Users ...' />}
