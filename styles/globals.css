@@ -143,9 +143,9 @@ code[class*='language-'] {
 .rmdp-input {
   padding: 27px 15px !important;
   border-radius: 8px !important;
-  border-color: rgba(76, 78, 100, 0.22) !important;
+  /* border-color: rgba(76, 78, 100, 0.22) !important; */
   font-size: 14px !important;
-  color: rgba(76, 78, 100, 0.87) !important;
+  /* color: rgba(76, 78, 100, 0.87) !important; */
   width: 100%;
 }
 

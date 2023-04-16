@@ -29,7 +29,8 @@ import {
   MenuItem,
   Rating,
   Select,
-  Typography
+  Typography,
+  useTheme
 } from '@mui/material'
 import { getFullName, uppercaseFirstLetters } from 'src/helpers/functions'
 import Language from 'src/helpers/Language'
@@ -82,6 +83,8 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
   const [result, setResult] = useState<any>('')
   const [status, setStatus] = useState<any>('')
 
+  const theme = useTheme()
+
   const language = Language.builder().getLanguage()
 
   const persianDate = language == 'fa' ? persian : undefined
@@ -131,6 +134,17 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                     locale={persianDateFa}
                     minDate={new DateObject()}
                     required
+                    style={{
+                      backgroundColor: theme.palette.mode == 'dark' ? '#30334E' : '#F7F7F9',
+                      color:
+                        theme.palette.mode == 'light'
+                          ? 'rgba(76, 78, 100, 0.87) !important'
+                          : theme.palette.secondary.dark,
+                      borderColor:
+                        theme.palette.mode == 'light'
+                          ? 'rgba(76, 78, 100, 0.22) !important'
+                          : theme.palette.secondary.dark
+                    }}
                   />
                 </FormControl>
               </Grid>

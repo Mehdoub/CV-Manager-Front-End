@@ -40,6 +40,7 @@ const ResumeKanbanCard = ({ cardData: card, setOpen }: ResumeKanbanCardProps) =>
         m: 4,
         cursor: 'pointer',
         boxShadow: 'none',
+        // backgroundColor: theme.palette.mode == 'dark' ? '#30334E' : '#F7F7F9',
         position: 'relative'
       }}
       onClick={() => setOpen(true)}

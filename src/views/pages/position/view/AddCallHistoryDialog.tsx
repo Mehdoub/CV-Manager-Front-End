@@ -25,7 +25,8 @@ import {
   Rating,
   Select,
   Typography,
-  useMediaQuery
+  useMediaQuery,
+  useTheme
 } from '@mui/material'
 import { uppercaseFirstLetters } from 'src/helpers/functions'
 import Language from 'src/helpers/Language'
@@ -48,6 +49,8 @@ const AddCallHistoryDialog = ({ open, handleClose }: AddCallHistoryDialogProps) 
   const [callResult, setCallResult] = useState<string>('')
   const [callingDate, setCallingDate] = useState<any>('')
   const [recallDate, setRecallDate] = useState<any>('')
+
+  const theme = useTheme()
 
   const language = Language.builder().getLanguage()
 
@@ -105,6 +108,17 @@ const AddCallHistoryDialog = ({ open, handleClose }: AddCallHistoryDialogProps) 
                     calendar={persianDate}
                     locale={persianDateFa}
                     required
+                    style={{
+                      backgroundColor: theme.palette.mode == 'dark' ? '#30334E' : '#F7F7F9',
+                      color:
+                        theme.palette.mode == 'light'
+                          ? 'rgba(76, 78, 100, 0.87) !important'
+                          : theme.palette.secondary.dark,
+                      borderColor:
+                        theme.palette.mode == 'light'
+                          ? 'rgba(76, 78, 100, 0.22) !important'
+                          : theme.palette.secondary.dark
+                    }}
                   />
                 </FormControl>
               </Grid>
@@ -125,6 +139,17 @@ const AddCallHistoryDialog = ({ open, handleClose }: AddCallHistoryDialogProps) 
                       calendar={persianDate}
                       locale={persianDateFa}
                       required
+                      style={{
+                        backgroundColor: theme.palette.mode == 'dark' ? '#30334E' : '#F7F7F9',
+                        color:
+                          theme.palette.mode == 'light'
+                            ? 'rgba(76, 78, 100, 0.87) !important'
+                            : theme.palette.secondary.dark,
+                        borderColor:
+                          theme.palette.mode == 'light'
+                            ? 'rgba(76, 78, 100, 0.22) !important'
+                            : theme.palette.secondary.dark
+                      }}
                     />
                   </FormControl>
                 </Grid>

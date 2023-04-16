@@ -1,4 +1,4 @@
-import { Card, Typography } from '@mui/material'
+import { Card, Typography, useTheme } from '@mui/material'
 import { getColorCodes } from 'src/helpers/functions'
 
 interface ResumeKanbanColumnProps {
@@ -8,19 +8,20 @@ interface ResumeKanbanColumnProps {
 }
 
 const ResumeKanbanColumn = ({ title, color, children }: ResumeKanbanColumnProps) => {
+  const theme = useTheme()
   return (
     <Card
       className='hide-scrollbar'
       sx={{
         minWidth: 300,
         maxHeight: 720,
-        backgroundColor: '#F7F7F9',
+        backgroundColor: theme.palette.mode == 'dark' ? '#282A42' : '#F7F7F9',
         overflowY: 'scroll',
         boxShadow: 'none',
         position: 'relative'
       }}
     >
-      <Typography
+      <Card
         sx={{
           fontSize: 16,
           fontWeight: 500,
@@ -33,7 +34,7 @@ const ResumeKanbanColumn = ({ title, color, children }: ResumeKanbanColumnProps)
           height: '42px',
           margin: '0 16px',
           borderRadius: '10px 10px 3px 3px',
-          backgroundColor: '#fff',
+          // backgroundColor: '#fff',
           display: 'flex',
           alignItems: 'center',
           boxShadow: '0px 2px 10px 0px rgb(76 78 100 / 22%)',
@@ -42,7 +43,7 @@ const ResumeKanbanColumn = ({ title, color, children }: ResumeKanbanColumnProps)
         }}
       >
         {title}
-      </Typography>
+      </Card>
       {children}
     </Card>
   )
