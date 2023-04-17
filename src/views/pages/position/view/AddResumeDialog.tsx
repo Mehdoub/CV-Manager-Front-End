@@ -27,6 +27,7 @@ import { useDispatch } from 'react-redux'
 import { clearCreateResume, createResume } from 'src/store/resume'
 import { useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
+import { getCitiesByProvince, getProvinces } from 'src/store/province'
 
 interface FileProp {
   name: string
@@ -124,6 +125,36 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   const [gender, setGender] = useState<string>('')
   const [salaryRange, setSalaryRange] = useState<any>([9000000, 20000000] || '')
 
+  const [workCities, setWorkCities] = useState([])
+  const [residanceCities, setResidanceCities] = useState([])
+  const [fillCities, setFillCities] = useState('')
+
+  const { data: provinceCities } = useSelector((state: any) => state.citiesByProvince)
+  const { data: provinces } = useSelector((state: any) => state.provinces)
+
+  const provincesValues = provinces.length > 0 ? provinces.map((province: any) => province._id) : []
+  const workCitiesValues = workCities.length > 0 ? workCities.map((workCity: any) => workCity._id) : []
+  const residanceCitiesValues =
+    residanceCities.length > 0 ? residanceCities.map((residanceCity: any) => residanceCity._id) : []
+
+  useEffect(() => {
+    dispatch(getProvinces())
+  }, [])
+
+  useEffect(() => {
+    if (provinceCities) {
+      if (fillCities == 'work') {
+        setWorkCities(provinceCities)
+        setFillCities('')
+      } else if (fillCities == 'residance') {
+        setResidanceCities(provinceCities)
+        setFillCities('')
+      }
+    }
+  }, [provinceCities])
+
+  const dispatch = useDispatch()
+
   const {
     data: {
       system: {
@@ -149,10 +180,10 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
           return yup.string().notRequired()
         }
       }),
-      work_province: yup.string().label('Work Province').oneOf(cityValues).required(),
-      work_city: yup.string().label('Work City').oneOf(cityValues).required(),
-      residence_province: yup.string().label('Residence Province').oneOf(cityValues).required(),
-      residence_city: yup.string().label('Residence City').oneOf(cityValues).required(),
+      work_province: yup.string().label('Work Province').oneOf(provincesValues).required(),
+      work_city: yup.string().label('Work City').oneOf(workCitiesValues).required(),
+      residence_province: yup.string().label('Residence Province').oneOf(provincesValues).required(),
+      residence_city: yup.string().label('Residence City').oneOf(residanceCitiesValues).required(),
       birth_year: yup.number().label('Birth Year').oneOf(years).required(),
       work_experience: yup.number().when('work_experience', (val: any) => {
         if (val) {
@@ -217,8 +248,6 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
       toastError('You can only upload PDF files with maximum size of 9 MB.')
     }
   })
-
-  const dispatch = useDispatch()
 
   const { status: statusResumeCreate, loading: loadingResumeCreate } = useSelector((state: any) => state.resumeCreate)
 
@@ -299,6 +328,11 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
     popObjectItemByKey(data, 'residence_province')
     ;[data.min_salary, data.max_salary] = salaryRange
     dispatch(createResume(data))
+  }
+
+  const handleCities = (provinceId: string, field: string) => {
+    setFillCities(field)
+    dispatch(getCitiesByProvince(provinceId))
   }
 
   return (
@@ -667,13 +701,16 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                               <Select
                                 label='Work Province'
                                 value={value}
-                                onChange={onChange}
+                                onChange={e => {
+                                  onChange(e)
+                                  handleCities(e.target.value, 'work')
+                                }}
                                 onBlur={onBlur}
                                 error={Boolean(errors.work_province)}
                               >
-                                {cityOptions.map(({ value, label }: any, index: number) => (
-                                  <MenuItem key={`work-province-${index}`} value={value}>
-                                    {label}
+                                {provinces.map((item: any, index: number) => (
+                                  <MenuItem key={`work-province-${index}`} value={item._id}>
+                                    {item.name}
                                   </MenuItem>
                                 ))}
                               </Select>
@@ -700,9 +737,9 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                                 onBlur={onBlur}
                                 error={Boolean(errors.work_city)}
                               >
-                                {cityOptions.map(({ value, label }: any, index: number) => (
-                                  <MenuItem key={`work-city-${index}`} value={value}>
-                                    {label}
+                                {workCities.map((item: any, index: number) => (
+                                  <MenuItem key={`work-city-${index}`} value={item._id}>
+                                    {item.name}
                                   </MenuItem>
                                 ))}
                               </Select>
@@ -725,13 +762,16 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                               <Select
                                 label='Residence Province'
                                 value={value}
-                                onChange={onChange}
+                                onChange={e => {
+                                  onChange(e)
+                                  handleCities(e.target.value, 'residance')
+                                }}
                                 onBlur={onBlur}
                                 error={Boolean(errors.residence_province)}
                               >
-                                {cityOptions.map(({ value, label }: any, index: number) => (
-                                  <MenuItem key={`residence-province-${index}`} value={value}>
-                                    {label}
+                                {provinces.map((item: any, index: number) => (
+                                  <MenuItem key={`residence-province-${index}`} value={item._id}>
+                                    {item.name}
                                   </MenuItem>
                                 ))}
                               </Select>
@@ -760,9 +800,9 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                                 onBlur={onBlur}
                                 error={Boolean(errors.residence_city)}
                               >
-                                {cityOptions.map(({ value, label }: any, index: number) => (
-                                  <MenuItem key={`residence-city-${index}`} value={value}>
-                                    {label}
+                                {residanceCities.map((item: any, index: number) => (
+                                  <MenuItem key={`residence-city-${index}`} value={item._id}>
+                                    {item.name}
                                   </MenuItem>
                                 ))}
                               </Select>

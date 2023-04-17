@@ -10,9 +10,6 @@ export const createResume: any = createAsyncThunk('createResume', async (data: R
     const resumeAvatar = popObjectItemByKey(data, 'avatar')
     const resumeFiles = popObjectItemByKey(data, 'resumeFiles')
 
-    data.work_city = '643402d32a0d82fd4b1a4273'
-    data.residence_city = '643402d32a0d82fd4b1a4273'
-
     const response = await ApiRequest.builder().auth().request('post', 'resumes', data)
 
     const newResumeId = response?.data?.data[0]?.id
