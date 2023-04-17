@@ -75,13 +75,13 @@ const RoleViewDialog = ({ open, toggle, dialogTitle, editRoleData }: RoleViewDia
   }, [editRoleData, dialogTitle])
 
   const togglePermission = (id: string) => {
-    let arr = selectedPermissions
+    let arr = [...selectedPermissions]
     console.log(arr)
     if (selectedPermissions.includes(id)) {
       arr.splice(arr.indexOf(id), 1)
       setSelectedPermissions([...arr])
     } else {
-      arr =[...arr, id]
+      arr = [...arr, id]
       setSelectedPermissions([...arr])
     }
   }
@@ -96,9 +96,7 @@ const RoleViewDialog = ({ open, toggle, dialogTitle, editRoleData }: RoleViewDia
               size='small'
               id={permission?._id}
               onChange={() => togglePermission(permission?._id)}
-              checked={
-                selectedPermissions.includes(permission?._id)
-              }
+              checked={selectedPermissions.includes(permission?._id)}
             />
           }
         />
@@ -130,7 +128,7 @@ const RoleViewDialog = ({ open, toggle, dialogTitle, editRoleData }: RoleViewDia
       setRoleNameErr('')
       let sendData = { name: roleName, permissions: selectedPermissions }
       if (dialogTitle == 'Add') dispatch(createRole(sendData))
-      else dispatch(editRole({ ...sendData, id: editRoleData?.id }))
+      else dispatch(editRole({ ...sendData, id: editRoleData?._id }))
     }
   }
 
