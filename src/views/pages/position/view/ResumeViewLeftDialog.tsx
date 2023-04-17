@@ -4,6 +4,7 @@ import TabPanel from '@mui/lab/TabPanel'
 import { Box, BoxProps, Grid, IconButton, Tab, Typography, styled } from '@mui/material'
 import ResumeDetailsTab from './ResumeDetailsTab'
 import ResumeCallsTab from './ResumeCallsTab'
+import ResumeFileTab from './ResumeFileTab'
 
 import ResumeInterviewsTab from './ResumeInterviewsTab'
 import Icon from 'src/@core/components/icon'
@@ -63,11 +64,11 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
                 label='Details'
                 className={`${activeTab == 'details' ? 'resume-active-tab' : ''} resume-tab`}
               />
-              {/* <Tab
+              <Tab
                 value='file'
                 label='File'
                 className={`${activeTab == 'file' ? 'resume-active-tab' : ''} resume-tab`}
-              /> */}
+              />
               <Tab
                 value='interview'
                 label='Interview'
@@ -84,11 +85,9 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
                 <TabPanel sx={{ p: 0, mt: 6 }} value='details'>
                   {constants?.system && <ResumeDetailsTab />}
                 </TabPanel>
-                {/* <TabPanel sx={{ p: 0 }} value='file'>
-                  <Grid xs={12} container>
-                    <h5>There Is Nothing To Show File ...</h5>
-                  </Grid>
-                </TabPanel> */}
+                <TabPanel sx={{ p: 0 }} value='file'>
+                  <ResumeFileTab />
+                </TabPanel>
                 <TabPanel sx={{ p: 0 }} value='interview'>
                   <Grid xs={12} container>
                     <ResumeInterviewsTab />
