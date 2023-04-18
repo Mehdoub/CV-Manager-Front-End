@@ -158,3 +158,141 @@ code[class*='language-'] {
   color: #b1b1b1 !important;
   font-size: 15px !important;
 }
+
+/* Speed Dial Styles */
+
+.sd-link {
+  color: inherit;
+}
+
+.sd-menu {
+  filter: url('#goo');
+}
+
+.sd-menu-item,
+.sd-menu-open-button {
+  background: #666cff;
+  border-radius: 100%;
+  width: 55px;
+  height: 55px;
+  position: absolute;
+  right: 60px;
+  bottom: 0;
+  color: white;
+  text-align: center;
+  line-height: 80px;
+  transform: translate3d(0, 0, 0);
+  transition: transform ease-out 200ms;
+}
+
+.sd-menu-open {
+  display: none;
+}
+
+.sd-hamburger {
+  width: 25px;
+  height: 3px;
+  background: white;
+  display: block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-left: -12.5px;
+  margin-top: -1.5px;
+  transition: transform 200ms;
+}
+
+.sd-hamburger-1 {
+  transform: translate3d(0, -8px, 0);
+}
+
+.sd-hamburger-2 {
+  transform: translate3d(0, 0, 0);
+}
+
+.sd-hamburger-3 {
+  transform: translate3d(0, 8px, 0);
+}
+
+.sd-menu-open:checked + .sd-menu-open-button .sd-hamburger-1 {
+  transform: translate3d(0, 0, 0) rotate(45deg);
+}
+.sd-menu-open:checked + .sd-menu-open-button .sd-hamburger-2 {
+  transform: translate3d(0, 0, 0) scale(0.1, 1);
+}
+.sd-menu-open:checked + .sd-menu-open-button .sd-hamburger-3 {
+  transform: translate3d(0, 0, 0) rotate(-45deg);
+}
+
+.sd-menu {
+  position: fixed;
+  right: 20px;
+  bottom: 70px;
+  width: 380px;
+  height: 250px;
+  box-sizing: border-box;
+  font-size: 20px;
+  text-align: left;
+  z-index: 1000;
+}
+
+.sd-menu-item:hover {
+  background: #6d788d;
+}
+.sd-menu-item:nth-child(3) {
+  transition-duration: 180ms;
+}
+.sd-menu-item:nth-child(4) {
+  transition-duration: 180ms;
+}
+.sd-menu-item:nth-child(5) {
+  transition-duration: 180ms;
+}
+.sd-menu-item:nth-child(6) {
+  transition-duration: 180ms;
+}
+.sd-menu-item:nth-child(7) {
+  transition-duration: 180ms;
+}
+
+.sd-menu-open-button {
+  z-index: 2;
+  transition-timing-function: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition-duration: 400ms;
+  transform: scale(1.1, 1.1) translate3d(0, 0, 0);
+  cursor: pointer;
+}
+
+.sd-menu-open-button:hover {
+  transform: scale(1.2, 1.2) translate3d(0, 0, 0);
+}
+
+.sd-menu-open:checked + .sd-menu-open-button {
+  transition-timing-function: linear;
+  transition-duration: 200ms;
+  transform: scale(0.8, 0.8) translate3d(0, 0, 0);
+}
+
+.sd-menu-open:checked ~ .sd-menu-item {
+  transition-timing-function: cubic-bezier(0.935, 0, 0.34, 1.33);
+}
+.sd-menu-open:checked ~ .sd-menu-item:nth-child(3) {
+  transition-duration: 180ms;
+  transform: translate3d(0.08361px, -60.99997px, 0);
+}
+.sd-menu-open:checked ~ .sd-menu-item:nth-child(4) {
+  transition-duration: 280ms;
+  transform: translate3d(65px, 0px, 0);
+}
+.sd-menu-open:checked ~ .sd-menu-item:nth-child(5) {
+  transition-duration: 380ms;
+  transform: translate3d(0.08361px, 60.99997px, 0);
+}
+.sd-menu-open:checked ~ .sd-menu-item:nth-child(6) {
+  transition-duration: 480ms;
+  transform: translate3d(-60.99987px, 0.16723px, 0);
+}
+.sd-menu-open:checked ~ .sd-menu-item:nth-child(7) {
+  transition-duration: 580ms;
+  transform: translate3d(-0.25084px, -60.9997px, 0);
+}

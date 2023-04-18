@@ -44,11 +44,7 @@ const renderClient = (row: any) => {
     return <CustomAvatar src={getImagePath(row?.avatar)} alt={getFullName(row)} sx={{ mr: 3, width: 34, height: 34 }} />
   } else {
     return (
-      <CustomAvatar
-        skin='light'
-        color={row.avatarColor || 'primary'}
-        sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}
-      >
+      <CustomAvatar skin='light' color={'primary'} sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}>
         {getInitials(row?.firstname ? getFullName(row) : 'John Doe')}
       </CustomAvatar>
     )
@@ -88,7 +84,7 @@ const ManagersView = (props: Props) => {
     entityManagerRemoveStore,
     removeEntityManagerAction,
     clearEntityManagerRemoveAction,
-    getEntityManagersAction,
+    getEntityManagersAction
   } = props
 
   const [removeManagerDialogOpen, setRemoveManagerDialogOpen] = useState<boolean>(false)

@@ -339,7 +339,7 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
                     onChange={onChange}
                     error={Boolean(errors.level)}
                   >
-                    {levelOptions.map(item => (
+                    {levelOptions.map((item: string) => (
                       <MenuItem value={item}>
                         <Typography sx={{ textTransform: 'capitalize' }}>{item}</Typography>
                       </MenuItem>

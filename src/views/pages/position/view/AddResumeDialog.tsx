@@ -17,9 +17,28 @@ import CardContent from '@mui/material/CardContent'
 import InputAdornment from '@mui/material/InputAdornment'
 import Button from '@mui/material/Button'
 import Icon from 'src/@core/components/icon'
-import { Box, FormHelperText, IconButton, Link, List, ListItem, Slider } from '@mui/material'
+import {
+  Autocomplete,
+  Avatar,
+  Box,
+  CircularProgress,
+  FormHelperText,
+  IconButton,
+  Link,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Slider
+} from '@mui/material'
 import * as yup from 'yup'
-import { mobileHandler, popObjectItemByKey, toastError, uppercaseFirstLetters } from 'src/helpers/functions'
+import {
+  getImagePath,
+  mobileHandler,
+  popObjectItemByKey,
+  toastError,
+  uppercaseFirstLetters
+} from 'src/helpers/functions'
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useDropzone } from 'react-dropzone'
@@ -28,6 +47,7 @@ import { clearCreateResume, createResume } from 'src/store/resume'
 import { useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { getCitiesByProvince, getProvinces } from 'src/store/province'
+import { getPositions } from 'src/store/position'
 
 interface FileProp {
   name: string
@@ -124,13 +144,15 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   const [resumeFiles, setResumeFiles] = useState<File[]>([])
   const [gender, setGender] = useState<string>('')
   const [salaryRange, setSalaryRange] = useState<any>([9000000, 20000000] || '')
-
   const [workCities, setWorkCities] = useState([])
   const [residanceCities, setResidanceCities] = useState([])
   const [fillCities, setFillCities] = useState('')
+  const [resumePosition, setResumePosition] = useState<any>({})
+  const [positionErr, setPositionErr] = useState<string>('')
 
   const { data: provinceCities } = useSelector((state: any) => state.citiesByProvince)
   const { data: provinces } = useSelector((state: any) => state.provinces)
+  const { data: positions, loading: loadingSearchPositions } = useSelector((state: any) => state.positionsList)
 
   const provincesValues = provinces.length > 0 ? provinces.map((province: any) => province._id) : []
   const workCitiesValues = workCities.length > 0 ? workCities.map((workCity: any) => workCity._id) : []
@@ -316,23 +338,31 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   })
 
   const submitHandler = (data: ResumeFormData) => {
-    data = { ...data, position_id: positionId }
-    data.mobile = '98' + data.mobile
-    if (avatar[0]) {
-      data = { ...data, avatar: avatar[0] }
+    const newPosition = positionId ?? resumePosition?.id
+    if (!newPosition) setPositionErr('Position Cannot Be Empty!')
+    else {
+      data.mobile = '98' + data.mobile
+      if (avatar[0]) {
+        data = { ...data, avatar: avatar[0] }
+      }
+      if (resumeFiles.length) {
+        data = { ...data, resumeFiles }
+      }
+      popObjectItemByKey(data, 'work_province')
+      popObjectItemByKey(data, 'residence_province')
+      ;[data.min_salary, data.max_salary] = salaryRange
+      dispatch(createResume({ ...data, position_id: newPosition }))
     }
-    if (resumeFiles.length) {
-      data = { ...data, resumeFiles }
-    }
-    popObjectItemByKey(data, 'work_province')
-    popObjectItemByKey(data, 'residence_province')
-    ;[data.min_salary, data.max_salary] = salaryRange
-    dispatch(createResume(data))
   }
 
   const handleCities = (provinceId: string, field: string) => {
     setFillCities(field)
     dispatch(getCitiesByProvince(provinceId))
+  }
+
+  const searchPositions = (value: any) => {
+    const query = value?.target?.value
+    if (query?.length > 0) dispatch(getPositions({ query }))
   }
 
   return (
@@ -385,6 +415,56 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                 <Divider />
                 <CardContent>
                   <Grid container spacing={6}>
+                    {!positionId && (
+                      <Grid item xs={12} mt={5}>
+                        <FormControl fullWidth>
+                          <Autocomplete
+                            autoHighlight
+                            loading={loadingSearchPositions}
+                            options={positions?.docs ?? []}
+                            onChange={(e, newValue) => {
+                              setPositionErr('')
+                              setResumePosition(newValue)
+                            }}
+                            getOptionLabel={(positionItem: any) => positionItem?.title}
+                            ListboxComponent={List}
+                            renderInput={params => (
+                              <TextField
+                                {...params}
+                                label='Position'
+                                onChange={searchPositions}
+                                size='medium'
+                                placeholder='Search For Positions ...'
+                                error={!!positionErr}
+                                InputProps={{
+                                  ...params.InputProps,
+                                  endAdornment: (
+                                    <Fragment>
+                                      {loadingSearchPositions ? <CircularProgress color='inherit' size={20} /> : null}
+                                      {params.InputProps.endAdornment}
+                                    </Fragment>
+                                  )
+                                }}
+                              />
+                            )}
+                            renderOption={(props, positionItem) => (
+                              <ListItem {...props}>
+                                <ListItemAvatar>
+                                  <Avatar
+                                    src={getImagePath(positionItem?.logo)}
+                                    alt={positionItem?.title}
+                                    sx={{ height: 28, width: 28 }}
+                                  />
+                                </ListItemAvatar>
+                                <ListItemText primary={positionItem?.title} />
+                              </ListItem>
+                            )}
+                          />
+                          {positionErr && <FormHelperText sx={{ color: 'error.main' }}>{positionErr}</FormHelperText>}
+                        </FormControl>
+                      </Grid>
+                    )}
+
                     <Grid item xs={12} mt={5} md={4}>
                       <FormControl fullWidth>
                         <Controller
