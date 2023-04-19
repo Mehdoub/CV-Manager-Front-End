@@ -1,13 +1,15 @@
-import { Card, Typography, useTheme } from '@mui/material'
+import { Card, List, Typography, useTheme } from '@mui/material'
+import { Droppable } from 'react-beautiful-dnd'
 import { getColorCodes } from 'src/helpers/functions'
 
 interface ResumeKanbanColumnProps {
   title: string
   color: string
   children: any
+  statusKey: StringConstructor
 }
 
-const ResumeKanbanColumn = ({ title, color, children }: ResumeKanbanColumnProps) => {
+const ResumeKanbanColumn = ({ title, color, children, statusKey }: ResumeKanbanColumnProps) => {
   const theme = useTheme()
   return (
     <Card
@@ -44,7 +46,14 @@ const ResumeKanbanColumn = ({ title, color, children }: ResumeKanbanColumnProps)
       >
         {title}
       </Card>
-      {children}
+      <Droppable droppableId={`${statusKey}`}>
+        {provided => (
+          <List {...provided.droppableProps} ref={provided.innerRef}>
+            {children}
+            {provided.placeholder}
+          </List>
+        )}
+      </Droppable>
     </Card>
   )
 }

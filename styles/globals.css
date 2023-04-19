@@ -278,21 +278,21 @@ code[class*='language-'] {
 }
 .sd-menu-open:checked ~ .sd-menu-item:nth-child(3) {
   transition-duration: 180ms;
-  transform: translate3d(0.08361px, -60.99997px, 0);
+  transform: translate3d(0.08361px, -55.99997px, 0);
 }
 .sd-menu-open:checked ~ .sd-menu-item:nth-child(4) {
   transition-duration: 280ms;
-  transform: translate3d(65px, 0px, 0);
+  transform: translate3d(57px, 0px, 0);
 }
 .sd-menu-open:checked ~ .sd-menu-item:nth-child(5) {
   transition-duration: 380ms;
-  transform: translate3d(0.08361px, 60.99997px, 0);
+  transform: translate3d(0.08361px, 55.99997px, 0);
 }
 .sd-menu-open:checked ~ .sd-menu-item:nth-child(6) {
   transition-duration: 480ms;
-  transform: translate3d(-60.99987px, 0.16723px, 0);
+  transform: translate3d(-55.99987px, 0.16723px, 0);
 }
 .sd-menu-open:checked ~ .sd-menu-item:nth-child(7) {
   transition-duration: 580ms;
-  transform: translate3d(-0.25084px, -60.9997px, 0);
+  transform: translate3d(-0.25084px, -55.9997px, 0);
 }
