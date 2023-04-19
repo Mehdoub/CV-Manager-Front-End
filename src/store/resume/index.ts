@@ -49,6 +49,42 @@ const resumeCreateSlice = createSlice({
   }
 })
 
+
+export const addResumeFiles: any = createAsyncThunk('addResumeFiles', async (data: { resumeId: string, resumeFiles: Array<any> }, { rejectWithValue }) => {
+  try {
+    let response
+    const { resumeId, resumeFiles } = data
+
+    if (resumeFiles.length && resumeId) {
+      for (const resumeFile of resumeFiles) {
+        response = await ApiRequest.builder()
+          .auth()
+          .contentType('multipart/form-data')
+          .request('patch', `resumes/${resumeId}/file`, { file: resumeFile })
+      }
+    }
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const resumeAddFilesSlice = createSlice({
+  name: 'resumeAddFiles',
+  initialState: sliceInitialStateWithStatus,
+  reducers: {
+    clearResumeAddFiles: (state) => {
+      clearStatesAction(state)
+    }
+  },
+  extraReducers: (builder) => {
+    createExtraReducers(builder, addResumeFiles)
+  }
+})
+
 export const { clearCreateResume } = resumeCreateSlice.actions
+export const { clearResumeAddFiles } = resumeAddFilesSlice.actions
 
 export const resumeCreateReducer = resumeCreateSlice.reducer
+export const resumeAddFilesReducer = resumeAddFilesSlice.reducer

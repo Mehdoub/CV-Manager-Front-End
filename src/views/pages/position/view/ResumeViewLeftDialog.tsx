@@ -9,9 +9,11 @@ import ResumeFileTab from './ResumeFileTab'
 import ResumeInterviewsTab from './ResumeInterviewsTab'
 import Icon from 'src/@core/components/icon'
 import { useDropzone } from 'react-dropzone'
-import { toast } from 'react-hot-toast'
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { addResumeFiles, clearResumeAddFiles } from 'src/store/resume'
+import { toastError } from 'src/helpers/functions'
 
 const UploadFileWrapper = styled(Grid)<BoxProps>(({ theme }) => ({
   display: 'flex',
@@ -24,21 +26,25 @@ const UploadFileWrapper = styled(Grid)<BoxProps>(({ theme }) => ({
 }))
 
 const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
-  const [files, setFiles] = useState<File[]>([])
+  const dispatch = useDispatch()
+
+  const { status: uploadResumeFilesStatus } = useSelector((state: any) => state.resumeAddFiles)
+
+  useEffect(() => {
+    if (uploadResumeFilesStatus) dispatch(clearResumeAddFiles())
+  }, [uploadResumeFilesStatus])
 
   const { getRootProps, getInputProps } = useDropzone({
-    maxFiles: 1,
+    maxFiles: 5,
     maxSize: 5000000,
     accept: {
-      'image/*': ['.png', '.jpg', '.jpeg', '.gif']
-    },
-    onDrop: (acceptedFiles: File[]) => {
-      setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
+      'application/*': ['.pdf']
     },
     onDropRejected: () => {
-      toast.error('You can only upload maximum size of 5 MB.', {
-        duration: 2000
-      })
+      toastError('You Can Nnly Upload 5 PDF Files With Maximum Size Of 5 MB.')
+    },
+    onDropAccepted(acceptedFiles) {
+      dispatch(addResumeFiles({ resumeFiles: acceptedFiles, resumeId: '643e6f56fb07b43fa72a7176' }))
     }
   })
 
@@ -56,7 +62,6 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
               aria-label='forced scroll tabs example'
               sx={{
                 borderBottom: theme => `1px solid ${theme.palette.divider}`
-                // , width: '360px'
               }}
             >
               <Tab

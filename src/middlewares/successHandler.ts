@@ -20,6 +20,7 @@ const successHandler = ({ }) => (next: any) => async (action: any) => {
     'createRole/fulfilled',
     'editRole/fulfilled',
     'createResume/fulfilled',
+    'addResumeFiles/fulfilled',
   ]
 
   if (isFulfilled(action) && showTypesArr.includes(action.type)) {
