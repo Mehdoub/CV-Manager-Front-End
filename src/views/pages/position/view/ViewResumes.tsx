@@ -64,9 +64,14 @@ const ViewResumes = () => {
       >
         <DragDropContext onDragEnd={dragEndHandler}>
           {allResumes.map((columnData: any) => (
-            <ResumeKanbanColumn title={columnData.title} color={columnData.status_color} statusKey={columnData.key}>
-              {columnData?.resumes.map((resumeData: any, index: number) => (
-                <ResumeKanbanCard cardData={resumeData} setOpen={setOpen} index={index} />
+            <ResumeKanbanColumn
+              title={columnData.title}
+              color={columnData.status_color}
+              statusKey={columnData.key}
+              key={columnData.key}
+            >
+              {columnData?.resumes.map((resumeData: any) => (
+                <ResumeKanbanCard cardData={resumeData} setOpen={setOpen} />
               ))}
             </ResumeKanbanColumn>
           ))}

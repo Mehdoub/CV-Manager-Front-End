@@ -1,7 +1,17 @@
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import TabPanel from '@mui/lab/TabPanel'
-import { Box, BoxProps, Grid, IconButton, Tab, Typography, styled } from '@mui/material'
+import {
+  Box,
+  BoxProps,
+  CircularProgress,
+  Grid,
+  IconButton,
+  LinearProgress,
+  Tab,
+  Typography,
+  styled
+} from '@mui/material'
 import ResumeDetailsTab from './ResumeDetailsTab'
 import ResumeCallsTab from './ResumeCallsTab'
 import ResumeFileTab from './ResumeFileTab'
@@ -28,7 +38,9 @@ const UploadFileWrapper = styled(Grid)<BoxProps>(({ theme }) => ({
 const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
   const dispatch = useDispatch()
 
-  const { status: uploadResumeFilesStatus } = useSelector((state: any) => state.resumeAddFiles)
+  const { status: uploadResumeFilesStatus, loading: uploadResumeFilesLoading } = useSelector(
+    (state: any) => state.resumeAddFiles
+  )
 
   useEffect(() => {
     if (uploadResumeFilesStatus) dispatch(clearResumeAddFiles())
@@ -107,21 +119,26 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
           </div>
         </TabContext>
         <Box sx={{ width: '100%', position: 'absolute', bottom: 0, zIndex: 10000, cursor: 'pointer' }}>
-          <form onSubmit={() => console.log('hi')}>
-            <Fragment>
-              <div {...getRootProps({ className: 'dropzone' })}>
-                <input {...getInputProps()} />
-                <UploadFileWrapper tabIndex={1} container>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 3, mr: 3 }}>
-                    <IconButton size='small' sx={{ mr: 1.5, color: 'rgb(76 78 100 / 14%)' }}>
-                      <Icon icon='ic:round-cloud-upload' fontSize='2.25rem' />
-                    </IconButton>
-                    <Typography sx={{ color: 'text.secondary' }}>Drop Resume File Or Click To Upload</Typography>
-                  </Box>
-                </UploadFileWrapper>
-              </div>
-            </Fragment>
-          </form>
+          {uploadResumeFilesLoading && <LinearProgress />}
+          <Fragment>
+            <div {...getRootProps({ className: 'dropzone' })}>
+              <input {...getInputProps()} />
+              <UploadFileWrapper tabIndex={1} container>
+                <Box sx={{ display: 'flex', alignItems: 'center', mt: 3, mr: 3 }}>
+                  {!uploadResumeFilesLoading ? (
+                    <>
+                      <IconButton size='small' sx={{ mr: 1.5, color: 'rgb(76 78 100 / 14%)' }}>
+                        <Icon icon='ic:round-cloud-upload' fontSize='2.25rem' />
+                      </IconButton>
+                      <Typography sx={{ color: 'text.secondary' }}>Drop Resume File Or Click To Upload</Typography>
+                    </>
+                  ) : (
+                    <CircularProgress />
+                  )}
+                </Box>
+              </UploadFileWrapper>
+            </div>
+          </Fragment>
         </Box>
       </Grid>
     </>

@@ -1,6 +1,7 @@
 html,
 body {
   min-height: 100%;
+  user-select: none;
 }
 
 #__next {

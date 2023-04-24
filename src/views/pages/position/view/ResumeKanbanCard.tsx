@@ -16,17 +16,16 @@ import { Draggable } from 'react-beautiful-dnd'
 interface ResumeKanbanCardProps {
   cardData: any
   setOpen: any
-  index: number
 }
 
-const ResumeKanbanCard = ({ cardData: card, setOpen, index }: ResumeKanbanCardProps) => {
+const ResumeKanbanCard = ({ cardData: card, setOpen }: ResumeKanbanCardProps) => {
   const [interviewDateText, interviewColor, interviewDateString] = calcInterviewRemainingTime(
     card.latest_interview.interview_date,
     card.latest_interview.interview_end_date
   )
 
   return (
-    <Draggable draggableId={`resume-id-${card.id}-${index}`} index={card.index}>
+    <Draggable draggableId={`${card.id}`} index={card.index} key={card.id}>
       {provided => (
         <Card
           {...provided.draggableProps}
