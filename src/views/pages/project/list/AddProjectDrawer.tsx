@@ -28,7 +28,7 @@ import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { clearCreateProject, createProject, getProjects } from 'src/store/project'
 import { getCompanies, getCompanyProjects } from 'src/store/company'
-import { getImagePath, setServerValidationErrors } from 'src/helpers/functions'
+import { getAllowedFormats, getImagePath, setServerValidationErrors } from 'src/helpers/functions'
 import { Autocomplete, Avatar, CircularProgress, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material'
 
 interface FileProp {
@@ -123,7 +123,6 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
       if (dispatchCompanyProjects) dispatch(getCompanyProjects(companyId))
       else dispatch(getProjects())
       dispatch(clearCreateProject())
-      setCompany({})
       setCompanyErr('')
       setFiles([])
       toggle()
@@ -136,10 +135,10 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
 
   const onSubmit = (data: ProjectFormData) => {
     const newCompany = companyId ?? company?.id
-    let dataToSent : ProjectFormData = { name: data?.name, company_id: newCompany, description: data?.description }
+    let dataToSent: ProjectFormData = { name: data?.name, company_id: newCompany, description: data?.description }
     if (!newCompany) setCompanyErr('Company Cannot Be Empty!')
     else {
-      if (files[0]) dataToSent = {...dataToSent, logo: files[0]}
+      if (files[0]) dataToSent = { ...dataToSent, logo: files[0] }
       dispatch(createProject(dataToSent))
     }
   }
@@ -154,13 +153,13 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
     maxFiles: 1,
     maxSize: 2000000,
     accept: {
-      'image/*': ['.png', '.jpg', '.jpeg', '.gif']
+      'image/*': getAllowedFormats('image', true)
     },
     onDrop: (acceptedFiles: File[]) => {
       setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
     },
     onDropRejected: () => {
-      toast.error('You can only upload maximum size of 2 MB.', {
+      toast.error('You can only upload maximum size of 2 MB of allowed image files.', {
         duration: 2000
       })
     }
@@ -228,7 +227,7 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
                   }}
                 >
                   <Typography sx={{ fontSize: '12px' }} color='textSecondary'>
-                    Allowed *.jpeg, *.jpg, *.png, *.gif
+                    Allowed{getAllowedFormats()}
                   </Typography>
                   <Typography sx={{ fontSize: '12px' }} color='textSecondary'>
                     Max size of 2 MB
@@ -237,24 +236,6 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
               </Box>
             </div>
           </Fragment>
-          <FormControl fullWidth sx={{ mb: 6 }}>
-            <Controller
-              name='name'
-              control={control}
-              rules={{ required: true }}
-              render={({ field: { value, onChange, onBlur } }) => (
-                <TextField
-                  value={value}
-                  label='Name'
-                  onChange={onChange}
-                  onBlur={onBlur}
-                  placeholder='Example: BPM'
-                  error={Boolean(errors.name)}
-                />
-              )}
-            />
-            {errors.name && <FormHelperText sx={{ color: 'error.main' }}>{errors.name.message}</FormHelperText>}
-          </FormControl>
           {!companyId && (
             <FormControl fullWidth sx={{ mb: 6 }}>
               <Autocomplete
@@ -298,6 +279,24 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
               {companyErr && <FormHelperText sx={{ color: 'error.main' }}>{companyErr}</FormHelperText>}
             </FormControl>
           )}
+          <FormControl fullWidth sx={{ mb: 6 }}>
+            <Controller
+              name='name'
+              control={control}
+              rules={{ required: true }}
+              render={({ field: { value, onChange, onBlur } }) => (
+                <TextField
+                  value={value}
+                  label='Name'
+                  onChange={onChange}
+                  onBlur={onBlur}
+                  placeholder='Example: BPM'
+                  error={Boolean(errors.name)}
+                />
+              )}
+            />
+            {errors.name && <FormHelperText sx={{ color: 'error.main' }}>{errors.name.message}</FormHelperText>}
+          </FormControl>
           <FormControl fullWidth sx={{ mb: 6 }}>
             <Controller
               name='description'

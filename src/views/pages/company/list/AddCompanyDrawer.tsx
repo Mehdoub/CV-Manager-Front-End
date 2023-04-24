@@ -28,7 +28,7 @@ import { useDropzone } from 'react-dropzone'
 import { useDispatch } from 'react-redux'
 import { clearCreateCompany, createCompany, getCompanies } from 'src/store/company'
 import { useSelector } from 'react-redux'
-import { setServerValidationErrors } from 'src/helpers/functions'
+import { getAllowedFormats, setServerValidationErrors } from 'src/helpers/functions'
 
 interface FileProp {
   name: string
@@ -111,7 +111,7 @@ const defaultValues = {
   name: '',
   phone: '',
   address: '',
-  description: '',
+  description: ''
 }
 
 const AddCompanyDrawer = (props: Props) => {
@@ -158,7 +158,7 @@ const AddCompanyDrawer = (props: Props) => {
 
   const onSubmit = (data: CompanyFormData) => {
     if (files[0]) {
-      data = {...data, logo: files[0]}
+      data = { ...data, logo: files[0] }
     }
     dispatch(createCompany(data))
   }
@@ -176,7 +176,7 @@ const AddCompanyDrawer = (props: Props) => {
     maxFiles: 1,
     maxSize: 2000000,
     accept: {
-      'image/*': ['.png', '.jpg', '.jpeg', '.gif']
+      'image/*': getAllowedFormats('image', true)
     },
     onDrop: (acceptedFiles: File[]) => {
       setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
@@ -192,7 +192,7 @@ const AddCompanyDrawer = (props: Props) => {
     if (file.type.startsWith('image')) {
       return (
         <img
-          style={{ borderRadius: '50%', border: '2px solid black' , width: '150px', height: '150px' }}
+          style={{ borderRadius: '50%', border: '2px solid black', width: '150px', height: '150px' }}
           alt={file.name}
           src={URL.createObjectURL(file as any)}
         />
@@ -229,7 +229,12 @@ const AddCompanyDrawer = (props: Props) => {
                 {files[0] ? (
                   renderFilePreview(files[0])
                 ) : (
-                  <Img width={150} alt='Upload img' src='/images/logos/datalogo2.avif' sx={{ borderRadius: '50%', border: '1px solid black' }} />
+                  <Img
+                    width={150}
+                    alt='Upload img'
+                    src='/images/logos/datalogo2.avif'
+                    sx={{ borderRadius: '50%', border: '1px solid black' }}
+                  />
                 )}
                 <Box
                   sx={{
@@ -240,7 +245,7 @@ const AddCompanyDrawer = (props: Props) => {
                   }}
                 >
                   <Typography sx={{ fontSize: '12px' }} color='textSecondary'>
-                    Allowed *.jpeg, *.jpg, *.png, *.gif
+                    Allowed{getAllowedFormats()}
                   </Typography>
                   <Typography sx={{ fontSize: '12px' }} color='textSecondary'>
                     Max size of 2 MB

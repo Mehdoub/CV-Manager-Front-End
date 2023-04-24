@@ -33,6 +33,7 @@ import {
 } from '@mui/material'
 import * as yup from 'yup'
 import {
+  getAllowedFormats,
   getImagePath,
   mobileHandler,
   popObjectItemByKey,
@@ -246,7 +247,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
     multiple: false,
     maxSize: 2000000,
     accept: {
-      'image/*': ['.png', '.jpg', '.jpeg', '.gif']
+      'image/*': getAllowedFormats('image', true)
     },
     onDrop: (acceptedFiles: File[]) => {
       setAvatar(acceptedFiles.map((file: File) => Object.assign(file)))
@@ -260,14 +261,14 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
     maxFiles: 5,
     maxSize: 9000000,
     accept: {
-      'application/*': ['.pdf']
+      'application/*': getAllowedFormats('file', true)
     },
     onDrop: (acceptedFiles: File[]) => {
       let newUploads: any = acceptedFiles.map((file: File) => Object.assign(file))
       setResumeFiles(newUploads.concat(resumeFiles))
     },
     onDropRejected: () => {
-      toastError('You can only upload PDF files with maximum size of 9 MB.')
+      toastError('You can only upload .pdf files with maximum size of 9 MB.')
     }
   })
 
@@ -403,7 +404,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         }}
                       >
                         <Typography sx={{ fontSize: '12px' }} color='textSecondary'>
-                          Allowed *.jpeg, *.jpg, *.png, *.gif
+                          Allowed{getAllowedFormats()}
                         </Typography>
                         <Typography sx={{ fontSize: '12px' }} color='textSecondary'>
                           Max size of 2 MB

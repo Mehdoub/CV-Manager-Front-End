@@ -23,7 +23,7 @@ import { Fragment, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { addResumeFiles, clearResumeAddFiles } from 'src/store/resume'
-import { toastError } from 'src/helpers/functions'
+import { getAllowedFormats, toastError } from 'src/helpers/functions'
 
 const UploadFileWrapper = styled(Grid)<BoxProps>(({ theme }) => ({
   display: 'flex',
@@ -48,12 +48,12 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
 
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 5,
-    maxSize: 5000000,
+    maxSize: 9000000,
     accept: {
-      'application/*': ['.pdf']
+      'application/*': getAllowedFormats('file', true)
     },
     onDropRejected: () => {
-      toastError('You Can Nnly Upload 5 PDF Files With Maximum Size Of 5 MB.')
+      toastError('You Can Nnly Upload 5 .pdf Files With Maximum Size Of 9 MB.')
     },
     onDropAccepted(acceptedFiles) {
       dispatch(addResumeFiles({ resumeFiles: acceptedFiles, resumeId: '643e6f56fb07b43fa72a7176' }))

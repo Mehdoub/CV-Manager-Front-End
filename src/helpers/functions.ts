@@ -222,3 +222,13 @@ export const calcInterviewRemainingTime = (startDate: any, endDate: any) => {
 
   return [interviewDateText, interviewColor, interviewDateString]
 }
+
+export const getAllowedFormats = (type: 'image' | 'file' = 'image', asArray: boolean = false) => {
+  const formats = {
+    image: JSON.parse(process.env.NEXT_PUBLIC_ALLOWED_UPLOAD_IMAGES_FORMATS as string),
+    file: JSON.parse(process.env.NEXT_PUBLIC_ALLOWED_UPLOAD_FILES_FORMATS as string),
+  }
+  return !asArray ? ' ' + formats[type].map(
+    (item: string) => ` *${item} `
+  ) : formats[type]
+}

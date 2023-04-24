@@ -38,7 +38,7 @@ import {
 } from '@mui/material'
 import { useDispatch } from 'react-redux'
 import { clearPositionCreate, createPosition, getPositions } from 'src/store/position'
-import { getImagePath, setServerValidationErrors } from 'src/helpers/functions'
+import { getAllowedFormats, getImagePath, setServerValidationErrors } from 'src/helpers/functions'
 import { useSelector } from 'react-redux'
 import { getProjectPositions, getProjects } from 'src/store/project'
 
@@ -180,7 +180,7 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
     maxFiles: 1,
     maxSize: 2000000,
     accept: {
-      'image/*': ['.png', '.jpg', '.jpeg', '.gif']
+      'image/*': getAllowedFormats('image', true)
     },
     onDrop: (acceptedFiles: File[]) => {
       setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
@@ -249,7 +249,7 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
                   }}
                 >
                   <Typography sx={{ fontSize: '12px' }} color='textSecondary'>
-                    Allowed *.jpeg, *.jpg, *.png, *.gif
+                    Allowed{getAllowedFormats()}
                   </Typography>
                   <Typography sx={{ fontSize: '12px' }} color='textSecondary'>
                     Max size of 2 MB
