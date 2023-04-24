@@ -384,10 +384,11 @@ const removeProjectManagerSlice = createSlice({
 
 export const getProjectPositions: any = createAsyncThunk(
   'getProjectPositions',
-  async (_, { rejectWithValue, getState }) => {
+  async (projectId: string | undefined = undefined, { rejectWithValue, getState }) => {
     try {
       const { projectFind: { data } } = getState() as any
-      const response = await ApiRequest.builder().auth().request('get', `projects/${data?.id}/positions`)
+      const project = projectId ?? data?.id
+      const response = await ApiRequest.builder().auth().request('get', `projects/${project}/positions`)
 
       return response
     } catch (err: any) {

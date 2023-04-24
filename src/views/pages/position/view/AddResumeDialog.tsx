@@ -49,6 +49,7 @@ import { useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { getCitiesByProvince, getProvinces } from 'src/store/province'
 import { getPositions } from 'src/store/position'
+import { getProjectPositions, getProjects } from 'src/store/project'
 
 interface FileProp {
   name: string
@@ -150,10 +151,27 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   const [fillCities, setFillCities] = useState('')
   const [resumePosition, setResumePosition] = useState<any>({})
   const [positionErr, setPositionErr] = useState<string>('')
+  const [resumeProject, setResumeProject] = useState<any>({})
 
   const { data: provinceCities } = useSelector((state: any) => state.citiesByProvince)
   const { data: provinces } = useSelector((state: any) => state.provinces)
-  const { data: positions, loading: loadingSearchPositions } = useSelector((state: any) => state.positionsList)
+  const { data: positions, loading: loadingSearchPositions } = useSelector((state: any) => state.projectPositions)
+  const { status: statusResumeCreate, loading: loadingResumeCreate } = useSelector((state: any) => state.resumeCreate)
+  const { data: projects, loading: loadingSearchProjects } = useSelector((state: any) => state.projectsList)
+  const {
+    data: {
+      system: {
+        gender: genderOptions,
+        education: educationOptions,
+        military_status: militaryOptions,
+        marital_status: maritalOptions
+      }
+    }
+  } = useSelector((state: any) => state.constants)
+
+  const {
+    query: { positionId }
+  } = useRouter()
 
   const provincesValues = provinces.length > 0 ? provinces.map((province: any) => province._id) : []
   const workCitiesValues = workCities.length > 0 ? workCities.map((workCity: any) => workCity._id) : []
@@ -177,17 +195,6 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   }, [provinceCities])
 
   const dispatch = useDispatch()
-
-  const {
-    data: {
-      system: {
-        gender: genderOptions,
-        education: educationOptions,
-        military_status: militaryOptions,
-        marital_status: maritalOptions
-      }
-    }
-  } = useSelector((state: any) => state.constants)
 
   const schema = yup.object().shape(
     {
@@ -257,6 +264,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
     }
   })
 
+  // Upload File
   const { getRootProps: getRootPropsResume, getInputProps: getInputPropsResume } = useDropzone({
     maxFiles: 5,
     maxSize: 9000000,
@@ -271,12 +279,6 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
       toastError('You can only upload .pdf files with maximum size of 9 MB.')
     }
   })
-
-  const { status: statusResumeCreate, loading: loadingResumeCreate } = useSelector((state: any) => state.resumeCreate)
-
-  const {
-    query: { positionId }
-  } = useRouter()
 
   useEffect(() => {
     if (statusResumeCreate) {
@@ -361,9 +363,13 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
     dispatch(getCitiesByProvince(provinceId))
   }
 
-  const searchPositions = (value: any) => {
+  const getPositionsHandler = (projectId: string) => {
+    if (projectId?.length > 0) dispatch(getProjectPositions(projectId))
+  }
+
+  const searchProjects = (value: any) => {
     const query = value?.target?.value
-    if (query?.length > 0) dispatch(getPositions({ query }))
+    if (query?.length > 0) dispatch(getProjects({ query }))
   }
 
   return (
@@ -417,53 +423,147 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                 <CardContent>
                   <Grid container spacing={6}>
                     {!positionId && (
-                      <Grid item xs={12} mt={5}>
-                        <FormControl fullWidth>
-                          <Autocomplete
-                            autoHighlight
-                            loading={loadingSearchPositions}
-                            options={positions?.docs ?? []}
-                            onChange={(e, newValue) => {
-                              setPositionErr('')
-                              setResumePosition(newValue)
-                            }}
-                            getOptionLabel={(positionItem: any) => positionItem?.title}
-                            ListboxComponent={List}
-                            renderInput={params => (
-                              <TextField
-                                {...params}
-                                label='Position'
-                                onChange={searchPositions}
-                                size='medium'
-                                placeholder='Search For Positions ...'
-                                error={!!positionErr}
-                                InputProps={{
-                                  ...params.InputProps,
-                                  endAdornment: (
-                                    <Fragment>
-                                      {loadingSearchPositions ? <CircularProgress color='inherit' size={20} /> : null}
-                                      {params.InputProps.endAdornment}
-                                    </Fragment>
-                                  )
-                                }}
-                              />
-                            )}
-                            renderOption={(props, positionItem) => (
-                              <ListItem {...props}>
-                                <ListItemAvatar>
-                                  <Avatar
-                                    src={getImagePath(positionItem?.logo)}
-                                    alt={positionItem?.title}
-                                    sx={{ height: 28, width: 28 }}
-                                  />
-                                </ListItemAvatar>
-                                <ListItemText primary={positionItem?.title} />
-                              </ListItem>
-                            )}
-                          />
-                          {positionErr && <FormHelperText sx={{ color: 'error.main' }}>{positionErr}</FormHelperText>}
-                        </FormControl>
-                      </Grid>
+                      <>
+                        <Grid item xs={12} md={6} mt={5}>
+                          <FormControl fullWidth>
+                            <Autocomplete
+                              autoHighlight
+                              loading={loadingSearchProjects}
+                              options={projects?.docs ?? []}
+                              onChange={(e, newValue) => {
+                                setResumeProject(newValue)
+                                getPositionsHandler(newValue?.id)
+                              }}
+                              getOptionLabel={(projectItem: any) => projectItem?.name}
+                              ListboxComponent={List}
+                              renderInput={params => (
+                                <TextField
+                                  {...params}
+                                  label='Project'
+                                  onChange={searchProjects}
+                                  size='medium'
+                                  placeholder='Search For Projects ...'
+                                  InputProps={{
+                                    ...params.InputProps,
+                                    endAdornment: (
+                                      <Fragment>
+                                        {loadingSearchProjects ? <CircularProgress color='inherit' size={20} /> : null}
+                                        {params.InputProps.endAdornment}
+                                      </Fragment>
+                                    )
+                                  }}
+                                />
+                              )}
+                              renderOption={(props, projectItem) => (
+                                <ListItem {...props}>
+                                  <ListItemAvatar>
+                                    <Avatar
+                                      src={getImagePath(projectItem?.logo)}
+                                      alt={projectItem?.name}
+                                      sx={{ height: 28, width: 28 }}
+                                    />
+                                  </ListItemAvatar>
+                                  <ListItemText primary={projectItem?.name} />
+                                </ListItem>
+                              )}
+                            />
+                          </FormControl>
+                        </Grid>
+                        {/* <Grid item xs={12} md={6} mt={5}>
+                          <FormControl fullWidth>
+                            <Autocomplete
+                              autoHighlight
+                              loading={loadingSearchPositions}
+                              options={positions ?? []}
+                              onChange={(e, newValue) => {
+                                setPositionErr('')
+                                setResumePosition(newValue)
+                              }}
+                              getOptionLabel={(positionItem: any) => positionItem?.title}
+                              ListboxComponent={List}
+                              renderInput={params => (
+                                <TextField
+                                  {...params}
+                                  label='Position'
+                                  onChange={() => console.log('position')}
+                                  size='medium'
+                                  placeholder='Search For Positions ...'
+                                  error={!!positionErr}
+                                  InputProps={{
+                                    ...params.InputProps,
+                                    endAdornment: (
+                                      <Fragment>
+                                        {loadingSearchPositions ? <CircularProgress color='inherit' size={20} /> : null}
+                                        {params.InputProps.endAdornment}
+                                      </Fragment>
+                                    )
+                                  }}
+                                />
+                              )}
+                              renderOption={(props, positionItem) => (
+                                <ListItem {...props}>
+                                  <ListItemAvatar>
+                                    <Avatar
+                                      src={getImagePath(positionItem?.logo)}
+                                      alt={positionItem?.title}
+                                      sx={{ height: 28, width: 28 }}
+                                    />
+                                  </ListItemAvatar>
+                                  <ListItemText primary={positionItem?.title} />
+                                </ListItem>
+                              )}
+                            />
+                            {positionErr && <FormHelperText sx={{ color: 'error.main' }}>{positionErr}</FormHelperText>}
+                          </FormControl>
+                        </Grid> */}
+                        <Grid item xs={12} md={6} mt={5}>
+                          <FormControl fullWidth>
+                            <Autocomplete
+                              autoHighlight
+                              loading={loadingSearchPositions}
+                              options={positions.length > 0 ? positions : []}
+                              onChange={(e, newValue) => {
+                                setPositionErr('')
+                                setResumePosition(newValue)
+                              }}
+                              getOptionLabel={(positionItem: any) => positionItem?.title}
+                              ListboxComponent={List}
+                              renderInput={params => (
+                                <TextField
+                                  {...params}
+                                  label='Position'
+                                  // onChange={searchPositions}
+                                  size='medium'
+                                  placeholder='Search For Positions ...'
+                                  error={!!positionErr}
+                                  InputProps={{
+                                    ...params.InputProps,
+                                    endAdornment: (
+                                      <Fragment>
+                                        {loadingSearchPositions ? <CircularProgress color='inherit' size={20} /> : null}
+                                        {params.InputProps.endAdornment}
+                                      </Fragment>
+                                    )
+                                  }}
+                                />
+                              )}
+                              renderOption={(props, positionItem) => (
+                                <ListItem {...props}>
+                                  <ListItemAvatar>
+                                    <Avatar
+                                      src={getImagePath(positionItem?.logo)}
+                                      alt={positionItem?.title}
+                                      sx={{ height: 28, width: 28 }}
+                                    />
+                                  </ListItemAvatar>
+                                  <ListItemText primary={positionItem?.title} />
+                                </ListItem>
+                              )}
+                            />
+                            {positionErr && <FormHelperText sx={{ color: 'error.main' }}>{positionErr}</FormHelperText>}
+                          </FormControl>
+                        </Grid>
+                      </>
                     )}
 
                     <Grid item xs={12} mt={5} md={4}>

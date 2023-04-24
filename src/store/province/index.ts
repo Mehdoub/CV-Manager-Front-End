@@ -23,7 +23,7 @@ const provincesSlice = createSlice({
 
 export const getCitiesByProvince: any = createAsyncThunk('getCitiesByProvince', async (provinceId: string, { rejectWithValue }) => {
   try {
-    const response = await ApiRequest.builder().auth().request('get', `provinces/${provinceId}`)
+    const response = await ApiRequest.builder().auth().request('get', `provinces/${provinceId}/cities`)
 
     return response
   } catch (err: any) {

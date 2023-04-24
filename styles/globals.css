@@ -262,7 +262,7 @@ code[class*='language-'] {
   transition-duration: 400ms;
   transform: scale(1.1, 1.1) translate3d(0, 0, 0);
   cursor: pointer;
-  animation: zoom-in-zoom-out 2s ease-out 2s;
+  animation: zoom-in-zoom-out 2s ease-out 1s;
 }
 
 .sd-menu-open-button:hover {
