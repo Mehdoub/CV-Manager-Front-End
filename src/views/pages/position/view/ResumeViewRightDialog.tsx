@@ -16,7 +16,7 @@ import {
 import { useEffect, useRef, useState, MouseEvent, SyntheticEvent } from 'react'
 import Icon from 'src/@core/components/icon'
 import { getInitials } from 'src/@core/utils/get-initials'
-import { BootstrapTooltip } from 'src/pages/companies'
+import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 
 const useOutsideBox = (ref: any, setState: any, setMsgRow: any) => {
   useEffect(() => {

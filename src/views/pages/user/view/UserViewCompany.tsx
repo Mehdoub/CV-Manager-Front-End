@@ -23,6 +23,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 // ** Custom Components Imports
 import CustomAvatar from 'src/@core/components/mui/avatar'
+import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
@@ -31,18 +32,7 @@ import { getInitials } from 'src/@core/utils/get-initials'
 import { fetchData } from 'src/store/apps/project'
 
 // ** Custom Table Components Imports
-import { AvatarGroup, Button, Tooltip, TooltipProps, tooltipClasses } from '@mui/material'
-
-export const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} arrow classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.arrow}`]: {
-    color: theme.palette.common.black
-  },
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: theme.palette.common.black
-  }
-}))
+import { AvatarGroup, Button } from '@mui/material'
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -154,7 +144,7 @@ const columns = [
         </Typography>
       )
     }
-  },
+  }
 ]
 
 const UserViewCompany = () => {
@@ -168,7 +158,6 @@ const UserViewCompany = () => {
   useEffect(() => {
     dispatch(fetchData())
   }, [dispatch])
-
 
   return (
     <Grid container spacing={6}>

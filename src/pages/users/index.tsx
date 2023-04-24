@@ -32,7 +32,7 @@ import { AppDispatch } from 'src/store'
 import TableHeader from 'src/views/pages/user/list/TableHeader'
 import AddUserDrawer from 'src/views/pages/user/list/AddUserDrawer'
 import { Skeleton, Stack } from '@mui/material'
-import { BootstrapTooltip } from '../companies'
+import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 import { getUsers } from 'src/store/user'
 import { showDate, showIsActiveColor } from 'src/helpers/functions'
 
@@ -191,7 +191,7 @@ const UserList = () => {
     dispatch(getUsers({ page: newPage, size: pageSize, query: searchQuery }))
   }
 
-  const clearTimerRef : any = useRef();
+  const clearTimerRef: any = useRef()
   const handleFilter = useCallback((val: string) => {
     setSearchQuery(val)
     clearTimeout(clearTimerRef.current)

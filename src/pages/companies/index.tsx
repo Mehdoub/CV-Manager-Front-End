@@ -25,13 +25,14 @@ import { useDispatch, useSelector } from 'react-redux'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import CustomChip from 'src/@core/components/mui/chip'
 import CardStatisticsHorizontal from 'src/@core/components/card-statistics/card-stats-horizontal'
+import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
 
 // ** Custom Table Components Imports
 import TableHeader from 'src/views/pages/company/list/TableHeader'
-import { AvatarGroup, Skeleton, Tooltip, TooltipProps, tooltipClasses } from '@mui/material'
+import { AvatarGroup, Skeleton } from '@mui/material'
 import { Stack } from '@mui/system'
 import { getCompanies } from 'src/store/company'
 import CompanyEditDialog from 'src/views/pages/company/view/CompanyEditDialog'
@@ -43,17 +44,6 @@ const statusColors: any = {
   active: 'success',
   inactive: 'error'
 }
-
-export const BootstrapTooltip = styled(({ className, ...props }: TooltipProps) => (
-  <Tooltip {...props} arrow classes={{ popper: className }} />
-))(({ theme }) => ({
-  [`& .${tooltipClasses.arrow}`]: {
-    color: theme.palette.common.black
-  },
-  [`& .${tooltipClasses.tooltip}`]: {
-    backgroundColor: theme.palette.common.black
-  }
-}))
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -136,7 +126,7 @@ const CompanyList = () => {
     dispatch(getCompanies({ size: pageSize, page: page, query: searchQuery }))
   }, [])
 
-  const clearTimerRef : any = useRef();
+  const clearTimerRef: any = useRef()
   const handleFilter = useCallback((val: string) => {
     setSearchQuery(val)
     clearTimeout(clearTimerRef.current)

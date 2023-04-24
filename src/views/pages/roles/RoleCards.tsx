@@ -37,7 +37,7 @@ import { useSelector } from 'react-redux'
 import { getPermissionsGrouped } from 'src/store/permission'
 import { Skeleton } from '@mui/material'
 import { getFullName, getImagePath } from 'src/helpers/functions'
-import { BootstrapTooltip } from 'src/pages/companies'
+import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 
 interface CardDataType {
   title: string
@@ -130,16 +130,18 @@ const RolesCards = () => {
           <CardContent>
             <Box sx={{ mb: 3, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <Typography variant='body2'>{`Total ${role?.usersCount} user(s)`}</Typography>
-              <AvatarGroup className='pull-up' max={4} sx={{ '& .MuiAvatar-root': { width: 40, height: 40, fontSize: '0.875rem' } }}>
-                {role?.users?.length > 0 ? role?.users?.map((user: any, index: number) => (
-                  <BootstrapTooltip
-                  key={index}
-                  title={getFullName(user)}
-                  placement='top'
-                >
-                  <Avatar key={index} alt={getFullName(user)} src={getImagePath(user?.avatar)} />
-                </BootstrapTooltip>
-                )) : (
+              <AvatarGroup
+                className='pull-up'
+                max={4}
+                sx={{ '& .MuiAvatar-root': { width: 40, height: 40, fontSize: '0.875rem' } }}
+              >
+                {role?.users?.length > 0 ? (
+                  role?.users?.map((user: any, index: number) => (
+                    <BootstrapTooltip key={index} title={getFullName(user)} placement='top'>
+                      <Avatar key={index} alt={getFullName(user)} src={getImagePath(user?.avatar)} />
+                    </BootstrapTooltip>
+                  ))
+                ) : (
                   <Skeleton variant='circular' animation={false} width={40} height={40} />
                 )}
               </AvatarGroup>

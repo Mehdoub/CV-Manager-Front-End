@@ -11,7 +11,7 @@ import Icon from 'src/@core/components/icon'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 
 import { AvatarGroup, Button, Grid } from '@mui/material'
-import { BootstrapTooltip } from 'src/pages/companies'
+import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 import Link from 'next/link'
 import { renderClient } from 'src/pages/projects'
 import { useDispatch } from 'react-redux'

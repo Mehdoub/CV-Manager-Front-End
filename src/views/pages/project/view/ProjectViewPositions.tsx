@@ -15,7 +15,7 @@ import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import Link from 'next/link'
 import { AvatarGroup, Button, Grid, Skeleton } from '@mui/material'
-import { BootstrapTooltip } from 'src/pages/companies'
+import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 import { getProjectPositions } from 'src/store/project'
 import { getFullName, getImagePath } from 'src/helpers/functions'
 import { getInitials } from 'src/@core/utils/get-initials'
@@ -42,7 +42,6 @@ const renderClient = (row: any, field = 'logo') => {
     )
   }
 }
-
 
 const latestPositionColumns = [
   {

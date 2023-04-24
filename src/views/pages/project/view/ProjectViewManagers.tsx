@@ -32,7 +32,7 @@ import { useSelector } from 'react-redux'
 import { addProjectManager, getProjectManagers } from 'src/store/project'
 import { getFullName, getImagePath } from 'src/helpers/functions'
 import { getUsers } from 'src/store/user'
-import { BootstrapTooltip } from 'src/pages/companies'
+import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 import ProjectRemoveManagerDialog from './ProjectRemoveManagerDialog'
 
 const statusColors: any = {
@@ -86,7 +86,6 @@ const ProjectViewManagers = () => {
   const { status: addMnanagerStatus } = useSelector((state: any) => state.addProjectManager)
 
   const projectId = project?.id
-
 
   useEffect(() => {
     if (addMnanagerStatus) {
@@ -232,7 +231,9 @@ const ProjectViewManagers = () => {
                   onChange={(e, newValue) => addNewManager(newValue)}
                   ListboxComponent={List}
                   getOptionLabel={(user: any) => getFullName(user)}
-                  renderInput={params => <TextField {...params} onChange={searchUsers} size='small' placeholder='Search for managers...' />}
+                  renderInput={params => (
+                    <TextField {...params} onChange={searchUsers} size='small' placeholder='Search for managers...' />
+                  )}
                   renderOption={(props, user) => (
                     <ListItem {...props}>
                       <ListItemAvatar>

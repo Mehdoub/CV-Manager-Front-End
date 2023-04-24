@@ -31,7 +31,7 @@ import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { getFullName, getImagePath } from 'src/helpers/functions'
 import { getUsers } from 'src/store/user'
-import { BootstrapTooltip } from 'src/pages/companies'
+import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 import RemoveManagerDialog from './RemoveManagerDialog'
 
 const statusColors: any = {

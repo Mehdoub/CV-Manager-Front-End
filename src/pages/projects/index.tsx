@@ -40,7 +40,7 @@ import { getInitials } from 'src/@core/utils/get-initials'
 import TableHeader from 'src/views/pages/project/list/TableHeader'
 import AddProjectDrawer from 'src/views/pages/project/list/AddProjectDrawer'
 import { AvatarGroup, Skeleton, Stack } from '@mui/material'
-import { BootstrapTooltip } from '../companies'
+import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 import { getProjects } from 'src/store/project'
 import ProjectEditDialog from 'src/views/pages/project/view/ProjectEditDialog'
 import { getImagePath, showDate } from 'src/helpers/functions'
@@ -130,7 +130,7 @@ const ProjectList = () => {
     dispatch(getProjects({ size: pageSize, query: searchQuery, page }))
   }, [])
 
-  const clearTimerRef : any = useRef();
+  const clearTimerRef: any = useRef()
   const handleFilter = useCallback((val: string) => {
     setSearchQuery(val)
     clearTimeout(clearTimerRef.current)
@@ -298,7 +298,9 @@ const ProjectList = () => {
       <Grid item xs={12}>
         <Card>
           <TableHeader searchQuery={searchQuery} handleFilter={handleFilter} toggle={toggleAddProjectDrawer} />
-          {projectsListLoading ? <Skeleton variant='rounded' height={600} /> : (
+          {projectsListLoading ? (
+            <Skeleton variant='rounded' height={600} />
+          ) : (
             <DataGrid
               autoHeight
               rows={projects?.docs ?? []}

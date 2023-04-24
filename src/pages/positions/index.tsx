@@ -37,10 +37,10 @@ import { getInitials } from 'src/@core/utils/get-initials'
 import TableHeader from 'src/views/pages/position/list/TableHeader'
 import AddPositionDrawer from 'src/views/pages/position/list/AddPositionDrawer'
 import { AvatarGroup, Skeleton, Stack } from '@mui/material'
-import { BootstrapTooltip } from '../companies'
 import { getPositions } from 'src/store/position'
 import PositionEditDialog from 'src/views/pages/position/view/PositionEditDialog'
-import { getFullName, getImagePath, showDate } from 'src/helpers/functions'
+import { getFullName, getImagePath, getMaxTextLen, showDate } from 'src/helpers/functions'
+import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -145,7 +145,7 @@ const PositionList = () => {
   const columns = [
     {
       flex: 0.2,
-      minWidth: 230,
+      minWidth: 200,
       field: 'position',
       headerName: 'Position',
       renderCell: ({ row }: any) => {
@@ -155,7 +155,9 @@ const PositionList = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row, 'logo', 'title')}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href={`/positions/view/${id}/overview/`}>{title}</StyledLink>
+              <BootstrapTooltip title={title} placement='top'>
+                <StyledLink href={`/positions/view/${id}/overview/`}>{getMaxTextLen(title)}</StyledLink>
+              </BootstrapTooltip>
             </Box>
           </Box>
         )
@@ -163,25 +165,7 @@ const PositionList = () => {
     },
     {
       flex: 0.2,
-      minWidth: 230,
-      field: 'project_id',
-      headerName: 'Project',
-      renderCell: ({ row }: any) => {
-        const { project_id } = row
-
-        return (
-          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            {renderClient(project_id)}
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href={`/projects/view/${project_id?.id}/overview/`}>{project_id?.name}</StyledLink>
-            </Box>
-          </Box>
-        )
-      }
-    },
-    {
-      flex: 0.2,
-      minWidth: 230,
+      minWidth: 200,
       field: 'company_id',
       headerName: 'Company',
       renderCell: ({ row }: any) => {
@@ -191,7 +175,33 @@ const PositionList = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(company_id)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href={`/companies/view/${company_id?.id}/overview/`}>{company_id?.name}</StyledLink>
+              <BootstrapTooltip title={company_id?.name} placement='top'>
+                <StyledLink href={`/companies/view/${company_id?.id}/overview/`}>
+                  {getMaxTextLen(company_id?.name)}
+                </StyledLink>
+              </BootstrapTooltip>
+            </Box>
+          </Box>
+        )
+      }
+    },
+    {
+      flex: 0.2,
+      minWidth: 200,
+      field: 'project_id',
+      headerName: 'Project',
+      renderCell: ({ row }: any) => {
+        const { project_id } = row
+
+        return (
+          <Box sx={{ display: 'flex', alignItems: 'center' }}>
+            {renderClient(project_id)}
+            <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
+              <BootstrapTooltip title={project_id?.name} placement='top'>
+                <StyledLink href={`/projects/view/${project_id?.id}/overview/`}>
+                  {getMaxTextLen(project_id?.name)}
+                </StyledLink>
+              </BootstrapTooltip>
             </Box>
           </Box>
         )
@@ -220,7 +230,7 @@ const PositionList = () => {
         )
     },
     {
-      flex: 0.15,
+      flex: 0.1,
       minWidth: 90,
       headerName: 'Status',
       field: 'is_active',
@@ -244,7 +254,7 @@ const PositionList = () => {
     },
     {
       flex: 0.2,
-      minWidth: 230,
+      minWidth: 200,
       field: 'created_by',
       headerName: 'User Create',
       renderCell: ({ row }: any) => {
@@ -260,8 +270,8 @@ const PositionList = () => {
       }
     },
     {
-      flex: 0.15,
-      minWidth: 120,
+      flex: 0.2,
+      minWidth: 160,
       headerName: 'Time Create',
       field: 'time_created',
       renderCell: ({ row }: any) => {

@@ -16,7 +16,7 @@ import {
   createFilterOptions
 } from '@mui/material'
 import { getMaxTextLen } from 'src/helpers/functions'
-import { BootstrapTooltip } from 'src/pages/companies'
+import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import CustomChip from 'src/@core/components/mui/chip'
 import Icon from 'src/@core/components/icon'

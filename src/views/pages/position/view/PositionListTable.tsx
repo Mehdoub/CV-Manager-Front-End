@@ -18,7 +18,7 @@ import { fetchData } from 'src/store/apps/project'
 import { renderClient } from 'src/pages/projects'
 import Link from 'next/link'
 import { AvatarGroup, Button, Grid } from '@mui/material'
-import { BootstrapTooltip } from 'src/pages/companies'
+import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,

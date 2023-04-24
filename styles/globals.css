@@ -262,6 +262,7 @@ code[class*='language-'] {
   transition-duration: 400ms;
   transform: scale(1.1, 1.1) translate3d(0, 0, 0);
   cursor: pointer;
+  animation: zoom-in-zoom-out 2s ease-out 2s;
 }
 
 .sd-menu-open-button:hover {
@@ -296,4 +297,10 @@ code[class*='language-'] {
 .sd-menu-open:checked ~ .sd-menu-item:nth-child(7) {
   transition-duration: 580ms;
   transform: translate3d(-0.25084px, -55.9997px, 0);
+}
+
+@keyframes zoom-in-zoom-out {
+  50% {
+    transform: scale(1.5, 1.5);
+  }
 }
