@@ -73,17 +73,6 @@ any) => {
         { property: 'Registered Resumes', value: '135', icon: 'mdi:check' },
         { property: 'Companies', value: '897', icon: 'mdi:account-outline' },
         { property: 'Projects', value: '146', icon: 'mdi:view-grid-plus-outline' }
-      ],
-      teams: [
-        { property: 'Backend Developer', value: '(126 Members)', icon: 'mdi:github', color: 'primary' },
-        { property: 'React Developer', value: '(98 Members)', icon: 'mdi:react', color: 'info' }
-      ],
-      connections: [
-        { isFriend: false, connections: '45', name: 'Cecilia Payne', avatar: '/images/avatars/2.png' },
-        { isFriend: true, connections: '1.32k', name: 'Curtis Fletcher', avatar: '/images/avatars/3.png' },
-        { isFriend: true, connections: '125', name: 'Alice Stone', avatar: '/images/avatars/4.png' },
-        { isFriend: false, connections: '456', name: 'Darrell Barnes', avatar: '/images/avatars/5.png' },
-        { isFriend: false, connections: '1.2k', name: 'Eugenia Moore', avatar: '/images/avatars/8.png' }
       ]
     })
   }, [tab])

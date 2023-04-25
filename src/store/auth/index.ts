@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ApiRequest from "src/helpers/ApiRequest";
 
 
-export const checkUsername = createAsyncThunk('checkUsername', async (username: string, { rejectWithValue }) => {
+export const checkUsername: any = createAsyncThunk('checkUsername', async (username: string, { rejectWithValue }) => {
   try {
     const response = await ApiRequest.builder().request('post', 'auth/username-isavailable', { username })
 

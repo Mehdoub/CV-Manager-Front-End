@@ -19,6 +19,8 @@ import CustomChip from 'src/@core/components/mui/chip'
 import Icon from 'src/@core/components/icon'
 import { useEffect, useState } from 'react'
 import { UserDataType } from 'src/context/types'
+import { useSelector } from 'react-redux'
+import { getFullName } from 'src/helpers/functions'
 
 // ** Types
 // import { ProfileHeaderType } from 'src/@fake-db/types'
@@ -41,6 +43,8 @@ const ProfilePicture = styled('img')(({ theme }) => ({
 const UserProfileHeader = () => {
   // ** State
   const [data, setData] = useState<UserDataType | null>(null)
+
+  const { data: user } = useSelector((state: any) => state.user)
 
   useEffect(() => {
     setData(JSON.parse(localStorage.getItem('userData') as string))
@@ -81,12 +85,12 @@ const UserProfileHeader = () => {
         >
           <Box sx={{ mb: [6, 0], display: 'flex', flexDirection: 'column', alignItems: ['center', 'flex-start'] }}>
             <Typography variant='h5' sx={{ mb: 4, fontSize: '1.375rem' }}>
-              {`${data?.firstname} ${data?.lastname}`}
+              {getFullName(user)}
               <CustomChip
                 skin='light'
                 size='small'
-                label={data?.is_banned ? 'inactive' : 'active'}
-                color={statusColors[data?.is_banned ? 'inactive' : 'active']}
+                label={user?.is_banned ? 'inactive' : 'active'}
+                color={statusColors[user?.is_banned ? 'inactive' : 'active']}
                 sx={{
                   height: 20,
                   fontWeight: 500,

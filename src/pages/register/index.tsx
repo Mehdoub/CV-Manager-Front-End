@@ -130,7 +130,7 @@ const Register = () => {
       .matches(/^9[\d]{9}$/, 'Mobile Is Not Valid (example: 9123456789)')
       .required(),
     password: yup.string().label('Password').min(8).max(12).required(),
-    repeatpassword: yup.string().label('Repeat assword').min(8).max(12).required()
+    repeatpassword: yup.string().label('Repeat Password').min(8).max(12).required()
   })
 
   const {

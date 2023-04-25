@@ -10,9 +10,11 @@ import Icon from 'src/@core/components/icon'
 
 // ** Types
 import { ProfileTeamsType, ProfileTabCommonType } from 'src/@fake-db/types'
+import { Button, CardActions } from '@mui/material'
+import UserEditDialog from '../../user/view/UserEditDialog'
+import { useState } from 'react'
 
 interface Props {
-  teams: ProfileTeamsType[]
   about: ProfileTabCommonType[]
   contacts: ProfileTabCommonType[]
   overview: ProfileTabCommonType[]
@@ -77,47 +79,51 @@ const renderTeams = (arr: ProfileTeamsType[]) => {
 }
 
 const AboutOverivew = (props: Props) => {
-  const { teams, about, contacts, overview } = props
+  const { about, contacts, overview } = props
+  const [editUserOpen, setEditUserOpen] = useState<boolean>(false)
+  const closeEditUserDialog = () => setEditUserOpen(false)
 
   return (
-    <Grid container spacing={6}>
-      <Grid item xs={12}>
-        <Card>
-          <CardContent>
-            <Box sx={{ mb: 7 }}>
-              <Typography variant='body2' sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}>
-                About
-              </Typography>
-              {renderList(about)}
-            </Box>
-            <Box sx={{ mb: 7 }}>
-              <Typography variant='body2' sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}>
-                Contacts
-              </Typography>
-              {renderList(contacts)}
-            </Box>
-            {/* <div>
-              <Typography variant='body2' sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}>
-                Teams
-              </Typography>
-              {renderTeams(teams)}
-            </div> */}
-          </CardContent>
-        </Card>
+    <>
+      <Grid container spacing={6}>
+        <Grid item xs={12}>
+          <Card>
+            <CardContent>
+              <Box sx={{ mb: 7 }}>
+                <Typography variant='body2' sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}>
+                  About
+                </Typography>
+                {renderList(about)}
+              </Box>
+              <Box sx={{ mb: 7 }}>
+                <Typography variant='body2' sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}>
+                  Contacts
+                </Typography>
+                {renderList(contacts)}
+              </Box>
+            </CardContent>
+            <CardActions sx={{ display: 'flex', justifyContent: 'right' }}>
+              <Button variant='contained' sx={{ mr: 2 }} onClick={() => setEditUserOpen(true)}>
+                Edit
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+        <Grid item xs={12}>
+          <Card>
+            <CardContent>
+              <div>
+                <Typography variant='body2' sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}>
+                  Overview
+                </Typography>
+                {renderList(overview)}
+              </div>
+            </CardContent>
+          </Card>
+        </Grid>
       </Grid>
-      <Grid item xs={12}>
-        <Card>
-          <CardContent>
-            <div>
-              <Typography variant='body2' sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}>
-                Overview
-              </Typography>
-              {renderList(overview)}
-            </div>
-          </CardContent>
-        </Card>
-      </Grid>
-    </Grid>
+      <UserEditDialog open={editUserOpen} handleClose={closeEditUserDialog} data={{}} />
+    </>
   )
 }
 

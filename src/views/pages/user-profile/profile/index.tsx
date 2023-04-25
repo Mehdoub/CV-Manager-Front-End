@@ -1,5 +1,13 @@
 // ** MUI Components
 import Grid from '@mui/material/Grid'
+import { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import Skelet from 'src/@core/components/loading/Skelet'
+import Language from 'src/helpers/Language'
+import { getFullName } from 'src/helpers/functions'
+import { useAuth } from 'src/hooks/useAuth'
+import { getUser } from 'src/store/user'
 
 // ** Demo Components
 import AboutOverivew from 'src/views/pages/user-profile/profile/AboutOverivew'
@@ -12,10 +20,39 @@ import ConnectionsTeams from 'src/views/pages/user-profile/profile/ConnectionsTe
 // import { ProfileTabType } from 'src/@fake-db/types'
 
 const ProfileTab = ({ data }: { data: any }) => {
+  const [about, setAbout] = useState<any>([])
+  const [contact, setContact] = useState<any>([])
+  const auth = useAuth()
+  const dispatch = useDispatch()
+  const { data: user, loading, userLoading } = useSelector((state: any) => state.user)
+
+  useEffect(() => {
+    dispatch(getUser(auth?.user?._id))
+  }, [])
+
+  useEffect(() => {
+    if (user?.id) {
+      setAbout([
+        { property: 'Full Name', value: getFullName(user), icon: 'mdi:account-outline' },
+        { property: 'Role', value: user?.role[0], icon: 'mdi:star-outline' },
+        { property: 'Username', value: user?.username, icon: 'mdi:flag-outline' },
+        { property: 'Language', value: Language.builder().lang, icon: 'mdi:translate' }
+      ])
+      setContact([
+        { property: 'Contact', value: `+${user?.mobile}`, icon: 'mdi:phone-outline' },
+        { property: 'Email', value: user?.email ?? 'john.doe@example.com', icon: 'mdi:email-outline' }
+      ])
+    }
+  }, [user])
+
   return data && Object.values(data).length ? (
     <Grid container spacing={6}>
       <Grid item xl={4} md={5} xs={12}>
-        <AboutOverivew about={data.about} contacts={data.contacts} teams={data.teams} overview={data.overview} />
+        <Skelet
+          loading={loading}
+          component={<AboutOverivew about={about} contacts={contact} overview={data.overview} />}
+          height={465}
+        />
       </Grid>
       <Grid item xl={8} md={7} xs={12}>
         <Grid container spacing={6}>

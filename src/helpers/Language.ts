@@ -21,7 +21,7 @@ export default class Language {
     }
   }
 
-  public getLanguage = () : any => {
+  public getLanguage = (): any => {
     if (typeof window !== 'undefined') {
       let language = localStorage.getItem('language') as Langs ?? this.defaultLang
       if (!['en', 'fa'].includes(language)) {

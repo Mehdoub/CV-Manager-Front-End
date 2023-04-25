@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import ApiRequest from "src/helpers/ApiRequest"
-import { clearStatesAction, createExtraReducers, sliceInitialStateWithData, sliceInitialStateWithStatus } from "src/helpers/functions"
+import { clearStatesAction, createExtraReducers, popObjectItemByKey, sliceInitialStateWithData, sliceInitialStateWithStatus } from "src/helpers/functions"
 
 export const getUsers: any = createAsyncThunk(
   'getUsers',
@@ -118,7 +118,7 @@ const userChangePasswordSlice = createSlice({
 })
 
 
-export const getUserLoginHistory : any = createAsyncThunk('getUserLoginHistory', async (_, { rejectWithValue, getState }) => {
+export const getUserLoginHistory: any = createAsyncThunk('getUserLoginHistory', async (_, { rejectWithValue, getState }) => {
   try {
     const { user: { data: user } } = getState() as any
     const response = await ApiRequest.builder().auth().request('get', `users/${user?.id}/login-history`)
@@ -138,10 +138,48 @@ const userLoginHistorySlice = createSlice({
   }
 })
 
+export const editUser: any = createAsyncThunk(
+  'editUser',
+  async (data: any,
+    { rejectWithValue }) => {
+    try {
+      const avatar = popObjectItemByKey(data, 'avatar')
+      const userId = popObjectItemByKey(data, 'userId')
+
+      const response = await ApiRequest.builder().auth().request('patch', `users/${userId}`, data)
+
+      // if (avatar) {
+      //   await ApiRequest.builder()
+      //     .auth()
+      //     .contentType('multipart/form-data')
+      //     .request('patch', `users/${userId}/avatar`, { avatar })
+      // }
+
+      return response
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const userEditSlice = createSlice({
+  name: 'userEdit',
+  initialState: sliceInitialStateWithStatus,
+  reducers: {
+    clearUserEdit: (state) => {
+      clearStatesAction(state)
+    }
+  },
+  extraReducers: (builder) => {
+    createExtraReducers(builder, editUser)
+  }
+})
+
 export const { clearUserBan } = userBanSlice.actions
 export const { clearChangePassword } = userChangePasswordSlice.actions
+export const { clearUserEdit } = userEditSlice.actions
 export const usersListReducer = usersListSlice.reducer
 export const userReducer = userSlice.reducer
 export const userBanReducer = userBanSlice.reducer
 export const userChangePasswordReducer = userChangePasswordSlice.reducer
 export const userLoginHistoryReducer = userLoginHistorySlice.reducer
+export const userEditReducer = userEditSlice.reducer
