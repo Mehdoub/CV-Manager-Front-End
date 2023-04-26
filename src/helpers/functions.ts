@@ -19,6 +19,7 @@ export const statusColors: any = {
 }
 
 export const ratingTextsObj: any = {
+  0: 'No Rating',
   1: 'Useless',
   2: 'Poor',
   3: 'Ok',

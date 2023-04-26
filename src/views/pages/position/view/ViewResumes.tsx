@@ -10,6 +10,17 @@ import { toastError } from 'src/helpers/functions'
 import { getPositionResumes } from 'src/store/position'
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
+import { useSelector } from 'react-redux'
+
+const resumesStates: any = {
+  pending: { title: 'pending', color: 'warning' },
+  call_review: { title: 'call review', color: 'info' },
+  tech_review: { title: 'tech review', color: 'primary' },
+  wait_reject: { title: 'wait reject', color: 'secondary' },
+  rejected: { title: 'rejected', color: 'error' },
+  hired: { title: 'hired', color: 'success' },
+  wait_hire: { title: 'wait hire', color: 'info' }
+}
 
 const ViewResumes = () => {
   const [open, setOpen] = useState<boolean>(false)
@@ -19,6 +30,8 @@ const ViewResumes = () => {
   const cols = Object.keys(resumes)
 
   const dispatch = useDispatch()
+
+  const { data: positionResumes, loading: positionResumesLoading } = useSelector((state: any) => state.positionResumes)
 
   const {
     query: { positionId }
@@ -79,18 +92,23 @@ const ViewResumes = () => {
         }}
       >
         <DragDropContext onDragEnd={dragEndHandler}>
-          {allResumes.map((columnData: any) => (
-            <ResumeKanbanColumn
-              title={columnData.title}
-              color={columnData.status_color}
-              statusKey={columnData.key}
-              key={columnData.key}
-            >
-              {columnData?.resumes.map((resumeData: any) => (
-                <ResumeKanbanCard cardData={resumeData} setOpen={setOpen} />
-              ))}
-            </ResumeKanbanColumn>
-          ))}
+          {positionResumes.length > 0 &&
+            positionResumes.map((column: any) => {
+              const status = Object.keys(column)[0]
+              const colData = resumesStates[status]
+              return (
+                <ResumeKanbanColumn
+                  title={colData.title}
+                  color={colData.color}
+                  statusKey={colData.key}
+                  key={colData.key}
+                >
+                  {column[status].map((resumeData: any, index: number) => (
+                    <ResumeKanbanCard cardData={resumeData} setOpen={setOpen} index={index} />
+                  ))}
+                </ResumeKanbanColumn>
+              )
+            })}
         </DragDropContext>
       </Stack>
       <ResumeCardMainDialog open={open} toggle={handleClose} resumeData={{}} />

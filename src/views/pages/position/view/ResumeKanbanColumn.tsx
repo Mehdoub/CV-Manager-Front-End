@@ -1,6 +1,6 @@
 import { Card, List, Typography, useTheme } from '@mui/material'
 import { Droppable } from 'react-beautiful-dnd'
-import { getColorCodes } from 'src/helpers/functions'
+import { getColorCodes, uppercaseFirstLetters } from 'src/helpers/functions'
 
 interface ResumeKanbanColumnProps {
   title: string
@@ -44,7 +44,7 @@ const ResumeKanbanColumn = ({ title, color, children, statusKey }: ResumeKanbanC
           zIndex: 100
         }}
       >
-        {title}
+        {uppercaseFirstLetters(title)}
       </Card>
       <Droppable droppableId={`${statusKey}`}>
         {provided => (

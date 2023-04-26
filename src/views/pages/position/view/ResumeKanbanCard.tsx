@@ -2,6 +2,7 @@ import { Avatar, AvatarGroup, Box, Card, Chip, Rating, Stack, Typography } from 
 import {
   calcInterviewRemainingTime,
   getColorCodes,
+  getImagePath,
   getMaxTextLen,
   ratingTextsObj,
   uppercaseFirstLetters
@@ -16,16 +17,17 @@ import { Draggable } from 'react-beautiful-dnd'
 interface ResumeKanbanCardProps {
   cardData: any
   setOpen: any
+  index: number
 }
 
-const ResumeKanbanCard = ({ cardData: card, setOpen }: ResumeKanbanCardProps) => {
+const ResumeKanbanCard = ({ cardData: card, setOpen, index }: ResumeKanbanCardProps) => {
   const [interviewDateText, interviewColor, interviewDateString] = calcInterviewRemainingTime(
-    card.latest_interview.interview_date,
-    card.latest_interview.interview_end_date
+    '2023-09-18T07:09:11.498Z',
+    '2023-09-18T11:09:11.498Z'
   )
 
   return (
-    <Draggable draggableId={`${card.id}`} index={card.index} key={card.id}>
+    <Draggable draggableId={`${card.id}`} index={index} key={card.id}>
       {provided => (
         <Card
           {...provided.draggableProps}
@@ -58,21 +60,21 @@ const ResumeKanbanCard = ({ cardData: card, setOpen }: ResumeKanbanCardProps) =>
                 mb: 3
               }}
             >
-              <BootstrapTooltip placement='top' title={card.position.name}>
+              <BootstrapTooltip placement='top' title={card.position_id.title}>
                 <div>
                   <CustomChip
                     rounded
                     size='small'
-                    label={getMaxTextLen(card.position.name, 20)}
+                    label={getMaxTextLen(card.position_id.title, 20)}
                     skin='light'
-                    color={card.position.color as any}
+                    color={'info'}
                     sx={{ fontSize: 10, height: 19 }}
                   />
                 </div>
               </BootstrapTooltip>
-              <BootstrapTooltip placement='top' title={ratingTextsObj[card.rating as any]}>
+              <BootstrapTooltip placement='top' title={ratingTextsObj[(card.rating as any) ?? 0]}>
                 <div>
-                  <Rating readOnly value={card.rating} name='read-only' size='small' />
+                  <Rating readOnly value={card.rating ?? 0} name='read-only' size='small' />
                 </div>
               </BootstrapTooltip>
             </Box>
@@ -80,19 +82,19 @@ const ResumeKanbanCard = ({ cardData: card, setOpen }: ResumeKanbanCardProps) =>
               {card.avatar ? (
                 <Avatar
                   color='primary'
-                  src={card.avatar}
+                  src={getImagePath(card.avatar)}
                   sx={{ mr: 3, width: 35, height: 35, fontSize: '0.85rem' }}
-                  alt={card.title}
+                  alt={'John Doe'}
                 />
               ) : (
                 <CustomAvatar skin='light' color='primary' sx={{ mr: 3, width: 35, height: 35, fontSize: '0.85rem' }}>
-                  {getInitials(card.title)}
+                  {getInitials('John Doe')}
                 </CustomAvatar>
               )}
               <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <BootstrapTooltip title={card.title} placement='top'>
+                <BootstrapTooltip title={'John Doe'} placement='top'>
                   <Typography fontSize={13} fontWeight={500}>
-                    {getMaxTextLen(card.title)}
+                    {getMaxTextLen('John Doe')}
                   </Typography>
                 </BootstrapTooltip>
                 <Stack direction='row' spacing={1} ml={-2}>
@@ -118,7 +120,7 @@ const ResumeKanbanCard = ({ cardData: card, setOpen }: ResumeKanbanCardProps) =>
                           </BootstrapTooltip>
                         )
                     )}
-                  {card.count_tags - 2 > 0 && (
+                  {card?.count_tags && card?.count_tags - 2 > 0 && (
                     <BootstrapTooltip placement='top' title={`+${card.count_tags - 2}`}>
                       <div>
                         <CustomChip
@@ -176,7 +178,7 @@ const ResumeKanbanCard = ({ cardData: card, setOpen }: ResumeKanbanCardProps) =>
                 <BootstrapTooltip placement='top' title='File Attachments'>
                   <Chip
                     size='small'
-                    label={card.summery_counts.attachments}
+                    label={card.summary_count.file}
                     sx={{ fontSize: 10, height: 19, width: 41 }}
                     avatar={
                       <Avatar>
@@ -188,7 +190,7 @@ const ResumeKanbanCard = ({ cardData: card, setOpen }: ResumeKanbanCardProps) =>
                 <BootstrapTooltip placement='top' title='Call History'>
                   <Chip
                     size='small'
-                    label={card.summery_counts.calls}
+                    label={card.summary_count.call_history}
                     sx={{ fontSize: 10, height: 19, width: 41 }}
                     avatar={
                       <Avatar>
@@ -200,7 +202,7 @@ const ResumeKanbanCard = ({ cardData: card, setOpen }: ResumeKanbanCardProps) =>
                 <BootstrapTooltip placement='top' title='Comments'>
                   <Chip
                     size='small'
-                    label={card.summery_counts.comments}
+                    label={card.summary_count.comment}
                     sx={{ fontSize: 10, height: 19, width: 41 }}
                     avatar={
                       <Avatar>
@@ -217,17 +219,23 @@ const ResumeKanbanCard = ({ cardData: card, setOpen }: ResumeKanbanCardProps) =>
                   '& .MuiAvatar-root': { width: 30, height: 30, fontSize: 15 }
                 }}
               >
-                {card?.asignees.map((asignee: any, index: any) => (
-                  <BootstrapTooltip key={index} title={asignee.title} placement='top'>
-                    {asignee.avatar ? (
-                      <CustomAvatar src={asignee.avatar} sx={{ height: 26, width: 26 }} />
-                    ) : (
-                      <CustomAvatar skin='light' color='primary' sx={{ mr: 3, width: 26, height: 26 }}>
-                        {getInitials(asignee.title)}
-                      </CustomAvatar>
-                    )}
+                {card?.contributors.length > 0 ? (
+                  card?.contributors.map((asignee: any, index: any) => (
+                    <BootstrapTooltip key={index} title={asignee.title} placement='top'>
+                      {asignee.avatar ? (
+                        <CustomAvatar src={asignee.avatar} sx={{ height: 26, width: 26 }} />
+                      ) : (
+                        <CustomAvatar skin='light' color='primary' sx={{ mr: 3, width: 26, height: 26 }}>
+                          {getInitials(asignee.title)}
+                        </CustomAvatar>
+                      )}
+                    </BootstrapTooltip>
+                  ))
+                ) : (
+                  <BootstrapTooltip title='No Contributor' placement='top'>
+                    <CustomAvatar skin='light' color='primary' sx={{ width: 26, height: 26 }}></CustomAvatar>
                   </BootstrapTooltip>
-                ))}
+                )}
               </AvatarGroup>
             </Box>
           </Typography>
