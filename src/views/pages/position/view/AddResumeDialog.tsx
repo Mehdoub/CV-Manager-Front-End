@@ -48,7 +48,7 @@ import { clearCreateResume, createResume } from 'src/store/resume'
 import { useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { getCitiesByProvince, getProvinces } from 'src/store/province'
-import { getPositions } from 'src/store/position'
+import { getPositionResumes } from 'src/store/position'
 import { getProjectPositions, getProjects } from 'src/store/project'
 
 interface FileProp {
@@ -276,6 +276,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
     if (statusResumeCreate) {
       reset()
       dispatch(clearCreateResume())
+      dispatch(getPositionResumes(positionId))
       handleClose()
       setAvatar([])
       setResumeFiles([])
