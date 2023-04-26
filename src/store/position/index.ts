@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ApiRequest from "src/helpers/ApiRequest";
-import { clearStatesAction, createExtraReducers, popObjectItemByKey, sliceInitialStateWithStatus } from "src/helpers/functions";
+import { clearStatesAction, createExtraReducers, popObjectItemByKey, sliceInitialStateWithData, sliceInitialStateWithStatus } from "src/helpers/functions";
 import { PositionEditData } from "src/views/pages/position/view/PositionEditDialog";
 
 
@@ -409,6 +409,29 @@ const positionEditSlice = createSlice({
 })
 
 
+export const getPositionResumes: any = createAsyncThunk(
+  'getPositionResumes',
+  async (positionId: string,
+    { rejectWithValue }) => {
+    try {
+      const response = await ApiRequest.builder().auth().request('get', `positions/${positionId}/resumes`)
+
+      return response
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const positionResumesSlice = createSlice({
+  name: 'positionResumes',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    createExtraReducers(builder, getPositionResumes, true)
+  }
+})
+
+
 
 export const { clearPositionCreate } = positionCreateSlice.actions
 export const { clearPositionDeactive } = positionDeactiveSlice.actions
@@ -425,3 +448,4 @@ export const positionManagersReducer = positionManagersSlice.reducer
 export const positionManagerAddReducer = positionManagerAddSlice.reducer
 export const positionManagerRemoveReducer = positionManagerRemoveSlice.reducer
 export const positionEditReducer = positionEditSlice.reducer
+export const positionResumesReducer = positionResumesSlice.reducer

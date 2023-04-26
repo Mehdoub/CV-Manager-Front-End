@@ -38,7 +38,7 @@ import { userBanReducer, userChangePasswordReducer, userEditReducer, userLoginHi
 import successHandler from 'src/middlewares/successHandler'
 import { usernameCheckReducer } from './auth'
 import errorHandler from 'src/middlewares/errorHandler'
-import { positionActiveReducer, positionCreateReducer, positionDeactiveReducer, positionEditReducer, positionManagerAddReducer, positionManagerRemoveReducer, positionManagersReducer, positionReducer, positionsListReducer } from './position'
+import { positionActiveReducer, positionCreateReducer, positionDeactiveReducer, positionEditReducer, positionManagerAddReducer, positionManagerRemoveReducer, positionManagersReducer, positionReducer, positionResumesReducer, positionsListReducer } from './position'
 import { constantsReducer } from './common'
 import { roleCreateReducer, roleEditReducer, rolesReducer } from './role'
 import { permissionsGroupedReducer } from './permission'
@@ -87,6 +87,7 @@ export const store = configureStore({
     positionManagerAdd: positionManagerAddReducer,
     positionManagerRemove: positionManagerRemoveReducer,
     positionEdit: positionEditReducer,
+    positionResumes: positionResumesReducer,
 
     usersList: usersListReducer,
     user: userReducer,

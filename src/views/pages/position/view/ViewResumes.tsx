@@ -7,6 +7,9 @@ import ResumeKanbanCard from './ResumeKanbanCard'
 import resumes from 'src/data/resumeCards.json'
 import { DragDropContext } from 'react-beautiful-dnd'
 import { toastError } from 'src/helpers/functions'
+import { getPositionResumes } from 'src/store/position'
+import { useDispatch } from 'react-redux'
+import { useRouter } from 'next/router'
 
 const ViewResumes = () => {
   const [open, setOpen] = useState<boolean>(false)
@@ -15,8 +18,15 @@ const ViewResumes = () => {
   const scrollContainer = useScrollContainer()
   const cols = Object.keys(resumes)
 
+  const dispatch = useDispatch()
+
+  const {
+    query: { positionId }
+  } = useRouter()
+
   useEffect(() => {
     setAllResumes(resumes)
+    dispatch(getPositionResumes(positionId))
   }, [])
 
   const dragEndHandler = (result: any) => {
