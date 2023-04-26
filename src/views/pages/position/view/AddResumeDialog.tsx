@@ -57,14 +57,6 @@ interface FileProp {
   size: number
 }
 
-const cityOptions = [
-  { value: 'tehran', label: 'Tehran' },
-  { value: 'alborz', label: 'Alborz' },
-  { value: 'qazvin', label: 'Qazvin' },
-  { value: 'khorasaan_razavi', label: 'Khorasaan Razavi' }
-]
-const cityValues = cityOptions.map(item => item.value)
-
 let years: Array<number> = []
 for (let year = 1970; year <= new Date().getFullYear(); year++) years.push(year)
 

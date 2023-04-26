@@ -217,7 +217,7 @@ const ResumeDetailsTab = () => {
                 <Grid item xs={12} mt={5} sm={6}>
                   <FormControl fullWidth>
                     <InputLabel>Gender</InputLabel>
-                    <Select label='Gender' value='man' onChange={e => handleFormChange('gender', e.target.value)}>
+                    <Select label='Gender' value='men' onChange={e => handleFormChange('gender', e.target.value)}>
                       {genderOptions.map((item: any, index: number) => (
                         <MenuItem key={`gender-${index}`} value={item}>
                           {uppercaseFirstLetters(item)}

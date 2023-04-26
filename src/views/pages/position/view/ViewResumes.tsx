@@ -6,6 +6,7 @@ import ResumeKanbanColumn from './ResumeKanbanColumn'
 import ResumeKanbanCard from './ResumeKanbanCard'
 import resumes from 'src/data/resumeCards.json'
 import { DragDropContext } from 'react-beautiful-dnd'
+import { toastError } from 'src/helpers/functions'
 
 const ViewResumes = () => {
   const [open, setOpen] = useState<boolean>(false)
@@ -24,6 +25,11 @@ const ViewResumes = () => {
     if (!destination) return
 
     if (source.droppableId == destination.droppableId && source.index == destination.index) return
+
+    if (['4-hired', '5-rejected'].includes(destination.droppableId)) {
+      toastError('You Cannot Drop Resume Directly Into Hired Or Rejected!')
+      return
+    }
 
     const tempAllResumes = allResumes
 

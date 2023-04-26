@@ -3,7 +3,9 @@ import {
   Avatar,
   Box,
   Button,
+  ButtonGroup,
   Chip,
+  Fab,
   Grid,
   IconButton,
   ListItem,
@@ -24,6 +26,8 @@ import { getInitials } from 'src/@core/utils/get-initials'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import { useState } from 'react'
+import ResumeHiringDialog from './ResumeHiringDialog'
+import ResumeRejectingDialog from './ResumeRejectingDialog'
 
 const filter = createFilterOptions<any>()
 
@@ -56,6 +60,11 @@ const ResumeCardHeader = ({
 }: any) => {
   const [anchorElAddTag, setAnchorElAddTag] = useState<HTMLButtonElement | null>(null)
   const [newTag, setNewTag] = useState<any>({})
+  const [openResumeHiringDialog, setOpenResumeHiringDialog] = useState<boolean>(false)
+  const [openResumeRejectingDialog, setOpenResumeRejectingDialog] = useState<boolean>(false)
+
+  const handleCloseResumeHiringDialog = () => setOpenResumeHiringDialog(false)
+  const handleCloseResumeRejectingDialog = () => setOpenResumeRejectingDialog(false)
 
   const handleClickAddTag = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorElAddTag(event.currentTarget)
@@ -122,7 +131,7 @@ const ResumeCardHeader = ({
           borderRight: '1px solid rgba(76, 78, 100, 0.12)'
         }}
       >
-        <Grid item mt={4} lg={6} xs={12}>
+        <Grid item mt={4} lg={7} xs={12}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
             <CustomAvatar skin='light' color='primary' sx={{ mr: 3, width: 55, height: 55, fontSize: '1rem' }}>
               {getInitials('Mahdi Mehrjoo')}
@@ -135,18 +144,40 @@ const ResumeCardHeader = ({
             </Box>
           </Box>
         </Grid>
-        <Grid item mt={4} lg={6} xs={12} sx={{ textAlign: 'right' }}>
+        <Grid
+          item
+          mt={4}
+          lg={5}
+          xs={12}
+          sx={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'end' }}
+        >
           <Box>
-            <IconButton aria-label='capture screenshot'>
+            <IconButton aria-label='capture screenshot' sx={{ pl: 0 }}>
               <Icon icon='material-symbols:arrow-back-ios-new-rounded' />
             </IconButton>
             <Button size='small' variant='contained' color='info'>
               Technical Test
             </Button>
-            <IconButton aria-label='capture screenshot'>
+            <IconButton aria-label='capture screenshot' sx={{ pr: 0 }}>
               <Icon icon='material-symbols:arrow-forward-ios-rounded' />
             </IconButton>
           </Box>
+          <ButtonGroup size='small' variant='outlined' sx={{ mt: 3, mr: 1 }}>
+            <Button
+              startIcon={<Icon icon='mdi:tick-circle-outline' />}
+              color='success'
+              onClick={() => setOpenResumeHiringDialog(true)}
+            >
+              Hiring
+            </Button>
+            <Button
+              startIcon={<Icon icon='material-symbols:cancel-outline' />}
+              color='error'
+              onClick={() => setOpenResumeRejectingDialog(true)}
+            >
+              Reject
+            </Button>
+          </ButtonGroup>
         </Grid>
         <Grid item mt={4} lg={6} xs={12}>
           <Stack direction='row' spacing={1} mt={2}>
@@ -272,7 +303,7 @@ const ResumeCardHeader = ({
               ))}
           </Stack>
         </Grid>
-        <Grid item mt={4} lg={6} xs={12} sx={{ textAlign: 'right' }}>
+        <Grid item mt={7} lg={6} xs={12} sx={{ textAlign: 'right' }}>
           <Rating readOnly value={4} sx={{ mr: 5 }} name='read-only' size='small' />
         </Grid>
       </Grid>
@@ -326,6 +357,8 @@ const ResumeCardHeader = ({
           </Button>
         </Grid>
       </Grid>
+      <ResumeHiringDialog open={openResumeHiringDialog} handleClose={handleCloseResumeHiringDialog} />
+      <ResumeRejectingDialog open={openResumeRejectingDialog} handleClose={handleCloseResumeRejectingDialog} />
     </>
   )
 }
