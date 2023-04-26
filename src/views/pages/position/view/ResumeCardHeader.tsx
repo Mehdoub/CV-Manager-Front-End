@@ -337,24 +337,26 @@ const ResumeCardHeader = ({
           mt={3}
           sx={{ display: 'flex', justifyContent: 'end', alignItems: 'inherit', flexDirection: 'column' }}
         >
-          <Button
-            onClick={handleClickOpenAddCallDialog}
-            variant='outlined'
-            color='secondary'
-            startIcon={<Icon icon='ic:round-call' />}
-            sx={{ fontSize: '0.75rem', p: 2 }}
-          >
-            Add Call History
-          </Button>
-          <Button
-            onClick={handleClickOpenAddInterviewDialog}
-            sx={{ mt: 3, fontSize: '0.75rem', p: 2 }}
-            variant='outlined'
-            color='secondary'
-            startIcon={<Icon icon='mdi:virtual-meeting' />}
-          >
-            Add Interview
-          </Button>
+          <ButtonGroup orientation='vertical'>
+            <Button
+              onClick={handleClickOpenAddCallDialog}
+              variant='outlined'
+              color='secondary'
+              startIcon={<Icon icon='ic:round-call' />}
+              sx={{ fontSize: '0.75rem', p: 2 }}
+            >
+              Add Call History
+            </Button>
+            <Button
+              onClick={handleClickOpenAddInterviewDialog}
+              sx={{ mt: 3, fontSize: '0.75rem', p: 2 }}
+              variant='outlined'
+              color='secondary'
+              startIcon={<Icon icon='mdi:virtual-meeting' />}
+            >
+              Add Interview
+            </Button>
+          </ButtonGroup>
         </Grid>
       </Grid>
       <ResumeHiringDialog open={openResumeHiringDialog} handleClose={handleCloseResumeHiringDialog} />

@@ -116,7 +116,7 @@ const AddCallHistoryDialog = ({ open, handleClose }: AddCallHistoryDialogProps) 
                     locale={persianDateFa}
                     required
                     style={{
-                      backgroundColor: theme.palette.mode == 'dark' ? '#30334E' : '#F7F7F9',
+                      backgroundColor: theme.palette.mode == 'dark' ? '#30334E' : '',
                       color:
                         theme.palette.mode == 'light'
                           ? 'rgba(76, 78, 100, 0.87) !important'
@@ -129,38 +129,38 @@ const AddCallHistoryDialog = ({ open, handleClose }: AddCallHistoryDialogProps) 
                   />
                 </FormControl>
               </Grid>
-              {callResult == 'recall' && (
-                <Grid item xs={6}>
-                  <FormControl fullWidth>
-                    <Typography fontSize={14} sx={{ fontWeight: 400, mb: 1, ml: 1, color: 'text.secondary' }}>
-                      {`${uppercaseFirstLetters('Recall Date')}`}
-                    </Typography>
-                    <DatePicker
-                      value={recallDate}
-                      onChange={setRecallDate}
-                      format='MM/DD/YYYY HH:mm:ss'
-                      plugins={[<TimePicker position='bottom' />]}
-                      inputClass='rmdp-input'
-                      placeholder='Click To Select Time'
-                      minDate={new DateObject()}
-                      calendar={persianDate}
-                      locale={persianDateFa}
-                      required
-                      style={{
-                        backgroundColor: theme.palette.mode == 'dark' ? '#30334E' : '#F7F7F9',
-                        color:
-                          theme.palette.mode == 'light'
-                            ? 'rgba(76, 78, 100, 0.87) !important'
-                            : theme.palette.secondary.dark,
-                        borderColor:
-                          theme.palette.mode == 'light'
-                            ? 'rgba(76, 78, 100, 0.22) !important'
-                            : theme.palette.secondary.dark
-                      }}
-                    />
-                  </FormControl>
-                </Grid>
-              )}
+              <Grid item xs={6}>
+                <FormControl fullWidth>
+                  <Typography fontSize={14} sx={{ fontWeight: 400, mb: 1, ml: 1, color: 'text.secondary' }}>
+                    {`${uppercaseFirstLetters('Recall Date')}`}
+                  </Typography>
+                  <DatePicker
+                    disabled={callResult !== 'recall'}
+                    value={recallDate}
+                    onChange={setRecallDate}
+                    format='MM/DD/YYYY HH:mm:ss'
+                    plugins={[<TimePicker position='bottom' />]}
+                    inputClass='rmdp-input'
+                    placeholder='Click To Select Time'
+                    minDate={new DateObject()}
+                    calendar={persianDate}
+                    locale={persianDateFa}
+                    required
+                    style={{
+                      backgroundColor:
+                        callResult !== 'recall' ? '#F7F7F9' : theme.palette.mode == 'dark' ? '#30334E' : '',
+                      color:
+                        theme.palette.mode == 'light'
+                          ? 'rgba(76, 78, 100, 0.87) !important'
+                          : theme.palette.secondary.dark,
+                      borderColor:
+                        theme.palette.mode == 'light'
+                          ? 'rgba(76, 78, 100, 0.22) !important'
+                          : theme.palette.secondary.dark
+                    }}
+                  />
+                </FormControl>
+              </Grid>
               <Grid item xs={12} mt={5}>
                 <FormControl fullWidth>
                   <InputLabel>Result</InputLabel>

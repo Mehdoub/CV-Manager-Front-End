@@ -135,7 +135,7 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                     minDate={new DateObject()}
                     required
                     style={{
-                      backgroundColor: theme.palette.mode == 'dark' ? '#30334E' : '#F7F7F9',
+                      backgroundColor: theme.palette.mode == 'dark' ? '#30334E' : '',
                       color:
                         theme.palette.mode == 'light'
                           ? 'rgba(76, 78, 100, 0.87) !important'
@@ -165,7 +165,7 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                     minDate={new DateObject()}
                     required
                     style={{
-                      backgroundColor: theme.palette.mode == 'dark' ? '#30334E' : '#F7F7F9',
+                      backgroundColor: theme.palette.mode == 'dark' ? '#30334E' : '',
                       color:
                         theme.palette.mode == 'light'
                           ? 'rgba(76, 78, 100, 0.87) !important'
