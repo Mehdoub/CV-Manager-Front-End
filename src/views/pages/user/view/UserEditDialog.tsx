@@ -1,4 +1,5 @@
 import {
+  Autocomplete,
   Box,
   Button,
   Dialog,
@@ -8,7 +9,7 @@ import {
   FormControl,
   FormHelperText,
   Grid,
-  InputAdornment,
+  ListItem,
   TextField,
   Typography,
   styled
@@ -62,6 +63,7 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
   const { data: userDataFromView } = useSelector((state: any) => state.user)
   const { isAvailable } = useSelector((state: any) => state.usernameCheck)
   const { status: userEditStatus, loading: userEditLoading } = useSelector((state: any) => state.userEdit)
+  const { data: roles } = useSelector((state: any) => state.roles)
 
   const {
     control,
@@ -104,7 +106,7 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
       setValue('firstname', user?.firstname)
       setValue('lastname', user?.lastname)
       setValue('username', user?.username)
-      setValue('email', user?.email)
+      setValue('email', user?.email ?? '')
     }
   }, [user])
 
@@ -250,19 +252,6 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
             </Grid>
             <Grid item xs={12} md={6} mt={3}>
               <FormControl fullWidth>
-                <TextField
-                  label='Mobile'
-                  placeholder='9123456789'
-                  value={user?.mobile?.substring(2)}
-                  InputProps={{
-                    startAdornment: <InputAdornment position='start'>IR (+98)</InputAdornment>
-                  }}
-                  disabled
-                />
-              </FormControl>
-            </Grid>
-            <Grid item xs={12} md={6} mt={3}>
-              <FormControl fullWidth>
                 <Controller
                   name='username'
                   control={control}
@@ -289,6 +278,22 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
                   ''
                 )}
               </FormControl>
+            </Grid>
+            <Grid item xs={12}>
+              <Autocomplete
+                options={roles}
+                id='autocomplete-size-small-multi'
+                defaultValue={{ name: user?.role ? user?.role[0] : '' }}
+                renderInput={params => <TextField {...params} label='Edit Role' placeholder='Search Roles ...' />}
+                renderOption={(props, role: any) => <ListItem {...props}>{role.name}</ListItem>}
+                onChange={(event, newValue) => {
+                  console.log('changed')
+                }}
+                selectOnFocus
+                clearOnBlur
+                handleHomeEndKeys
+                getOptionLabel={option => option.name}
+              />
             </Grid>
           </Grid>
           <DialogActions sx={{ justifyContent: 'center', pb: 0, mt: 5 }}>

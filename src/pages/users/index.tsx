@@ -234,45 +234,6 @@ const UserList = () => {
               <Icon icon='mdi:pencil-outline' fontSize={20} />
             </div>
           </BootstrapTooltip>
-          <BootstrapTooltip title='edit role' placement='top'>
-            <div style={{ cursor: 'pointer' }} onClick={handleClickAddRole as any}>
-              <Icon icon='icon-park-outline:permissions' fontSize={20} />
-            </div>
-          </BootstrapTooltip>
-          <Popover
-            id='add-Role'
-            open={openAddRole}
-            anchorEl={anchorElAddRole}
-            onClose={handleCloseAddRole}
-            anchorOrigin={{
-              vertical: 'bottom',
-              horizontal: 'left'
-            }}
-            PaperProps={{
-              style: {
-                width: '15%'
-              }
-            }}
-          >
-            <Grid container xs={12} p={5}>
-              <Grid item xs={12}>
-                <Autocomplete
-                  options={roles}
-                  id='autocomplete-size-small-multi'
-                  defaultValue={{ name: row?.role[0] }}
-                  renderInput={params => <TextField {...params} label='Edit Role' placeholder='Search Roles ...' />}
-                  renderOption={(props, role: any) => <ListItem {...props}>{role.name}</ListItem>}
-                  onChange={(event, newValue) => {
-                    console.log('changed')
-                  }}
-                  selectOnFocus
-                  clearOnBlur
-                  handleHomeEndKeys
-                  getOptionLabel={option => option.name}
-                />
-              </Grid>
-            </Grid>
-          </Popover>
         </Stack>
       )
     }
