@@ -1,8 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import ApiRequest from "src/helpers/ApiRequest"
-import { clearStatesAction, createExtraReducers, popObjectItemByKey, sliceInitialStateWithStatus } from "src/helpers/functions"
+import { clearStatesAction, createExtraReducers, popObjectItemByKey, sliceInitialStateWithData, sliceInitialStateWithStatus } from "src/helpers/functions"
 import { ResumeFormData } from "src/views/pages/position/view/AddResumeDialog"
-
 
 
 export const createResume: any = createAsyncThunk('createResume', async (data: ResumeFormData, { rejectWithValue }) => {
@@ -50,6 +49,42 @@ const resumeCreateSlice = createSlice({
 })
 
 
+export const editResume: any = createAsyncThunk('editResume', async (data: any, { rejectWithValue }) => {
+  try {
+    const resumeAvatar = popObjectItemByKey(data, 'avatar')
+    const resumeId = popObjectItemByKey(data, 'resumeId')
+
+    const response = await ApiRequest.builder().auth().request('patch', `resumes/${resumeId}`, data)
+
+    const newResumeId = response?.data?.data[0]?.id
+
+    if (resumeAvatar && newResumeId) {
+      await ApiRequest.builder()
+        .auth()
+        .contentType('multipart/form-data')
+        .request('patch', `resumes/${newResumeId}/avatar`, { avatar: resumeAvatar })
+    }
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const resumeEditSlice = createSlice({
+  name: 'resumeEdit',
+  initialState: sliceInitialStateWithStatus,
+  reducers: {
+    clearEditResume: (state) => {
+      clearStatesAction(state)
+    }
+  },
+  extraReducers: (builder) => {
+    createExtraReducers(builder, editResume)
+  }
+})
+
+
 export const addResumeFiles: any = createAsyncThunk('addResumeFiles', async (data: { resumeId: string, resumeFiles: Array<any> }, { rejectWithValue }) => {
   try {
     let response
@@ -83,8 +118,32 @@ const resumeAddFilesSlice = createSlice({
   }
 })
 
+
+export const getResume: any = createAsyncThunk('getResume', async (resumeId: string, { rejectWithValue }) => {
+  try {
+    const response = await ApiRequest.builder().auth().request('get', `resumes/${resumeId}`)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const resumeSlice = createSlice({
+  name: 'resume',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    createExtraReducers(builder, getResume, true, true)
+  }
+})
+
+
 export const { clearCreateResume } = resumeCreateSlice.actions
+export const { clearEditResume } = resumeEditSlice.actions
 export const { clearResumeAddFiles } = resumeAddFilesSlice.actions
 
 export const resumeCreateReducer = resumeCreateSlice.reducer
+export const resumeEditReducer = resumeEditSlice.reducer
 export const resumeAddFilesReducer = resumeAddFilesSlice.reducer
+export const resumeReducer = resumeSlice.reducer

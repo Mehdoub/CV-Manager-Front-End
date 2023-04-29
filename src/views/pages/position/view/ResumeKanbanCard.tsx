@@ -13,6 +13,8 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 import Icon from 'src/@core/components/icon'
 import { getInitials } from 'src/@core/utils/get-initials'
 import { Draggable } from 'react-beautiful-dnd'
+import { useDispatch } from 'react-redux'
+import { getResume } from 'src/store/resume'
 
 interface ResumeKanbanCardProps {
   cardData: any
@@ -21,6 +23,12 @@ interface ResumeKanbanCardProps {
 }
 
 const ResumeKanbanCard = ({ cardData: card, setOpen, index }: ResumeKanbanCardProps) => {
+  const dispatch = useDispatch()
+
+  const handleResumeCardClick = (resumeId: string) => {
+    dispatch(getResume(resumeId))
+  }
+
   const [interviewDateText, interviewColor, interviewDateString] = calcInterviewRemainingTime(
     '2023-09-18T07:09:11.498Z',
     '2023-09-18T11:09:11.498Z'
@@ -41,7 +49,10 @@ const ResumeKanbanCard = ({ cardData: card, setOpen, index }: ResumeKanbanCardPr
             // backgroundColor: theme.palette.mode == 'dark' ? '#30334E' : '#F7F7F9',
             position: 'relative'
           }}
-          onClick={() => setOpen(true)}
+          onClick={() => {
+            setOpen(true)
+            handleResumeCardClick(card.id)
+          }}
         >
           <Typography
             sx={{

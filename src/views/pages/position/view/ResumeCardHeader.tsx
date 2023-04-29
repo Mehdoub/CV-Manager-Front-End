@@ -24,7 +24,7 @@ import {
   Typography,
   createFilterOptions
 } from '@mui/material'
-import { getMaxTextLen } from 'src/helpers/functions'
+import { getFullName, getImagePath, getMaxTextLen, uppercaseFirstLetters } from 'src/helpers/functions'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import CustomChip from 'src/@core/components/mui/chip'
@@ -35,6 +35,8 @@ import TabList from '@mui/lab/TabList'
 import { useState } from 'react'
 import ResumeHiringDialog from './ResumeHiringDialog'
 import ResumeRejectingDialog from './ResumeRejectingDialog'
+import { useSelector } from 'react-redux'
+import { resumesStates } from './ViewResumes'
 
 const filter = createFilterOptions<any>()
 
@@ -88,6 +90,9 @@ const ResumeCardHeader = ({
   const [openResumeHiringDialog, setOpenResumeHiringDialog] = useState<boolean>(false)
   const [openResumeRejectingDialog, setOpenResumeRejectingDialog] = useState<boolean>(false)
 
+  const { data: resume } = useSelector((state: any) => state.resume)
+
+  const stateTitles = Object.entries(resumesStates).map(([key, value]: any) => key)
   const handleCloseResumeHiringDialog = () => setOpenResumeHiringDialog(false)
   const handleCloseResumeRejectingDialog = () => setOpenResumeRejectingDialog(false)
 
@@ -167,14 +172,21 @@ const ResumeCardHeader = ({
       >
         <Grid item mt={4} lg={7} xs={12}>
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
-            <CustomAvatar skin='light' color='primary' sx={{ mr: 3, width: 55, height: 55, fontSize: '1rem' }}>
-              {getInitials('Mahdi Mehrjoo')}
+            <CustomAvatar
+              src={resume?.avatar ? getImagePath(resume?.avatar) : ''}
+              skin='light'
+              color='primary'
+              sx={{ mr: 3, width: 55, height: 55, fontSize: '1rem' }}
+            >
+              {!resume?.avatar && getInitials(getFullName(resume))}
             </CustomAvatar>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography fontSize={18} fontWeight={500}>
-                Mahdi Mehrjoo
+                {getFullName(resume)}
               </Typography>
-              <Typography variant='body2'>Favin • BPM</Typography>
+              <Typography variant='body2'>
+                {resume.company_id} • {resume.project_id}
+              </Typography>
             </Box>
           </Box>
         </Grid>
@@ -186,15 +198,34 @@ const ResumeCardHeader = ({
           sx={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'end' }}
         >
           <Box>
-            <IconButton aria-label='capture screenshot' sx={{ pl: 0 }}>
-              <Icon icon='material-symbols:arrow-back-ios-new-rounded' />
-            </IconButton>
-            <Button size='small' variant='contained' color='info'>
-              Technical Test
+            {stateTitles.indexOf(resume?.status) > 0 && (
+              <BootstrapTooltip
+                placement='top'
+                title={uppercaseFirstLetters(resumesStates[stateTitles[stateTitles.indexOf(resume?.status) - 1]].title)}
+              >
+                <IconButton aria-label='capture screenshot' sx={{ pl: 0 }}>
+                  <Icon icon='material-symbols:arrow-back-ios-new-rounded' />
+                </IconButton>
+              </BootstrapTooltip>
+            )}
+            <Button
+              size='small'
+              variant='contained'
+              color={(resume?.status && resumesStates[resume?.status]?.color) ?? 'info'}
+            >
+              {resume?.status && uppercaseFirstLetters(resumesStates[resume?.status]?.title)}
             </Button>
-            <IconButton aria-label='capture screenshot' sx={{ pr: 0 }}>
-              <Icon icon='material-symbols:arrow-forward-ios-rounded' />
-            </IconButton>
+
+            {stateTitles.indexOf(resume?.status) < stateTitles.length - 1 && (
+              <BootstrapTooltip
+                placement='top'
+                title={uppercaseFirstLetters(resumesStates[stateTitles[stateTitles.indexOf(resume?.status) + 1]].title)}
+              >
+                <IconButton aria-label='capture screenshot' sx={{ pr: 0 }}>
+                  <Icon icon='material-symbols:arrow-forward-ios-rounded' />
+                </IconButton>
+              </BootstrapTooltip>
+            )}
           </Box>
           <ButtonGroup size='small' variant='outlined' sx={{ mt: 3, mr: 1 }}>
             <Button
@@ -338,7 +369,7 @@ const ResumeCardHeader = ({
           </Stack>
         </Grid>
         <Grid item mt={7} lg={6} xs={12} sx={{ textAlign: 'right' }}>
-          <Rating readOnly value={4} sx={{ mr: 5 }} name='read-only' size='small' />
+          <Rating readOnly value={resume?.rating ?? 0} sx={{ mr: 5 }} name='read-only' size='small' />
         </Grid>
       </Grid>
       <Grid lg={6} xs={12} item container sx={{ textAlign: 'left', p: 5 }}>

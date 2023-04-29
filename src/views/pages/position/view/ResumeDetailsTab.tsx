@@ -1,65 +1,103 @@
 // ** React Imports
-import { useState, ElementType, ChangeEvent } from 'react'
+import { useState, Fragment, useEffect } from 'react'
 
 // ** MUI Imports
-import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
-import Card from '@mui/material/Card'
 import Select from '@mui/material/Select'
-import Dialog from '@mui/material/Dialog'
 import Divider from '@mui/material/Divider'
 import { styled } from '@mui/material/styles'
-import Checkbox from '@mui/material/Checkbox'
 import MenuItem from '@mui/material/MenuItem'
 import TextField from '@mui/material/TextField'
-import Typography from '@mui/material/Typography'
+import Typography, { TypographyProps } from '@mui/material/Typography'
 import InputLabel from '@mui/material/InputLabel'
 import CardHeader from '@mui/material/CardHeader'
 import FormControl from '@mui/material/FormControl'
 import CardContent from '@mui/material/CardContent'
-import DialogContent from '@mui/material/DialogContent'
-import DialogActions from '@mui/material/DialogActions'
-import FormHelperText from '@mui/material/FormHelperText'
 import InputAdornment from '@mui/material/InputAdornment'
-import Button, { ButtonProps } from '@mui/material/Button'
-import FormControlLabel from '@mui/material/FormControlLabel'
-
-// ** Third Party Imports
-import { useForm, Controller } from 'react-hook-form'
-
-// ** Icon Imports
+import Button from '@mui/material/Button'
 import Icon from 'src/@core/components/icon'
+import {
+  Autocomplete,
+  Avatar,
+  Box,
+  CircularProgress,
+  FormHelperText,
+  IconButton,
+  Link,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Slider
+} from '@mui/material'
+import * as yup from 'yup'
+import {
+  getAllowedFormats,
+  getImagePath,
+  mobileHandler,
+  popObjectItemByKey,
+  toastError,
+  uppercaseFirstLetters
+} from 'src/helpers/functions'
+import { Controller, useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useDropzone } from 'react-dropzone'
+import { useDispatch } from 'react-redux'
+import { clearCreateResume, clearEditResume, createResume, editResume, getResume } from 'src/store/resume'
 import { useSelector } from 'react-redux'
-import { uppercaseFirstLetters } from 'src/helpers/functions'
+import { useRouter } from 'next/router'
+import { getCitiesByProvince, getProvinces } from 'src/store/province'
+import { getPositionResumes } from 'src/store/position'
+import { getProjectPositions, getProjects } from 'src/store/project'
 
-interface Data {
-  email: string
-  state: string
-  address: string
-  country: string
-  lastName: string
-  currency: string
-  language: string
-  timezone: string
-  firstName: string
-  organization: string
-  number: number | string
-  zipCode: number | string
+interface FileProp {
+  name: string
+  type: string
+  size: number
 }
 
-const initialData: Data = {
-  state: '',
-  number: '',
-  address: '',
-  zipCode: '',
-  lastName: 'Doe',
-  currency: 'usd',
-  firstName: 'John',
-  language: 'arabic',
-  timezone: 'gmt-12',
-  country: 'australia',
-  email: 'john.doe@example.com',
-  organization: 'ThemeSelection'
+let years: Array<number> = []
+for (let year = 1970; year <= new Date().getFullYear(); year++) years.push(year)
+
+export interface ResumeFormData {
+  firstname: string
+  lastname: string
+  gender: string
+  education: string
+  marital_status: string
+  military_status?: string
+  work_province: string
+  work_city: string
+  residence_province: string
+  residence_city: string
+  birth_year: number
+  work_experience?: number
+  min_salary?: number
+  max_salary?: number
+  mobile: string
+  phone?: string
+  email: string
+  avatar?: any
+  resumeFiles?: any
+  position_id?: any
+}
+
+const defaultValues = {
+  firstname: '',
+  lastname: '',
+  gender: '',
+  education: '',
+  marital_status: '',
+  military_status: '',
+  // work_province: '',
+  // work_city: '',
+  // residence_province: '',
+  // residence_city: '',
+  birth_year: years.at(-1) as number,
+  work_experience: years.at(-1) as number,
+  mobile: '',
+  phone: '',
+  email: ''
 }
 
 const ImgStyled = styled('img')(({ theme }) => ({
@@ -69,79 +107,30 @@ const ImgStyled = styled('img')(({ theme }) => ({
   borderRadius: theme.shape.borderRadius
 }))
 
-const ButtonStyled = styled(Button)<ButtonProps & { component?: ElementType; htmlFor?: string }>(({ theme }) => ({
-  marginTop: theme.spacing(4),
+const HeadingTypography = styled(Typography)<TypographyProps>(({ theme }) => ({
+  marginBottom: theme.spacing(5),
   [theme.breakpoints.down('sm')]: {
-    width: '100%',
-    textAlign: 'center'
-  }
-}))
-
-const ResetButtonStyled = styled(Button)<ButtonProps>(({ theme }) => ({
-  marginTop: theme.spacing(4),
-  [theme.breakpoints.down('sm')]: {
-    width: '100%',
-    marginLeft: 0,
-    textAlign: 'center',
-    marginTop: theme.spacing(4)
+    marginBottom: theme.spacing(4)
   }
 }))
 
 const ResumeDetailsTab = () => {
-  // ** State
-  const [open, setOpen] = useState<boolean>(false)
-  const [inputValue, setInputValue] = useState<string>('')
-  const [userInput, setUserInput] = useState<string>('yes')
-  const [formData, setFormData] = useState<any>(initialData)
-  const [imgSrc, setImgSrc] = useState<string>('/images/avatars/1.png')
-  const [secondDialogOpen, setSecondDialogOpen] = useState<boolean>(false)
+  const [avatar, setAvatar] = useState<File[]>([])
+  const [resumeFiles, setResumeFiles] = useState<File[]>([])
+  const [gender, setGender] = useState<string>('')
+  const [salaryRange, setSalaryRange] = useState<any>([9000000, 20000000] || '')
+  const [workCities, setWorkCities] = useState([])
+  const [residanceCities, setResidanceCities] = useState([])
+  const [fillCities, setFillCities] = useState('')
+  const [resumePosition, setResumePosition] = useState<any>({})
+  const [positionErr, setPositionErr] = useState<string>('')
 
-  // ** Hooks
-  const {
-    control,
-    handleSubmit,
-    formState: { errors }
-  } = useForm({ defaultValues: { checkbox: false } })
-
-  const handleClose = () => setOpen(false)
-
-  const handleSecondDialogClose = () => setSecondDialogOpen(false)
-
-  const onSubmit = () => setOpen(true)
-
-  const handleConfirmation = (value: string) => {
-    handleClose()
-    setUserInput(value)
-    setSecondDialogOpen(true)
-  }
-
-  const handleInputImageChange = (file: ChangeEvent) => {
-    const reader = new FileReader()
-    const { files } = file.target as HTMLInputElement
-    if (files && files.length !== 0) {
-      reader.onload = () => setImgSrc(reader.result as string)
-      reader.readAsDataURL(files[0])
-
-      if (reader.result !== null) {
-        setInputValue(reader.result as string)
-      }
-    }
-  }
-  const handleInputImageReset = () => {
-    setInputValue('')
-    setImgSrc('/images/avatars/1.png')
-  }
-
-  const handleFormChange = (field: any, value: any) => {
-    setFormData({ ...formData, [field]: value })
-  }
-
-  let years = []
-  for (let year = 1970; year <= new Date().getFullYear(); year++) years.push(year)
-
-  let salaries = []
-  for (let salary = 10; salary <= 50; salary++) salaries.push(salary * 1000000)
-
+  const { data: resume } = useSelector((state: any) => state.resume)
+  const { data: provinceCities } = useSelector((state: any) => state.citiesByProvince)
+  const { data: provinces } = useSelector((state: any) => state.provinces)
+  const { data: positions, loading: loadingSearchPositions } = useSelector((state: any) => state.projectPositions)
+  const { status: statusResumeEdit, loading: loadingResumeEdit } = useSelector((state: any) => state.resumeEdit)
+  const { data: projects, loading: loadingSearchProjects } = useSelector((state: any) => state.projectsList)
   const {
     data: {
       system: {
@@ -152,6 +141,197 @@ const ResumeDetailsTab = () => {
       }
     }
   } = useSelector((state: any) => state.constants)
+
+  const {
+    query: { positionId }
+  } = useRouter()
+
+  const provincesValues = provinces.length > 0 ? provinces.map((province: any) => province._id) : []
+  const workCitiesValues = workCities.length > 0 ? workCities.map((workCity: any) => workCity._id) : []
+  const residanceCitiesValues =
+    residanceCities.length > 0 ? residanceCities.map((residanceCity: any) => residanceCity._id) : []
+
+  useEffect(() => {
+    dispatch(getProvinces())
+  }, [])
+
+  useEffect(() => {
+    if (provinceCities) {
+      if (fillCities == 'work') {
+        setWorkCities(provinceCities)
+        setFillCities('')
+      } else if (fillCities == 'residance') {
+        setResidanceCities(provinceCities)
+        setFillCities('')
+      }
+    }
+  }, [provinceCities])
+
+  const dispatch = useDispatch()
+
+  const schema = yup.object().shape(
+    {
+      firstname: yup.string().label('First name').min(3).required(),
+      lastname: yup.string().label('Last name').min(3).required(),
+      gender: yup.string().label('Gender').oneOf(genderOptions).required(),
+      education: yup.string().label('Education').oneOf(educationOptions).required(),
+      marital_status: yup.string().label('Marital Status').oneOf(maritalOptions).required(),
+      military_status: yup.string().when('gender', (val: any) => {
+        if (val == 'men') {
+          return yup.string().label('Military Status').oneOf(militaryOptions).required()
+        } else {
+          return yup.string().notRequired()
+        }
+      }),
+      // work_province: yup.string().label('Work Province').oneOf(provincesValues).required(),
+      // work_city: yup.string().label('Work City').oneOf(workCitiesValues).required(),
+      // residence_province: yup.string().label('Residence Province').oneOf(provincesValues).required(),
+      // residence_city: yup.string().label('Residence City').oneOf(residanceCitiesValues).required(),
+      birth_year: yup.number().label('Birth Year').oneOf(years).required(),
+      work_experience: yup.number().when('work_experience', (val: any) => {
+        if (val) {
+          return yup.number().label('Work Started Year').oneOf(years).required()
+        } else {
+          return yup.number().notRequired()
+        }
+      }),
+      mobile: yup
+        .string()
+        .label('Mobile')
+        .matches(/^[\d]{10}$/, 'Mobile Is Not Valid (example: 912 345 6789)')
+        .required(),
+      phone: yup.string().when('phone', (val: any) => {
+        if (val) {
+          return yup
+            .string()
+            .label('Phone Number')
+            .matches(/^[\d]{10}$/, 'Phone Number Is Not Valid (example: 21 8844 6623)')
+            .required()
+        } else {
+          return yup.string().notRequired()
+        }
+      }),
+      email: yup.string().label('Email').email('Email Is Not Valid!').required()
+    },
+    [
+      ['military_status', 'military_status'],
+      ['work_experience', 'work_experience'],
+      ['phone', 'phone']
+    ]
+  )
+
+  // ** Hooks
+  // Upload Avatar
+  const { getRootProps, getInputProps } = useDropzone({
+    maxFiles: 1,
+    multiple: false,
+    maxSize: 2000000,
+    accept: {
+      'image/*': getAllowedFormats('image', true)
+    },
+    onDrop: (acceptedFiles: File[]) => {
+      setAvatar(acceptedFiles.map((file: File) => Object.assign(file)))
+    },
+    onDropRejected: () => {
+      toastError('You can only upload maximum size of 2 MB.')
+    }
+  })
+
+  useEffect(() => {
+    if (statusResumeEdit) {
+      dispatch(clearEditResume())
+      dispatch(getPositionResumes(positionId))
+      dispatch(getResume(resume?.id))
+    }
+  }, [statusResumeEdit])
+
+  const renderFilePreview = (file: any) => {
+    if (file?.type?.startsWith('image')) {
+      return <ImgStyled alt={file.name} src={URL.createObjectURL(file as any)} />
+    } else {
+      return <Icon icon='mdi:file-document-outline' />
+    }
+  }
+
+  const handleRemoveFile = (file: FileProp) => {
+    const uploadedFiles = resumeFiles
+    const filtered = uploadedFiles.filter((i: FileProp) => i.name !== file.name)
+    setResumeFiles([...filtered])
+  }
+
+  const fileList = resumeFiles.map((file: FileProp) => (
+    <ListItem key={file.name} style={{ border: '1px solid #e2e2e2', borderRadius: '16px', marginTop: '8px' }}>
+      <Grid item xs={4} sm={1} className='file-preview'>
+        {renderFilePreview(file)}
+      </Grid>
+      <Grid item xs={12}>
+        <Typography className='file-name'>{file.name}</Typography>
+        <Typography className='file-size' variant='body2'>
+          {Math.round(file.size / 100) / 10 > 1000
+            ? (Math.round(file.size / 100) / 10000).toFixed(1) + ' MB'
+            : (Math.round(file.size / 100) / 10).toFixed(1)}{' '}
+          KB
+        </Typography>
+      </Grid>
+      <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'right' }}>
+        <IconButton onClick={() => handleRemoveFile(file)}>
+          <Icon icon='mdi:close' fontSize={20} />
+        </IconButton>
+      </Grid>
+    </ListItem>
+  ))
+
+  const {
+    reset,
+    control,
+    handleSubmit,
+    formState: { errors },
+    setValue
+  } = useForm({
+    defaultValues,
+    mode: 'onBlur',
+    resolver: yupResolver(schema)
+  })
+
+  useEffect(() => {
+    if (resume?._id) {
+      setInitialValues()
+    }
+  }, [resume])
+
+  const setInitialValues = () => {
+    setValue('firstname', resume?.firstname)
+    setValue('lastname', resume?.lastname)
+    setValue('gender', resume?.gender)
+    setValue('mobile', resume?.mobile.substring(2))
+    setValue('email', resume?.email)
+    setValue('phone', resume?.phone)
+    setValue('birth_year', resume?.birth_year)
+    setValue('work_experience', resume?.work_experience)
+    setValue('marital_status', resume?.marital_status)
+    setValue('education', resume?.education)
+    setValue('military_status', resume?.military_status)
+    // setValue('work_city', resume?.work_city)
+    // setValue('residence_city', resume?.residence_city)
+    setSalaryRange([resume?.min_salary, resume?.max_salary])
+    setGender(resume?.gender)
+  }
+
+  const submitHandler = (data: any) => {
+    data.mobile = '98' + data.mobile
+    if (avatar[0]) {
+      data = { ...data, avatar: avatar[0] }
+    }
+    popObjectItemByKey(data, 'work_province')
+    popObjectItemByKey(data, 'residence_province')
+    ;[data.min_salary, data.max_salary] = salaryRange
+    dispatch(editResume({ ...data, resumeId: resume?._id }))
+  }
+
+  const handleCities = (provinceId: string, field: string) => {
+    setFillCities(field)
+    dispatch(getCitiesByProvince(provinceId))
+  }
 
   return (
     <Grid
@@ -164,263 +344,494 @@ const ResumeDetailsTab = () => {
       <Grid item xs={12}>
         <>
           <CardHeader title='Personal Information' />
-          <form>
-            <CardContent sx={{ pt: 0 }}>
-              <Grid container sx={{ display: 'flex', alignItems: 'center' }}>
-                <ImgStyled src={imgSrc} alt='Profile Pic' />
-                <Grid
-                  item
-                  xs={12}
-                  md={6}
-                  mt={4}
-                  sx={{ alignItems: 'baseline', display: 'flex', flexDirection: 'column' }}
-                >
-                  <ButtonStyled component='label' variant='contained' htmlFor='account-settings-upload-image'>
-                    Upload New Photo
-                    <input
-                      hidden
-                      type='file'
-                      value={inputValue}
-                      accept='image/png, image/jpeg'
-                      onChange={handleInputImageChange}
-                      id='account-settings-upload-image'
-                    />
-                  </ButtonStyled>
-                  <ResetButtonStyled color='secondary' variant='outlined' onClick={handleInputImageReset}>
-                    Reset
-                  </ResetButtonStyled>
-                  <Typography sx={{ mt: 5, color: 'text.disabled' }}>Allowed PNG or JPEG. Max size of 800K.</Typography>
-                </Grid>
-              </Grid>
-            </CardContent>
-            {/* <Divider /> */}
+          <form onSubmit={handleSubmit(submitHandler)}>
+            <Fragment>
+              <div {...getRootProps({ className: 'dropzone' })}>
+                <input {...getInputProps()} />
+                <Box sx={{ textAlign: 'center' }}>
+                  <Typography sx={{ marginBottom: '10px', fontWeight: 200 }} variant='h6'>
+                    Drop Avatar Here Or Click To Upload
+                  </Typography>
+                  {avatar[0] ? (
+                    renderFilePreview(avatar[0])
+                  ) : resume?.avatar ? (
+                    <ImgStyled src={getImagePath(resume?.avatar)} alt='Profile Pic' />
+                  ) : (
+                    <ImgStyled src={'/images/avatars/1.png'} alt='Profile Pic' />
+                  )}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      textAlign: ['center', 'center', 'inherit'],
+                      margin: '10px 0'
+                    }}
+                  >
+                    <Typography sx={{ fontSize: '12px' }} color='textSecondary'>
+                      Allowed{getAllowedFormats()}
+                    </Typography>
+                    <Typography sx={{ fontSize: '12px' }} color='textSecondary'>
+                      Max size of 2 MB
+                    </Typography>
+                  </Box>
+                </Box>
+              </div>
+            </Fragment>
+            <Divider />
             <CardContent>
               <Grid container spacing={6}>
-                <Grid item xs={12} mt={5} sm={6}>
-                  <TextField
-                    fullWidth
-                    label='First Name'
-                    placeholder='John'
-                    value={formData.firstName}
-                    onChange={e => handleFormChange('firstname', e.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={12} mt={5} sm={6}>
-                  <TextField
-                    fullWidth
-                    label='Last Name'
-                    placeholder='Doe'
-                    value={formData.lastName}
-                    onChange={e => handleFormChange('lastname', e.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={12} mt={5} sm={6}>
+                <Grid item xs={12} mt={5} md={4}>
                   <FormControl fullWidth>
-                    <InputLabel>Gender</InputLabel>
-                    <Select label='Gender' value='men' onChange={e => handleFormChange('gender', e.target.value)}>
-                      {genderOptions.map((item: any, index: number) => (
-                        <MenuItem key={`gender-${index}`} value={item}>
-                          {uppercaseFirstLetters(item)}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} mt={5} sm={6}>
-                  <TextField
-                    fullWidth
-                    type='number'
-                    label='Mobile'
-                    value={formData.number}
-                    placeholder='919 123 4567'
-                    onChange={e => handleFormChange('mobile', e.target.value)}
-                    InputProps={{ startAdornment: <InputAdornment position='start'>IR (+98)</InputAdornment> }}
-                  />
-                </Grid>
-                <Grid item xs={12} mt={5} sm={6}>
-                  <TextField
-                    fullWidth
-                    type='email'
-                    label='Email'
-                    value={formData.email}
-                    placeholder='john.doe@example.com'
-                    onChange={e => handleFormChange('email', e.target.value)}
-                  />
-                </Grid>
-                <Grid item xs={12} mt={5} sm={6}>
-                  <TextField
-                    fullWidth
-                    type='number'
-                    label='Phone Number'
-                    value={formData.number}
-                    placeholder='8846 7889'
-                    onChange={e => handleFormChange('phone', e.target.value)}
-                    InputProps={{ startAdornment: <InputAdornment position='start'>IR (+98)</InputAdornment> }}
-                  />
-                </Grid>
-                <Grid item xs={12} mt={5} sm={4}>
-                  <FormControl fullWidth>
-                    <InputLabel>Birth Year</InputLabel>
-                    <Select
-                      label='Birth Year'
-                      value={2000}
-                      onChange={e => handleFormChange('birth_year', e.target.value)}
-                    >
-                      {years.map((item: number, index: number) => (
-                        <MenuItem key={index} value={item}>
-                          {item}
-                        </MenuItem>
-                      ))}
-                    </Select>
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} mt={5} sm={4}>
-                  <FormControl fullWidth>
-                    <InputLabel>Work Started Year</InputLabel>
-                    <Select
-                      label='Work Started Year'
-                      value={2018}
-                      onChange={e => handleFormChange('work_experience', e.target.value)}
-                    >
-                      {years.map(
-                        (item: number, index: number) =>
-                          item >= 1980 && (
-                            <MenuItem key={index} value={item}>
-                              {item}
-                            </MenuItem>
-                          )
+                    <Controller
+                      name='firstname'
+                      control={control}
+                      rules={{ required: true }}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <TextField
+                          value={value}
+                          fullWidth
+                          label='First Name'
+                          placeholder='John'
+                          onChange={onChange}
+                          onBlur={onBlur}
+                          error={Boolean(errors.firstname)}
+                        />
                       )}
-                    </Select>
+                    />
+                    {errors.firstname && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{errors.firstname.message}</FormHelperText>
+                    )}
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} mt={5} sm={4}>
+                <Grid item xs={12} mt={5} md={4}>
                   <FormControl fullWidth>
-                    <InputLabel>Education</InputLabel>
-                    <Select
-                      label='Education'
-                      value={'masters'}
-                      onChange={e => handleFormChange('education', e.target.value)}
-                    >
-                      {educationOptions.map((item: any, index: number) => (
-                        <MenuItem key={`education-${index}`} value={item}>
-                          {uppercaseFirstLetters(item)}
-                        </MenuItem>
-                      ))}
-                    </Select>
+                    <Controller
+                      name='lastname'
+                      control={control}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <TextField
+                          value={value}
+                          fullWidth
+                          label='Last Name'
+                          placeholder='Doe'
+                          onChange={onChange}
+                          onBlur={onBlur}
+                          error={Boolean(errors.lastname)}
+                        />
+                      )}
+                    />
+                    {errors.lastname && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{errors.lastname.message}</FormHelperText>
+                    )}
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} mt={5} sm={6}>
+                <Grid item xs={12} mt={5} md={4}>
                   <FormControl fullWidth>
-                    <InputLabel>Marital Status</InputLabel>
-                    <Select
-                      label='Marital Status'
-                      value={'married'}
-                      onChange={e => handleFormChange('marital_status', e.target.value)}
-                    >
-                      {maritalOptions.map((item: any, index: number) => (
-                        <MenuItem key={`marital-${index}`} value={item}>
-                          {uppercaseFirstLetters(item)}
-                        </MenuItem>
-                      ))}
-                    </Select>
+                    <Controller
+                      name='gender'
+                      control={control}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <>
+                          <InputLabel>Gender</InputLabel>
+                          <Select
+                            label='Gender'
+                            value={value}
+                            onChange={e => {
+                              onChange(e)
+                              setGender(e.target.value)
+                            }}
+                            onBlur={onBlur}
+                            error={Boolean(errors.gender)}
+                          >
+                            {genderOptions.map((item: any, index: number) => (
+                              <MenuItem key={`gender-${index}`} value={item}>
+                                {uppercaseFirstLetters(item)}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </>
+                      )}
+                    />
+                    {errors.gender && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{errors.gender.message}</FormHelperText>
+                    )}
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} mt={5} sm={6}>
+                <Grid item xs={12} mt={5} md={4}>
                   <FormControl fullWidth>
-                    <InputLabel>Military Status</InputLabel>
-                    <Select
-                      label='Military Status'
-                      value={'exemption-edu'}
-                      onChange={e => handleFormChange('military_status', e.target.value)}
-                    >
-                      {militaryOptions.map((item: any, index: number) => (
-                        <MenuItem key={`military-${index}`} value={item}>
-                          {uppercaseFirstLetters(item)}
-                        </MenuItem>
-                      ))}
-                    </Select>
+                    <Controller
+                      name='mobile'
+                      control={control}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <TextField
+                          value={value}
+                          fullWidth
+                          label='Mobile'
+                          placeholder='919 123 4567'
+                          InputProps={{
+                            startAdornment: <InputAdornment position='start'>IR (+98)</InputAdornment>
+                          }}
+                          onChange={e => {
+                            onChange(e)
+                            mobileHandler(e.target.value, value, setValue)
+                          }}
+                          onBlur={onBlur}
+                          error={Boolean(errors.mobile)}
+                        />
+                      )}
+                    />
+                    {errors.mobile && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{errors.mobile.message}</FormHelperText>
+                    )}
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} mt={5} sm={6}>
+                <Grid item xs={12} mt={5} md={4}>
                   <FormControl fullWidth>
-                    <InputLabel>Work City</InputLabel>
-                    <Select
-                      label='Work City'
-                      value={'tehran'}
-                      onChange={e => handleFormChange('Work_city', e.target.value)}
-                    >
-                      {[
-                        { value: 'tehran', label: 'Tehran' },
-                        { value: 'alborz', label: 'Alborz' },
-                        { value: 'qazvin', label: 'Qazvin' },
-                        { value: 'khorasaan_razavi', label: 'Khorasaan Razavi' }
-                      ].map(({ value, label }: any, index: number) => (
-                        <MenuItem key={index} value={value}>
-                          {label}
-                        </MenuItem>
-                      ))}
-                    </Select>
+                    <Controller
+                      name='email'
+                      control={control}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <TextField
+                          value={value}
+                          fullWidth
+                          type='email'
+                          label='Email'
+                          placeholder='john.doe@example.com'
+                          onChange={onChange}
+                          onBlur={onBlur}
+                          error={Boolean(errors.email)}
+                        />
+                      )}
+                    />
+                    {errors.email && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{errors.email.message}</FormHelperText>
+                    )}
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} mt={5} sm={6}>
+                <Grid item xs={12} mt={5} md={4}>
                   <FormControl fullWidth>
-                    <InputLabel>Residence City</InputLabel>
-                    <Select
-                      label='Residence City'
-                      value={'tehran'}
-                      onChange={e => handleFormChange('residence_city', e.target.value)}
-                    >
-                      {[
-                        { value: 'tehran', label: 'Tehran' },
-                        { value: 'alborz', label: 'Alborz' },
-                        { value: 'qazvin', label: 'Qazvin' },
-                        { value: 'khorasaan_razavi', label: 'Khorasaan Razavi' }
-                      ].map(({ value, label }: any, index: number) => (
-                        <MenuItem key={index} value={value}>
-                          {label}
-                        </MenuItem>
-                      ))}
-                    </Select>
+                    <Controller
+                      name='phone'
+                      control={control}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <TextField
+                          value={value}
+                          fullWidth
+                          label='Phone Number'
+                          placeholder='21 8846 7889'
+                          InputProps={{
+                            startAdornment: <InputAdornment position='start'>IR (+98)</InputAdornment>
+                          }}
+                          onChange={onChange}
+                          onBlur={onBlur}
+                          error={Boolean(errors.phone)}
+                        />
+                      )}
+                    />
+                    {errors.phone && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{errors.phone.message}</FormHelperText>
+                    )}
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} mt={5} sm={6}>
+                <Grid item xs={12} mt={5} md={6}>
                   <FormControl fullWidth>
-                    <InputLabel>Minimum Requested Salary (Toman)</InputLabel>
-                    <Select
-                      label='Minimum Requested Salary (Toman)'
-                      value={30000000}
-                      onChange={e => handleFormChange('min_salary', e.target.value)}
-                    >
-                      {salaries.map((item: any, index: number) => (
-                        <MenuItem key={index} value={item}>
-                          {item.format()}
-                        </MenuItem>
-                      ))}
-                    </Select>
+                    <Controller
+                      name='birth_year'
+                      control={control}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <>
+                          <InputLabel>Birth Year</InputLabel>
+                          <Select
+                            label='Birth Year'
+                            value={value}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            error={Boolean(errors.birth_year)}
+                          >
+                            {years.map((item: number, index: number) => (
+                              <MenuItem key={index} value={item}>
+                                {item}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </>
+                      )}
+                    />
+                    {errors.birth_year && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{errors.birth_year.message}</FormHelperText>
+                    )}
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} mt={5} sm={6}>
+                <Grid item xs={12} mt={5} md={6}>
                   <FormControl fullWidth>
-                    <InputLabel>Maximum Requested Salary (Toman)</InputLabel>
-                    <Select
-                      label='Maximum Requested Salary (Toman)'
-                      value={35000000}
-                      onChange={e => handleFormChange('max_salary', e.target.value)}
-                    >
-                      {salaries.map((item: any, index: number) => (
-                        <MenuItem key={index} value={item}>
-                          {item.format()}
-                        </MenuItem>
-                      ))}
-                    </Select>
+                    <Controller
+                      name='work_experience'
+                      control={control}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <>
+                          <InputLabel>Work Started Year</InputLabel>
+                          <Select
+                            label='Work Started Year'
+                            value={value}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            error={Boolean(errors.work_experience)}
+                          >
+                            {years.map(
+                              (item: number, index: number) =>
+                                item >= 1980 && (
+                                  <MenuItem key={index} value={item}>
+                                    {item}
+                                  </MenuItem>
+                                )
+                            )}
+                          </Select>
+                        </>
+                      )}
+                    />
+                    {errors.work_experience && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{errors.work_experience.message}</FormHelperText>
+                    )}
                   </FormControl>
                 </Grid>
-
-                <Grid item xs={12} mt={5}>
-                  <Button variant='contained' sx={{ mr: 3 }}>
+                <Grid item xs={12} mt={5} md={4}>
+                  <FormControl fullWidth>
+                    <Controller
+                      name='education'
+                      control={control}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <>
+                          <InputLabel>Education</InputLabel>
+                          <Select
+                            label='Education'
+                            value={value}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            error={Boolean(errors.education)}
+                          >
+                            {educationOptions.map((item: any, index: number) => (
+                              <MenuItem key={`education-${index}`} value={item}>
+                                {uppercaseFirstLetters(item)}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </>
+                      )}
+                    />
+                    {errors.education && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{errors.education.message}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} mt={5} md={4}>
+                  <FormControl fullWidth>
+                    <Controller
+                      name='marital_status'
+                      control={control}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <>
+                          <InputLabel>Marital Status</InputLabel>
+                          <Select
+                            label='Marital Status'
+                            value={value}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            error={Boolean(errors.marital_status)}
+                          >
+                            {maritalOptions.map((item: any, index: number) => (
+                              <MenuItem key={`marital-${index}`} value={item}>
+                                {uppercaseFirstLetters(item)}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </>
+                      )}
+                    />
+                    {errors.marital_status && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{errors.marital_status.message}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} mt={5} md={4}>
+                  {gender != 'women' && (
+                    <FormControl fullWidth>
+                      <Controller
+                        name='military_status'
+                        control={control}
+                        render={({ field: { value, onChange, onBlur } }) => (
+                          <>
+                            <InputLabel>Military Status</InputLabel>
+                            <Select
+                              label='Military Status'
+                              value={value}
+                              onChange={onChange}
+                              onBlur={onBlur}
+                              error={Boolean(errors.military_status)}
+                            >
+                              {militaryOptions.map((item: any, index: number) => (
+                                <MenuItem key={`military-${index}`} value={item}>
+                                  {uppercaseFirstLetters(item)}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          </>
+                        )}
+                      />
+                      {errors.military_status && (
+                        <FormHelperText sx={{ color: 'error.main' }}>{errors.military_status.message}</FormHelperText>
+                      )}
+                    </FormControl>
+                  )}
+                </Grid>
+                {/* <Grid item xs={12} mt={5} md={6}>
+                  <FormControl fullWidth>
+                    <Controller
+                      name='work_province'
+                      control={control}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <>
+                          <InputLabel>Work Province</InputLabel>
+                          <Select
+                            label='Work Province'
+                            value={value}
+                            onChange={e => {
+                              onChange(e)
+                              handleCities(e.target.value, 'work')
+                            }}
+                            onBlur={onBlur}
+                            error={Boolean(errors.work_province)}
+                          >
+                            {provinces.map((item: any, index: number) => (
+                              <MenuItem key={`work-province-${index}`} value={item._id}>
+                                {item.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </>
+                      )}
+                    />
+                    {errors.work_province && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{errors.work_province.message}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} mt={5} md={6}>
+                  <FormControl fullWidth>
+                    <Controller
+                      name='work_city'
+                      control={control}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <>
+                          <InputLabel>Work City</InputLabel>
+                          <Select
+                            label='Work City'
+                            value={value}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            error={Boolean(errors.work_city)}
+                          >
+                            {workCities.map((item: any, index: number) => (
+                              <MenuItem key={`work-city-${index}`} value={item._id}>
+                                {item.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </>
+                      )}
+                    />
+                    {errors.work_city && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{errors.work_city.message}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} mt={5} md={6}>
+                  <FormControl fullWidth>
+                    <Controller
+                      name='residence_province'
+                      control={control}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <>
+                          <InputLabel>Residence Province</InputLabel>
+                          <Select
+                            label='Residence Province'
+                            value={value}
+                            onChange={e => {
+                              onChange(e)
+                              handleCities(e.target.value, 'residance')
+                            }}
+                            onBlur={onBlur}
+                            error={Boolean(errors.residence_province)}
+                          >
+                            {provinces.map((item: any, index: number) => (
+                              <MenuItem key={`residence-province-${index}`} value={item._id}>
+                                {item.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </>
+                      )}
+                    />
+                    {errors.residence_province && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{errors.residence_province.message}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid>
+                <Grid item xs={12} mt={5} md={6}>
+                  <FormControl fullWidth>
+                    <Controller
+                      name='residence_city'
+                      control={control}
+                      render={({ field: { value, onChange, onBlur } }) => (
+                        <>
+                          <InputLabel>Residence City</InputLabel>
+                          <Select
+                            label='Residence City'
+                            value={value}
+                            onChange={onChange}
+                            onBlur={onBlur}
+                            error={Boolean(errors.residence_city)}
+                          >
+                            {residanceCities.map((item: any, index: number) => (
+                              <MenuItem key={`residence-city-${index}`} value={item._id}>
+                                {item.name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        </>
+                      )}
+                    />
+                    {errors.residence_city && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{errors.residence_city.message}</FormHelperText>
+                    )}
+                  </FormControl>
+                </Grid> */}
+                <Grid item xs={12} mt={5} px={7}>
+                  <InputLabel>Requested Salary Range (Toman)</InputLabel>
+                  <Slider
+                    sx={{ mt: 4 }}
+                    defaultValue={[9000000, 20000000]}
+                    value={salaryRange}
+                    onChange={(e, value) => setSalaryRange(value)}
+                    valueLabelDisplay='auto'
+                    aria-labelledby='range-slider'
+                    min={8000000}
+                    max={80000000}
+                    step={1000000}
+                    valueLabelFormat={(value: any) => value.format()}
+                  />
+                  <Typography>{`${salaryRange[0].format()} - ${salaryRange[1].format()} Toman`}</Typography>
+                </Grid>
+                <Grid item xs={12} mt={3}>
+                  <Button type='submit' variant='contained' sx={{ mr: 3, mt: 2 }} disabled={loadingResumeEdit}>
                     Save Changes
                   </Button>
-                  <Button type='reset' variant='outlined' color='secondary' onClick={() => setFormData(initialData)}>
+                  <Button
+                    variant='outlined'
+                    color='secondary'
+                    sx={{ mt: 2 }}
+                    disabled={loadingResumeEdit}
+                    onClick={() => setInitialValues()}
+                  >
                     Reset
                   </Button>
                 </Grid>
