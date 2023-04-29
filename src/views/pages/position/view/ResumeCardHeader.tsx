@@ -1,14 +1,21 @@
 import {
   Autocomplete,
   Avatar,
+  Badge,
   Box,
   Button,
   ButtonGroup,
   Chip,
-  Fab,
+  Divider,
   Grid,
   IconButton,
+  List,
   ListItem,
+  ListItemAvatar,
+  ListItemButton,
+  ListItemSecondaryAction,
+  ListItemText,
+  ListSubheader,
   Popover,
   Rating,
   Stack,
@@ -30,6 +37,23 @@ import ResumeHiringDialog from './ResumeHiringDialog'
 import ResumeRejectingDialog from './ResumeRejectingDialog'
 
 const filter = createFilterOptions<any>()
+
+const viewes = [
+  {
+    id: 1,
+    name: 'Aliakbar Rezaei',
+    username: 'akrez',
+    avatar: '/images/avatars/3.png',
+    date: 'Yesterday'
+  },
+  {
+    id: 2,
+    name: 'Mahdi Amereh',
+    username: 'mehdieight',
+    avatar: '/images/avatars/5.png',
+    date: '2 Days Ago'
+  }
+]
 
 const fakeTags = [
   {
@@ -59,6 +83,7 @@ const ResumeCardHeader = ({
   isSmallScreen
 }: any) => {
   const [anchorElAddTag, setAnchorElAddTag] = useState<HTMLButtonElement | null>(null)
+  const [anchorElViewes, setAnchorElViewes] = useState<HTMLButtonElement | null>(null)
   const [newTag, setNewTag] = useState<any>({})
   const [openResumeHiringDialog, setOpenResumeHiringDialog] = useState<boolean>(false)
   const [openResumeRejectingDialog, setOpenResumeRejectingDialog] = useState<boolean>(false)
@@ -74,7 +99,16 @@ const ResumeCardHeader = ({
     setAnchorElAddTag(null)
   }
 
+  const handleClickViewes = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorElViewes(event.currentTarget)
+  }
+
+  const handleCloseViewes = () => {
+    setAnchorElViewes(null)
+  }
+
   const openAddTag = Boolean(anchorElAddTag)
+  const openViewes = Boolean(anchorElViewes)
 
   return (
     <>
@@ -335,8 +369,62 @@ const ResumeCardHeader = ({
           lg={4}
           xs={12}
           mt={3}
-          sx={{ display: 'flex', justifyContent: 'end', alignItems: 'inherit', flexDirection: 'column' }}
+          sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'inherit', flexDirection: 'column' }}
         >
+          <Grid item sx={{ textAlign: 'right' }}>
+            <BootstrapTooltip title='Viewes' placement='top'>
+              <Button onClick={handleClickViewes} sx={{ mr: 5 }} color='secondary'>
+                <Badge
+                  badgeContent={viewes.length ?? 0}
+                  color='primary'
+                  overlap='circular'
+                  invisible={!Boolean(viewes.length)}
+                >
+                  <Icon icon='teenyicons:eye-outline' fontSize={35} />
+                </Badge>
+              </Button>
+            </BootstrapTooltip>
+            <Popover
+              open={openViewes}
+              anchorEl={anchorElViewes}
+              onClose={handleCloseViewes}
+              anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+              PaperProps={{
+                style: {
+                  width: '450px'
+                }
+              }}
+            >
+              <Grid container xs={12}>
+                <Grid item xs={12} p={3}>
+                  <List dense subheader={<ListSubheader>Viewes</ListSubheader>}>
+                    <Divider />
+                    {viewes.length > 0 ? (
+                      viewes.map((viewer: any, index: number) => (
+                        <ListItemButton key={`viewer-${index}`} sx={{ mt: 3 }}>
+                          <ListItemAvatar>
+                            {viewer.avatar ? (
+                              <Avatar src={viewer.avatar} alt={viewer.name}></Avatar>
+                            ) : (
+                              <Avatar alt={viewer.name}>{getInitials(viewer.name)}</Avatar>
+                            )}
+                          </ListItemAvatar>
+                          <ListItemText secondary={viewer.username}>{viewer.name}</ListItemText>
+                          <ListItemSecondaryAction>
+                            <Typography fontSize={13}>{viewer.date}</Typography>
+                          </ListItemSecondaryAction>
+                        </ListItemButton>
+                      ))
+                    ) : (
+                      <Typography textAlign='center' p={3}>
+                        There Is Nothing To Show Here!
+                      </Typography>
+                    )}
+                  </List>
+                </Grid>
+              </Grid>
+            </Popover>
+          </Grid>
           <ButtonGroup orientation='vertical'>
             <Button
               onClick={handleClickOpenAddCallDialog}
