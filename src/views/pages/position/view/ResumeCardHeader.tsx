@@ -409,7 +409,7 @@ const ResumeCardHeader = ({
                               <Avatar alt={viewer.name}>{getInitials(viewer.name)}</Avatar>
                             )}
                           </ListItemAvatar>
-                          <ListItemText secondary={viewer.username}>{viewer.name}</ListItemText>
+                          <ListItemText secondary={`@${viewer.username}`}>{viewer.name}</ListItemText>
                           <ListItemSecondaryAction>
                             <Typography fontSize={13}>{viewer.date}</Typography>
                           </ListItemSecondaryAction>
