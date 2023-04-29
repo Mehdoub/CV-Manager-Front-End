@@ -20,6 +20,7 @@ const successHandler = ({ }) => (next: any) => async (action: any) => {
     'createRole/fulfilled',
     'editRole/fulfilled',
     'createResume/fulfilled',
+    'editResume/fulfilled',
     'addResumeFiles/fulfilled',
     'editUser/fulfilled',
   ]

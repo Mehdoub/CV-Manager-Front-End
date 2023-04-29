@@ -369,7 +369,7 @@ const ResumeCardHeader = ({
           </Stack>
         </Grid>
         <Grid item mt={7} lg={6} xs={12} sx={{ textAlign: 'right' }}>
-          <Rating readOnly value={4} sx={{ mr: 5 }} name='read-only' size='small' />
+          <Rating readOnly value={resume?.rating ?? 0} sx={{ mr: 5 }} name='read-only' size='small' />
         </Grid>
       </Grid>
       <Grid lg={6} xs={12} item container sx={{ textAlign: 'left', p: 5 }}>
