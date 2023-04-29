@@ -11,8 +11,9 @@ import { getPositionResumes } from 'src/store/position'
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
+import { getResume } from 'src/store/resume'
 
-const resumesStates: any = {
+export const resumesStates: any = {
   pending: { title: 'pending', color: 'warning' },
   call_review: { title: 'call review', color: 'info' },
   tech_review: { title: 'tech review', color: 'primary' },

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import ApiRequest from "src/helpers/ApiRequest"
-import { clearStatesAction, createExtraReducers, popObjectItemByKey, sliceInitialStateWithStatus } from "src/helpers/functions"
+import { clearStatesAction, createExtraReducers, popObjectItemByKey, sliceInitialStateWithData, sliceInitialStateWithStatus } from "src/helpers/functions"
 import { ResumeFormData } from "src/views/pages/position/view/AddResumeDialog"
 
 
@@ -83,8 +83,30 @@ const resumeAddFilesSlice = createSlice({
   }
 })
 
+
+export const getResume: any = createAsyncThunk('getResume', async (resumeId: string, { rejectWithValue }) => {
+  try {
+    const response = await ApiRequest.builder().auth().request('get', `resumes/${resumeId}`)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const resumeSlice = createSlice({
+  name: 'resume',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    createExtraReducers(builder, getResume, true, true)
+  }
+})
+
+
 export const { clearCreateResume } = resumeCreateSlice.actions
 export const { clearResumeAddFiles } = resumeAddFilesSlice.actions
 
 export const resumeCreateReducer = resumeCreateSlice.reducer
 export const resumeAddFilesReducer = resumeAddFilesSlice.reducer
+export const resumeReducer = resumeSlice.reducer

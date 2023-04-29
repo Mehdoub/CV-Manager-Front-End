@@ -39,7 +39,7 @@ function ResumeFileTab() {
               }}
             >
               <img style={{ height: '50%', width: '100%' }} src='/images/pdf-file.avif' />
-              <Typography textAlign='center' mt={1} fontSize={12}>
+              <Typography textAlign='center' fontSize={12}>
                 file{index + 1}.pdf
               </Typography>
             </Card>
