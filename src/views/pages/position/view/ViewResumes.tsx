@@ -1,45 +1,51 @@
-import { Stack } from '@mui/material'
+import { CircularProgress, Grid, Stack } from '@mui/material'
 import { useScrollContainer } from 'react-indiana-drag-scroll'
 import ResumeCardMainDialog from './ResumeCardMainDialog'
 import { useEffect, useState } from 'react'
 import ResumeKanbanColumn from './ResumeKanbanColumn'
 import ResumeKanbanCard from './ResumeKanbanCard'
-import resumes from 'src/data/resumeCards.json'
 import { DragDropContext } from 'react-beautiful-dnd'
 import { toastError } from 'src/helpers/functions'
 import { getPositionResumes } from 'src/store/position'
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
-import { getResume } from 'src/store/resume'
+import { clearResumeUpdateStatus, updateResumeStatus } from 'src/store/resume'
 
 export const resumesStates: any = {
   pending: { title: 'pending', color: 'warning' },
   call_review: { title: 'call review', color: 'info' },
   tech_review: { title: 'tech review', color: 'primary' },
-  wait_reject: { title: 'wait reject', color: 'secondary' },
+  wait_reject: { title: 'wait reject', color: 'error' },
   rejected: { title: 'rejected', color: 'error' },
   hired: { title: 'hired', color: 'success' },
-  wait_hire: { title: 'wait hire', color: 'info' }
+  wait_hire: { title: 'wait hire', color: 'secondary' }
 }
 
 const ViewResumes = () => {
   const [open, setOpen] = useState<boolean>(false)
-  const [allResumes, setAllResumes] = useState<any>([])
   const handleClose = () => setOpen(false)
-  const scrollContainer = useScrollContainer()
-  const cols = Object.keys(resumes)
+  // const scrollContainer = useScrollContainer()
 
   const dispatch = useDispatch()
 
   const { data: positionResumes, loading: positionResumesLoading } = useSelector((state: any) => state.positionResumes)
+  const { status: resumeStateUpdateStatus, loading: resumeStateUpdateLoading } = useSelector(
+    (state: any) => state.resumeUpdateStatus
+  )
 
   const {
     query: { positionId }
   } = useRouter()
 
   useEffect(() => {
-    setAllResumes(resumes)
+    if (resumeStateUpdateStatus) {
+      dispatch(getPositionResumes(positionId))
+      dispatch(clearResumeUpdateStatus())
+    }
+  }, [resumeStateUpdateStatus])
+
+  useEffect(() => {
     dispatch(getPositionResumes(positionId))
   }, [])
 
@@ -50,36 +56,52 @@ const ViewResumes = () => {
 
     if (source.droppableId == destination.droppableId && source.index == destination.index) return
 
-    if (['4-hired', '5-rejected'].includes(destination.droppableId)) {
+    const [destinationStateIndex, newStatus] = destination.droppableId.split('-')
+
+    if (['hired', 'rejected'].includes(newStatus)) {
       toastError('You Cannot Drop Resume Directly Into Hired Or Rejected!')
       return
     }
 
-    const tempAllResumes = allResumes
+    let newIndex: number = 1
 
-    const sourceIndex = Number(source.droppableId.substring(0, 1))
-    const destinationIndex = Number(destination.droppableId.substring(0, 1))
+    const sameColumnTowardDown =
+      source.droppableId == destination.droppableId && source.index < destination.index ? 1 : 0
 
-    const subjectResume = allResumes[sourceIndex].resumes.filter((item: any) => item.index == source.index)
-    let sourceState = allResumes[sourceIndex].resumes.filter((item: any) => item.index !== source.index)
-    sourceState = sourceState.map((item: any) =>
-      item.index >= source.index ? { ...item, index: item.index - 1 } : item
-    )
-    tempAllResumes[sourceIndex].resumes = sourceState
+    const upResume = positionResumes[destinationStateIndex][newStatus][destination.index - 1 + sameColumnTowardDown]
+    const downResume = positionResumes[destinationStateIndex][newStatus][destination.index + sameColumnTowardDown]
 
-    subjectResume[0].index = destination.index
+    if (upResume && downResume) {
+      newIndex = (upResume.index + downResume.index) / 2
+    } else if (upResume) {
+      newIndex = Math.ceil(upResume.index) + 1
+    } else if (downResume) {
+      newIndex = downResume.index / 2
+    }
 
-    const destinationState = allResumes[destinationIndex].resumes.map((item: any) =>
-      item.index >= destination.index ? { ...item, index: item.index + 1 } : item
-    )
-    destinationState.splice(destination.index - 1, 0, subjectResume[0])
-    tempAllResumes[destinationIndex].resumes = destinationState
-
-    setAllResumes([...tempAllResumes])
+    dispatch(updateResumeStatus({ resumeId: draggableId, status: newStatus, index: newIndex }))
   }
+
+  const isLoading = resumeStateUpdateLoading || positionResumesLoading
 
   return (
     <>
+      {isLoading && (
+        <Grid
+          container
+          sx={{
+            justifyContent: 'center',
+            alignItems: 'center',
+            height: '450px',
+            position: 'fixed',
+            zIndex: 1000,
+            top: '45%',
+            left: '5%'
+          }}
+        >
+          <CircularProgress />
+        </Grid>
+      )}
       <Stack
         // ref={scrollContainer.ref}
         direction='row'
@@ -89,20 +111,22 @@ const ViewResumes = () => {
           pr: 3,
           pb: 20,
           pt: 0,
-          pl: 0
+          pl: 0,
+          filter: isLoading ? 'blur(3px)' : undefined,
+          position: 'relative'
         }}
       >
         <DragDropContext onDragEnd={dragEndHandler}>
           {positionResumes.length > 0 &&
-            positionResumes.map((column: any) => {
+            positionResumes.map((column: any, colIndex: number) => {
               const status = Object.keys(column)[0]
               const colData = resumesStates[status]
               return (
                 <ResumeKanbanColumn
                   title={colData.title}
                   color={colData.color}
-                  statusKey={colData.key}
-                  key={colData.key}
+                  statusKey={`${colIndex}-${status}`}
+                  key={status}
                 >
                   {column[status].map((resumeData: any, index: number) => (
                     <ResumeKanbanCard cardData={resumeData} setOpen={setOpen} index={index} />

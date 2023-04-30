@@ -50,7 +50,7 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
     maxFiles: 5,
     maxSize: 9000000,
     accept: {
-      'application/*': getAllowedFormats('file', true)
+      'application/pdf': getAllowedFormats('file', true)
     },
     onDropRejected: () => {
       toastError('You Can Nnly Upload 5 .pdf Files With Maximum Size Of 9 MB.')

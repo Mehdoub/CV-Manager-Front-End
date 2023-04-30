@@ -6,7 +6,7 @@ interface ResumeKanbanColumnProps {
   title: string
   color: string
   children: any
-  statusKey: StringConstructor
+  statusKey: string
 }
 
 const ResumeKanbanColumn = ({ title, color, children, statusKey }: ResumeKanbanColumnProps) => {

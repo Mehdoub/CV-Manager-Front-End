@@ -343,7 +343,6 @@ const ResumeDetailsTab = () => {
     >
       <Grid item xs={12}>
         <>
-          <CardHeader title='Personal Information' />
           <form onSubmit={handleSubmit(submitHandler)}>
             <Fragment>
               <div {...getRootProps({ className: 'dropzone' })}>

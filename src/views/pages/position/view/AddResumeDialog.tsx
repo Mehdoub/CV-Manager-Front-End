@@ -261,7 +261,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
     maxFiles: 5,
     maxSize: 9000000,
     accept: {
-      'application/*': getAllowedFormats('file', true)
+      'application/pdf': getAllowedFormats('file', true)
     },
     onDrop: (acceptedFiles: File[]) => {
       let newUploads: any = acceptedFiles.map((file: File) => Object.assign(file))

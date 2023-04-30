@@ -24,19 +24,23 @@ import {
   Typography,
   createFilterOptions
 } from '@mui/material'
-import { getFullName, getImagePath, getMaxTextLen, uppercaseFirstLetters } from 'src/helpers/functions'
+import { getColorCodes, getFullName, getImagePath, getMaxTextLen, uppercaseFirstLetters } from 'src/helpers/functions'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import CustomChip from 'src/@core/components/mui/chip'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
 import Icon from 'src/@core/components/icon'
 import { getInitials } from 'src/@core/utils/get-initials'
 import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
-import { useState } from 'react'
+import { MouseEvent, useEffect, useState } from 'react'
 import ResumeHiringDialog from './ResumeHiringDialog'
 import ResumeRejectingDialog from './ResumeRejectingDialog'
 import { useSelector } from 'react-redux'
 import { resumesStates } from './ViewResumes'
+import { getResume, updateResumeStatus } from 'src/store/resume'
+import { useDispatch } from 'react-redux'
 
 const filter = createFilterOptions<any>()
 
@@ -89,10 +93,31 @@ const ResumeCardHeader = ({
   const [newTag, setNewTag] = useState<any>({})
   const [openResumeHiringDialog, setOpenResumeHiringDialog] = useState<boolean>(false)
   const [openResumeRejectingDialog, setOpenResumeRejectingDialog] = useState<boolean>(false)
+  const [anchorElStatesMenu, setAnchorElStatesMenu] = useState<null | HTMLElement>(null)
+
+  const handleClickStatesMenu = (event: MouseEvent<HTMLElement>) => {
+    setAnchorElStatesMenu(event.currentTarget)
+  }
+
+  const handleCloseStatesMenu = () => {
+    setAnchorElStatesMenu(null)
+  }
+
+  const dispatch = useDispatch()
 
   const { data: resume } = useSelector((state: any) => state.resume)
+  const { data: positionResumes } = useSelector((state: any) => state.positionResumes)
+  const { status: resumeStateUpdateStatus, loading: resumeStateUpdateLoading } = useSelector(
+    (state: any) => state.resumeUpdateStatus
+  )
 
-  const stateTitles = Object.entries(resumesStates).map(([key, value]: any) => key)
+  useEffect(() => {
+    if (resumeStateUpdateStatus) {
+      dispatch(getResume(resume.id))
+    }
+  }, [resumeStateUpdateStatus])
+
+  const stateKeys = Object.entries(resumesStates).map(([key, value]: any) => key)
   const handleCloseResumeHiringDialog = () => setOpenResumeHiringDialog(false)
   const handleCloseResumeRejectingDialog = () => setOpenResumeRejectingDialog(false)
 
@@ -115,6 +140,19 @@ const ResumeCardHeader = ({
   const openAddTag = Boolean(anchorElAddTag)
   const openViewes = Boolean(anchorElViewes)
 
+  const isForbiddenState = (state: string) => ['hired', 'rejected'].includes(state)
+
+  const previousState = stateKeys[stateKeys.indexOf(resume?.status) - 1]
+  const nextState = stateKeys[stateKeys.indexOf(resume?.status) + 1]
+
+  const updateStateHandler = (newState: string) => {
+    if (resume?.id) {
+      const firstResumeOfNewState = positionResumes[stateKeys.indexOf(newState)][newState][0]
+      const newIndex = firstResumeOfNewState ? firstResumeOfNewState.index / 2 : 1
+
+      dispatch(updateResumeStatus({ resumeId: resume?.id, status: newState, index: newIndex }))
+    }
+  }
   return (
     <>
       <IconButton size='small' onClick={closeToggle} sx={{ position: 'absolute', right: '0.05rem', top: '0.05rem' }}>
@@ -198,34 +236,75 @@ const ResumeCardHeader = ({
           sx={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'end' }}
         >
           <Box>
-            {stateTitles.indexOf(resume?.status) > 0 && (
-              <BootstrapTooltip
-                placement='top'
-                title={uppercaseFirstLetters(resumesStates[stateTitles[stateTitles.indexOf(resume?.status) - 1]].title)}
-              >
-                <IconButton aria-label='capture screenshot' sx={{ pl: 0 }}>
-                  <Icon icon='material-symbols:arrow-back-ios-new-rounded' />
-                </IconButton>
-              </BootstrapTooltip>
-            )}
+            {stateKeys.indexOf(resume?.status) > 0 &&
+              !isForbiddenState(previousState) &&
+              !isForbiddenState(resume?.status) && (
+                <BootstrapTooltip placement='top' title={uppercaseFirstLetters(resumesStates[previousState].title)}>
+                  <IconButton
+                    aria-label='capture screenshot'
+                    sx={{ pl: 0 }}
+                    onClick={() => updateStateHandler(previousState)}
+                    disabled={resumeStateUpdateLoading}
+                  >
+                    <Icon icon='material-symbols:arrow-back-ios-new-rounded' />
+                  </IconButton>
+                </BootstrapTooltip>
+              )}
             <Button
               size='small'
               variant='contained'
               color={(resume?.status && resumesStates[resume?.status]?.color) ?? 'info'}
+              disabled={resumeStateUpdateLoading}
+              onClick={handleClickStatesMenu}
             >
               {resume?.status && uppercaseFirstLetters(resumesStates[resume?.status]?.title)}
             </Button>
+            <Menu
+              keepMounted
+              elevation={0}
+              anchorEl={anchorElStatesMenu}
+              onClose={handleCloseStatesMenu}
+              open={Boolean(anchorElStatesMenu)}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center'
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'center'
+              }}
+            >
+              {stateKeys.map(
+                (item: string, index: number) =>
+                  ![resume?.status, 'hired', 'rejected'].includes(item) && (
+                    <MenuItem
+                      key={`states-menu-${index}`}
+                      onClick={() => {
+                        handleCloseStatesMenu()
+                        updateStateHandler(item)
+                      }}
+                      sx={{ color: getColorCodes(resumesStates[item].color) }}
+                    >
+                      {uppercaseFirstLetters(resumesStates[item].title)}
+                    </MenuItem>
+                  )
+              )}
+            </Menu>
 
-            {stateTitles.indexOf(resume?.status) < stateTitles.length - 1 && (
-              <BootstrapTooltip
-                placement='top'
-                title={uppercaseFirstLetters(resumesStates[stateTitles[stateTitles.indexOf(resume?.status) + 1]].title)}
-              >
-                <IconButton aria-label='capture screenshot' sx={{ pr: 0 }}>
-                  <Icon icon='material-symbols:arrow-forward-ios-rounded' />
-                </IconButton>
-              </BootstrapTooltip>
-            )}
+            {stateKeys.indexOf(resume?.status) < stateKeys.length - 1 &&
+              !isForbiddenState(nextState) &&
+              !isForbiddenState(resume?.status) && (
+                <BootstrapTooltip placement='top' title={uppercaseFirstLetters(resumesStates[nextState].title)}>
+                  <IconButton
+                    aria-label='capture screenshot'
+                    sx={{ pr: 0 }}
+                    onClick={() => updateStateHandler(nextState)}
+                    disabled={resumeStateUpdateLoading}
+                  >
+                    <Icon icon='material-symbols:arrow-forward-ios-rounded' />
+                  </IconButton>
+                </BootstrapTooltip>
+              )}
           </Box>
           <ButtonGroup size='small' variant='outlined' sx={{ mt: 3, mr: 1 }}>
             <Button

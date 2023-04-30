@@ -139,11 +139,38 @@ const resumeSlice = createSlice({
 })
 
 
+export const updateResumeStatus: any = createAsyncThunk('updateResumeStatus', async (data: { resumeId: string, status: string, index: number }, { rejectWithValue }) => {
+  try {
+    const resumeId = popObjectItemByKey(data, 'resumeId')
+    const response = await ApiRequest.builder().auth().request('patch', `resumes/${resumeId}`, data)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const resumeUpdateStatusSlice = createSlice({
+  name: 'resumeUpdateStatus',
+  initialState: sliceInitialStateWithStatus,
+  reducers: {
+    clearResumeUpdateStatus: (state) => {
+      clearStatesAction(state)
+    }
+  },
+  extraReducers: (builder) => {
+    createExtraReducers(builder, updateResumeStatus)
+  }
+})
+
+
 export const { clearCreateResume } = resumeCreateSlice.actions
 export const { clearEditResume } = resumeEditSlice.actions
 export const { clearResumeAddFiles } = resumeAddFilesSlice.actions
+export const { clearResumeUpdateStatus } = resumeUpdateStatusSlice.actions
 
 export const resumeCreateReducer = resumeCreateSlice.reducer
 export const resumeEditReducer = resumeEditSlice.reducer
 export const resumeAddFilesReducer = resumeAddFilesSlice.reducer
 export const resumeReducer = resumeSlice.reducer
+export const resumeUpdateStatusReducer = resumeUpdateStatusSlice.reducer

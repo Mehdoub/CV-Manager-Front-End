@@ -2,6 +2,7 @@ import { Avatar, AvatarGroup, Box, Card, Chip, Rating, Stack, Typography } from 
 import {
   calcInterviewRemainingTime,
   getColorCodes,
+  getFullName,
   getImagePath,
   getMaxTextLen,
   ratingTextsObj,
@@ -95,17 +96,17 @@ const ResumeKanbanCard = ({ cardData: card, setOpen, index }: ResumeKanbanCardPr
                   color='primary'
                   src={getImagePath(card.avatar)}
                   sx={{ mr: 3, width: 35, height: 35, fontSize: '0.85rem' }}
-                  alt={'John Doe'}
+                  alt={getFullName(card)}
                 />
               ) : (
                 <CustomAvatar skin='light' color='primary' sx={{ mr: 3, width: 35, height: 35, fontSize: '0.85rem' }}>
-                  {getInitials('John Doe')}
+                  {getInitials(getFullName(card))}
                 </CustomAvatar>
               )}
               <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-                <BootstrapTooltip title={'John Doe'} placement='top'>
+                <BootstrapTooltip title={getFullName(card)} placement='top'>
                   <Typography fontSize={13} fontWeight={500}>
-                    {getMaxTextLen('John Doe')}
+                    {getMaxTextLen(getFullName(card))}
                   </Typography>
                 </BootstrapTooltip>
                 <Stack direction='row' spacing={1} ml={-2}>
