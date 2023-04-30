@@ -58,6 +58,13 @@ const viewes = [
     username: 'mehdieight',
     avatar: '/images/avatars/5.png',
     date: '2 Days Ago'
+  },
+  {
+    id: 3,
+    name: 'Mahdi Mehrjoo',
+    username: 'mehdoub',
+    avatar: '/images/avatars/1.png',
+    date: '4 Days Ago'
   }
 ]
 
@@ -236,20 +243,23 @@ const ResumeCardHeader = ({
           sx={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'end' }}
         >
           <Box>
-            {stateKeys.indexOf(resume?.status) > 0 &&
-              !isForbiddenState(previousState) &&
-              !isForbiddenState(resume?.status) && (
-                <BootstrapTooltip placement='top' title={uppercaseFirstLetters(resumesStates[previousState].title)}>
-                  <IconButton
-                    aria-label='capture screenshot'
-                    sx={{ pl: 0 }}
-                    onClick={() => updateStateHandler(previousState)}
-                    disabled={resumeStateUpdateLoading}
-                  >
-                    <Icon icon='material-symbols:arrow-back-ios-new-rounded' />
-                  </IconButton>
-                </BootstrapTooltip>
-              )}
+            <BootstrapTooltip placement='top' title={uppercaseFirstLetters(resumesStates[previousState].title)}>
+              <IconButton
+                aria-label='capture screenshot'
+                sx={{ pl: 0 }}
+                onClick={() => updateStateHandler(previousState)}
+                disabled={
+                  resumeStateUpdateLoading ||
+                  !(
+                    stateKeys.indexOf(resume?.status) > 0 &&
+                    !isForbiddenState(previousState) &&
+                    !isForbiddenState(resume?.status)
+                  )
+                }
+              >
+                <Icon icon='material-symbols:arrow-back-ios-new-rounded' />
+              </IconButton>
+            </BootstrapTooltip>
             <Button
               size='small'
               variant='contained'
@@ -290,21 +300,23 @@ const ResumeCardHeader = ({
                   )
               )}
             </Menu>
-
-            {stateKeys.indexOf(resume?.status) < stateKeys.length - 1 &&
-              !isForbiddenState(nextState) &&
-              !isForbiddenState(resume?.status) && (
-                <BootstrapTooltip placement='top' title={uppercaseFirstLetters(resumesStates[nextState].title)}>
-                  <IconButton
-                    aria-label='capture screenshot'
-                    sx={{ pr: 0 }}
-                    onClick={() => updateStateHandler(nextState)}
-                    disabled={resumeStateUpdateLoading}
-                  >
-                    <Icon icon='material-symbols:arrow-forward-ios-rounded' />
-                  </IconButton>
-                </BootstrapTooltip>
-              )}
+            <BootstrapTooltip placement='top' title={uppercaseFirstLetters(resumesStates[nextState].title)}>
+              <IconButton
+                aria-label='capture screenshot'
+                sx={{ pr: 0 }}
+                onClick={() => updateStateHandler(nextState)}
+                disabled={
+                  resumeStateUpdateLoading ||
+                  !(
+                    stateKeys.indexOf(resume?.status) < stateKeys.length - 1 &&
+                    !isForbiddenState(nextState) &&
+                    !isForbiddenState(resume?.status)
+                  )
+                }
+              >
+                <Icon icon='material-symbols:arrow-forward-ios-rounded' />
+              </IconButton>
+            </BootstrapTooltip>
           </Box>
           <ButtonGroup size='small' variant='outlined' sx={{ mt: 3, mr: 1 }}>
             <Button
@@ -452,7 +464,7 @@ const ResumeCardHeader = ({
         </Grid>
       </Grid>
       <Grid lg={6} xs={12} item container sx={{ textAlign: 'left', p: 5 }}>
-        <Grid item container lg={8} xs={12}>
+        <Grid item container lg={7} xl={8} xs={12}>
           <Grid item xs={12}>
             <Typography variant='body2'>Asignee(s):</Typography>
             <Stack direction='row' spacing={1} mt={2} sx={{ display: 'flex', justifyContent: 'left' }}>
@@ -476,14 +488,19 @@ const ResumeCardHeader = ({
         <Grid
           item
           container
-          lg={4}
+          lg={5}
+          xl={4}
           xs={12}
           mt={3}
           sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'inherit', flexDirection: 'column' }}
         >
           <Grid item sx={{ textAlign: 'right' }}>
             <BootstrapTooltip title='Viewes' placement='top'>
-              <Button onClick={handleClickViewes} sx={{ mr: 5 }} color='secondary'>
+              <Button
+                onClick={handleClickViewes}
+                sx={{ p: 0, mt: 3, justifyContent: 'end', minWidth: 0 }}
+                color='secondary'
+              >
                 <Badge
                   badgeContent={viewes.length ?? 0}
                   color='primary'
@@ -501,17 +518,19 @@ const ResumeCardHeader = ({
               anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
               PaperProps={{
                 style: {
-                  width: '450px'
+                  width: '350px',
+                  maxHeight: '400px',
+                  overflowY: 'scroll'
                 }
               }}
             >
               <Grid container xs={12}>
-                <Grid item xs={12} p={3}>
+                <Grid item xs={12} p={0.5}>
                   <List dense subheader={<ListSubheader>Viewes</ListSubheader>}>
                     <Divider />
                     {viewes.length > 0 ? (
                       viewes.map((viewer: any, index: number) => (
-                        <ListItemButton key={`viewer-${index}`} sx={{ mt: 3 }}>
+                        <ListItemButton key={`viewer-${index}`}>
                           <ListItemAvatar>
                             {viewer.avatar ? (
                               <Avatar src={viewer.avatar} alt={viewer.name}></Avatar>
@@ -535,7 +554,7 @@ const ResumeCardHeader = ({
               </Grid>
             </Popover>
           </Grid>
-          <ButtonGroup orientation='vertical'>
+          <ButtonGroup sx={{ justifyContent: 'end' }}>
             <Button
               onClick={handleClickOpenAddCallDialog}
               variant='outlined'
@@ -543,11 +562,11 @@ const ResumeCardHeader = ({
               startIcon={<Icon icon='ic:round-call' />}
               sx={{ fontSize: '0.75rem', p: 2 }}
             >
-              Add Call History
+              Call History
             </Button>
             <Button
               onClick={handleClickOpenAddInterviewDialog}
-              sx={{ mt: 3, fontSize: '0.75rem', p: 2 }}
+              sx={{ fontSize: '0.75rem', p: 2 }}
               variant='outlined'
               color='secondary'
               startIcon={<Icon icon='mdi:virtual-meeting' />}

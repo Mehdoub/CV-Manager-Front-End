@@ -97,7 +97,7 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
                 className={`${activeTab == 'call' ? 'resume-active-tab' : ''} resume-tab`}
               />
             </TabList>
-            <Box sx={{ height: '65vh', overflowY: 'scroll' }}>
+            <Box sx={{ height: '65vh', overflowY: 'scroll', position: 'relative' }}>
               <>
                 <TabPanel sx={{ p: 0, mt: 6 }} value='details'>
                   {constants?.system && <ResumeDetailsTab />}
