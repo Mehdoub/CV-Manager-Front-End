@@ -243,7 +243,7 @@ const ResumeCardHeader = ({
           sx={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'end' }}
         >
           <Box>
-            <BootstrapTooltip placement='top' title={uppercaseFirstLetters(resumesStates[previousState].title)}>
+            <BootstrapTooltip placement='top' title={uppercaseFirstLetters(resumesStates[previousState]?.title)}>
               <IconButton
                 aria-label='capture screenshot'
                 sx={{ pl: 0 }}
@@ -300,7 +300,7 @@ const ResumeCardHeader = ({
                   )
               )}
             </Menu>
-            <BootstrapTooltip placement='top' title={uppercaseFirstLetters(resumesStates[nextState].title)}>
+            <BootstrapTooltip placement='top' title={uppercaseFirstLetters(resumesStates[nextState]?.title)}>
               <IconButton
                 aria-label='capture screenshot'
                 sx={{ pr: 0 }}
