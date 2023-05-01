@@ -25,6 +25,7 @@ const successHandler = ({ }) => (next: any) => async (action: any) => {
     'editUser/fulfilled',
     'addCallHistoryToResume/fulfilled',
     'addInterviewToResume/fulfilled',
+    'hireResume/fulfilled',
   ]
 
   if (isFulfilled(action) && showTypesArr.includes(action.type)) {

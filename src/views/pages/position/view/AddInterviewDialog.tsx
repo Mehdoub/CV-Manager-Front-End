@@ -425,10 +425,23 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                 </FormControl>
               </Grid>
               <Grid item xs={12} sx={{ textAlign: 'right', mt: 8 }}>
-                <Button onClick={handleClose} sx={{ mt: 2 }} variant='outlined' size='large' color='secondary'>
+                <Button
+                  disabled={resumeAddInterviewLoading}
+                  onClick={handleClose}
+                  sx={{ mt: 2 }}
+                  variant='outlined'
+                  size='large'
+                  color='secondary'
+                >
                   Cancel
                 </Button>
-                <Button type='submit' variant='contained' size='large' sx={{ ml: 2, mt: 2 }}>
+                <Button
+                  disabled={resumeAddInterviewLoading}
+                  type='submit'
+                  variant='contained'
+                  size='large'
+                  sx={{ ml: 2, mt: 2 }}
+                >
                   Submit
                 </Button>
               </Grid>

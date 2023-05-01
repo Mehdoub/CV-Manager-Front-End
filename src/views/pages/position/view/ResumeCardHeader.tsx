@@ -24,7 +24,14 @@ import {
   Typography,
   createFilterOptions
 } from '@mui/material'
-import { getColorCodes, getFullName, getImagePath, getMaxTextLen, uppercaseFirstLetters } from 'src/helpers/functions'
+import {
+  getColorCodes,
+  getFullName,
+  getImagePath,
+  getMaxTextLen,
+  isForbiddenState,
+  uppercaseFirstLetters
+} from 'src/helpers/functions'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import CustomChip from 'src/@core/components/mui/chip'
@@ -102,14 +109,6 @@ const ResumeCardHeader = ({
   const [openResumeRejectingDialog, setOpenResumeRejectingDialog] = useState<boolean>(false)
   const [anchorElStatesMenu, setAnchorElStatesMenu] = useState<null | HTMLElement>(null)
 
-  const handleClickStatesMenu = (event: MouseEvent<HTMLElement>) => {
-    setAnchorElStatesMenu(event.currentTarget)
-  }
-
-  const handleCloseStatesMenu = () => {
-    setAnchorElStatesMenu(null)
-  }
-
   const dispatch = useDispatch()
 
   const { data: resume } = useSelector((state: any) => state.resume)
@@ -123,6 +122,16 @@ const ResumeCardHeader = ({
       dispatch(getResume(resume.id))
     }
   }, [resumeStateUpdateStatus])
+
+  const handleClickStatesMenu = (event: MouseEvent<HTMLElement>) => {
+    if (!isForbiddenState(resume?.status)) {
+      setAnchorElStatesMenu(event.currentTarget)
+    }
+  }
+
+  const handleCloseStatesMenu = () => {
+    setAnchorElStatesMenu(null)
+  }
 
   const stateKeys = Object.entries(resumesStates).map(([key, value]: any) => key)
   const handleCloseResumeHiringDialog = () => setOpenResumeHiringDialog(false)
@@ -146,8 +155,6 @@ const ResumeCardHeader = ({
 
   const openAddTag = Boolean(anchorElAddTag)
   const openViewes = Boolean(anchorElViewes)
-
-  const isForbiddenState = (state: string) => ['hired', 'rejected'].includes(state)
 
   const previousState = stateKeys[stateKeys.indexOf(resume?.status) - 1]
   const nextState = stateKeys[stateKeys.indexOf(resume?.status) + 1]
@@ -323,6 +330,7 @@ const ResumeCardHeader = ({
               startIcon={<Icon icon='mdi:tick-circle-outline' />}
               color='success'
               onClick={() => setOpenResumeHiringDialog(true)}
+              disabled={isForbiddenState(resume?.status)}
             >
               Hiring
             </Button>
@@ -330,6 +338,7 @@ const ResumeCardHeader = ({
               startIcon={<Icon icon='material-symbols:cancel-outline' />}
               color='error'
               onClick={() => setOpenResumeRejectingDialog(true)}
+              disabled={isForbiddenState(resume?.status)}
             >
               Reject
             </Button>

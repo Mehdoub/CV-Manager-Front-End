@@ -213,6 +213,31 @@ const resumeAddInterviewSlice = createSlice({
 })
 
 
+export const hireResume: any = createAsyncThunk('hireResume', async (data: any, { rejectWithValue }) => {
+  try {
+    const resumeId = popObjectItemByKey(data, 'resumeId')
+    const response = await ApiRequest.builder().auth().request('patch', `resumes/${resumeId}/hired`, data)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const resumeHireSlice = createSlice({
+  name: 'resumeHire',
+  initialState: sliceInitialStateWithStatus,
+  reducers: {
+    clearResumeHire: (state) => {
+      clearStatesAction(state)
+    }
+  },
+  extraReducers: (builder) => {
+    createExtraReducers(builder, hireResume)
+  }
+})
+
+
 
 export const { clearCreateResume } = resumeCreateSlice.actions
 export const { clearEditResume } = resumeEditSlice.actions
@@ -220,6 +245,7 @@ export const { clearResumeAddFiles } = resumeAddFilesSlice.actions
 export const { clearResumeUpdateStatus } = resumeUpdateStatusSlice.actions
 export const { clearResumeAddCallHistory } = resumeAddCallHistorySlice.actions
 export const { clearResumeAddInterview } = resumeAddInterviewSlice.actions
+export const { clearResumeHire } = resumeHireSlice.actions
 
 export const resumeCreateReducer = resumeCreateSlice.reducer
 export const resumeEditReducer = resumeEditSlice.reducer
@@ -228,4 +254,5 @@ export const resumeReducer = resumeSlice.reducer
 export const resumeUpdateStatusReducer = resumeUpdateStatusSlice.reducer
 export const resumeAddCallHistoryReducer = resumeAddCallHistorySlice.reducer
 export const resumeAddInterviewReducer = resumeAddInterviewSlice.reducer
+export const resumeHireReducer = resumeHireSlice.reducer
 

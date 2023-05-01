@@ -237,3 +237,5 @@ export const getAllowedFormats = (type: 'image' | 'file' = 'image', asArray: boo
 export const getIsoTime = (unixTime: number) => {
   return new Date(unixTime * 1000).toISOString()
 }
+
+export const isForbiddenState = (state: string) => ['hired', 'rejected'].includes(state)

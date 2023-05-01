@@ -1,90 +1,69 @@
 // ** React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
-import TextField from '@mui/material/TextField'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import Grid from '@mui/material/Grid'
-import InputAdornment from '@mui/material/InputAdornment'
 
 import DatePicker, { DateObject } from 'react-multi-date-picker'
-import TimePicker from 'react-multi-date-picker/plugins/time_picker'
 import persian from 'react-date-object/calendars/persian'
 import persian_fa from 'react-date-object/locales/persian_fa'
 
 import Icon from 'src/@core/components/icon'
 import {
-  Autocomplete,
-  Avatar,
-  Box,
   FormControl,
+  FormHelperText,
   IconButton,
   InputLabel,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   MenuItem,
-  Rating,
   Select,
+  Slider,
   Typography,
   useMediaQuery,
   useTheme
 } from '@mui/material'
-import { getFullName, uppercaseFirstLetters } from 'src/helpers/functions'
+import { getIsoTime, uppercaseFirstLetters } from 'src/helpers/functions'
 import Language from 'src/helpers/Language'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { clearResumeHire, getResume, hireResume } from 'src/store/resume'
+import { getPositionResumes } from 'src/store/position'
 
 let salaries: Array<number> = []
 for (let salary = 10; salary <= 50; salary++) salaries.push(salary * 1000000)
 
-const fakeUsers = [
-  {
-    id: 1,
-    firstname: 'Aliakbar',
-    lastname: 'Rezaei',
-    avatar: '/images/avatars/7.png'
-  },
-  {
-    id: 2,
-    firstname: 'Mahdi',
-    lastname: 'Amereh',
-    avatar: '/images/avatars/3.png'
-  },
-  {
-    id: 3,
-    firstname: 'Ali',
-    lastname: 'Hamzehei',
-    avatar: '/images/avatars/5.png'
-  },
-  {
-    id: 4,
-    firstname: 'Saeed',
-    lastname: 'Esfehani',
-    avatar: '/images/avatars/2.png'
-  }
-]
-
-const ratingLabels: { [index: string]: string } = {
-  1: 'Useless',
-  2: 'Poor',
-  3: 'Ok',
-  4: 'Good',
-  5: 'Excellent!'
-}
-
+const cooperationOptions = ['trial', 'contractual', 'projection']
 interface ResumeHiringDialogProps {
   open: boolean
   handleClose: any
 }
 const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
-  const [ratingValue, setRatingValue] = useState<any>(2)
-  const [hoverRatingValue, setHoverRatingValue] = useState<any>(1)
-  const [eventType, setEventType] = useState<string>('')
-  const [eventTime, setEventTime] = useState<any>('')
-  const [cooperationType, setCooperationType] = useState<any>('')
-  const [salary, setSalary] = useState<any>('')
+  const [income, setIncome] = useState<any>(10000000)
+  const [incomeErr, setIncomeErr] = useState<string>('')
+  const [startDate, setStartDate] = useState<any>('')
+  const [startDateErr, setStartDateErr] = useState<string>('')
+  const [endDate, setEndDate] = useState<any>('')
+  const [endDateErr, setEndDateErr] = useState<string>('')
+  const [cooperationType, setCooperationType] = useState<string>('')
+  const [cooperationTypeErr, setCooperationTypeErr] = useState<string>('')
+
+  const { data: resume } = useSelector((state: any) => state.resume)
+  const { status: resumeHireStatus, loading: resumeHireLoading } = useSelector((state: any) => state.resumeHire)
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (resumeHireStatus) {
+      dispatch(clearResumeHire())
+      dispatch(getResume(resume?.id))
+      dispatch(getPositionResumes(resume?.position_id))
+      resetFormErrors(true)
+      handleClose()
+    }
+  }, [resumeHireStatus])
 
   const theme = useTheme()
 
@@ -95,6 +74,38 @@ const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
 
   const isSmallScreen = useMediaQuery((theme: any) => theme.breakpoints.down('lg'))
   const overflowVisibility = isSmallScreen ? 'scroll' : 'visible'
+
+  const resetFormErrors = (resetValues: boolean = false) => {
+    setStartDateErr('')
+    setEndDateErr('')
+    setIncomeErr('')
+    setCooperationTypeErr('')
+    if (resetValues) {
+      setIncome(10000000)
+      setStartDate('')
+      setEndDate('')
+      setCooperationType('')
+    }
+  }
+
+  const submitHandler = (e: any) => {
+    e.preventDefault()
+    resetFormErrors()
+    if (!startDate) setStartDateErr('Work Start Date Cannot Be Empty')
+    else if (!endDate) setEndDateErr('Work End Date Cannot Be Empty')
+    else if (!income) setIncomeErr('Income Cannot Be Empty')
+    else if (!cooperationType) setCooperationTypeErr('Cooperation Type Cannot Be Empty')
+    else {
+      const data = {
+        resumeId: resume?.id,
+        how_to_cooperate: cooperationType,
+        hired_from_date: getIsoTime(startDate.unix),
+        hired_to_date: getIsoTime(endDate.unix),
+        income
+      }
+      dispatch(hireResume(data))
+    }
+  }
 
   return (
     <>
@@ -109,7 +120,7 @@ const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
         </IconButton>
         <DialogTitle id='form-dialog-title'>Resume Hiring Form</DialogTitle>
         <DialogContent sx={{ overflowY: overflowVisibility }}>
-          <form onSubmit={e => e.preventDefault()} style={{ marginTop: '15px' }}>
+          <form onSubmit={submitHandler} style={{ marginTop: '15px' }}>
             <Grid container spacing={3}>
               <Grid item md={6} xs={12}>
                 <FormControl fullWidth>
@@ -117,10 +128,9 @@ const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
                     {`${uppercaseFirstLetters('Work Start Date')}`}
                   </Typography>
                   <DatePicker
-                    value={eventTime}
-                    onChange={setEventTime}
-                    format='MM/DD/YYYY HH:mm:ss'
-                    // plugins={[<TimePicker position='bottom' />]}
+                    value={startDate}
+                    onChange={setStartDate}
+                    format='MM/DD/YYYY'
                     inputClass='rmdp-input'
                     placeholder='Click To Select Time'
                     calendar={persianDate}
@@ -128,7 +138,7 @@ const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
                     minDate={new DateObject()}
                     required
                     style={{
-                      backgroundColor: theme.palette.mode == 'dark' ? '#30334E' : '#F7F7F9',
+                      backgroundColor: theme.palette.mode == 'dark' ? '#30334E' : undefined,
                       color:
                         theme.palette.mode == 'light'
                           ? 'rgba(76, 78, 100, 0.87) !important'
@@ -139,6 +149,7 @@ const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
                           : theme.palette.secondary.dark
                     }}
                   />
+                  {startDateErr && <FormHelperText sx={{ color: 'error.main' }}>{startDateErr}</FormHelperText>}
                 </FormControl>
               </Grid>
               <Grid item md={6} xs={12}>
@@ -147,10 +158,9 @@ const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
                     {`${uppercaseFirstLetters('Work End Date')}`}
                   </Typography>
                   <DatePicker
-                    value={eventTime}
-                    onChange={setEventTime}
-                    format='MM/DD/YYYY HH:mm:ss'
-                    // plugins={[<TimePicker position='bottom' />]}
+                    value={endDate}
+                    onChange={setEndDate}
+                    format='MM/DD/YYYY'
                     inputClass='rmdp-input'
                     placeholder='Click To Select Time'
                     calendar={persianDate}
@@ -158,7 +168,7 @@ const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
                     minDate={new DateObject()}
                     required
                     style={{
-                      backgroundColor: theme.palette.mode == 'dark' ? '#30334E' : '#F7F7F9',
+                      backgroundColor: theme.palette.mode == 'dark' ? '#30334E' : undefined,
                       color:
                         theme.palette.mode == 'light'
                           ? 'rgba(76, 78, 100, 0.87) !important'
@@ -169,6 +179,7 @@ const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
                           : theme.palette.secondary.dark
                     }}
                   />
+                  {endDateErr && <FormHelperText sx={{ color: 'error.main' }}>{endDateErr}</FormHelperText>}
                 </FormControl>
               </Grid>
               <Grid item md={6} xs={12} mt={5}>
@@ -177,33 +188,55 @@ const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
                   <Select
                     label='Cooperation Type'
                     value={cooperationType}
+                    error={Boolean(cooperationTypeErr)}
                     onChange={(e: any) => setCooperationType(e.target.value)}
                   >
-                    {['Full-Time', 'Half-Time', 'Remoot'].map((item: string, index: number) => (
+                    {cooperationOptions.map((item: string, index: number) => (
                       <MenuItem key={`${item}-${index}`} value={item}>
                         {uppercaseFirstLetters(item)}
                       </MenuItem>
                     ))}
                   </Select>
+                  {cooperationTypeErr && (
+                    <FormHelperText sx={{ color: 'error.main' }}>{cooperationTypeErr}</FormHelperText>
+                  )}
                 </FormControl>
               </Grid>
-              <Grid item md={6} xs={12} mt={5}>
-                <FormControl fullWidth>
-                  <InputLabel>Salary (Toman)</InputLabel>
-                  <Select label='Salary (Toman)' value={salary} onChange={(e: any) => setSalary(e.target.value)}>
-                    {salaries.map((item: any, index: number) => (
-                      <MenuItem key={`max-salary-${index}`} value={item}>
-                        {item.format()}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
+              <Grid item md={12} xs={12} mt={5}>
+                <InputLabel sx={{ pl: '4px' }}>Income (Toman)</InputLabel>
+                <Slider
+                  sx={{ mt: 4 }}
+                  defaultValue={10000000}
+                  value={income}
+                  onChange={(e, value) => setIncome(value as number)}
+                  valueLabelDisplay='auto'
+                  aria-labelledby='range-slider'
+                  min={8000000}
+                  max={80000000}
+                  step={1000000}
+                  valueLabelFormat={(value: any) => value.format()}
+                />
+                <Typography>{`${income.format()} Toman`}</Typography>
+                {incomeErr && <FormHelperText sx={{ color: 'error.main' }}>{incomeErr}</FormHelperText>}
               </Grid>
               <Grid item xs={12} sx={{ textAlign: 'right', mt: 8 }}>
-                <Button onClick={handleClose} sx={{ mt: 2 }} variant='outlined' size='large' color='secondary'>
+                <Button
+                  disabled={resumeHireLoading}
+                  onClick={handleClose}
+                  sx={{ mt: 2 }}
+                  variant='outlined'
+                  size='large'
+                  color='secondary'
+                >
                   Cancel
                 </Button>
-                <Button type='submit' variant='contained' size='large' sx={{ ml: 2, mt: 2 }}>
+                <Button
+                  disabled={resumeHireLoading}
+                  type='submit'
+                  variant='contained'
+                  size='large'
+                  sx={{ ml: 2, mt: 2 }}
+                >
                   Submit
                 </Button>
               </Grid>

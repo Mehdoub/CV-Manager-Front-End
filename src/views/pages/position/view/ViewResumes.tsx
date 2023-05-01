@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import ResumeKanbanColumn from './ResumeKanbanColumn'
 import ResumeKanbanCard from './ResumeKanbanCard'
 import { DragDropContext } from 'react-beautiful-dnd'
-import { toastError } from 'src/helpers/functions'
+import { isForbiddenState, toastError } from 'src/helpers/functions'
 import { getPositionResumes } from 'src/store/position'
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
@@ -56,9 +56,15 @@ const ViewResumes = () => {
 
     if (source.droppableId == destination.droppableId && source.index == destination.index) return
 
+    const currentStatus = source.droppableId.split('-')[1]
     const [destinationStateIndex, newStatus] = destination.droppableId.split('-')
 
-    if (['hired', 'rejected'].includes(newStatus)) {
+    if (isForbiddenState(currentStatus)) {
+      toastError('You Cannot Move Hired And Rejected Resumes!')
+      return
+    }
+
+    if (isForbiddenState(newStatus)) {
       toastError('You Cannot Drop Resume Directly Into Hired Or Rejected!')
       return
     }
