@@ -233,3 +233,7 @@ export const getAllowedFormats = (type: 'image' | 'file' = 'image', asArray: boo
     (item: string) => ` *${item} `
   ) : formats[type]
 }
+
+export const getIsoTime = (unixTime: number) => {
+  return new Date(unixTime * 1000).toISOString()
+}

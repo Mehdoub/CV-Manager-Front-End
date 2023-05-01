@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Button from '@mui/material/Button'
@@ -21,6 +21,7 @@ import {
   Avatar,
   Box,
   FormControl,
+  FormHelperText,
   IconButton,
   InputLabel,
   ListItem,
@@ -32,8 +33,16 @@ import {
   Typography,
   useTheme
 } from '@mui/material'
-import { getFullName, uppercaseFirstLetters } from 'src/helpers/functions'
+import { getFullName, getImagePath, getIsoTime, uppercaseFirstLetters } from 'src/helpers/functions'
 import Language from 'src/helpers/Language'
+import { useSelector } from 'react-redux'
+import * as yup from 'yup'
+import { Controller, useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useDispatch } from 'react-redux'
+import { getUsers } from 'src/store/user'
+import { addInterviewToResume, clearResumeAddInterview, getResume } from 'src/store/resume'
+import { getPositionResumes } from 'src/store/position'
 
 const fakeUsers = [
   {
@@ -75,13 +84,64 @@ interface AddInterviewDialogProps {
   handleClose: any
 }
 const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
-  const [ratingValue, setRatingValue] = useState<any>(2)
-  const [hoverRatingValue, setHoverRatingValue] = useState<any>(1)
-  const [eventType, setEventType] = useState<string>('')
-  const [eventTime, setEventTime] = useState<any>('')
-  const [interviewType, setInterviewType] = useState<any>('')
-  const [result, setResult] = useState<any>('')
-  const [status, setStatus] = useState<any>('')
+  const [ratingValue, setRatingValue] = useState<any>(0)
+  const [hoverRatingValue, setHoverRatingValue] = useState<any>(0)
+  const [eventStartTime, setEventStartTime] = useState<any>('')
+  const [eventStartTimeErr, setEventStartTimeErr] = useState<any>('')
+  const [eventEndTime, setEventEndTime] = useState<any>('')
+  const [eventEndTimeErr, setEventEndTimeErr] = useState<any>('')
+  const [contributors, setContributors] = useState<any>([])
+
+  const { data: constants } = useSelector((state: any) => state.constants)
+  const { data: users } = useSelector((state: any) => state.usersList)
+  const { data: resume } = useSelector((state: any) => state.resume)
+  const { status: resumeAddInterviewStatus, loading: resumeAddInterviewLoading } = useSelector(
+    (state: any) => state.resumeAddInterview
+  )
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    dispatch(getUsers())
+  }, [])
+
+  useEffect(() => {
+    if (resumeAddInterviewStatus) {
+      dispatch(getResume(resume?.id))
+      dispatch(getPositionResumes(resume?.position_id))
+      dispatch(clearResumeAddInterview())
+      resetForm()
+      handleClose()
+    }
+  }, [resumeAddInterviewStatus])
+
+  const schema = yup.object().shape({
+    event_type: yup.string().label('Event Type').oneOf(constants?.interview?.event_type).required(),
+    status: yup.string().label('Status').oneOf(constants?.interview?.status).required(),
+    type: yup.string().label('Interview Type').oneOf(constants?.interview?.type).required(),
+    result: yup.string().label('Result').oneOf(constants?.interview?.result).optional(),
+    description: yup.string().label('Description').optional()
+  })
+
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+    setValue
+  } = useForm({
+    mode: 'onBlur',
+    resolver: yupResolver(schema)
+  })
+
+  const resetForm = () => {
+    setValue('event_type', '')
+    setValue('status', '')
+    setValue('type', '')
+    setValue('result', '')
+    setValue('description', '')
+    setEventStartTimeErr('')
+    setContributors([])
+  }
 
   const theme = useTheme()
 
@@ -89,6 +149,17 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
 
   const persianDate = language == 'fa' ? persian : undefined
   const persianDateFa = language == 'fa' ? persian_fa : undefined
+
+  const submitHandler = (data: any) => {
+    setEventStartTimeErr('')
+    if (!eventStartTime) setEventStartTimeErr('Event Start Time Cannot Be Empty')
+    else {
+      data.contribution = contributors.map((contributor: any) => contributor?._id)
+      data.event_time = getIsoTime(eventStartTime?.unix)
+      data.rating = ratingValue
+      dispatch(addInterviewToResume({ ...data, resumeId: resume?.id }))
+    }
+  }
 
   return (
     <>
@@ -98,7 +169,7 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
         </IconButton>
         <DialogTitle id='form-dialog-title'>Add Interview</DialogTitle>
         <DialogContent>
-          <form onSubmit={e => e.preventDefault()} style={{ marginTop: '15px' }}>
+          <form onSubmit={handleSubmit(submitHandler)} style={{ marginTop: '15px' }}>
             <Grid container spacing={3}>
               <Grid item xs={12}>
                 <Box sx={{ display: 'flex', alignItems: 'left', flexDirection: 'column' }}>
@@ -124,8 +195,8 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                     {`${uppercaseFirstLetters('Event Start Time')}`}
                   </Typography>
                   <DatePicker
-                    value={eventTime}
-                    onChange={setEventTime}
+                    value={eventStartTime}
+                    onChange={setEventStartTime}
                     format='MM/DD/YYYY HH:mm:ss'
                     plugins={[<TimePicker position='bottom' />]}
                     inputClass='rmdp-input'
@@ -146,6 +217,9 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                           : theme.palette.secondary.dark
                     }}
                   />
+                  {eventStartTimeErr && (
+                    <FormHelperText sx={{ color: 'error.main' }}>{eventStartTimeErr}</FormHelperText>
+                  )}
                 </FormControl>
               </Grid>
               <Grid item md={6} xs={12}>
@@ -154,8 +228,8 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                     {`${uppercaseFirstLetters('Event End Time')}`}
                   </Typography>
                   <DatePicker
-                    value={eventTime}
-                    onChange={setEventTime}
+                    value={eventEndTime}
+                    onChange={setEventEndTime}
                     format='MM/DD/YYYY HH:mm:ss'
                     plugins={[<TimePicker position='bottom' />]}
                     inputClass='rmdp-input'
@@ -176,20 +250,26 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                           : theme.palette.secondary.dark
                     }}
                   />
+                  {eventEndTimeErr && <FormHelperText sx={{ color: 'error.main' }}>{eventEndTimeErr}</FormHelperText>}
                 </FormControl>
               </Grid>
               <Grid item xs={12} sx={{ mt: '26px' }}>
                 <Autocomplete
                   multiple
-                  options={fakeUsers}
+                  options={users?.docs ?? []}
                   limitTags={2}
-                  id='autocomplete-multi-contributers'
+                  id='autocomplete-multi-contributors'
                   getOptionLabel={user => getFullName(user)}
-                  renderInput={params => <TextField {...params} label='Contributers' placeholder='Search Users ...' />}
+                  onChange={(e: any, newValue: any) => setContributors(newValue)}
+                  renderInput={params => <TextField {...params} label='Contributors' placeholder='Search Users ...' />}
                   renderOption={(props, user) => (
                     <ListItem {...props}>
                       <ListItemAvatar>
-                        <Avatar src={user?.avatar} alt={getFullName(user)} sx={{ height: 28, width: 28 }} />
+                        <Avatar
+                          src={getImagePath(user?.avatar)}
+                          alt={getFullName(user)}
+                          sx={{ height: 28, width: 28 }}
+                        />
                       </ListItemAvatar>
                       <ListItemText primary={getFullName(user)} />
                     </ListItem>
@@ -198,72 +278,151 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
               </Grid>
               <Grid item md={6} xs={12} mt={5}>
                 <FormControl fullWidth>
-                  <InputLabel>Interview Type</InputLabel>
-                  <Select
-                    label='Interview Type'
-                    value={interviewType}
-                    onChange={(e: any) => setInterviewType(e.target.value)}
-                  >
-                    {['Person', 'Personality'].map((item: string, index: number) => (
-                      <MenuItem key={`${item}-${index}`} value={item}>
-                        {uppercaseFirstLetters(item)}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                  <Controller
+                    name='type'
+                    control={control}
+                    render={({ field: { value, onChange, onBlur } }) => (
+                      <>
+                        <InputLabel>Interview Type</InputLabel>
+                        <Select
+                          label='Interview Type'
+                          value={value}
+                          onChange={onChange}
+                          onBlur={onBlur}
+                          error={Boolean(errors?.type)}
+                        >
+                          {constants?.interview?.type.map((item: string, index: number) => (
+                            <MenuItem key={`${item}-${index}`} value={item}>
+                              {uppercaseFirstLetters(item)}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </>
+                    )}
+                  />
+                  {errors?.type && (
+                    <FormHelperText sx={{ color: 'error.main' }}>{errors?.type?.message}</FormHelperText>
+                  )}
                 </FormControl>
               </Grid>
               <Grid item md={6} xs={12} mt={5}>
                 <FormControl fullWidth>
-                  <InputLabel>Event Type</InputLabel>
-                  <Select label='Event Type' value={eventType} onChange={(e: any) => setEventType(e.target.value)}>
-                    {['online', 'inperson', 'inphone'].map((item: string, index: number) => (
-                      <MenuItem key={`${item}-${index}`} value={item}>
-                        {uppercaseFirstLetters(item)}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                  <Controller
+                    name='event_type'
+                    control={control}
+                    render={({ field: { value, onChange, onBlur } }) => (
+                      <>
+                        <InputLabel>Event Type</InputLabel>
+                        <Select
+                          label='Event Type'
+                          value={value}
+                          onChange={onChange}
+                          onBlur={onBlur}
+                          error={Boolean(errors?.event_type)}
+                        >
+                          {constants?.interview?.event_type.map((item: string, index: number) => (
+                            <MenuItem key={`${item}-${index}`} value={item}>
+                              {uppercaseFirstLetters(item)}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </>
+                    )}
+                  />
+                  {errors?.event_type && (
+                    <FormHelperText sx={{ color: 'error.main' }}>{errors?.event_type?.message}</FormHelperText>
+                  )}
                 </FormControl>
               </Grid>
               <Grid item md={6} xs={12} mt={5}>
                 <FormControl fullWidth>
-                  <InputLabel>Result</InputLabel>
-                  <Select label='Result' value={result} onChange={(e: any) => setResult(e.target.value)}>
-                    {['accepted', 'rejected'].map((item: string, index: number) => (
-                      <MenuItem key={`${item}-${index}`} value={item}>
-                        {uppercaseFirstLetters(item)}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                  <Controller
+                    name='result'
+                    control={control}
+                    render={({ field: { value, onChange, onBlur } }) => (
+                      <>
+                        <InputLabel>Result</InputLabel>
+                        <Select
+                          label='Result'
+                          value={value}
+                          onChange={onChange}
+                          onBlur={onBlur}
+                          error={Boolean(errors?.result)}
+                        >
+                          {constants?.interview?.result.map((item: string, index: number) => (
+                            <MenuItem key={`${item}-${index}`} value={item}>
+                              {uppercaseFirstLetters(item)}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </>
+                    )}
+                  />
+                  {errors?.result && (
+                    <FormHelperText sx={{ color: 'error.main' }}>{errors?.result?.message}</FormHelperText>
+                  )}
                 </FormControl>
               </Grid>
               <Grid item md={6} xs={12} mt={5}>
                 <FormControl fullWidth>
-                  <InputLabel>Status</InputLabel>
-                  <Select label='Status' value={status} onChange={(e: any) => setStatus(e.target.value)}>
-                    {['pending', 'done', 'canceled'].map((item: string, index: number) => (
-                      <MenuItem key={`${item}-${index}`} value={item}>
-                        {uppercaseFirstLetters(item)}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                  <Controller
+                    name='status'
+                    control={control}
+                    render={({ field: { value, onChange, onBlur } }) => (
+                      <>
+                        <InputLabel>Status</InputLabel>
+                        <Select
+                          label='Status'
+                          value={value}
+                          onChange={onChange}
+                          onBlur={onBlur}
+                          error={Boolean(errors?.status)}
+                        >
+                          {constants?.interview?.status.map((item: string, index: number) => (
+                            <MenuItem key={`${item}-${index}`} value={item}>
+                              {uppercaseFirstLetters(item)}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </>
+                    )}
+                  />
+                  {errors?.status && (
+                    <FormHelperText sx={{ color: 'error.main' }}>{errors?.status?.message}</FormHelperText>
+                  )}
                 </FormControl>
               </Grid>
               <Grid item xs={12} mt={5}>
-                <TextField
-                  fullWidth
-                  multiline
-                  minRows={3}
-                  label='Description'
-                  placeholder='Call Is Described Here...'
-                  sx={{ '& .MuiOutlinedInput-root': { alignItems: 'baseline' } }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position='start'>
-                        <Icon icon='fluent:text-description-24-filled' />
-                      </InputAdornment>
-                    )
-                  }}
-                />
+                <FormControl fullWidth>
+                  <Controller
+                    name='description'
+                    control={control}
+                    render={({ field: { value, onChange, onBlur } }) => (
+                      <TextField
+                        value={value}
+                        onChange={onChange}
+                        onBlur={onBlur}
+                        error={Boolean(errors?.description)}
+                        fullWidth
+                        multiline
+                        minRows={3}
+                        label='Description'
+                        placeholder='Call Is Described Here...'
+                        sx={{ '& .MuiOutlinedInput-root': { alignItems: 'baseline' } }}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position='start'>
+                              <Icon icon='fluent:text-description-24-filled' />
+                            </InputAdornment>
+                          )
+                        }}
+                      />
+                    )}
+                  />
+                  {errors?.description && (
+                    <FormHelperText sx={{ color: 'error.main' }}>{errors?.description?.message}</FormHelperText>
+                  )}
+                </FormControl>
               </Grid>
               <Grid item xs={12} sx={{ textAlign: 'right', mt: 8 }}>
                 <Button onClick={handleClose} sx={{ mt: 2 }} variant='outlined' size='large' color='secondary'>

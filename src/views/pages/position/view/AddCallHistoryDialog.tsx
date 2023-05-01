@@ -29,7 +29,7 @@ import {
   useMediaQuery,
   useTheme
 } from '@mui/material'
-import { ratingTextsObj, uppercaseFirstLetters } from 'src/helpers/functions'
+import { getIsoTime, ratingTextsObj, uppercaseFirstLetters } from 'src/helpers/functions'
 import Language from 'src/helpers/Language'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
@@ -111,12 +111,12 @@ const AddCallHistoryDialog = ({ open, handleClose }: AddCallHistoryDialogProps) 
     let data: any = {}
     if (data.result == 'recall' && !recallDate) setRecallDateErr('Recall Date Cannot Be Empty!')
     else if (!callingDate) setCallingDateErr('Calling Date Cannot Be Empty!')
-    else if (description.length > 1000) setDescriptionErr('Description Should Be Lower Than 1000 Characters')
+    else if (description.length > 1000) setDescriptionErr('Description Must Be Lower Than 1000 Characters')
     else if (!ratingValue) setRatingErr('Please Rate This Call!')
     else if (!callResult) setCallResultErr('Call Result Cannot Be Empty!')
     else {
-      if (callResult == 'recall') data.recall_at = new Date(recallDate?.unix * 1000).toISOString()
-      data.calling_date = new Date(callingDate?.unix * 1000).toISOString()
+      if (callResult == 'recall') data.recall_at = getIsoTime(recallDate?.unix)
+      data.calling_date = getIsoTime(callingDate?.unix)
       dispatch(
         addCallHistoryToResume({ ...data, resumeId: resume?.id, rating: ratingValue, result: callResult, description })
       )

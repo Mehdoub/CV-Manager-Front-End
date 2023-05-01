@@ -42,7 +42,7 @@ import { positionActiveReducer, positionCreateReducer, positionDeactiveReducer, 
 import { constantsReducer } from './common'
 import { roleCreateReducer, roleEditReducer, rolesReducer } from './role'
 import { permissionsGroupedReducer } from './permission'
-import { resumeAddCallHistoryReducer, resumeAddFilesReducer, resumeCreateReducer, resumeEditReducer, resumeReducer, resumeUpdateStatusReducer } from './resume'
+import { resumeAddCallHistoryReducer, resumeAddFilesReducer, resumeAddInterviewReducer, resumeCreateReducer, resumeEditReducer, resumeReducer, resumeUpdateStatusReducer } from './resume'
 import { citiesByProvinceReducer, provincesReducer } from './province'
 
 export const store = configureStore({
@@ -112,6 +112,7 @@ export const store = configureStore({
     resume: resumeReducer,
     resumeUpdateStatus: resumeUpdateStatusReducer,
     resumeAddCallHistory: resumeAddCallHistoryReducer,
+    resumeAddInterview: resumeAddInterviewReducer,
 
     provinces: provincesReducer,
     citiesByProvince: citiesByProvinceReducer,
