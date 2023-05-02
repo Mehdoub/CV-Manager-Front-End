@@ -42,8 +42,9 @@ import { positionActiveReducer, positionCreateReducer, positionDeactiveReducer, 
 import { constantsReducer } from './common'
 import { roleCreateReducer, roleEditReducer, rolesReducer } from './role'
 import { permissionsGroupedReducer } from './permission'
-import { resumeAddCallHistoryReducer, resumeAddFilesReducer, resumeAddInterviewReducer, resumeCreateReducer, resumeEditReducer, resumeHireReducer, resumeReducer, resumeUpdateStatusReducer } from './resume'
+import { resumeAddCallHistoryReducer, resumeAddFilesReducer, resumeAddInterviewReducer, resumeAddTagReducer, resumeCreateReducer, resumeEditReducer, resumeHireReducer, resumeReducer, resumeRemoveTagReducer, resumeUpdateStatusReducer } from './resume'
 import { citiesByProvinceReducer, provincesReducer } from './province'
+import { tagCreateReducer, tagsReducer } from './tag'
 
 export const store = configureStore({
   reducer: {
@@ -114,9 +115,14 @@ export const store = configureStore({
     resumeAddCallHistory: resumeAddCallHistoryReducer,
     resumeAddInterview: resumeAddInterviewReducer,
     resumeHire: resumeHireReducer,
+    resumeAddTag: resumeAddTagReducer,
+    resumeRemoveTag: resumeRemoveTagReducer,
 
     provinces: provincesReducer,
     citiesByProvince: citiesByProvinceReducer,
+
+    tagCreate: tagCreateReducer,
+    tags: tagsReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

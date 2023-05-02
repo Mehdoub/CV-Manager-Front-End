@@ -70,7 +70,7 @@ export default class ApiRequest {
 
         return await requestMethod(response.data.data[0].access_token)
       }
-      if (!err?.response?.data?.message) toastError('Something Went Wrong!')
+      if (!err?.response?.data?.message && !['CanceledError'].includes(err?.name)) toastError('Something Went Wrong!')
 
       throw err
     }

@@ -46,8 +46,17 @@ import ResumeHiringDialog from './ResumeHiringDialog'
 import ResumeRejectingDialog from './ResumeRejectingDialog'
 import { useSelector } from 'react-redux'
 import { resumesStates } from './ViewResumes'
-import { getResume, updateResumeStatus } from 'src/store/resume'
+import {
+  addTagToResume,
+  clearResumeAddTag,
+  clearResumeRemoveTag,
+  getResume,
+  removeTagFromResume,
+  updateResumeStatus
+} from 'src/store/resume'
 import { useDispatch } from 'react-redux'
+import { clearTagCreate, createTag, getTags } from 'src/store/tag'
+import { getPositionResumes } from 'src/store/position'
 
 const filter = createFilterOptions<any>()
 
@@ -94,7 +103,6 @@ const fakeTags = [
 ]
 
 const ResumeCardHeader = ({
-  tags,
   handleClickOpenAddCallDialog,
   handleClickOpenAddInterviewDialog,
   closeToggle,
@@ -104,7 +112,6 @@ const ResumeCardHeader = ({
 }: any) => {
   const [anchorElAddTag, setAnchorElAddTag] = useState<HTMLButtonElement | null>(null)
   const [anchorElViewes, setAnchorElViewes] = useState<HTMLButtonElement | null>(null)
-  const [newTag, setNewTag] = useState<any>({})
   const [openResumeHiringDialog, setOpenResumeHiringDialog] = useState<boolean>(false)
   const [openResumeRejectingDialog, setOpenResumeRejectingDialog] = useState<boolean>(false)
   const [anchorElStatesMenu, setAnchorElStatesMenu] = useState<null | HTMLElement>(null)
@@ -116,12 +123,44 @@ const ResumeCardHeader = ({
   const { status: resumeStateUpdateStatus, loading: resumeStateUpdateLoading } = useSelector(
     (state: any) => state.resumeUpdateStatus
   )
+  const { data: tags } = useSelector((state: any) => state.tags)
+  const { data: createdTag } = useSelector((state: any) => state.tagCreate)
+  const { status: resumeAddTagStatus } = useSelector((state: any) => state.resumeAddTag)
+  const { status: resumeRemoveTagStatus } = useSelector((state: any) => state.resumeRemoveTag)
 
   useEffect(() => {
     if (resumeStateUpdateStatus) {
       dispatch(getResume(resume.id))
     }
   }, [resumeStateUpdateStatus])
+
+  useEffect(() => {
+    if (resumeAddTagStatus) {
+      dispatch(getResume(resume.id))
+      dispatch(getPositionResumes(resume?.position_id))
+      dispatch(clearResumeAddTag())
+      handleCloseAddTag()
+    }
+  }, [resumeAddTagStatus])
+
+  useEffect(() => {
+    if (resumeRemoveTagStatus) {
+      dispatch(getResume(resume.id))
+      dispatch(getPositionResumes(resume?.position_id))
+      dispatch(clearResumeRemoveTag())
+    }
+  }, [resumeAddTagStatus])
+
+  useEffect(() => {
+    if (createdTag?.name?.length > 0) {
+      addTagToResumeHandler(createdTag?._id)
+      dispatch(clearTagCreate())
+    }
+  }, [createdTag])
+
+  useEffect(() => {
+    dispatch(getTags())
+  }, [])
 
   const handleClickStatesMenu = (event: MouseEvent<HTMLElement>) => {
     if (!isForbiddenState(resume?.status)) {
@@ -167,6 +206,23 @@ const ResumeCardHeader = ({
       dispatch(updateResumeStatus({ resumeId: resume?.id, status: newState, index: newIndex }))
     }
   }
+
+  const searchTags = (e: any) => {
+    dispatch(getTags({ query: e?.target?.value }))
+  }
+
+  const addTagToResumeHandler = (tagId: string) => {
+    dispatch(addTagToResume({ resumeId: resume?.id, tagId }))
+  }
+
+  const removeTagFromResumeHandler = (tagId: string) => {
+    dispatch(removeTagFromResume({ resumeId: resume?.id, tagId }))
+  }
+
+  const createTagHandler = (name: string) => {
+    dispatch(createTag({ name }))
+  }
+
   return (
     <>
       <IconButton size='small' onClick={closeToggle} sx={{ position: 'absolute', right: '0.05rem', top: '0.05rem' }}>
@@ -346,19 +402,20 @@ const ResumeCardHeader = ({
         </Grid>
         <Grid item mt={4} lg={6} xs={12}>
           <Stack direction='row' spacing={1} mt={2}>
-            {tags?.length > 0 &&
-              tags?.map((tag: any, index: any) => (
+            {resume?.tags?.length > 0 &&
+              resume?.tags?.map((tag: any, index: any) => (
                 <>
-                  <BootstrapTooltip placement='top' title={tag.text}>
+                  <BootstrapTooltip placement='top' title={tag?.name}>
                     <div>
                       <CustomChip
                         size='small'
-                        label={getMaxTextLen(tag.text)}
+                        label={getMaxTextLen(tag?.name)}
                         skin='light'
-                        color={tag.color as any}
+                        // color={tag?.color as any}
                         sx={{
                           fontSize: 12,
                           height: 22,
+                          color: tag?.color,
                           borderBottomLeftRadius: 0,
                           borderTopLeftRadius: 0,
                           cursor: 'pointer',
@@ -371,101 +428,98 @@ const ResumeCardHeader = ({
                             }
                           }
                         }}
-                        onDelete={() => console.log('deleted')}
+                        onDelete={() => removeTagFromResumeHandler(tag?._id)}
                       />
                     </div>
                   </BootstrapTooltip>
-                  {tags?.length == index + 1 && (
-                    <>
-                      <BootstrapTooltip placement='top' title='Add Tag'>
-                        <IconButton
-                          aria-label='capture screenshot'
-                          sx={{ border: '1px dashed gray', width: '28px', height: '28px', p: 0 }}
-                          onClick={handleClickAddTag}
-                        >
-                          <Icon fontSize={16} icon='mdi:tag-plus' />
-                        </IconButton>
-                      </BootstrapTooltip>
-                      <Popover
-                        id='add-tag'
-                        open={openAddTag}
-                        anchorEl={anchorElAddTag}
-                        onClose={handleCloseAddTag}
-                        anchorOrigin={{
-                          vertical: 'bottom',
-                          horizontal: 'left'
-                        }}
-                        PaperProps={{
-                          style: {
-                            width: '15%'
-                          }
-                        }}
-                      >
-                        <Grid container xs={12} p={5}>
-                          <Grid item xs={12}>
-                            <Autocomplete
-                              options={fakeTags}
-                              id='autocomplete-size-small-multi'
-                              renderInput={params => (
-                                <TextField {...params} label='Add Tag' placeholder='Search Tags ...' />
-                              )}
-                              renderOption={(props, tag: any) =>
-                                tag.title.includes('Add "') ? (
-                                  <ListItem {...props}>{tag.title}</ListItem>
-                                ) : (
-                                  <ListItem {...props}>
-                                    <CustomChip size='small' label={tag.title} skin='light' color={tag.color as any} />
-                                  </ListItem>
-                                )
-                              }
-                              onChange={(event, newValue) => {
-                                if (typeof newValue === 'string') {
-                                  setNewTag({
-                                    title: newValue
-                                  })
-                                } else if (newValue && newValue.inputValue) {
-                                  setNewTag({
-                                    title: newValue.inputValue
-                                  })
-                                } else {
-                                  setNewTag(newValue)
-                                }
-                              }}
-                              filterOptions={(options, params) => {
-                                const filtered = filter(options, params)
-
-                                const { inputValue } = params
-                                // Suggest the creation of a new value
-                                const isExisting = options.some(option => inputValue === option.title)
-                                if (inputValue !== '' && !isExisting) {
-                                  filtered.push({
-                                    inputValue,
-                                    title: `Add "${inputValue}"`
-                                  })
-                                }
-
-                                return filtered
-                              }}
-                              selectOnFocus
-                              clearOnBlur
-                              handleHomeEndKeys
-                              getOptionLabel={option => {
-                                if (typeof option === 'string') {
-                                  return option
-                                }
-                                if (option.inputValue) {
-                                  return option.inputValue
-                                }
-                                return option.title
-                              }}
-                            />
-                          </Grid>
-                        </Grid>
-                      </Popover>
-                    </>
-                  )}
                 </>
               ))}
+            <BootstrapTooltip placement='top' title='Add Tag'>
+              <IconButton
+                aria-label='capture screenshot'
+                sx={{ border: '1px dashed gray', width: '28px', height: '28px', p: 0 }}
+                onClick={handleClickAddTag}
+              >
+                <Icon fontSize={16} icon='mdi:tag-plus' />
+              </IconButton>
+            </BootstrapTooltip>
+            <Popover
+              id='add-tag'
+              open={openAddTag}
+              anchorEl={anchorElAddTag}
+              onClose={handleCloseAddTag}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'left'
+              }}
+              PaperProps={{
+                style: {
+                  width: '10%'
+                }
+              }}
+            >
+              <Grid container xs={12} p={3}>
+                <Grid item xs={12}>
+                  <Autocomplete
+                    options={tags?.docs ?? []}
+                    id='autocomplete-size-small-multi'
+                    renderInput={params => (
+                      <TextField {...params} label='Add Tag' placeholder='Search Tags ...' onChange={searchTags} />
+                    )}
+                    renderOption={(props, tag: any) =>
+                      tag.name.includes('Add "') ? (
+                        <ListItem {...props}>{tag?.name}</ListItem>
+                      ) : (
+                        <ListItem {...props}>
+                          <CustomChip size='small' label={tag?.name} skin='light' sx={{ color: tag?.color }} />
+                        </ListItem>
+                      )
+                    }
+                    onChange={(event, newValue) => {
+                      if (newValue?._id) {
+                        // setNewTag({
+                        //   name: newValue?._id
+                        // })
+                        addTagToResumeHandler(newValue?._id)
+                        handleCloseAddTag()
+                      } else if (newValue && newValue.inputValue) {
+                        createTagHandler(newValue.inputValue)
+                      }
+                      // else {
+                      //   setNewTag(newValue)
+                      // }
+                    }}
+                    filterOptions={(options, params) => {
+                      const filtered = filter(options, params)
+
+                      const { inputValue } = params
+                      // Suggest the creation of a new value
+                      const isExisting = options.some(option => inputValue === option?.name)
+                      if (inputValue !== '' && !isExisting) {
+                        filtered.push({
+                          inputValue,
+                          name: `Add "${inputValue}"`
+                        })
+                      }
+
+                      return filtered
+                    }}
+                    selectOnFocus
+                    clearOnBlur
+                    handleHomeEndKeys
+                    getOptionLabel={option => {
+                      // if (typeof option === 'string') {
+                      //   return option
+                      // }
+                      if (option.inputValue) {
+                        return option.inputValue
+                      }
+                      return option?.name
+                    }}
+                  />
+                </Grid>
+              </Grid>
+            </Popover>
           </Stack>
         </Grid>
         <Grid item mt={7} lg={6} xs={12} sx={{ textAlign: 'right' }}>

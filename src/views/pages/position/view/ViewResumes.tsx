@@ -1,4 +1,4 @@
-import { CircularProgress, Grid, Stack } from '@mui/material'
+import { Box, CircularProgress, Stack } from '@mui/material'
 import { useScrollContainer } from 'react-indiana-drag-scroll'
 import ResumeCardMainDialog from './ResumeCardMainDialog'
 import { useEffect, useState } from 'react'
@@ -93,20 +93,23 @@ const ViewResumes = () => {
   return (
     <>
       {isLoading && (
-        <Grid
-          container
+        <Box
           sx={{
-            justifyContent: 'center',
+            mt: 6,
+            display: 'flex',
             alignItems: 'center',
+            flexDirection: 'column',
+            justifyContent: 'center',
             height: '450px',
             position: 'fixed',
             zIndex: 1000,
             top: '45%',
-            left: '5%'
+            left: '5%',
+            width: '100%'
           }}
         >
-          <CircularProgress />
-        </Grid>
+          <CircularProgress sx={{ mb: 4 }} />
+        </Box>
       )}
       <Stack
         // ref={scrollContainer.ref}
