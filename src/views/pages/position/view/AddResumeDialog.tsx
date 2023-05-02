@@ -462,53 +462,6 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                             />
                           </FormControl>
                         </Grid>
-                        {/* <Grid item xs={12} md={6} mt={5}>
-                          <FormControl fullWidth>
-                            <Autocomplete
-                              autoHighlight
-                              loading={loadingSearchPositions}
-                              options={positions ?? []}
-                              onChange={(e, newValue) => {
-                                setPositionErr('')
-                                setResumePosition(newValue)
-                              }}
-                              getOptionLabel={(positionItem: any) => positionItem?.title}
-                              ListboxComponent={List}
-                              renderInput={params => (
-                                <TextField
-                                  {...params}
-                                  label='Position'
-                                  onChange={() => console.log('position')}
-                                  size='medium'
-                                  placeholder='Search For Positions ...'
-                                  error={!!positionErr}
-                                  InputProps={{
-                                    ...params.InputProps,
-                                    endAdornment: (
-                                      <Fragment>
-                                        {loadingSearchPositions ? <CircularProgress color='inherit' size={20} /> : null}
-                                        {params.InputProps.endAdornment}
-                                      </Fragment>
-                                    )
-                                  }}
-                                />
-                              )}
-                              renderOption={(props, positionItem) => (
-                                <ListItem {...props}>
-                                  <ListItemAvatar>
-                                    <Avatar
-                                      src={getImagePath(positionItem?.logo)}
-                                      alt={positionItem?.title}
-                                      sx={{ height: 28, width: 28 }}
-                                    />
-                                  </ListItemAvatar>
-                                  <ListItemText primary={positionItem?.title} />
-                                </ListItem>
-                              )}
-                            />
-                            {positionErr && <FormHelperText sx={{ color: 'error.main' }}>{positionErr}</FormHelperText>}
-                          </FormControl>
-                        </Grid> */}
                         <Grid item xs={12} md={6} mt={5}>
                           <FormControl fullWidth>
                             <Autocomplete

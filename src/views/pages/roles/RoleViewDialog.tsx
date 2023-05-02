@@ -76,7 +76,6 @@ const RoleViewDialog = ({ open, toggle, dialogTitle, editRoleData }: RoleViewDia
 
   const togglePermission = (id: string) => {
     let arr = [...selectedPermissions]
-    console.log(arr)
     if (selectedPermissions.includes(id)) {
       arr.splice(arr.indexOf(id), 1)
       setSelectedPermissions([...arr])

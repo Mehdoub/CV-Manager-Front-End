@@ -152,7 +152,7 @@ const InterviewCard = () => {
           sx={{ flexDirection: 'column', justifyContent: 'start', pb: '24px', pr: '20px' }}
         >
           <Grid sx={{ display: 'flex', justifyContent: 'end', width: '100%' }}>
-            <IconButton onClick={() => console.log('clicked')}>
+            <IconButton>
               <Icon icon='material-symbols:more-vert' />
             </IconButton>
           </Grid>

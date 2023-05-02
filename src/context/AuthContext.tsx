@@ -59,7 +59,7 @@ const AuthProvider = ({ children }: Props) => {
     if (localStorage.getItem('accessToken')) {
       try {
         setLoading(false)
-        const result = await ApiRequest.builder().auth().request('get', 'users/getMe')
+        const result = await ApiRequest.builder().auth().request('get', 'users/get-me')
 
         const userData = { ...result.data.data[0], role: 'admin' }
         setUser(userData)

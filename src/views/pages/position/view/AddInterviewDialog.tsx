@@ -108,7 +108,7 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
   useEffect(() => {
     if (resumeAddInterviewStatus) {
       dispatch(getResume(resume?.id))
-      dispatch(getPositionResumes(resume?.position_id))
+      dispatch(getPositionResumes(resume?.position_id?._id))
       dispatch(clearResumeAddInterview())
       resetForm()
       handleClose()

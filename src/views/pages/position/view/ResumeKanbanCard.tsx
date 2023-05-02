@@ -16,6 +16,7 @@ import { getInitials } from 'src/@core/utils/get-initials'
 import { Draggable } from 'react-beautiful-dnd'
 import { useDispatch } from 'react-redux'
 import { getResume } from 'src/store/resume'
+import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 
 interface ResumeKanbanCardProps {
   cardData: any
@@ -34,6 +35,8 @@ const ResumeKanbanCard = ({ cardData: card, setOpen, index }: ResumeKanbanCardPr
     '2023-09-18T07:09:11.498Z',
     '2023-09-18T11:09:11.498Z'
   )
+
+  const selectedTags = card?.tags?.length <= 2 ? card?.tags : card?.tags?.slice(Math.max(card?.tags?.length - 2, 0))
 
   return (
     <Draggable draggableId={`${card.id}`} index={index} key={card.id}>
@@ -110,36 +113,37 @@ const ResumeKanbanCard = ({ cardData: card, setOpen, index }: ResumeKanbanCardPr
                   </Typography>
                 </BootstrapTooltip>
                 <Stack direction='row' spacing={1} ml={-2}>
-                  {card?.tags?.length > 0 &&
-                    card?.tags?.map(
+                  {selectedTags?.length > 0 &&
+                    selectedTags?.map(
                       (tag: any, index: number) =>
                         index < 2 && (
-                          <BootstrapTooltip placement='top' title={tag.text}>
+                          <BootstrapTooltip placement='top' title={tag?.name}>
                             <div>
                               <CustomChip
                                 size='small'
-                                label={getMaxTextLen(tag.text)}
+                                label={getMaxTextLen(tag?.name)}
                                 skin='light'
-                                color={tag.tag_color as any}
                                 sx={{
                                   fontSize: 10,
                                   height: 17,
                                   borderBottomLeftRadius: 0,
-                                  borderTopLeftRadius: 0
+                                  borderTopLeftRadius: 0,
+                                  backgroundColor: hexToRGBA(tag?.color, 0.12),
+                                  color: tag?.color
                                 }}
                               />
                             </div>
                           </BootstrapTooltip>
                         )
                     )}
-                  {card?.count_tags && card?.count_tags - 2 > 0 && (
-                    <BootstrapTooltip placement='top' title={`+${card.count_tags - 2}`}>
+                  {card?.summary_count?.tag > 2 && (
+                    <BootstrapTooltip placement='top' title={`${card?.summary_count?.tag - 2} More Tags`}>
                       <div>
                         <CustomChip
                           size='small'
-                          label={`+${card.count_tags - 2}`}
+                          label={`+${card?.summary_count?.tag - 2}`}
                           skin='light'
-                          color='info'
+                          color='secondary'
                           sx={{ fontSize: 10, height: 17, borderBottomLeftRadius: 0, borderTopLeftRadius: 0 }}
                         />
                       </div>

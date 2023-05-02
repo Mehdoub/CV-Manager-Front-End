@@ -59,7 +59,7 @@ const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
     if (resumeHireStatus) {
       dispatch(clearResumeHire())
       dispatch(getResume(resume?.id))
-      dispatch(getPositionResumes(resume?.position_id))
+      dispatch(getPositionResumes(resume?.position_id?._id))
       resetFormErrors(true)
       handleClose()
     }

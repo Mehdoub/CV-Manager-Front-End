@@ -17,7 +17,7 @@ const tagCreateSlice = createSlice({
   initialState: sliceInitialStateWithData,
   reducers: {
     clearTagCreate: (state) => {
-      clearStatesAction(state)
+      clearStatesAction(state, true)
     }
   },
   extraReducers: (builder) => {

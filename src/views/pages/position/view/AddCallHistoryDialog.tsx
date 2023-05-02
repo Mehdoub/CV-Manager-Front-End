@@ -72,7 +72,7 @@ const AddCallHistoryDialog = ({ open, handleClose }: AddCallHistoryDialogProps) 
   useEffect(() => {
     if (addCallHistoryStatus) {
       dispatch(getResume(resume.id))
-      dispatch(getPositionResumes(resume.position_id))
+      dispatch(getPositionResumes(resume?.position_id?._id?._id))
       dispatch(clearResumeAddCallHistory())
       resetErrors(true)
       handleClose()
@@ -122,8 +122,6 @@ const AddCallHistoryDialog = ({ open, handleClose }: AddCallHistoryDialogProps) 
       )
     }
   }
-
-  console.log(ratingValue)
 
   return (
     <>

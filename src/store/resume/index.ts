@@ -142,7 +142,7 @@ const resumeSlice = createSlice({
 export const updateResumeStatus: any = createAsyncThunk('updateResumeStatus', async (data: { resumeId: string, status: string, index: number }, { rejectWithValue }) => {
   try {
     const resumeId = popObjectItemByKey(data, 'resumeId')
-    const response = await ApiRequest.builder().auth().request('patch', `resumes/${resumeId}`, data)
+    const response = await ApiRequest.builder().auth().request('patch', `resumes/${resumeId}/status`, data)
 
     return response
   } catch (err: any) {

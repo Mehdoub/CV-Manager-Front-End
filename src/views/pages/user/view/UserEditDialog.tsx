@@ -286,9 +286,6 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
                 defaultValue={{ name: user?.role ? user?.role[0] : '' }}
                 renderInput={params => <TextField {...params} label='Edit Role' placeholder='Search Roles ...' />}
                 renderOption={(props, role: any) => <ListItem {...props}>{role.name}</ListItem>}
-                onChange={(event, newValue) => {
-                  console.log('changed')
-                }}
                 selectOnFocus
                 clearOnBlur
                 handleHomeEndKeys

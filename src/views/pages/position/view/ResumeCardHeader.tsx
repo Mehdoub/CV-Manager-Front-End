@@ -22,7 +22,8 @@ import {
   Tab,
   TextField,
   Typography,
-  createFilterOptions
+  createFilterOptions,
+  styled
 } from '@mui/material'
 import {
   getColorCodes,
@@ -30,6 +31,7 @@ import {
   getImagePath,
   getMaxTextLen,
   isForbiddenState,
+  ratingTextsObj,
   uppercaseFirstLetters
 } from 'src/helpers/functions'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
@@ -57,8 +59,21 @@ import {
 import { useDispatch } from 'react-redux'
 import { clearTagCreate, createTag, getTags } from 'src/store/tag'
 import { getPositionResumes } from 'src/store/position'
+import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
+import Link from 'next/link'
 
 const filter = createFilterOptions<any>()
+
+const StyledLink = styled(Link)(({ theme }) => ({
+  fontWeight: 500,
+  fontSize: '0.9rem',
+  cursor: 'pointer',
+  textDecoration: 'none',
+  color: theme.palette.text.secondary,
+  '&:hover': {
+    color: theme.palette.primary.main
+  }
+}))
 
 const viewes = [
   {
@@ -81,24 +96,6 @@ const viewes = [
     username: 'mehdoub',
     avatar: '/images/avatars/1.png',
     date: '4 Days Ago'
-  }
-]
-
-const fakeTags = [
-  {
-    id: 1,
-    title: 'tag number one',
-    color: 'error'
-  },
-  {
-    id: 2,
-    title: 'tag two',
-    color: 'success'
-  },
-  {
-    id: 3,
-    title: 'tag 3',
-    color: 'primary'
   }
 ]
 
@@ -137,7 +134,7 @@ const ResumeCardHeader = ({
   useEffect(() => {
     if (resumeAddTagStatus) {
       dispatch(getResume(resume.id))
-      dispatch(getPositionResumes(resume?.position_id))
+      dispatch(getPositionResumes(resume?.position_id?._id))
       dispatch(clearResumeAddTag())
       handleCloseAddTag()
     }
@@ -146,10 +143,10 @@ const ResumeCardHeader = ({
   useEffect(() => {
     if (resumeRemoveTagStatus) {
       dispatch(getResume(resume.id))
-      dispatch(getPositionResumes(resume?.position_id))
+      dispatch(getPositionResumes(resume?.position_id?._id))
       dispatch(clearResumeRemoveTag())
     }
-  }, [resumeAddTagStatus])
+  }, [resumeRemoveTagStatus])
 
   useEffect(() => {
     if (createdTag?.name?.length > 0) {
@@ -293,7 +290,17 @@ const ResumeCardHeader = ({
                 {getFullName(resume)}
               </Typography>
               <Typography variant='body2'>
-                {resume.company_id} • {resume.project_id}
+                <BootstrapTooltip title='Company' placement='bottom'>
+                  <StyledLink href={`/companies/view/${resume?.company_id?._id}/overview/`}>
+                    {resume?.company_id?.name}
+                  </StyledLink>
+                </BootstrapTooltip>{' '}
+                •{' '}
+                <BootstrapTooltip title='Project' placement='bottom'>
+                  <StyledLink href={`/projects/view/${resume?.project_id?._id}/overview/`}>
+                    {resume?.project_id?.name}
+                  </StyledLink>
+                </BootstrapTooltip>
               </Typography>
             </Box>
           </Box>
@@ -411,10 +418,10 @@ const ResumeCardHeader = ({
                         size='small'
                         label={getMaxTextLen(tag?.name)}
                         skin='light'
-                        // color={tag?.color as any}
                         sx={{
                           fontSize: 12,
                           height: 22,
+                          backgroundColor: hexToRGBA(tag?.color, 0.12),
                           color: tag?.color,
                           borderBottomLeftRadius: 0,
                           borderTopLeftRadius: 0,
@@ -450,7 +457,11 @@ const ResumeCardHeader = ({
               onClose={handleCloseAddTag}
               anchorOrigin={{
                 vertical: 'bottom',
-                horizontal: 'left'
+                horizontal: 'center'
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'center'
               }}
               PaperProps={{
                 style: {
@@ -462,6 +473,7 @@ const ResumeCardHeader = ({
                 <Grid item xs={12}>
                   <Autocomplete
                     options={tags?.docs ?? []}
+                    size='small'
                     id='autocomplete-size-small-multi'
                     renderInput={params => (
                       <TextField {...params} label='Add Tag' placeholder='Search Tags ...' onChange={searchTags} />
@@ -470,8 +482,16 @@ const ResumeCardHeader = ({
                       tag.name.includes('Add "') ? (
                         <ListItem {...props}>{tag?.name}</ListItem>
                       ) : (
-                        <ListItem {...props}>
-                          <CustomChip size='small' label={tag?.name} skin='light' sx={{ color: tag?.color }} />
+                        <ListItem {...props} alignItems='center'>
+                          <CustomChip
+                            size='small'
+                            label={tag?.name}
+                            skin='light'
+                            sx={{ backgroundColor: hexToRGBA(tag?.color, 0.12), color: tag?.color }}
+                          />
+                          <ListItemSecondaryAction>
+                            <Typography>{tag?.count}</Typography>
+                          </ListItemSecondaryAction>
                         </ListItem>
                       )
                     }
@@ -523,7 +543,11 @@ const ResumeCardHeader = ({
           </Stack>
         </Grid>
         <Grid item mt={7} lg={6} xs={12} sx={{ textAlign: 'right' }}>
-          <Rating readOnly value={resume?.rating ?? 0} sx={{ mr: 5 }} name='read-only' size='small' />
+          <BootstrapTooltip placement='top' title={ratingTextsObj[resume?.rating ?? 0]}>
+            <div style={{ display: 'inline', cursor: 'pointer' }}>
+              <Rating readOnly value={resume?.rating ?? 0} sx={{ mr: 5 }} name='read-only' size='small' />
+            </div>
+          </BootstrapTooltip>
         </Grid>
       </Grid>
       <Grid lg={6} xs={12} item container sx={{ textAlign: 'left', p: 5 }}>
