@@ -22,6 +22,8 @@ import { useAuth } from 'src/hooks/useAuth'
 
 // ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
+import { getFullName, getImagePath } from 'src/helpers/functions'
+import { useSelector } from 'react-redux'
 
 interface Props {
   settings: Settings
@@ -45,7 +47,9 @@ const UserDropdown = (props: Props) => {
 
   // ** Hooks
   const router = useRouter()
-  const { logout, user } = useAuth()
+  const { logout } = useAuth()
+
+  const { data: user } = useSelector((state: any) => state.user)
 
   // ** Vars
   const { direction } = settings
@@ -94,10 +98,10 @@ const UserDropdown = (props: Props) => {
         }}
       >
         <Avatar
-          alt={`${user?.firstname} ${user?.lastname}`}
+          alt={getFullName(user)}
           onClick={handleDropdownOpen}
           sx={{ width: 40, height: 40 }}
-          src='/images/avatars/1.png'
+          src={user?.avatar ? getImagePath(user?.avatar) : '/images/avatars/1.png'}
         />
       </Badge>
       <Menu
@@ -119,15 +123,15 @@ const UserDropdown = (props: Props) => {
               }}
             >
               <Avatar
-                alt={`${user?.firstname} ${user?.lastname}`}
-                src='/images/avatars/1.png'
+                alt={getFullName(user)}
+                src={user?.avatar ? getImagePath(user?.avatar) : '/images/avatars/1.png'}
                 sx={{ width: '2.5rem', height: '2.5rem' }}
               />
             </Badge>
             <Box sx={{ display: 'flex', ml: 3, alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography sx={{ fontWeight: 600 }}>{`${user?.firstname} ${user?.lastname}`}</Typography>
+              <Typography sx={{ fontWeight: 600 }}>{getFullName(user)}</Typography>
               <Typography variant='body2' sx={{ fontSize: '0.8rem', color: 'text.disabled' }}>
-                {`${user?.role}`}
+                {user?.username}
               </Typography>
             </Box>
           </Box>

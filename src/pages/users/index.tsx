@@ -34,7 +34,7 @@ import AddUserDrawer from 'src/views/pages/user/list/AddUserDrawer'
 import { Autocomplete, ListItem, Popover, Skeleton, Stack, TextField } from '@mui/material'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 import { getUsers } from 'src/store/user'
-import { showDate, showIsActiveColor } from 'src/helpers/functions'
+import { getFullName, getImagePath, showDate, showIsActiveColor } from 'src/helpers/functions'
 import UserEditDialog from 'src/views/pages/user/view/UserEditDialog'
 import { getRoles } from 'src/store/role'
 
@@ -51,17 +51,17 @@ const StyledLink = styled(Link)(({ theme }) => ({
 
 // ** renders client column
 const renderClient = (row: any) => {
-  const fullName = row?.firstname + ' ' + row?.lastname
   if (row?.avatar?.length) {
-    return <CustomAvatar src={row.avatar} sx={{ mr: 3, width: 34, height: 34 }} />
+    return <CustomAvatar src={getImagePath(row?.avatar)} sx={{ mr: 3, width: 34, height: 34 }} alt={getFullName(row)} />
   } else {
     return (
       <CustomAvatar
         skin='light'
-        color={row.avatarColor || 'primary'}
+        color='primary'
         sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}
+        alt={getFullName(row)}
       >
-        {getInitials(fullName ?? 'John Doe')}
+        {getInitials(getFullName(row))}
       </CustomAvatar>
     )
   }

@@ -148,12 +148,12 @@ export const editUser: any = createAsyncThunk(
 
       const response = await ApiRequest.builder().auth().request('patch', `users/${userId}`, data)
 
-      // if (avatar) {
-      //   await ApiRequest.builder()
-      //     .auth()
-      //     .contentType('multipart/form-data')
-      //     .request('patch', `users/${userId}/avatar`, { avatar })
-      // }
+      if (avatar) {
+        await ApiRequest.builder()
+          .auth()
+          .contentType('multipart/form-data')
+          .request('patch', `users/${userId}/avatar`, { avatar })
+      }
 
       return response
     } catch (err: any) {

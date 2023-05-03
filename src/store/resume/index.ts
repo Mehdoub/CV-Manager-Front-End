@@ -238,6 +238,31 @@ const resumeHireSlice = createSlice({
 })
 
 
+export const rejectResume: any = createAsyncThunk('rejectResume', async (data: any, { rejectWithValue }) => {
+  try {
+    const resumeId = popObjectItemByKey(data, 'resumeId')
+    const response = await ApiRequest.builder().auth().request('patch', `resumes/${resumeId}/reject`, data)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const resumeRejectSlice = createSlice({
+  name: 'resumeReject',
+  initialState: sliceInitialStateWithStatus,
+  reducers: {
+    clearResumeReject: (state) => {
+      clearStatesAction(state)
+    }
+  },
+  extraReducers: (builder) => {
+    createExtraReducers(builder, rejectResume)
+  }
+})
+
+
 export const addTagToResume: any = createAsyncThunk('addTagToResume', async (data: any, { rejectWithValue }) => {
   try {
     const { resumeId, tagId } = data
@@ -346,6 +371,7 @@ export const { clearResumeUpdateStatus } = resumeUpdateStatusSlice.actions
 export const { clearResumeAddCallHistory } = resumeAddCallHistorySlice.actions
 export const { clearResumeAddInterview } = resumeAddInterviewSlice.actions
 export const { clearResumeHire } = resumeHireSlice.actions
+export const { clearResumeReject } = resumeRejectSlice.actions
 export const { clearResumeAddTag } = resumeAddTagSlice.actions
 export const { clearResumeRemoveTag } = resumeRemoveTagSlice.actions
 export const { clearResumeAddContributor } = resumeAddContributorSlice.actions
@@ -359,6 +385,7 @@ export const resumeUpdateStatusReducer = resumeUpdateStatusSlice.reducer
 export const resumeAddCallHistoryReducer = resumeAddCallHistorySlice.reducer
 export const resumeAddInterviewReducer = resumeAddInterviewSlice.reducer
 export const resumeHireReducer = resumeHireSlice.reducer
+export const resumeRejectReducer = resumeRejectSlice.reducer
 export const resumeAddTagReducer = resumeAddTagSlice.reducer
 export const resumeRemoveTagReducer = resumeRemoveTagSlice.reducer
 export const resumeAddContributorReducer = resumeAddContributorSlice.reducer

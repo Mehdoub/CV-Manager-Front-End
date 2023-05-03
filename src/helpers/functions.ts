@@ -110,9 +110,14 @@ export const showDate = (date: string) => {
   return returnVal
 }
 
-export const uppercaseFirstLetters = (text: string) => {
+export const uppercaseFirstLetters = (text: any, removeUnderLines: boolean = false) => {
   let returnVal = ''
-  text?.split(' ').map((item: string) => returnVal += item.substring(0, 1).toUpperCase() + item.substring(1).toLowerCase() + ' ')
+  let modifiedText = text
+  if (removeUnderLines && text?.includes('_')) {
+    modifiedText = ''
+    text?.split('_').map((word: string) => modifiedText += word + ' ')
+  }
+  modifiedText?.split(' ').map((item: string) => returnVal += item.substring(0, 1).toUpperCase() + item.substring(1).toLowerCase() + ' ')
   return returnVal.trim()
 }
 

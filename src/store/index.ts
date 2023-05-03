@@ -42,7 +42,7 @@ import { positionActiveReducer, positionCreateReducer, positionDeactiveReducer, 
 import { constantsReducer } from './common'
 import { roleCreateReducer, roleEditReducer, rolesReducer } from './role'
 import { permissionsGroupedReducer } from './permission'
-import { resumeAddCallHistoryReducer, resumeAddContributorReducer, resumeAddFilesReducer, resumeAddInterviewReducer, resumeAddTagReducer, resumeCreateReducer, resumeEditReducer, resumeHireReducer, resumeReducer, resumeRemoveContributorReducer, resumeRemoveTagReducer, resumeUpdateStatusReducer } from './resume'
+import { resumeAddCallHistoryReducer, resumeAddContributorReducer, resumeAddFilesReducer, resumeAddInterviewReducer, resumeAddTagReducer, resumeCreateReducer, resumeEditReducer, resumeHireReducer, resumeReducer, resumeRejectReducer, resumeRemoveContributorReducer, resumeRemoveTagReducer, resumeUpdateStatusReducer } from './resume'
 import { citiesByProvinceReducer, provincesReducer } from './province'
 import { tagCreateReducer, tagsReducer } from './tag'
 
@@ -115,6 +115,7 @@ export const store = configureStore({
     resumeAddCallHistory: resumeAddCallHistoryReducer,
     resumeAddInterview: resumeAddInterviewReducer,
     resumeHire: resumeHireReducer,
+    resumeReject: resumeRejectReducer,
     resumeAddTag: resumeAddTagReducer,
     resumeRemoveTag: resumeRemoveTagReducer,
     resumeAddContributor: resumeAddContributorReducer,

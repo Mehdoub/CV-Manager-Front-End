@@ -26,6 +26,7 @@ const successHandler = ({ }) => (next: any) => async (action: any) => {
     'addCallHistoryToResume/fulfilled',
     'addInterviewToResume/fulfilled',
     'hireResume/fulfilled',
+    'rejectResume/fulfilled',
     'createTag/fulfilled',
     'addTagToResume/fulfilled',
     'removeTagFromResume/fulfilled',

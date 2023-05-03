@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 // ** MUI Imports
 import Button from '@mui/material/Button'
@@ -19,6 +19,7 @@ import Icon from 'src/@core/components/icon'
 import {
   Box,
   FormControl,
+  FormHelperText,
   IconButton,
   InputLabel,
   MenuItem,
@@ -31,6 +32,12 @@ import {
 import { uppercaseFirstLetters } from 'src/helpers/functions'
 import Language from 'src/helpers/Language'
 import { useSelector } from 'react-redux'
+import * as yup from 'yup'
+import { Controller, useForm } from 'react-hook-form'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { useDispatch } from 'react-redux'
+import { clearResumeReject, getResume, rejectResume } from 'src/store/resume'
+import { getPositionResumes } from 'src/store/position'
 
 const ratingLabels: { [index: string]: string } = {
   1: 'Useless',
@@ -44,30 +51,42 @@ interface ResumeRejectingDialogProps {
   open: boolean
   handleClose: any
 }
+
 const ResumeRejectingDialog = ({ open, handleClose }: ResumeRejectingDialogProps) => {
-  const [ratingValue, setRatingValue] = useState<any>(2)
-  const [hoverRatingValue, setHoverRatingValue] = useState<any>(1)
-  const [rejectionReason, setRejectionReason] = useState<string>('')
-  const [callingDate, setCallingDate] = useState<any>('')
-  const [recallDate, setRecallDate] = useState<any>('')
+  const { data: constants } = useSelector((state: any) => state.constants)
+  const { data: resume } = useSelector((state: any) => state.resume)
+  const { status: resumeRejectStatus, loading: resumeRejectLoading } = useSelector((state: any) => state.resumeReject)
 
-  // const {
-  //   data: {
-  //     resume: { call_history_status: rejectionReasonOptions }
-  //   }
-  // } = useSelector((state: any) => state.constants)
+  const dispatch = useDispatch()
 
-  const rejectionReasonOptions = ['lack of skills', 'improper personality', 'disagreement']
+  const schema = yup.object().shape({
+    reject_reason: yup.string().label('Reject Reason').oneOf(constants?.resume?.reject_reason).required(),
+    reject_description: yup.string().label('Reject Description').max(1000).optional()
+  })
 
-  const theme = useTheme()
+  const {
+    control,
+    formState: { errors },
+    handleSubmit,
+    reset
+  } = useForm({ mode: 'onBlur', resolver: yupResolver(schema) })
 
-  const language = Language.builder().getLanguage()
-
-  const persianDate = language == 'fa' ? persian : undefined
-  const persianDateFa = language == 'fa' ? persian_fa : undefined
+  useEffect(() => {
+    if (resumeRejectStatus) {
+      dispatch(getResume(resume?._id))
+      dispatch(getPositionResumes(resume?.position_id?._id))
+      dispatch(clearResumeReject())
+      reset()
+      handleClose()
+    }
+  }, [resumeRejectStatus])
 
   const isSmallScreen = useMediaQuery((theme: any) => theme.breakpoints.down('lg'))
   const overflowVisibility = isSmallScreen ? 'scroll' : 'visible'
+
+  const submitHandler = (data: any) => {
+    dispatch(rejectResume({ ...data, resumeId: resume?._id }))
+  }
 
   return (
     <>
@@ -82,47 +101,81 @@ const ResumeRejectingDialog = ({ open, handleClose }: ResumeRejectingDialogProps
         </IconButton>
         <DialogTitle id='form-dialog-title'>Rejecting Resume Form</DialogTitle>
         <DialogContent sx={{ overflowY: overflowVisibility }}>
-          <form onSubmit={e => e.preventDefault()} style={{ marginTop: '15px' }}>
+          <form onSubmit={handleSubmit(submitHandler)} style={{ marginTop: '15px' }}>
             <Grid container spacing={3}>
               <Grid item xs={12} mt={5}>
                 <FormControl fullWidth>
-                  <InputLabel>Rejection Reason</InputLabel>
-                  <Select
-                    label='Rejection Reason'
-                    value={rejectionReason}
-                    onChange={(e: any) => setRejectionReason(e.target.value)}
-                  >
-                    {rejectionReasonOptions.map((item: string, index: number) => (
-                      <MenuItem key={`${item}-${index}`} value={item}>
-                        {uppercaseFirstLetters(item)}
-                      </MenuItem>
-                    ))}
-                  </Select>
+                  <Controller
+                    name='reject_reason'
+                    control={control}
+                    render={({ field: { value, onChange, onBlur } }) => (
+                      <>
+                        <InputLabel>Rejection Reason</InputLabel>
+                        <Select
+                          label='Rejection Reason'
+                          value={value}
+                          onChange={onChange}
+                          onBlur={onBlur}
+                          error={Boolean(errors?.reject_reason)}
+                        >
+                          {constants?.resume?.reject_reason.map((item: string, index: number) => (
+                            <MenuItem key={`${item}-${index}`} value={item}>
+                              {uppercaseFirstLetters(item, true)}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </>
+                    )}
+                  />
+                  {errors?.reject_reason && (
+                    <FormHelperText sx={{ color: 'error.main' }}>{errors?.reject_reason?.message}</FormHelperText>
+                  )}
                 </FormControl>
               </Grid>
 
               <Grid item xs={12} mt={5}>
-                <TextField
-                  fullWidth
-                  multiline
-                  minRows={3}
-                  label='Description'
-                  placeholder='Rejection Reason Is Described Here...'
-                  sx={{ '& .MuiOutlinedInput-root': { alignItems: 'baseline' } }}
-                  InputProps={{
-                    startAdornment: (
-                      <InputAdornment position='start'>
-                        <Icon icon='fluent:text-description-24-filled' />
-                      </InputAdornment>
-                    )
-                  }}
-                />
+                <FormControl fullWidth>
+                  <Controller
+                    name='reject_description'
+                    control={control}
+                    render={({ field: { value, onChange, onBlur } }) => (
+                      <TextField
+                        value={value}
+                        onChange={onChange}
+                        onBlur={onBlur}
+                        error={Boolean(errors?.reject_description)}
+                        fullWidth
+                        multiline
+                        minRows={3}
+                        label='Description'
+                        placeholder='Rejection Reason Is Described Here...'
+                        sx={{ '& .MuiOutlinedInput-root': { alignItems: 'baseline' } }}
+                        InputProps={{
+                          startAdornment: (
+                            <InputAdornment position='start'>
+                              <Icon icon='fluent:text-description-24-filled' />
+                            </InputAdornment>
+                          )
+                        }}
+                      />
+                    )}
+                  />
+                  {errors?.reject_description && (
+                    <FormHelperText sx={{ color: 'error.main' }}>{errors?.reject_description?.message}</FormHelperText>
+                  )}
+                </FormControl>
               </Grid>
               <Grid item xs={12} sx={{ textAlign: 'right', mt: 10 }}>
-                <Button onClick={handleClose} variant='outlined' size='large' color='secondary'>
+                <Button
+                  disabled={resumeRejectLoading}
+                  onClick={handleClose}
+                  variant='outlined'
+                  size='large'
+                  color='secondary'
+                >
                   Cancel
                 </Button>
-                <Button type='submit' variant='contained' size='large' sx={{ ml: 2 }}>
+                <Button disabled={resumeRejectLoading} type='submit' variant='contained' size='large' sx={{ ml: 2 }}>
                   Submit
                 </Button>
               </Grid>

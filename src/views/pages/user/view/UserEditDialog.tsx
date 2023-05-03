@@ -25,6 +25,7 @@ import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { checkUsername } from 'src/store/auth'
 import { clearUserEdit, editUser, getUser, getUsers } from 'src/store/user'
+import { getRoles } from 'src/store/role'
 
 interface UserEditDialogProps {
   open: boolean
@@ -77,6 +78,10 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
     mode: 'onBlur',
     resolver: yupResolver(schema)
   })
+
+  useEffect(() => {
+    dispatch(getRoles())
+  }, [])
 
   useEffect(() => {
     if (userDataFromList?.id?.length > 0) setUser(userDataFromList)
@@ -140,7 +145,7 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
 
   const submitHandler = (data: any) => {
     if (avatar.length > 0) data = { ...data, avatar: avatar[0] }
-    else if (!usernameErr) dispatch(editUser({ ...data, userId: user?.id }))
+    if (!usernameErr) dispatch(editUser({ ...data, userId: user?.id }))
   }
 
   return (

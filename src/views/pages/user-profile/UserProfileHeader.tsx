@@ -20,7 +20,7 @@ import Icon from 'src/@core/components/icon'
 import { useEffect, useState } from 'react'
 import { UserDataType } from 'src/context/types'
 import { useSelector } from 'react-redux'
-import { getFullName } from 'src/helpers/functions'
+import { getFullName, getImagePath } from 'src/helpers/functions'
 
 // ** Types
 // import { ProfileHeaderType } from 'src/@fake-db/types'
@@ -72,7 +72,10 @@ const UserProfileHeader = () => {
           justifyContent: { xs: 'center', md: 'flex-start' }
         }}
       >
-        <ProfilePicture src='/images/avatars/1.png' alt='profile-picture' />
+        <ProfilePicture
+          src={user?.avatar ? getImagePath(user?.avatar) : '/images/avatars/1.png'}
+          alt='profile-picture'
+        />
         <Box
           sx={{
             width: '100%',
