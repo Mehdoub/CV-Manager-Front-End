@@ -32,6 +32,7 @@ import {
   getMaxTextLen,
   isForbiddenState,
   ratingTextsObj,
+  showDate,
   uppercaseFirstLetters
 } from 'src/helpers/functions'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
@@ -80,30 +81,6 @@ const StyledLink = styled(Link)(({ theme }) => ({
   }
 }))
 
-const viewes = [
-  {
-    id: 1,
-    name: 'Aliakbar Rezaei',
-    username: 'akrez',
-    avatar: '/images/avatars/3.png',
-    date: 'Yesterday'
-  },
-  {
-    id: 2,
-    name: 'Mahdi Amereh',
-    username: 'mehdieight',
-    avatar: '/images/avatars/5.png',
-    date: '2 Days Ago'
-  },
-  {
-    id: 3,
-    name: 'Mahdi Mehrjoo',
-    username: 'mehdoub',
-    avatar: '/images/avatars/1.png',
-    date: '4 Days Ago'
-  }
-]
-
 const ResumeCardHeader = ({
   handleClickOpenAddCallDialog,
   handleClickOpenAddInterviewDialog,
@@ -114,7 +91,7 @@ const ResumeCardHeader = ({
 }: any) => {
   const [anchorElAddTag, setAnchorElAddTag] = useState<HTMLButtonElement | null>(null)
   const [anchorElAddContributor, setAnchorElAddContributor] = useState<HTMLButtonElement | null>(null)
-  const [anchorElViewes, setAnchorElViewes] = useState<HTMLButtonElement | null>(null)
+  const [anchorElViews, setAnchorElViews] = useState<HTMLButtonElement | null>(null)
   const [openResumeHiringDialog, setOpenResumeHiringDialog] = useState<boolean>(false)
   const [openResumeRejectingDialog, setOpenResumeRejectingDialog] = useState<boolean>(false)
   const [anchorElStatesMenu, setAnchorElStatesMenu] = useState<null | HTMLElement>(null)
@@ -219,17 +196,17 @@ const ResumeCardHeader = ({
     setAnchorElAddContributor(null)
   }
 
-  const handleClickViewes = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorElViewes(event.currentTarget)
+  const handleClickViews = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorElViews(event.currentTarget)
   }
 
-  const handleCloseViewes = () => {
-    setAnchorElViewes(null)
+  const handleCloseViews = () => {
+    setAnchorElViews(null)
   }
 
   const openAddTag = Boolean(anchorElAddTag)
   const openAddContributor = Boolean(anchorElAddContributor)
-  const openViewes = Boolean(anchorElViewes)
+  const openViews = Boolean(anchorElViews)
 
   const previousState = stateKeys[stateKeys.indexOf(resume?.status) - 1]
   const nextState = stateKeys[stateKeys.indexOf(resume?.status) + 1]
@@ -703,26 +680,26 @@ const ResumeCardHeader = ({
           sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'inherit', flexDirection: 'column' }}
         >
           <Grid item sx={{ textAlign: 'right' }}>
-            <BootstrapTooltip title='Viewes' placement='top'>
+            <BootstrapTooltip title='Views' placement='top'>
               <Button
-                onClick={handleClickViewes}
+                onClick={handleClickViews}
                 sx={{ p: 0, mt: 3, justifyContent: 'end', minWidth: 0 }}
                 color='secondary'
               >
                 <Badge
-                  badgeContent={viewes.length ?? 0}
+                  badgeContent={resume?.summary_count?.view ?? 0}
                   color='primary'
                   overlap='circular'
-                  invisible={!Boolean(viewes.length)}
+                  invisible={!Boolean(resume?.summary_count?.view)}
                 >
                   <Icon icon='teenyicons:eye-outline' fontSize={35} />
                 </Badge>
               </Button>
             </BootstrapTooltip>
             <Popover
-              open={openViewes}
-              anchorEl={anchorElViewes}
-              onClose={handleCloseViewes}
+              open={openViews}
+              anchorEl={anchorElViews}
+              onClose={handleCloseViews}
               anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
               PaperProps={{
                 style: {
@@ -734,21 +711,23 @@ const ResumeCardHeader = ({
             >
               <Grid container xs={12}>
                 <Grid item xs={12} p={0.5}>
-                  <List dense subheader={<ListSubheader>Viewes</ListSubheader>}>
+                  <List dense subheader={<ListSubheader>Views</ListSubheader>}>
                     <Divider />
-                    {viewes.length > 0 ? (
-                      viewes.map((viewer: any, index: number) => (
+                    {resume?.summary_count?.view > 0 ? (
+                      resume?.views?.map((viewer: any, index: number) => (
                         <ListItemButton key={`viewer-${index}`}>
                           <ListItemAvatar>
                             {viewer.avatar ? (
-                              <Avatar src={viewer.avatar} alt={viewer.name}></Avatar>
+                              <Avatar src={getImagePath(viewer?.avatar)} alt={getFullName(viewer)}></Avatar>
                             ) : (
-                              <Avatar alt={viewer.name}>{getInitials(viewer.name)}</Avatar>
+                              <Avatar alt={getFullName(viewer)}>{getInitials(getFullName(viewer))}</Avatar>
                             )}
                           </ListItemAvatar>
-                          <ListItemText secondary={`@${viewer.username}`}>{viewer.name}</ListItemText>
-                          <ListItemSecondaryAction>
-                            <Typography fontSize={13}>{viewer.date}</Typography>
+                          <StyledLink href={`/users/view/${viewer?._id}/overview`}>
+                            <ListItemText secondary={`@${viewer?.username}`}>{getFullName(viewer)}</ListItemText>
+                          </StyledLink>
+                          <ListItemSecondaryAction sx={{ pt: 5 }}>
+                            <Typography fontSize={13}>{showDate(viewer?.createdAt)}</Typography>
                           </ListItemSecondaryAction>
                         </ListItemButton>
                       ))
