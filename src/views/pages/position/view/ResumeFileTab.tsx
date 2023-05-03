@@ -6,17 +6,17 @@ import '@react-pdf-viewer/core/lib/styles/index.css'
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout'
 import '@react-pdf-viewer/default-layout/lib/styles/index.css'
 import { Card, Grid, Typography } from '@mui/material'
+import { useSelector } from 'react-redux'
+import { getImagePath } from 'src/helpers/functions'
 
 function ResumeFileTab() {
   const defaultLayoutPluginInstance = defaultLayoutPlugin()
 
-  const sampelPdfFiles = [
-    'https://www.africau.edu/images/default/sample.pdf',
-    'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
-    'https://www.clickdimensions.com/links/TestPDFfile.pdf'
-  ]
+  const { data: resume } = useSelector((state: any) => state.resume)
 
-  const [pdfFile, setPdfFile] = useState<any>(sampelPdfFiles[0])
+  const resumeFiles = resume?.file?.map((resumeFile: string) => getImagePath(resumeFile))
+
+  const [pdfFile, setPdfFile] = useState<any>(resumeFiles?.length > 0 ? resumeFiles[resumeFiles?.length - 1] : '')
 
   return (
     <>
@@ -31,31 +31,32 @@ function ResumeFileTab() {
           pl={3}
           sx={{ overflowY: 'scroll', maxHeight: '320px', justifyContent: 'center' }}
         >
-          {sampelPdfFiles.map((pdfUrl: string, index: number) => (
-            <Grid xs={12} item p={1} sx={{ flexBasis: '0% !important' }}>
-              <Card
-                onClick={() => setPdfFile(pdfUrl)}
-                sx={{
-                  py: 2,
-                  px: 1,
-                  backgroundColor: pdfFile == pdfUrl ? '#f3f2f2' : undefined,
-                  cursor: 'pointer',
-                  '&:hover': {
-                    backgroundColor: '#f3f2f2'
-                  }
-                }}
-              >
-                <img style={{ height: '50%', width: '45px' }} src='/images/pdf-file.avif' />
-                <Typography textAlign='center' fontSize={12}>
-                  file{index + 1}.pdf
-                </Typography>
-              </Card>
-            </Grid>
-          ))}
+          {resumeFiles?.length > 0 &&
+            resumeFiles?.map((pdfUrl: string, index: number) => (
+              <Grid xs={12} item p={1} sx={{ flexBasis: '0% !important' }}>
+                <Card
+                  onClick={() => setPdfFile(pdfUrl)}
+                  sx={{
+                    py: 2,
+                    px: 1,
+                    backgroundColor: pdfFile == pdfUrl ? '#f3f2f2' : undefined,
+                    cursor: 'pointer',
+                    '&:hover': {
+                      backgroundColor: '#f3f2f2'
+                    }
+                  }}
+                >
+                  <img style={{ height: '50%', width: '45px' }} src='/images/pdf-file.avif' />
+                  <Typography textAlign='center' fontSize={12}>
+                    file{index + 1}.pdf
+                  </Typography>
+                </Card>
+              </Grid>
+            ))}
         </Grid>
         <Grid item xs={10} xl={10.5} className='viewer' style={{ padding: '15px', userSelect: 'text' }}>
           <Typography mb={4} fontWeight={500}>
-            file{sampelPdfFiles.indexOf(pdfFile) + 1}.pdf View:
+            file{resumeFiles?.indexOf(pdfFile) + 1}.pdf View:
           </Typography>
           {pdfFile && (
             <Worker workerUrl='https://unpkg.com/pdfjs-dist@2.12.313/build/pdf.worker.min.js'>

@@ -22,8 +22,9 @@ import { useDropzone } from 'react-dropzone'
 import { Fragment, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
-import { addResumeFiles, clearResumeAddFiles } from 'src/store/resume'
+import { addResumeFiles, clearResumeAddFiles, getResume } from 'src/store/resume'
 import { getAllowedFormats, toastError } from 'src/helpers/functions'
+import { getPositionResumes } from 'src/store/position'
 
 const UploadFileWrapper = styled(Grid)<BoxProps>(({ theme }) => ({
   display: 'flex',
@@ -41,9 +42,14 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
   const { status: uploadResumeFilesStatus, loading: uploadResumeFilesLoading } = useSelector(
     (state: any) => state.resumeAddFiles
   )
+  const { data: resume } = useSelector((state: any) => state.resume)
 
   useEffect(() => {
-    if (uploadResumeFilesStatus) dispatch(clearResumeAddFiles())
+    if (uploadResumeFilesStatus) {
+      dispatch(getResume(resume?._id))
+      dispatch(getPositionResumes(resume?.position_id?._id))
+      dispatch(clearResumeAddFiles())
+    }
   }, [uploadResumeFilesStatus])
 
   const { getRootProps, getInputProps } = useDropzone({
@@ -56,7 +62,7 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
       toastError('You Can Nnly Upload 5 .pdf Files With Maximum Size Of 9 MB.')
     },
     onDropAccepted(acceptedFiles) {
-      dispatch(addResumeFiles({ resumeFiles: acceptedFiles, resumeId: '643e6f56fb07b43fa72a7176' }))
+      dispatch(addResumeFiles({ resumeFiles: acceptedFiles, resumeId: resume?._id }))
     }
   })
 
