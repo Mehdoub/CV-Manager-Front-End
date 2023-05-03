@@ -49,10 +49,14 @@ import ResumeRejectingDialog from './ResumeRejectingDialog'
 import { useSelector } from 'react-redux'
 import { resumesStates } from './ViewResumes'
 import {
+  addContributorToResume,
   addTagToResume,
+  clearResumeAddContributor,
   clearResumeAddTag,
+  clearResumeRemoveContributor,
   clearResumeRemoveTag,
   getResume,
+  removeContributorFromResume,
   removeTagFromResume,
   updateResumeStatus
 } from 'src/store/resume'
@@ -61,6 +65,7 @@ import { clearTagCreate, createTag, getTags } from 'src/store/tag'
 import { getPositionResumes } from 'src/store/position'
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import Link from 'next/link'
+import { getUsers } from 'src/store/user'
 
 const filter = createFilterOptions<any>()
 
@@ -108,6 +113,7 @@ const ResumeCardHeader = ({
   isSmallScreen
 }: any) => {
   const [anchorElAddTag, setAnchorElAddTag] = useState<HTMLButtonElement | null>(null)
+  const [anchorElAddContributor, setAnchorElAddContributor] = useState<HTMLButtonElement | null>(null)
   const [anchorElViewes, setAnchorElViewes] = useState<HTMLButtonElement | null>(null)
   const [openResumeHiringDialog, setOpenResumeHiringDialog] = useState<boolean>(false)
   const [openResumeRejectingDialog, setOpenResumeRejectingDialog] = useState<boolean>(false)
@@ -124,6 +130,13 @@ const ResumeCardHeader = ({
   const { data: createdTag } = useSelector((state: any) => state.tagCreate)
   const { status: resumeAddTagStatus } = useSelector((state: any) => state.resumeAddTag)
   const { status: resumeRemoveTagStatus } = useSelector((state: any) => state.resumeRemoveTag)
+  const { status: resumeAddContributorStatus } = useSelector((state: any) => state.resumeAddContributor)
+  const { status: resumeRemoveContributorStatus } = useSelector((state: any) => state.resumeRemoveContributor)
+  const { data: users } = useSelector((state: any) => state.usersList)
+
+  useEffect(() => {
+    dispatch(getUsers())
+  }, [])
 
   useEffect(() => {
     if (resumeStateUpdateStatus) {
@@ -147,6 +160,23 @@ const ResumeCardHeader = ({
       dispatch(clearResumeRemoveTag())
     }
   }, [resumeRemoveTagStatus])
+
+  useEffect(() => {
+    if (resumeAddContributorStatus) {
+      dispatch(getResume(resume.id))
+      dispatch(getPositionResumes(resume?.position_id?._id))
+      dispatch(clearResumeAddContributor())
+      handleCloseAddContributor()
+    }
+  }, [resumeAddContributorStatus])
+
+  useEffect(() => {
+    if (resumeRemoveContributorStatus) {
+      dispatch(getResume(resume.id))
+      dispatch(getPositionResumes(resume?.position_id?._id))
+      dispatch(clearResumeRemoveContributor())
+    }
+  }, [resumeRemoveContributorStatus])
 
   useEffect(() => {
     if (createdTag?.name?.length > 0) {
@@ -181,6 +211,14 @@ const ResumeCardHeader = ({
     setAnchorElAddTag(null)
   }
 
+  const handleClickAddContributor = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorElAddContributor(event.currentTarget)
+  }
+
+  const handleCloseAddContributor = () => {
+    setAnchorElAddContributor(null)
+  }
+
   const handleClickViewes = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorElViewes(event.currentTarget)
   }
@@ -190,6 +228,7 @@ const ResumeCardHeader = ({
   }
 
   const openAddTag = Boolean(anchorElAddTag)
+  const openAddContributor = Boolean(anchorElAddContributor)
   const openViewes = Boolean(anchorElViewes)
 
   const previousState = stateKeys[stateKeys.indexOf(resume?.status) - 1]
@@ -214,6 +253,14 @@ const ResumeCardHeader = ({
 
   const removeTagFromResumeHandler = (tagId: string) => {
     dispatch(removeTagFromResume({ resumeId: resume?.id, tagId }))
+  }
+
+  const addContributorToResumeHandler = (userId: string) => {
+    dispatch(addContributorToResume({ resumeId: resume?.id, userId }))
+  }
+
+  const removeContributorFromResumeHandler = (userId: string) => {
+    dispatch(removeContributorFromResume({ resumeId: resume?.id, userId }))
   }
 
   const createTagHandler = (name: string) => {
@@ -330,15 +377,17 @@ const ResumeCardHeader = ({
                 <Icon icon='material-symbols:arrow-back-ios-new-rounded' />
               </IconButton>
             </BootstrapTooltip>
-            <Button
-              size='small'
-              variant='contained'
-              color={(resume?.status && resumesStates[resume?.status]?.color) ?? 'info'}
-              disabled={resumeStateUpdateLoading}
-              onClick={handleClickStatesMenu}
-            >
-              {resume?.status && uppercaseFirstLetters(resumesStates[resume?.status]?.title)}
-            </Button>
+            <BootstrapTooltip placement='top' title='Change Status'>
+              <Button
+                size='small'
+                variant='contained'
+                color={(resume?.status && resumesStates[resume?.status]?.color) ?? 'info'}
+                disabled={resumeStateUpdateLoading}
+                onClick={handleClickStatesMenu}
+              >
+                {resume?.status && uppercaseFirstLetters(resumesStates[resume?.status]?.title)}
+              </Button>
+            </BootstrapTooltip>
             <Menu
               keepMounted
               elevation={0}
@@ -552,24 +601,96 @@ const ResumeCardHeader = ({
       </Grid>
       <Grid lg={6} xs={12} item container sx={{ textAlign: 'left', p: 5 }}>
         <Grid item container lg={7} xl={8} xs={12}>
-          <Grid item xs={12}>
-            <Typography variant='body2'>Asignee(s):</Typography>
-            <Stack direction='row' spacing={1} mt={2} sx={{ display: 'flex', justifyContent: 'left' }}>
-              <Chip label='Mani Mohammadi' avatar={<Avatar src='/images/avatars/7.png' alt='User Avatar' />} />
-            </Stack>
-          </Grid>
-          <Grid item container xs={12} sx={{ textAlign: 'left' }} spacing={2}>
-            <Grid item xs={12}>
-              <Typography sx={{ mt: 7 }} variant='body2'>
-                Interviewer(s):
-              </Typography>
+          <Grid item container xs={12} sx={{ textAlign: 'left', alignItems: 'end' }} spacing={2}>
+            <Grid item xs={12} mt={10} ml={1}>
+              <Typography variant='body2'>Contributor(s):</Typography>
             </Grid>
+            {resume?.contributors?.length > 0 &&
+              resume?.contributors?.map((contributorUser: any, index: number) => (
+                <Grid item>
+                  <BootstrapTooltip placement='top' title={uppercaseFirstLetters(getFullName(contributorUser))}>
+                    <Chip
+                      sx={{
+                        cursor: 'pointer',
+                        '.MuiSvgIcon-root': {
+                          display: 'none'
+                        },
+                        ':hover': {
+                          '.MuiSvgIcon-root': {
+                            display: 'inline-block'
+                          }
+                        }
+                      }}
+                      onDelete={() => removeContributorFromResumeHandler(contributorUser?._id)}
+                      label={uppercaseFirstLetters(getMaxTextLen(getFullName(contributorUser)))}
+                      avatar={
+                        contributorUser?.avatar ? (
+                          <Avatar src={getImagePath(contributorUser?.avatar)} alt={getFullName(contributorUser)} />
+                        ) : (
+                          <CustomAvatar skin='light' color='primary' alt={getFullName(contributorUser)}>
+                            {getInitials(getFullName(contributorUser))}
+                          </CustomAvatar>
+                        )
+                      }
+                    />
+                  </BootstrapTooltip>
+                </Grid>
+              ))}
             <Grid item>
-              <Chip label='Mahdi Amereh' avatar={<Avatar src='/images/avatars/5.png' alt='User Avatar' />} />
+              <BootstrapTooltip placement='top' title='Add Contributor'>
+                <IconButton
+                  aria-label='capture screenshot'
+                  sx={{ border: '1px dashed gray', width: '28px', height: '28px', p: 0, mb: 0.5 }}
+                  onClick={handleClickAddContributor}
+                >
+                  <Icon fontSize={16} icon='pajamas:assignee' />
+                </IconButton>
+              </BootstrapTooltip>
             </Grid>
-            <Grid item>
-              <Chip label='Ali Akbar Rezaei' avatar={<Avatar src='/images/avatars/3.png' alt='User Avatar' />} />
-            </Grid>
+            <Popover
+              id='add-Contributor'
+              open={openAddContributor}
+              anchorEl={anchorElAddContributor}
+              onClose={handleCloseAddContributor}
+              anchorOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center'
+              }}
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'center'
+              }}
+              PaperProps={{
+                style: {
+                  width: '13%'
+                }
+              }}
+            >
+              <Grid container xs={12} p={3}>
+                <Grid item xs={12}>
+                  <Autocomplete
+                    size='small'
+                    options={users?.docs ?? []}
+                    limitTags={2}
+                    getOptionLabel={user => getFullName(user)}
+                    onChange={(e: any, newValue: any) => addContributorToResumeHandler(newValue?._id)}
+                    renderInput={params => <TextField {...params} label='Contributor' placeholder='Search Users ...' />}
+                    renderOption={(props, user) => (
+                      <ListItem {...props}>
+                        <ListItemAvatar>
+                          <Avatar
+                            src={getImagePath(user?.avatar)}
+                            alt={getFullName(user)}
+                            sx={{ height: 28, width: 28 }}
+                          />
+                        </ListItemAvatar>
+                        <ListItemText primary={getFullName(user)} />
+                      </ListItem>
+                    )}
+                  />
+                </Grid>
+              </Grid>
+            </Popover>
           </Grid>
         </Grid>
         <Grid

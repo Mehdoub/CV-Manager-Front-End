@@ -236,15 +236,9 @@ const ResumeKanbanCard = ({ cardData: card, setOpen, index }: ResumeKanbanCardPr
                 }}
               >
                 {card?.contributors.length > 0 ? (
-                  card?.contributors.map((asignee: any, index: any) => (
-                    <BootstrapTooltip key={index} title={asignee.title} placement='top'>
-                      {asignee.avatar ? (
-                        <CustomAvatar src={asignee.avatar} sx={{ height: 26, width: 26 }} />
-                      ) : (
-                        <CustomAvatar skin='light' color='primary' sx={{ mr: 3, width: 26, height: 26 }}>
-                          {getInitials(asignee.title)}
-                        </CustomAvatar>
-                      )}
+                  card?.contributors.map((contributor: any, index: number) => (
+                    <BootstrapTooltip key={index} title={getFullName(contributor)} placement='top'>
+                      <CustomAvatar src={getImagePath(contributor?.avatar)} sx={{ height: 26, width: 26 }} />
                     </BootstrapTooltip>
                   ))
                 ) : (

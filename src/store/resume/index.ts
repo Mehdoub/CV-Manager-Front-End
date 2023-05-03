@@ -288,6 +288,56 @@ const resumeRemoveTagSlice = createSlice({
 })
 
 
+export const addContributorToResume: any = createAsyncThunk('addContributorToResume', async (data: any, { rejectWithValue }) => {
+  try {
+    const { resumeId, userId } = data
+    const response = await ApiRequest.builder().auth().request('patch', `resumes/${resumeId}/contributor/${userId}`)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const resumeAddContributorSlice = createSlice({
+  name: 'resumeAddContributor',
+  initialState: sliceInitialStateWithStatus,
+  reducers: {
+    clearResumeAddContributor: (state) => {
+      clearStatesAction(state)
+    }
+  },
+  extraReducers: (builder) => {
+    createExtraReducers(builder, addContributorToResume)
+  }
+})
+
+
+export const removeContributorFromResume: any = createAsyncThunk('removeContributorFromResume', async (data: any, { rejectWithValue }) => {
+  try {
+    const { resumeId, userId } = data
+    const response = await ApiRequest.builder().auth().request('delete', `resumes/${resumeId}/contributor/${userId}`)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const resumeRemoveContributorSlice = createSlice({
+  name: 'resumeRemoveContributor',
+  initialState: sliceInitialStateWithStatus,
+  reducers: {
+    clearResumeRemoveContributor: (state) => {
+      clearStatesAction(state)
+    }
+  },
+  extraReducers: (builder) => {
+    createExtraReducers(builder, removeContributorFromResume)
+  }
+})
+
+
 
 export const { clearCreateResume } = resumeCreateSlice.actions
 export const { clearEditResume } = resumeEditSlice.actions
@@ -298,6 +348,8 @@ export const { clearResumeAddInterview } = resumeAddInterviewSlice.actions
 export const { clearResumeHire } = resumeHireSlice.actions
 export const { clearResumeAddTag } = resumeAddTagSlice.actions
 export const { clearResumeRemoveTag } = resumeRemoveTagSlice.actions
+export const { clearResumeAddContributor } = resumeAddContributorSlice.actions
+export const { clearResumeRemoveContributor } = resumeRemoveContributorSlice.actions
 
 export const resumeCreateReducer = resumeCreateSlice.reducer
 export const resumeEditReducer = resumeEditSlice.reducer
@@ -309,4 +361,5 @@ export const resumeAddInterviewReducer = resumeAddInterviewSlice.reducer
 export const resumeHireReducer = resumeHireSlice.reducer
 export const resumeAddTagReducer = resumeAddTagSlice.reducer
 export const resumeRemoveTagReducer = resumeRemoveTagSlice.reducer
-
+export const resumeAddContributorReducer = resumeAddContributorSlice.reducer
+export const resumeRemoveContributorReducer = resumeRemoveContributorSlice.reducer
