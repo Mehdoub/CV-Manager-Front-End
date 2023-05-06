@@ -9,7 +9,7 @@ import Grid, { GridProps } from '@mui/material/Grid'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import Icon from 'src/@core/components/icon'
 import { AvatarGroup, Divider, IconButton, Stack } from '@mui/material'
-import { getFullName, getTimeText, ratingTextsObj, uppercaseFirstLetters } from 'src/helpers/functions'
+import { getFullName, getImagePath, getTimeText, ratingTextsObj, uppercaseFirstLetters } from 'src/helpers/functions'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 
 const fakeUsers = [
@@ -176,9 +176,9 @@ const InterviewCard = ({ interview }: { interview: any }) => {
             </BootstrapTooltip>
           </CardContent>
           <AvatarGroup className='pull-up'>
-            {fakeUsers.map((item: any, index: any) => (
-              <BootstrapTooltip key={index} title={getFullName(item)} placement='top'>
-                <CustomAvatar src={item?.avatar} sx={{ height: 30, width: 30 }} />
+            {interview?.contribution?.map((item: any, index: any) => (
+              <BootstrapTooltip key={'interview-contribution-' + index} title={getFullName(item)} placement='top'>
+                <CustomAvatar src={getImagePath(item?.avatar)} sx={{ height: 30, width: 30 }} />
               </BootstrapTooltip>
             ))}
           </AvatarGroup>

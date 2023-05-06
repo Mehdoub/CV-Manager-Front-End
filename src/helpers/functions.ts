@@ -194,7 +194,7 @@ export const getTimeText = (time: string, hasRange: boolean = false) => {
   const diffDays: number = Math.floor((dateObj - now) / (1000 * 60 * 60 * 24))
   let dateText = ''
   let dateColor = ''
-  const halfHourLater = new Date(now.getTime() + 30 * 60000)
+  const halfHourLater = new Date(dateObj.getTime() + 30 * 60000)
 
   if (diffDays > 0) {
     dateText = diffDays + ' Day(s) Later'
@@ -203,7 +203,7 @@ export const getTimeText = (time: string, hasRange: boolean = false) => {
     dateText = Math.abs(diffDays) + ' Day(s) Ago'
     dateColor = 'warning'
   } else {
-    if (hasRange && dateObj.getTime() < now.getTime() && dateObj.getTime() < halfHourLater.getTime()
+    if (hasRange && dateObj.getTime() < now.getTime() && now.getTime() < halfHourLater.getTime()
     ) {
       dateText = 'right now'
       dateColor = 'error'
@@ -217,8 +217,13 @@ export const getTimeText = (time: string, hasRange: boolean = false) => {
         dateColor = 'secondary'
       } else {
         const diffMinutes = Math.ceil((dateObj - now) / (1000 * 60))
-        dateText = Math.abs(diffMinutes) + ' Minute(s) Later'
-        dateColor = 'primary'
+        if (diffMinutes > 0) {
+          dateText = Math.abs(diffMinutes) + ' Minute(s) Later'
+          dateColor = 'primary'
+        } else {
+          dateText = Math.abs(diffMinutes) + ' Minute(s) Ago'
+          dateColor = 'secondary'
+        }
       }
     }
   }
