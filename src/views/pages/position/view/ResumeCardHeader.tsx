@@ -30,6 +30,7 @@ import {
   getFullName,
   getImagePath,
   getMaxTextLen,
+  handleCopyClick,
   isForbiddenState,
   ratingTextsObj,
   showDate,
@@ -67,6 +68,7 @@ import { getPositionResumes } from 'src/store/position'
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import Link from 'next/link'
 import { getUsers } from 'src/store/user'
+import { useRouter } from 'next/router'
 
 const filter = createFilterOptions<any>()
 
@@ -95,8 +97,10 @@ const ResumeCardHeader = ({
   const [openResumeHiringDialog, setOpenResumeHiringDialog] = useState<boolean>(false)
   const [openResumeRejectingDialog, setOpenResumeRejectingDialog] = useState<boolean>(false)
   const [anchorElStatesMenu, setAnchorElStatesMenu] = useState<null | HTMLElement>(null)
+  const [copyText, setCopyText] = useState<string>('Copy Link')
 
   const dispatch = useDispatch()
+  const router = useRouter()
 
   const { data: resume } = useSelector((state: any) => state.resume)
   const { data: positionResumes } = useSelector((state: any) => state.positionResumes)
@@ -207,6 +211,8 @@ const ResumeCardHeader = ({
   const openAddTag = Boolean(anchorElAddTag)
   const openAddContributor = Boolean(anchorElAddContributor)
   const openViews = Boolean(anchorElViews)
+
+  const resumeLink = process.env.NEXT_PUBLIC_APP_BASE_URL + router.asPath
 
   const previousState = stateKeys[stateKeys.indexOf(resume?.status) - 1]
   const nextState = stateKeys[stateKeys.indexOf(resume?.status) + 1]
@@ -680,6 +686,15 @@ const ResumeCardHeader = ({
           sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'inherit', flexDirection: 'column' }}
         >
           <Grid item sx={{ textAlign: 'right' }}>
+            <BootstrapTooltip title={copyText} placement='top'>
+              <Button
+                onClick={() => handleCopyClick(resumeLink, setCopyText)}
+                sx={{ p: 0, mt: 2, mr: 2, justifyContent: 'end', minWidth: 0 }}
+                color='secondary'
+              >
+                <Icon icon='mdi:content-copy' fontSize={32} />
+              </Button>
+            </BootstrapTooltip>
             <BootstrapTooltip title='Views' placement='top'>
               <Button
                 onClick={handleClickViews}

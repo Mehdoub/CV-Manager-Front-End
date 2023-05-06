@@ -27,6 +27,10 @@ export const ratingTextsObj: any = {
   5: 'Excellent!',
 }
 
+export const allowedFormats = {
+  image: [".png", ".jpg", ".jpeg", ".gif", ".svg"],
+  file: [".pdf"],
+}
 
 export const toastError = (msg: string, duration: number = 5000, position: ToastPosition = 'bottom-left') => {
   if (msg?.length > 0) toast.error(msg, { duration, position, style: { maxWidth: '650px' } })
@@ -184,6 +188,39 @@ export const mobileHandler = (mobileValue: string, value: string, setValue: any,
   setValue(fieldName, mobileValue)
 }
 
+export const getTimeText = (time: string) => {
+  const dateObj: any = new Date(time)
+  const now: any = new Date()
+  const diffDays: number = Math.floor((dateObj - now) / (1000 * 60 * 60 * 24))
+  let dateText = ''
+  let dateColor = ''
+
+  if (diffDays > 0) {
+    dateText = diffDays + ' Day(s) Later'
+    dateColor = 'success'
+  } else if (diffDays < 0 && diffDays !== -1) {
+    dateText = Math.abs(diffDays) + ' Day(s) Ago'
+    dateColor = 'warning'
+  } else {
+    const diffHours = Math.ceil((dateObj - now) / (1000 * 60 * 60))
+    if (diffHours > 0 && diffHours !== 1) {
+      dateText = diffHours + ' Hour(s) Later'
+      dateColor = 'primary'
+    } else if (diffHours < 0) {
+      dateText = Math.abs(diffHours) + ' Hour(s) Ago'
+      dateColor = 'secondary'
+    } else {
+      const diffMinutes = Math.ceil((dateObj - now) / (1000 * 60))
+      dateText = Math.abs(diffMinutes) + ' Minute(s) Later'
+      dateColor = 'primary'
+    }
+  }
+
+  const dateString = dateObj.toDateString()
+
+  return [dateText, dateColor, dateString]
+}
+
 export const calcInterviewRemainingTime = (startDate: any, endDate: any) => {
   const interviewStartDate: any = new Date(startDate)
   const interviewEndDate: any = new Date(endDate)
@@ -231,8 +268,8 @@ export const calcInterviewRemainingTime = (startDate: any, endDate: any) => {
 
 export const getAllowedFormats = (type: 'image' | 'file' = 'image', asArray: boolean = false) => {
   const formats = {
-    image: JSON.parse(process.env.NEXT_PUBLIC_ALLOWED_UPLOAD_IMAGES_FORMATS as string),
-    file: JSON.parse(process.env.NEXT_PUBLIC_ALLOWED_UPLOAD_FILES_FORMATS as string),
+    image: allowedFormats.image,
+    file: allowedFormats.file,
   }
   return !asArray ? ' ' + formats[type].map(
     (item: string) => ` *${item} `
@@ -244,3 +281,24 @@ export const getIsoTime = (unixTime: number) => {
 }
 
 export const isForbiddenState = (state: string) => ['hired', 'rejected'].includes(state)
+
+async function copyTextToClipboard(text: string) {
+  if ('clipboard' in navigator) {
+    return await navigator.clipboard.writeText(text)
+  } else {
+    return document.execCommand('copy', true, text)
+  }
+}
+
+export const handleCopyClick = (copyText: string, setCopyText: any) => {
+  copyTextToClipboard(copyText)
+    .then(() => {
+      setCopyText('Copied!');
+      setTimeout(() => {
+        setCopyText('Copy Link');
+      }, 1500);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}

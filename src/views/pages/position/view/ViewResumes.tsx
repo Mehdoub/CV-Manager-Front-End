@@ -10,7 +10,7 @@ import { getPositionResumes } from 'src/store/position'
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
-import { clearResumeUpdateStatus, updateResumeStatus } from 'src/store/resume'
+import { clearResumeUpdateStatus, getResume, updateResumeStatus } from 'src/store/resume'
 
 export const resumesStates: any = {
   pending: { title: 'pending', color: 'warning' },
@@ -34,9 +34,18 @@ const ViewResumes = () => {
     (state: any) => state.resumeUpdateStatus
   )
 
-  const {
-    query: { positionId }
-  } = useRouter()
+  const router = useRouter()
+
+  const positionId = router?.query?.positionId
+
+  const resumeId = router?.query?.resume_id as string
+
+  useEffect(() => {
+    if (resumeId?.length > 0) {
+      dispatch(getResume(resumeId))
+      setOpen(true)
+    }
+  }, [router?.query])
 
   useEffect(() => {
     if (resumeStateUpdateStatus) {
@@ -90,6 +99,10 @@ const ViewResumes = () => {
 
   const isLoading = resumeStateUpdateLoading || positionResumesLoading
 
+  const handleResumeCardClick = (resumeId: string) => {
+    router.push({ query: { ...router.query, resume_id: resumeId } })
+  }
+
   return (
     <>
       {isLoading && (
@@ -138,7 +151,12 @@ const ViewResumes = () => {
                   key={status}
                 >
                   {column[status].map((resumeData: any, index: number) => (
-                    <ResumeKanbanCard cardData={resumeData} setOpen={setOpen} index={index} />
+                    <ResumeKanbanCard
+                      cardData={resumeData}
+                      setOpen={setOpen}
+                      index={index}
+                      handleClick={handleResumeCardClick}
+                    />
                   ))}
                 </ResumeKanbanColumn>
               )
