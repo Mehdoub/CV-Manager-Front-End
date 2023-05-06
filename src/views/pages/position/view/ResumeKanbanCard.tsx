@@ -1,10 +1,10 @@
 import { Avatar, AvatarGroup, Box, Card, Chip, Rating, Stack, Typography } from '@mui/material'
 import {
-  calcInterviewRemainingTime,
   getColorCodes,
   getFullName,
   getImagePath,
   getMaxTextLen,
+  getTimeText,
   ratingTextsObj,
   uppercaseFirstLetters
 } from 'src/helpers/functions'
@@ -24,10 +24,10 @@ interface ResumeKanbanCardProps {
 }
 
 const ResumeKanbanCard = ({ cardData: card, setOpen, index, handleClick }: ResumeKanbanCardProps) => {
-  const [interviewDateText, interviewColor, interviewDateString] = calcInterviewRemainingTime(
-    '2023-09-18T07:09:11.498Z',
-    '2023-09-18T11:09:11.498Z'
-  )
+  const [interviewDateText, interviewColor, interviewDateString] =
+    card?.interviews?.length > 0
+      ? getTimeText(card?.interviews[card?.interviews?.length - 1]?.event_time, true)
+      : ['', '', '']
 
   const selectedTags = card?.tags?.length <= 2 ? card?.tags : card?.tags?.slice(Math.max(card?.tags?.length - 2, 0))
 
@@ -145,33 +145,35 @@ const ResumeKanbanCard = ({ cardData: card, setOpen, index, handleClick }: Resum
                 </Stack>
               </Box>
             </Box>
-            <BootstrapTooltip placement='top' title={interviewDateString}>
-              <Chip
-                variant='outlined'
-                size='small'
-                label={`${getMaxTextLen(uppercaseFirstLetters(interviewDateText), 20)}`}
-                color={interviewColor as any}
-                sx={{ backgroundColor: '#fff', position: 'absolute', bottom: 40, fontSize: 10, height: 20 }}
-                avatar={
-                  interviewDateText == 'right now' ? (
-                    <svg height='18' width='18' className='blinking'>
-                      <circle cx='9' cy='9' r='5' fill={getColorCodes('error')} />
-                    </svg>
-                  ) : (
-                    <Avatar sx={{ backgroundColor: '#fff !important' }}>
-                      <Icon
-                        style={{
-                          color: getColorCodes(interviewColor),
-                          backgroundColor: '#fff'
-                        }}
-                        icon='fluent:device-meeting-room-remote-16-filled'
-                        fontSize={15}
-                      />
-                    </Avatar>
-                  )
-                }
-              />
-            </BootstrapTooltip>
+            {interviewDateText && (
+              <BootstrapTooltip placement='top' title={interviewDateString}>
+                <Chip
+                  variant='outlined'
+                  size='small'
+                  label={`${getMaxTextLen(uppercaseFirstLetters(interviewDateText), 20)}`}
+                  color={interviewColor as any}
+                  sx={{ backgroundColor: '#fff', position: 'absolute', bottom: 40, fontSize: 10, height: 20 }}
+                  avatar={
+                    interviewDateText == 'right now' ? (
+                      <svg height='18' width='18' className='blinking'>
+                        <circle cx='9' cy='9' r='5' fill={getColorCodes('error')} />
+                      </svg>
+                    ) : (
+                      <Avatar sx={{ backgroundColor: '#fff !important' }}>
+                        <Icon
+                          style={{
+                            color: getColorCodes(interviewColor),
+                            backgroundColor: '#fff'
+                          }}
+                          icon='fluent:device-meeting-room-remote-16-filled'
+                          fontSize={15}
+                        />
+                      </Avatar>
+                    )
+                  }
+                />
+              </BootstrapTooltip>
+            )}
 
             <Box
               sx={{

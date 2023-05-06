@@ -9,7 +9,7 @@ import Grid, { GridProps } from '@mui/material/Grid'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import Icon from 'src/@core/components/icon'
 import { AvatarGroup, Divider, IconButton, Stack } from '@mui/material'
-import { calcInterviewRemainingTime, getFullName, uppercaseFirstLetters } from 'src/helpers/functions'
+import { getFullName, getTimeText, ratingTextsObj, uppercaseFirstLetters } from 'src/helpers/functions'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 
 const fakeUsers = [
@@ -74,55 +74,26 @@ const StyledBox = styled(Box)<BoxProps>(({ theme }) => ({
   }
 }))
 
-const InterviewCard = () => {
-  const [interviewDateText, interviewColor, interviewDateString] = calcInterviewRemainingTime(
-    '2023-04-16T09:49:11.498Z',
-    '2023-04-16T12:09:11.498Z'
-  )
+const InterviewCard = ({ interview }: { interview: any }) => {
+  const [interviewDateText, interviewColor, interviewDateString] = getTimeText(interview?.event_time, true)
 
   return (
     <Card>
       <Grid container spacing={6}>
         <StyledGrid1 item xs={12} lg={9}>
-          <CardContent sx={{ p: theme => `${theme.spacing(6)} !important` }}>
-            <Box sx={{ py: 1, mb: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-              <Rating readOnly value={4} name='read-only' sx={{ mr: 2 }} />
-              <Typography variant='body2'>3 Star | Good!</Typography>
-            </Box>
+          <Box sx={{ p: 6, mb: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+            <Rating readOnly value={interview?.rating ?? 0} name='read-only' sx={{ mr: 2 }} />
             <Typography variant='body2'>
-              Before there was a United States of America, there were coffee houses. Roasters there was a United States
-              of America, before there were coffee houses.
+              {interview?.rating ?? 0} Star(s) | {ratingTextsObj[interview?.rating ?? 0]}
             </Typography>
-            <Divider sx={{ my: theme => `${theme.spacing(7)} !important` }} />
-            <Grid container spacing={4}>
-              <Grid item xs={12} sm={5}>
-                <StyledBox>
-                  <Box
-                    sx={{
-                      py: 1.25,
-                      mb: 4,
-                      display: 'flex',
-                      alignItems: 'center',
-                      '& svg': { color: 'primary.main', mr: 2.5 }
-                    }}
-                  >
-                    <Icon icon='heroicons-outline:status-online' fontSize={20} />
-                    <Typography variant='body2'>Online</Typography>
-                  </Box>
-                  <Box
-                    sx={{
-                      py: 1.25,
-                      display: 'flex',
-                      alignItems: 'center',
-                      '& svg': { color: 'primary.main', mr: 2.5 }
-                    }}
-                  >
-                    <Icon icon='mdi:account-outline' fontSize={20} />
-                    <Typography variant='body2'>Personality</Typography>
-                  </Box>
-                </StyledBox>
-              </Grid>
-              <Grid item xs={12} sm={7}>
+          </Box>
+          <Typography px={6} variant='body2'>
+            {interview?.description}
+          </Typography>
+          <Divider sx={{ my: theme => `${theme.spacing(7)} !important`, ml: 4, width: '100%' }} />
+          <Grid container spacing={4} p={5}>
+            <Grid item xs={12} sm={5}>
+              <StyledBox>
                 <Box
                   sx={{
                     py: 1.25,
@@ -132,18 +103,45 @@ const InterviewCard = () => {
                     '& svg': { color: 'primary.main', mr: 2.5 }
                   }}
                 >
-                  <Icon icon='material-symbols:pending-outline' fontSize={20} />
-                  <Typography variant='body2'>Pending</Typography>
+                  <Icon icon='heroicons-outline:status-online' fontSize={20} />
+                  <Typography variant='body2'>{uppercaseFirstLetters(interview?.event_type)}</Typography>
                 </Box>
+                <Box
+                  sx={{
+                    py: 1.25,
+                    display: 'flex',
+                    alignItems: 'center',
+                    '& svg': { color: 'primary.main', mr: 2.5 }
+                  }}
+                >
+                  <Icon icon='mdi:account-outline' fontSize={20} />
+                  <Typography variant='body2'>{uppercaseFirstLetters(interview?.type)}</Typography>
+                </Box>
+              </StyledBox>
+            </Grid>
+            <Grid item xs={12} sm={7}>
+              <Box
+                sx={{
+                  py: 1.25,
+                  mb: 4,
+                  display: 'flex',
+                  alignItems: 'center',
+                  '& svg': { color: 'primary.main', mr: 2.5 }
+                }}
+              >
+                <Icon icon='material-symbols:pending-outline' fontSize={20} />
+                <Typography variant='body2'>{uppercaseFirstLetters(interview?.status)}</Typography>
+              </Box>
+              {interview?.result && (
                 <Box
                   sx={{ py: 1.25, display: 'flex', alignItems: 'center', '& svg': { color: 'primary.main', mr: 2.5 } }}
                 >
                   <Icon icon='mdi:account-tick' fontSize={20} />
-                  <Typography variant='body2'>Accepted</Typography>
+                  <Typography variant='body2'>{uppercaseFirstLetters(interview?.result)}</Typography>
                 </Box>
-              </Grid>
+              )}
             </Grid>
-          </CardContent>
+          </Grid>
         </StyledGrid1>
         <StyledGrid2
           item

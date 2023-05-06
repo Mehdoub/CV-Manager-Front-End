@@ -13,6 +13,7 @@ import MuiTimeline, { TimelineProps } from '@mui/lab/Timeline'
 
 // ** Custom Components Import
 import InterviewCard from './InterviewCard'
+import { useSelector } from 'react-redux'
 
 // Styled Timeline component
 const Timeline = styled(MuiTimeline)<TimelineProps>({
@@ -27,88 +28,41 @@ const Timeline = styled(MuiTimeline)<TimelineProps>({
 })
 
 const ResumeInterviewsTab = () => {
+  const { data: resume } = useSelector((state: any) => state.resume)
   return (
-    <Grid sx={{ backgroundColor: '#4c4e640d' }}>
+    <Grid sx={{ backgroundColor: '#4c4e640d', minWidth: '100%' }}>
       <Grid container p={'10px 40px'}>
         <Timeline sx={{ my: 0, py: 0 }}>
-          <TimelineItem>
-            <TimelineSeparator>
-              <TimelineDot color='warning' />
-              <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent sx={{ mt: 0, mb: theme => `${theme.spacing(2)} !important` }}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  mb: 3
-                }}
-              >
-                <Stack direction='row' sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Avatar src='/images/avatars/3.png' sx={{ width: 25, height: 25 }} />
-                  <Typography sx={{ ml: 2, fontSize: '14px' }}>Ali Akbar Rezaei</Typography>
-                </Stack>
-                <Typography variant='body2' sx={{ color: 'text.disabled', fontSize: '13px' }}>
-                  Yesterday
-                </Typography>
-              </Box>
-              <InterviewCard />
-            </TimelineContent>
-          </TimelineItem>
-          <TimelineItem>
-            <TimelineSeparator>
-              <TimelineDot color='info' />
-              <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent sx={{ mt: 0, mb: theme => `${theme.spacing(2)} !important` }}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  mb: 3
-                }}
-              >
-                <Stack direction='row' sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Avatar src='/images/avatars/5.png' sx={{ width: 25, height: 25 }} />
-                  <Typography sx={{ ml: 2, fontSize: '14px' }}>Mahdi Amereh</Typography>
-                </Stack>
-                <Typography variant='body2' sx={{ color: 'text.disabled', fontSize: '13px' }}>
-                  4 hour
-                </Typography>
-              </Box>
-              <InterviewCard />
-            </TimelineContent>
-          </TimelineItem>
-          <TimelineItem>
-            <TimelineSeparator>
-              <TimelineDot color='error' />
-              <TimelineConnector />
-            </TimelineSeparator>
-            <TimelineContent sx={{ mt: 0, mb: theme => `${theme.spacing(2)} !important` }}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexWrap: 'wrap',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  mb: 3
-                }}
-              >
-                <Stack direction='row' sx={{ display: 'flex', alignItems: 'center' }}>
-                  <Avatar src='/images/avatars/7.png' sx={{ width: 25, height: 25 }} />
-                  <Typography sx={{ ml: 2, fontSize: '14px' }}>Mani Mohammadi</Typography>
-                </Stack>
-                <Typography variant='body2' sx={{ color: 'text.disabled', fontSize: '13px' }}>
-                  15 min
-                </Typography>
-              </Box>
-              <InterviewCard />
-            </TimelineContent>
-          </TimelineItem>
+          {resume?.interviews?.length > 0
+            ? resume?.interviews?.map((item: any, index: number) => (
+                <TimelineItem key={`interview-timeline-${index}`}>
+                  <TimelineSeparator>
+                    <TimelineDot color='warning' />
+                    <TimelineConnector />
+                  </TimelineSeparator>
+                  <TimelineContent sx={{ mt: 0, mb: theme => `${theme.spacing(2)} !important` }}>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        mb: 3
+                      }}
+                    >
+                      <Stack direction='row' sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Avatar src='/images/avatars/3.png' sx={{ width: 25, height: 25 }} />
+                        <Typography sx={{ ml: 2, fontSize: '14px' }}>Ali Akbar Rezaei</Typography>
+                      </Stack>
+                      <Typography variant='body2' sx={{ color: 'text.disabled', fontSize: '13px' }}>
+                        Yesterday
+                      </Typography>
+                    </Box>
+                    <InterviewCard interview={item} />
+                  </TimelineContent>
+                </TimelineItem>
+              ))
+            : ''}
         </Timeline>
       </Grid>
     </Grid>

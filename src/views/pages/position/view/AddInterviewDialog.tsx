@@ -222,7 +222,7 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                   )}
                 </FormControl>
               </Grid>
-              <Grid item md={6} xs={12}>
+              {/* <Grid item md={6} xs={12}>
                 <FormControl fullWidth>
                   <Typography fontSize={14} sx={{ fontWeight: 400, mb: 1, ml: 1, color: 'text.secondary' }}>
                     {`${uppercaseFirstLetters('Event End Time')}`}
@@ -252,7 +252,7 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                   />
                   {eventEndTimeErr && <FormHelperText sx={{ color: 'error.main' }}>{eventEndTimeErr}</FormHelperText>}
                 </FormControl>
-              </Grid>
+              </Grid> */}
               <Grid item xs={12} sx={{ mt: '26px' }}>
                 <Autocomplete
                   multiple

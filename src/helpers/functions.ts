@@ -188,12 +188,13 @@ export const mobileHandler = (mobileValue: string, value: string, setValue: any,
   setValue(fieldName, mobileValue)
 }
 
-export const getTimeText = (time: string) => {
+export const getTimeText = (time: string, hasRange: boolean = false) => {
   const dateObj: any = new Date(time)
   const now: any = new Date()
   const diffDays: number = Math.floor((dateObj - now) / (1000 * 60 * 60 * 24))
   let dateText = ''
   let dateColor = ''
+  const halfHourLater = new Date(now.getTime() + 30 * 60000)
 
   if (diffDays > 0) {
     dateText = diffDays + ' Day(s) Later'
@@ -202,68 +203,28 @@ export const getTimeText = (time: string) => {
     dateText = Math.abs(diffDays) + ' Day(s) Ago'
     dateColor = 'warning'
   } else {
-    const diffHours = Math.ceil((dateObj - now) / (1000 * 60 * 60))
-    if (diffHours > 0 && diffHours !== 1) {
-      dateText = diffHours + ' Hour(s) Later'
-      dateColor = 'primary'
-    } else if (diffHours < 0) {
-      dateText = Math.abs(diffHours) + ' Hour(s) Ago'
-      dateColor = 'secondary'
+    if (hasRange && dateObj.getTime() < now.getTime() && dateObj.getTime() < halfHourLater.getTime()
+    ) {
+      dateText = 'right now'
+      dateColor = 'error'
     } else {
-      const diffMinutes = Math.ceil((dateObj - now) / (1000 * 60))
-      dateText = Math.abs(diffMinutes) + ' Minute(s) Later'
-      dateColor = 'primary'
-    }
-  }
-
-  const dateString = dateObj.toDateString()
-
-  return [dateText, dateColor, dateString]
-}
-
-export const calcInterviewRemainingTime = (startDate: any, endDate: any) => {
-  const interviewStartDate: any = new Date(startDate)
-  const interviewEndDate: any = new Date(endDate)
-  const now: any = new Date()
-  const diffDays: number = Math.floor((interviewStartDate - now) / (1000 * 60 * 60 * 24))
-
-  let interviewDateText = ''
-  let interviewColor = ''
-
-  if (diffDays > 0) {
-    interviewDateText = diffDays + ' Day(s) Later'
-    interviewColor = 'success'
-  } else if (diffDays < 0 && diffDays !== -1) {
-    interviewDateText = Math.abs(diffDays) + ' Day(s) Ago'
-    interviewColor = 'warning'
-  } else {
-    if (now.getTime() > interviewStartDate.getTime() && now.getTime() < interviewEndDate.getTime()) {
-      interviewDateText = 'right now'
-      interviewColor = 'error'
-    } else {
-      const diffHours = Math.ceil((interviewStartDate - now) / (1000 * 60 * 60))
+      const diffHours = Math.ceil((dateObj - now) / (1000 * 60 * 60))
       if (diffHours > 0 && diffHours !== 1) {
-        interviewDateText = diffHours + ' Hour(s) Later'
-        interviewColor = 'primary'
+        dateText = diffHours + ' Hour(s) Later'
+        dateColor = 'primary'
       } else if (diffHours < 0) {
-        interviewDateText = Math.abs(diffHours) + ' Hour(s) Ago'
-        interviewColor = 'secondary'
+        dateText = Math.abs(diffHours) + ' Hour(s) Ago'
+        dateColor = 'secondary'
       } else {
-        const diffMinutes = Math.ceil((interviewStartDate - now) / (1000 * 60))
-        interviewDateText = Math.abs(diffMinutes) + ' Minute(s) Later'
-        interviewColor = 'primary'
+        const diffMinutes = Math.ceil((dateObj - now) / (1000 * 60))
+        dateText = Math.abs(diffMinutes) + ' Minute(s) Later'
+        dateColor = 'primary'
       }
     }
   }
+  const dateString = dateObj.toDateString() + ' ' + dateObj.toLocaleTimeString()
 
-  const interviewDateString =
-    interviewStartDate.toDateString() +
-    ' , ' +
-    interviewStartDate.toLocaleTimeString() +
-    ' To ' +
-    interviewEndDate.toLocaleTimeString()
-
-  return [interviewDateText, interviewColor, interviewDateString]
+  return [dateText, dateColor, dateString]
 }
 
 export const getAllowedFormats = (type: 'image' | 'file' = 'image', asArray: boolean = false) => {
