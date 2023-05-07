@@ -11,7 +11,22 @@ import Grid, { GridProps } from '@mui/material/Grid'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import Icon from 'src/@core/components/icon'
 import { Stack } from '@mui/material'
-import { uppercaseFirstLetters } from 'src/helpers/functions'
+import { getTimeText, ratingTextsObj, showDate, uppercaseFirstLetters } from 'src/helpers/functions'
+import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
+
+const callHostoryResultIcons: any = {
+  rejected: {
+    icon: 'solar:call-cancel-linear',
+    color: 'error'
+  },
+  answered: {
+    icon: 'charm:circle-tick',
+    color: 'success'
+  },
+  busy: { icon: 'ic:baseline-call-missed-outgoing', color: 'warning' },
+  'wrong-number': { icon: 'material-symbols:call-quality', color: 'secondary' },
+  recall: { icon: 'material-symbols:restart-alt', color: 'primary' }
+}
 
 // Styled Grid component
 const StyledGrid1 = styled(Grid)<GridProps>(({ theme }) => ({
@@ -48,52 +63,65 @@ const Img = styled('img')(({ theme }) => ({
   borderRadius: theme.shape.borderRadius
 }))
 
-const CallHistoryCard = () => {
+const CallHistoryCard = ({ callHistory }: { callHistory: any }) => {
+  const [callingDateText, callingColor, callingDateString] = getTimeText(callHistory?.calling_date)
+  const [recallDateText, recallColor, recallDateString] =
+    callHistory?.recall_at?.length > 0 ? getTimeText(callHistory?.recall_at) : ['', '', '']
   return (
     <Card
     // sx={{ backgroundColor: '#4c4e640d' }}
     >
       <Grid container spacing={6}>
         <StyledGrid1 item xs={12} lg={9}>
-          <CardContent sx={{ p: theme => `${theme.spacing(6)} !important` }}>
-            {/* <Typography variant='h6' sx={{ mb: 2 }}>
-              Wednesday 29 March
-            </Typography> */}
+          <CardContent>
             <Box sx={{ py: 1, mb: 2, display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-              <Rating readOnly value={4} name='read-only' sx={{ mr: 2 }} />
-              <Typography variant='body2'>3 Star | Good!</Typography>
+              <Rating readOnly value={callHistory?.rating ?? 0} name='read-only' sx={{ mr: 2 }} />
+              <Typography variant='body2'>
+                {callHistory?.rating ?? 0} Star | {ratingTextsObj[callHistory?.rating ?? 0]}!
+              </Typography>
             </Box>
-            <Typography variant='body2'>
-              Before there was a United States of America, there were coffee houses. Roasters there was a United States
-              of America, before there were coffee houses.
-            </Typography>
-            <Box
-              sx={{
-                mt: 4,
-                display: 'flex',
-                alignItems: 'center',
-                '&:not(:last-of-type)': { mb: 4 },
-                '& svg': { color: 'text.primary' }
-              }}
-            >
-              <Icon fontSize={24} icon='mdi:alarm-clock' />
+            <Typography variant='body2'>{callHistory?.description}</Typography>
+            {callHistory?.recall_at?.length > 0 && (
+              <Box
+                sx={{
+                  mt: 14,
+                  display: 'flex',
+                  alignItems: 'center',
+                  '&:not(:last-of-type)': { mb: 4 },
+                  '& svg': { color: 'text.primary' }
+                }}
+              >
+                <Icon fontSize={24} icon='mdi:alarm-clock' />
 
-              <Typography fontSize={14} sx={{ fontWeight: 600, mr: 2, ml: 1 }}>
-                {`${uppercaseFirstLetters('Recall Time')}:`}
-              </Typography>
-              <Typography fontSize={14} sx={{ color: 'text.secondary' }}>
-                {'12 Jan 2023, 04:30 P.M'}
-              </Typography>
-            </Box>
+                <Typography fontSize={14} sx={{ fontWeight: 600, mr: 2, ml: 1 }}>
+                  Recall Time:
+                </Typography>
+                <BootstrapTooltip title={recallDateString} placement='top'>
+                  <Typography fontSize={14} sx={{ color: recallColor + '.main' }}>
+                    {recallDateText}
+                  </Typography>
+                </BootstrapTooltip>
+              </Box>
+            )}
           </CardContent>
         </StyledGrid1>
         <StyledGrid2 item xs={12} lg={3}>
           <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Stack direction='column' sx={{ display: 'flex', alignItems: 'center' }}>
-              <CustomAvatar color='success' variant='rounded' skin='light' sx={{ width: 100, height: 100, mb: 2 }}>
-                <Icon icon='charm:circle-tick' fontSize='3rem' />
+              <CustomAvatar
+                color={callHostoryResultIcons[callHistory?.result].color}
+                variant='rounded'
+                skin='light'
+                sx={{ width: 100, height: 100, mb: 2 }}
+              >
+                <Icon icon={callHostoryResultIcons[callHistory?.result].icon} fontSize='3rem' />
               </CustomAvatar>
-              <Typography>Answered</Typography>
+              <Typography>{uppercaseFirstLetters(callHistory?.result)}</Typography>
+              <BootstrapTooltip title={callingDateString} placement='top'>
+                <Typography fontWeight={200} fontSize={14} sx={{ color: callingColor + '.main' }}>
+                  {callingDateText}
+                </Typography>
+              </BootstrapTooltip>
             </Stack>
           </CardContent>
         </StyledGrid2>
