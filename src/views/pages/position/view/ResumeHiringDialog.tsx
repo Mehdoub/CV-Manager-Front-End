@@ -45,10 +45,10 @@ const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
   const [incomeErr, setIncomeErr] = useState<string>('')
   const [startDate, setStartDate] = useState<any>('')
   const [startDateErr, setStartDateErr] = useState<string>('')
-  const [endDate, setEndDate] = useState<any>('')
-  const [endDateErr, setEndDateErr] = useState<string>('')
-  const [cooperationType, setCooperationType] = useState<string>('')
-  const [cooperationTypeErr, setCooperationTypeErr] = useState<string>('')
+  // const [endDate, setEndDate] = useState<any>('')
+  // const [endDateErr, setEndDateErr] = useState<string>('')
+  // const [cooperationType, setCooperationType] = useState<string>('')
+  // const [cooperationTypeErr, setCooperationTypeErr] = useState<string>('')
 
   const { data: resume } = useSelector((state: any) => state.resume)
   const { status: resumeHireStatus, loading: resumeHireLoading } = useSelector((state: any) => state.resumeHire)
@@ -77,14 +77,14 @@ const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
 
   const resetFormErrors = (resetValues: boolean = false) => {
     setStartDateErr('')
-    setEndDateErr('')
+    // setEndDateErr('')
     setIncomeErr('')
-    setCooperationTypeErr('')
+    // setCooperationTypeErr('')
     if (resetValues) {
       setIncome(10000000)
       setStartDate('')
-      setEndDate('')
-      setCooperationType('')
+      // setEndDate('')
+      // setCooperationType('')
     }
   }
 
@@ -92,15 +92,15 @@ const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
     e.preventDefault()
     resetFormErrors()
     if (!startDate) setStartDateErr('Work Start Date Cannot Be Empty')
-    else if (!endDate) setEndDateErr('Work End Date Cannot Be Empty')
+    // else if (!endDate) setEndDateErr('Work End Date Cannot Be Empty')
     else if (!income) setIncomeErr('Income Cannot Be Empty')
-    else if (!cooperationType) setCooperationTypeErr('Cooperation Type Cannot Be Empty')
+    // else if (!cooperationType) setCooperationTypeErr('Cooperation Type Cannot Be Empty')
     else {
       const data = {
         resumeId: resume?.id,
-        how_to_cooperate: cooperationType,
+        // how_to_cooperate: cooperationType,
         hired_from_date: getIsoTime(startDate.unix),
-        hired_to_date: getIsoTime(endDate.unix),
+        // hired_to_date: getIsoTime(endDate.unix),
         income
       }
       dispatch(hireResume(data))
@@ -152,7 +152,7 @@ const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
                   {startDateErr && <FormHelperText sx={{ color: 'error.main' }}>{startDateErr}</FormHelperText>}
                 </FormControl>
               </Grid>
-              <Grid item md={6} xs={12}>
+              {/* <Grid item md={6} xs={12}>
                 <FormControl fullWidth>
                   <Typography fontSize={14} sx={{ fontWeight: 400, mb: 1, ml: 1, color: 'text.secondary' }}>
                     {`${uppercaseFirstLetters('Work End Date')}`}
@@ -201,7 +201,7 @@ const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
                     <FormHelperText sx={{ color: 'error.main' }}>{cooperationTypeErr}</FormHelperText>
                   )}
                 </FormControl>
-              </Grid>
+              </Grid> */}
               <Grid item md={12} xs={12} mt={5}>
                 <InputLabel sx={{ pl: '4px' }}>Income (Toman)</InputLabel>
                 <Slider

@@ -69,6 +69,7 @@ import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import Link from 'next/link'
 import { getUsers } from 'src/store/user'
 import { useRouter } from 'next/router'
+import ResumeEndWorkDialog from './ResumeEndWorkDialog'
 
 const filter = createFilterOptions<any>()
 
@@ -83,7 +84,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
   }
 }))
 
-const ResumeCardHeader = ({
+const ResumeDialogHeader = ({
   handleClickOpenAddCallDialog,
   handleClickOpenAddInterviewDialog,
   closeToggle,
@@ -96,6 +97,7 @@ const ResumeCardHeader = ({
   const [anchorElViews, setAnchorElViews] = useState<HTMLButtonElement | null>(null)
   const [openResumeHiringDialog, setOpenResumeHiringDialog] = useState<boolean>(false)
   const [openResumeRejectingDialog, setOpenResumeRejectingDialog] = useState<boolean>(false)
+  const [openResumeEndWorkDialog, setOpenResumeEndWorkDialog] = useState<boolean>(false)
   const [anchorElStatesMenu, setAnchorElStatesMenu] = useState<null | HTMLElement>(null)
   const [copyText, setCopyText] = useState<string>('Copy Link')
 
@@ -183,6 +185,7 @@ const ResumeCardHeader = ({
   const stateKeys = Object.entries(resumesStates).map(([key, value]: any) => key)
   const handleCloseResumeHiringDialog = () => setOpenResumeHiringDialog(false)
   const handleCloseResumeRejectingDialog = () => setOpenResumeRejectingDialog(false)
+  const handleCloseResumeEndWorkDialog = () => setOpenResumeEndWorkDialog(false)
 
   const handleClickAddTag = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorElAddTag(event.currentTarget)
@@ -302,6 +305,7 @@ const ResumeCardHeader = ({
           textAlign: 'left',
           p: '5px 15px',
           alignItems: 'flex-start',
+          justifyContent: 'space-between',
           borderRight: '1px solid rgba(76, 78, 100, 0.12)'
         }}
       >
@@ -338,9 +342,9 @@ const ResumeCardHeader = ({
         <Grid
           item
           mt={4}
-          lg={5}
+          lg={3}
           xs={12}
-          sx={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'end' }}
+          sx={{ textAlign: 'right', display: 'flex', flexDirection: 'column', alignItems: 'center', minWidth: '225px' }}
         >
           <Box>
             <BootstrapTooltip placement='top' title={uppercaseFirstLetters(resumesStates[previousState]?.title)}>
@@ -367,6 +371,7 @@ const ResumeCardHeader = ({
                 color={(resume?.status && resumesStates[resume?.status]?.color) ?? 'info'}
                 disabled={resumeStateUpdateLoading}
                 onClick={handleClickStatesMenu}
+                sx={{ minWidth: '100px' }}
               >
                 {resume?.status && uppercaseFirstLetters(resumesStates[resume?.status]?.title)}
               </Button>
@@ -420,24 +425,37 @@ const ResumeCardHeader = ({
               </IconButton>
             </BootstrapTooltip>
           </Box>
-          <ButtonGroup size='small' variant='outlined' sx={{ mt: 3, mr: 1 }}>
+          {resume?.status == 'hired' ? (
             <Button
-              startIcon={<Icon icon='mdi:tick-circle-outline' />}
-              color='success'
-              onClick={() => setOpenResumeHiringDialog(true)}
-              disabled={isForbiddenState(resume?.status)}
+              startIcon={<Icon icon='bi:exclamation-circle' />}
+              color='warning'
+              onClick={() => setOpenResumeEndWorkDialog(true)}
+              variant='outlined'
+              size='small'
+              sx={{ mt: 3, mr: 1 }}
             >
-              Hiring
+              End Work
             </Button>
-            <Button
-              startIcon={<Icon icon='material-symbols:cancel-outline' />}
-              color='error'
-              onClick={() => setOpenResumeRejectingDialog(true)}
-              disabled={isForbiddenState(resume?.status)}
-            >
-              Reject
-            </Button>
-          </ButtonGroup>
+          ) : (
+            <ButtonGroup size='small' variant='outlined' sx={{ mt: 3, mr: 1 }}>
+              <Button
+                startIcon={<Icon icon='mdi:tick-circle-outline' />}
+                color='success'
+                onClick={() => setOpenResumeHiringDialog(true)}
+                disabled={isForbiddenState(resume?.status)}
+              >
+                Hiring
+              </Button>
+              <Button
+                startIcon={<Icon icon='material-symbols:cancel-outline' />}
+                color='error'
+                onClick={() => setOpenResumeRejectingDialog(true)}
+                disabled={isForbiddenState(resume?.status)}
+              >
+                Reject
+              </Button>
+            </ButtonGroup>
+          )}
         </Grid>
         <Grid item mt={4} lg={6} xs={12}>
           <Stack direction='row' spacing={1} mt={2}>
@@ -780,8 +798,9 @@ const ResumeCardHeader = ({
       </Grid>
       <ResumeHiringDialog open={openResumeHiringDialog} handleClose={handleCloseResumeHiringDialog} />
       <ResumeRejectingDialog open={openResumeRejectingDialog} handleClose={handleCloseResumeRejectingDialog} />
+      <ResumeEndWorkDialog open={openResumeEndWorkDialog} handleClose={handleCloseResumeEndWorkDialog} />
     </>
   )
 }
 
-export default ResumeCardHeader
+export default ResumeDialogHeader

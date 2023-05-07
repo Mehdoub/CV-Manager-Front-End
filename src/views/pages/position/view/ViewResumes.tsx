@@ -1,6 +1,6 @@
 import { Box, CircularProgress, Stack } from '@mui/material'
 import { useScrollContainer } from 'react-indiana-drag-scroll'
-import ResumeCardMainDialog from './ResumeCardMainDialog'
+import ResumeDialogMain from './ResumeDialogMain'
 import { useEffect, useState } from 'react'
 import ResumeKanbanColumn from './ResumeKanbanColumn'
 import ResumeKanbanCard from './ResumeKanbanCard'
@@ -163,7 +163,7 @@ const ViewResumes = () => {
             })}
         </DragDropContext>
       </Stack>
-      <ResumeCardMainDialog open={open} toggle={handleClose} resumeData={{}} />
+      <ResumeDialogMain open={open} toggle={handleClose} resumeData={{}} />
     </>
   )
 }

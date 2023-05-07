@@ -4,11 +4,11 @@ import AddCallHistoryDialog from './AddCallHistoryDialog'
 import ResumeViewLeftDialog from './ResumeViewLeftDialog'
 import ResumeViewRightDialog from './ResumeViewRightDialog'
 import cahtExample from 'src/data/chatData.json'
-import ResumeCardHeader from './ResumeCardHeader'
+import ResumeDialogHeader from './ResumeDialogHeader'
 import AddInterviewDialog from './AddInterviewDialog'
 import { useSelector } from 'react-redux'
 
-interface ResumeCardMainDialogProps {
+interface ResumeDialogMainProps {
   open: boolean
   toggle: () => void
   resumeData: any
@@ -29,7 +29,7 @@ const tags = [
   }
 ]
 
-const ResumeCardMainDialog = ({ open, toggle, resumeData }: ResumeCardMainDialogProps) => {
+const ResumeDialogMain = ({ open, toggle, resumeData }: ResumeDialogMainProps) => {
   const [activeTab, setActiveTab] = useState<string>('details')
   const [smActiveTab, setSmActiveTab] = useState<string>('resumedata')
   const [openAddCallDialog, setOpenAddCallDialog] = useState<boolean>(false)
@@ -66,7 +66,7 @@ const ResumeCardMainDialog = ({ open, toggle, resumeData }: ResumeCardMainDialog
       >
         <Grid container xs={12} flexDirection='row' sx={{ borderBottom: '1px solid rgba(76, 78, 100, 0.12)' }}>
           <Grid lg={12} item container sx={{ borderBottom: '1px solid rgba(76, 78, 100, 0.12)' }}>
-            <ResumeCardHeader
+            <ResumeDialogHeader
               handleClickOpenAddCallDialog={handleClickOpenAddCallDialog}
               handleClickOpenAddInterviewDialog={handleClickOpenAddInterviewDialog}
               tags={tags}
@@ -115,4 +115,4 @@ const ResumeCardMainDialog = ({ open, toggle, resumeData }: ResumeCardMainDialog
   )
 }
 
-export default ResumeCardMainDialog
+export default ResumeDialogMain
