@@ -14,7 +14,7 @@ import MuiTimeline, { TimelineProps } from '@mui/lab/Timeline'
 // ** Custom Components Import
 import InterviewCard from './InterviewCard'
 import { useSelector } from 'react-redux'
-import { getTimeText } from 'src/helpers/functions'
+import { getFullName, getImagePath, getTimeText } from 'src/helpers/functions'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 
 // Styled Timeline component
@@ -57,8 +57,8 @@ const ResumeInterviewsTab = () => {
                       }}
                     >
                       <Stack direction='row' sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Avatar src='/images/avatars/3.png' sx={{ width: 25, height: 25 }} />
-                        <Typography sx={{ ml: 2, fontSize: '14px' }}>Ali Akbar Rezaei</Typography>
+                        <Avatar src={getImagePath(item?.created_by?.avatar)} sx={{ width: 25, height: 25 }} />
+                        <Typography sx={{ ml: 2, fontSize: '14px' }}>{getFullName(item?.created_by)}</Typography>
                       </Stack>
                       <BootstrapTooltip title={timeLineDateString} placement='top'>
                         <Typography variant='body2' sx={{ color: 'text.disabled', fontSize: '13px' }}>

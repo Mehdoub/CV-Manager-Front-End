@@ -32,6 +32,7 @@ const successHandler = ({ }) => (next: any) => async (action: any) => {
     'removeTagFromResume/fulfilled',
     'addContributorToResume/fulfilled',
     'removeContributorFromResume/fulfilled',
+    'endWorkResume/fulfilled',
   ]
 
   if (isFulfilled(action) && showTypesArr.includes(action.type)) {

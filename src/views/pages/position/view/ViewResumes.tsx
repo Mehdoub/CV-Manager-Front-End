@@ -19,7 +19,8 @@ export const resumesStates: any = {
   wait_reject: { title: 'wait reject', color: 'error' },
   rejected: { title: 'rejected', color: 'error' },
   hired: { title: 'hired', color: 'success' },
-  wait_hire: { title: 'wait hire', color: 'secondary' }
+  wait_hire: { title: 'wait hire', color: 'secondary' },
+  end_cooperation: { title: 'end cooperation', color: 'secondary' }
 }
 
 const ViewResumes = () => {
@@ -67,12 +68,12 @@ const ViewResumes = () => {
     const [destinationStateIndex, newStatus] = destination.droppableId.split('-')
 
     if (isForbiddenState(currentStatus)) {
-      toastError('You Cannot Move Hired And Rejected Resumes!')
+      toastError('You Cannot Move Hired, Rejected And End Cooperation Resumes!')
       return
     }
 
     if (isForbiddenState(newStatus)) {
-      toastError('You Cannot Drop Resume Directly Into Hired Or Rejected!')
+      toastError('You Cannot Drop Resume Directly Into Hired, Rejected Or End Cooperation!')
       return
     }
 

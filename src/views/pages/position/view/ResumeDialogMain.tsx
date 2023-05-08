@@ -54,13 +54,18 @@ const ResumeDialogMain = ({ open, toggle, resumeData }: ResumeDialogMainProps) =
     setSmActiveTab(value)
   }
 
+  const handleCloseResumeDialog = () => {
+    handleTabChange({}, 'details')
+    toggle()
+  }
+
   return (
     <>
       <Dialog
         maxWidth='80%'
         fullWidth
         scroll='body'
-        onClose={toggle}
+        onClose={handleCloseResumeDialog}
         open={open}
         // sx={{ height: '100vh' }}
         PaperProps={{ style: { margin: '1.5rem 0' } }}
@@ -76,7 +81,7 @@ const ResumeDialogMain = ({ open, toggle, resumeData }: ResumeDialogMainProps) =
                 handleClickOpenAddCallDialog={handleClickOpenAddCallDialog}
                 handleClickOpenAddInterviewDialog={handleClickOpenAddInterviewDialog}
                 tags={tags}
-                closeToggle={toggle}
+                closeToggle={handleCloseResumeDialog}
                 smActiveTab={smActiveTab}
                 handleSmTabChange={handleSmTabChange}
                 isSmallScreen={isSmallScreen}

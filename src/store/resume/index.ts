@@ -363,6 +363,30 @@ const resumeRemoveContributorSlice = createSlice({
 })
 
 
+export const endWorkResume: any = createAsyncThunk('endWorkResume', async (data: any, { rejectWithValue }) => {
+  try {
+    const resumeId = popObjectItemByKey(data, 'resumeId')
+    const response = await ApiRequest.builder().auth().request('patch', `resumes/${resumeId}/end-cooperation`, data)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const resumeEndWorkSlice = createSlice({
+  name: 'resumeEndWork',
+  initialState: sliceInitialStateWithStatus,
+  reducers: {
+    clearResumeEndWork: (state) => {
+      clearStatesAction(state)
+    }
+  },
+  extraReducers: (builder) => {
+    createExtraReducers(builder, endWorkResume)
+  }
+})
+
 
 export const { clearCreateResume } = resumeCreateSlice.actions
 export const { clearEditResume } = resumeEditSlice.actions
@@ -376,6 +400,7 @@ export const { clearResumeAddTag } = resumeAddTagSlice.actions
 export const { clearResumeRemoveTag } = resumeRemoveTagSlice.actions
 export const { clearResumeAddContributor } = resumeAddContributorSlice.actions
 export const { clearResumeRemoveContributor } = resumeRemoveContributorSlice.actions
+export const { clearResumeEndWork } = resumeEndWorkSlice.actions
 
 export const resumeCreateReducer = resumeCreateSlice.reducer
 export const resumeEditReducer = resumeEditSlice.reducer
@@ -390,3 +415,4 @@ export const resumeAddTagReducer = resumeAddTagSlice.reducer
 export const resumeRemoveTagReducer = resumeRemoveTagSlice.reducer
 export const resumeAddContributorReducer = resumeAddContributorSlice.reducer
 export const resumeRemoveContributorReducer = resumeRemoveContributorSlice.reducer
+export const resumeEndWorkReducer = resumeEndWorkSlice.reducer

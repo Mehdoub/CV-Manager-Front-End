@@ -18,8 +18,6 @@ import {
   FormHelperText,
   IconButton,
   InputLabel,
-  MenuItem,
-  Select,
   Slider,
   Typography,
   useMediaQuery,
@@ -34,8 +32,6 @@ import { getPositionResumes } from 'src/store/position'
 
 let salaries: Array<number> = []
 for (let salary = 10; salary <= 50; salary++) salaries.push(salary * 1000000)
-
-const cooperationOptions = ['trial', 'contractual', 'projection']
 interface ResumeHiringDialogProps {
   open: boolean
   handleClose: any
@@ -45,10 +41,6 @@ const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
   const [incomeErr, setIncomeErr] = useState<string>('')
   const [startDate, setStartDate] = useState<any>('')
   const [startDateErr, setStartDateErr] = useState<string>('')
-  // const [endDate, setEndDate] = useState<any>('')
-  // const [endDateErr, setEndDateErr] = useState<string>('')
-  // const [cooperationType, setCooperationType] = useState<string>('')
-  // const [cooperationTypeErr, setCooperationTypeErr] = useState<string>('')
 
   const { data: resume } = useSelector((state: any) => state.resume)
   const { status: resumeHireStatus, loading: resumeHireLoading } = useSelector((state: any) => state.resumeHire)
@@ -77,14 +69,10 @@ const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
 
   const resetFormErrors = (resetValues: boolean = false) => {
     setStartDateErr('')
-    // setEndDateErr('')
     setIncomeErr('')
-    // setCooperationTypeErr('')
     if (resetValues) {
       setIncome(10000000)
       setStartDate('')
-      // setEndDate('')
-      // setCooperationType('')
     }
   }
 
@@ -92,15 +80,11 @@ const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
     e.preventDefault()
     resetFormErrors()
     if (!startDate) setStartDateErr('Work Start Date Cannot Be Empty')
-    // else if (!endDate) setEndDateErr('Work End Date Cannot Be Empty')
     else if (!income) setIncomeErr('Income Cannot Be Empty')
-    // else if (!cooperationType) setCooperationTypeErr('Cooperation Type Cannot Be Empty')
     else {
       const data = {
         resumeId: resume?.id,
-        // how_to_cooperate: cooperationType,
         hired_from_date: getIsoTime(startDate.unix),
-        // hired_to_date: getIsoTime(endDate.unix),
         income
       }
       dispatch(hireResume(data))
@@ -152,56 +136,6 @@ const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
                   {startDateErr && <FormHelperText sx={{ color: 'error.main' }}>{startDateErr}</FormHelperText>}
                 </FormControl>
               </Grid>
-              {/* <Grid item md={6} xs={12}>
-                <FormControl fullWidth>
-                  <Typography fontSize={14} sx={{ fontWeight: 400, mb: 1, ml: 1, color: 'text.secondary' }}>
-                    {`${uppercaseFirstLetters('Work End Date')}`}
-                  </Typography>
-                  <DatePicker
-                    value={endDate}
-                    onChange={setEndDate}
-                    format='MM/DD/YYYY'
-                    inputClass='rmdp-input'
-                    placeholder='Click To Select Time'
-                    calendar={persianDate}
-                    locale={persianDateFa}
-                    minDate={new DateObject()}
-                    required
-                    style={{
-                      backgroundColor: theme.palette.mode == 'dark' ? '#30334E' : undefined,
-                      color:
-                        theme.palette.mode == 'light'
-                          ? 'rgba(76, 78, 100, 0.87) !important'
-                          : theme.palette.secondary.dark,
-                      borderColor:
-                        theme.palette.mode == 'light'
-                          ? 'rgba(76, 78, 100, 0.22) !important'
-                          : theme.palette.secondary.dark
-                    }}
-                  />
-                  {endDateErr && <FormHelperText sx={{ color: 'error.main' }}>{endDateErr}</FormHelperText>}
-                </FormControl>
-              </Grid>
-              <Grid item md={6} xs={12} mt={5}>
-                <FormControl fullWidth>
-                  <InputLabel>Cooperation Type</InputLabel>
-                  <Select
-                    label='Cooperation Type'
-                    value={cooperationType}
-                    error={Boolean(cooperationTypeErr)}
-                    onChange={(e: any) => setCooperationType(e.target.value)}
-                  >
-                    {cooperationOptions.map((item: string, index: number) => (
-                      <MenuItem key={`${item}-${index}`} value={item}>
-                        {uppercaseFirstLetters(item)}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                  {cooperationTypeErr && (
-                    <FormHelperText sx={{ color: 'error.main' }}>{cooperationTypeErr}</FormHelperText>
-                  )}
-                </FormControl>
-              </Grid> */}
               <Grid item md={12} xs={12} mt={5}>
                 <InputLabel sx={{ pl: '4px' }}>Income (Toman)</InputLabel>
                 <Slider

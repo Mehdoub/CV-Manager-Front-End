@@ -29,14 +29,14 @@ import {
   useMediaQuery,
   useTheme
 } from '@mui/material'
-import { uppercaseFirstLetters } from 'src/helpers/functions'
+import { getIsoTime, uppercaseFirstLetters } from 'src/helpers/functions'
 import Language from 'src/helpers/Language'
 import { useSelector } from 'react-redux'
 import * as yup from 'yup'
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useDispatch } from 'react-redux'
-import { clearResumeReject, getResume, rejectResume } from 'src/store/resume'
+import { clearResumeEndWork, clearResumeReject, endWorkResume, getResume, rejectResume } from 'src/store/resume'
 import { getPositionResumes } from 'src/store/position'
 
 const ratingLabels: { [index: string]: string } = {
@@ -64,37 +64,55 @@ const ResumeEndWorkDialog = ({ open, handleClose }: ResumeEndWorkDialogProps) =>
 
   const { data: constants } = useSelector((state: any) => state.constants)
   const { data: resume } = useSelector((state: any) => state.resume)
-  const { status: resumeRejectStatus, loading: resumeRejectLoading } = useSelector((state: any) => state.resumeReject)
+  const { status: resumeEndWorkStatus, loading: resumeEndWorkLoading } = useSelector(
+    (state: any) => state.resumeEndWork
+  )
 
   const dispatch = useDispatch()
 
   const schema = yup.object().shape({
-    reject_reason: yup.string().label('Reject Reason').oneOf(constants?.resume?.reject_reason).required(),
-    reject_description: yup.string().label('Reject Description').max(1000).optional()
+    end_cooperation_reason: yup
+      .string()
+      .label('End Work Reason')
+      .oneOf(constants?.resume?.end_cooperation_reason)
+      .required(),
+    end_cooperation_description: yup.string().label('End Work Description').max(1000).optional()
   })
 
   const {
     control,
     formState: { errors },
     handleSubmit,
-    reset
+    setValue
   } = useForm({ mode: 'onBlur', resolver: yupResolver(schema) })
 
   useEffect(() => {
-    if (resumeRejectStatus) {
+    if (resumeEndWorkStatus) {
       dispatch(getResume(resume?._id))
       dispatch(getPositionResumes(resume?.position_id?._id))
-      dispatch(clearResumeReject())
-      reset()
+      dispatch(clearResumeEndWork())
+      resetFormErrors(true)
       handleClose()
     }
-  }, [resumeRejectStatus])
+  }, [resumeEndWorkStatus])
+
+  const resetFormErrors = (resetValues: boolean = false) => {
+    setEndDateErr('')
+    if (resetValues) {
+      setValue('end_cooperation_reason', '')
+      setValue('end_cooperation_description', '')
+    }
+  }
 
   const isSmallScreen = useMediaQuery((theme: any) => theme.breakpoints.down('lg'))
   const overflowVisibility = isSmallScreen ? 'scroll' : 'visible'
 
   const submitHandler = (data: any) => {
-    dispatch(rejectResume({ ...data, resumeId: resume?._id }))
+    resetFormErrors()
+    if (!endDate) setEndDateErr('Please Choose End Work Date!')
+    else {
+      dispatch(endWorkResume({ ...data, resumeId: resume?._id, end_cooperation_date: getIsoTime(endDate.unix) }))
+    }
   }
 
   return (
@@ -125,7 +143,7 @@ const ResumeEndWorkDialog = ({ open, handleClose }: ResumeEndWorkDialogProps) =>
                     placeholder='Click To Select Time'
                     calendar={persianDate}
                     locale={persianDateFa}
-                    minDate={new DateObject()}
+                    // minDate={new DateObject()}
                     required
                     style={{
                       backgroundColor: theme.palette.mode == 'dark' ? '#30334E' : undefined,
@@ -145,7 +163,7 @@ const ResumeEndWorkDialog = ({ open, handleClose }: ResumeEndWorkDialogProps) =>
               <Grid item xs={12} md={6} mt={11.5}>
                 <FormControl fullWidth>
                   <Controller
-                    name='reject_reason'
+                    name='end_cooperation_reason'
                     control={control}
                     render={({ field: { value, onChange, onBlur } }) => (
                       <>
@@ -155,9 +173,9 @@ const ResumeEndWorkDialog = ({ open, handleClose }: ResumeEndWorkDialogProps) =>
                           value={value}
                           onChange={onChange}
                           onBlur={onBlur}
-                          error={Boolean(errors?.reject_reason)}
+                          error={Boolean(errors?.end_cooperation_reason)}
                         >
-                          {constants?.resume?.reject_reason.map((item: string, index: number) => (
+                          {constants?.resume?.end_cooperation_reason.map((item: string, index: number) => (
                             <MenuItem key={`${item}-${index}`} value={item}>
                               {uppercaseFirstLetters(item, true)}
                             </MenuItem>
@@ -166,8 +184,10 @@ const ResumeEndWorkDialog = ({ open, handleClose }: ResumeEndWorkDialogProps) =>
                       </>
                     )}
                   />
-                  {errors?.reject_reason && (
-                    <FormHelperText sx={{ color: 'error.main' }}>{errors?.reject_reason?.message}</FormHelperText>
+                  {errors?.end_cooperation_reason && (
+                    <FormHelperText sx={{ color: 'error.main' }}>
+                      {errors?.end_cooperation_reason?.message}
+                    </FormHelperText>
                   )}
                 </FormControl>
               </Grid>
@@ -175,14 +195,14 @@ const ResumeEndWorkDialog = ({ open, handleClose }: ResumeEndWorkDialogProps) =>
               <Grid item xs={12} mt={5}>
                 <FormControl fullWidth>
                   <Controller
-                    name='reject_description'
+                    name='end_cooperation_description'
                     control={control}
                     render={({ field: { value, onChange, onBlur } }) => (
                       <TextField
                         value={value}
                         onChange={onChange}
                         onBlur={onBlur}
-                        error={Boolean(errors?.reject_description)}
+                        error={Boolean(errors?.end_cooperation_description)}
                         fullWidth
                         multiline
                         minRows={3}
@@ -199,14 +219,16 @@ const ResumeEndWorkDialog = ({ open, handleClose }: ResumeEndWorkDialogProps) =>
                       />
                     )}
                   />
-                  {errors?.reject_description && (
-                    <FormHelperText sx={{ color: 'error.main' }}>{errors?.reject_description?.message}</FormHelperText>
+                  {errors?.end_cooperation_description && (
+                    <FormHelperText sx={{ color: 'error.main' }}>
+                      {errors?.end_cooperation_description?.message}
+                    </FormHelperText>
                   )}
                 </FormControl>
               </Grid>
               <Grid item xs={12} sx={{ textAlign: 'right', mt: 10 }}>
                 <Button
-                  disabled={resumeRejectLoading}
+                  disabled={resumeEndWorkLoading}
                   onClick={handleClose}
                   variant='outlined'
                   size='large'
@@ -214,7 +236,7 @@ const ResumeEndWorkDialog = ({ open, handleClose }: ResumeEndWorkDialogProps) =>
                 >
                   Cancel
                 </Button>
-                <Button disabled={resumeRejectLoading} type='submit' variant='contained' size='large' sx={{ ml: 2 }}>
+                <Button disabled={resumeEndWorkLoading} type='submit' variant='contained' size='large' sx={{ ml: 2 }}>
                   Submit
                 </Button>
               </Grid>

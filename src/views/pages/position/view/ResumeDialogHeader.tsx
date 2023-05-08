@@ -757,14 +757,21 @@ const ResumeDialogHeader = ({
                       resume?.views?.map((viewer: any, index: number) => (
                         <ListItemButton key={`viewer-${index}`}>
                           <ListItemAvatar>
-                            {viewer.avatar ? (
-                              <Avatar src={getImagePath(viewer?.avatar)} alt={getFullName(viewer)}></Avatar>
+                            {viewer?.created_by.avatar ? (
+                              <Avatar
+                                src={getImagePath(viewer?.created_by?.avatar)}
+                                alt={getFullName(viewer?.created_by)}
+                              ></Avatar>
                             ) : (
-                              <Avatar alt={getFullName(viewer)}>{getInitials(getFullName(viewer))}</Avatar>
+                              <Avatar alt={getFullName(viewer?.created_by)}>
+                                {getInitials(getFullName(viewer?.created_by))}
+                              </Avatar>
                             )}
                           </ListItemAvatar>
-                          <StyledLink href={`/users/view/${viewer?._id}/overview`}>
-                            <ListItemText secondary={`@${viewer?.username}`}>{getFullName(viewer)}</ListItemText>
+                          <StyledLink href={`/users/view/${viewer?.created_by?._id}/overview`}>
+                            <ListItemText secondary={`@${viewer?.created_by?.username}`}>
+                              {getFullName(viewer?.created_by)}
+                            </ListItemText>
                           </StyledLink>
                           <ListItemSecondaryAction sx={{ pt: 5 }}>
                             <Typography fontSize={13}>{showDate(viewer?.createdAt)}</Typography>

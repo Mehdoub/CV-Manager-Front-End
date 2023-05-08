@@ -246,7 +246,7 @@ export const getIsoTime = (unixTime: number) => {
   return new Date(unixTime * 1000).toISOString()
 }
 
-export const isForbiddenState = (state: string) => ['hired', 'rejected'].includes(state)
+export const isForbiddenState = (state: string) => ['hired', 'rejected', 'end_cooperation'].includes(state)
 
 async function copyTextToClipboard(text: string) {
   if ('clipboard' in navigator) {
