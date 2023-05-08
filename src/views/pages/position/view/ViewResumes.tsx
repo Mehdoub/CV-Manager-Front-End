@@ -36,16 +36,14 @@ const ViewResumes = () => {
 
   const router = useRouter()
 
-  const positionId = router?.query?.positionId
-
-  const resumeId = router?.query?.resume_id as string
+  const { positionId, resumeId } = router?.query as any
 
   useEffect(() => {
     if (resumeId?.length > 0) {
-      dispatch(getResume(resumeId))
+      dispatch(getResume(resumeId[0]))
       setOpen(true)
     }
-  }, [router?.query])
+  }, [])
 
   useEffect(() => {
     if (resumeStateUpdateStatus) {
@@ -100,7 +98,9 @@ const ViewResumes = () => {
   const isLoading = resumeStateUpdateLoading || positionResumesLoading
 
   const handleResumeCardClick = (resumeId: string) => {
-    router.push({ query: { ...router.query, resume_id: resumeId } })
+    router.push({ query: { ...router.query, resumeId } })
+    dispatch(getResume(resumeId))
+    setOpen(true)
   }
 
   return (

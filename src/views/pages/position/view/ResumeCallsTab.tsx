@@ -34,7 +34,7 @@ const ResumeCallsTab = () => {
     <Grid sx={{ backgroundColor: '#4c4e640d' }}>
       <Grid container p={'10px 40px'}>
         <Timeline sx={{ my: 0, py: 0 }}>
-          {resume?.call_history?.length > 0 &&
+          {resume?.call_history?.length > 0 ? (
             resume?.call_history?.map((callHistory: any, index: number) => (
               <TimelineItem key={`call-history-timeline-${index}`}>
                 <TimelineSeparator>
@@ -62,7 +62,10 @@ const ResumeCallsTab = () => {
                   <CallHistoryCard callHistory={callHistory} />
                 </TimelineContent>
               </TimelineItem>
-            ))}
+            ))
+          ) : (
+            <Typography>There Is Nothing To Show Here!</Typography>
+          )}
         </Timeline>
       </Grid>
     </Grid>

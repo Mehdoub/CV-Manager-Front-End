@@ -43,7 +43,7 @@ import { AvatarGroup, Skeleton, Stack } from '@mui/material'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 import { getProjects } from 'src/store/project'
 import ProjectEditDialog from 'src/views/pages/project/view/ProjectEditDialog'
-import { getImagePath, showDate } from 'src/helpers/functions'
+import { getImagePath, showDate, uppercaseFirstLetters } from 'src/helpers/functions'
 
 const statusColors: any = {
   active: 'success',
@@ -156,7 +156,7 @@ const ProjectList = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href={`/projects/view/${id}/overview/`}>{name}</StyledLink>
+              <StyledLink href={`/projects/view/${id}/overview/`}>{uppercaseFirstLetters(name)}</StyledLink>
             </Box>
           </Box>
         )

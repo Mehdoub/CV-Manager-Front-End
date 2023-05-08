@@ -124,15 +124,13 @@ const UserList = () => {
       field: 'fullName',
       headerName: 'User',
       renderCell: ({ row }: any) => {
-        const { firstname, lastname, username, id } = row
+        const { username, id } = row
 
         return (
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href={`/users/view/${id}/overview`}>
-                {firstname} {lastname}
-              </StyledLink>
+              <StyledLink href={`/users/view/${id}/overview`}>{getFullName(row)}</StyledLink>
               <Typography noWrap variant='caption'>
                 {`@${username}`}
               </Typography>

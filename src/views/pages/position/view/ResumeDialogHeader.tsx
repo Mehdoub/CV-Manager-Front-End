@@ -322,6 +322,15 @@ const ResumeDialogHeader = ({
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
               <Typography fontSize={18} fontWeight={500}>
                 {getFullName(resume)}
+                <BootstrapTooltip title={copyText} placement='top'>
+                  <Button
+                    onClick={() => handleCopyClick(resumeLink, setCopyText)}
+                    sx={{ p: 0, mb: 1, ml: 1, justifyContent: 'end', minWidth: 0 }}
+                    color='secondary'
+                  >
+                    <Icon icon='mdi:link-variant' fontSize={25} />
+                  </Button>
+                </BootstrapTooltip>
               </Typography>
               <Typography variant='body2'>
                 <BootstrapTooltip title='Company' placement='bottom'>
@@ -604,7 +613,7 @@ const ResumeDialogHeader = ({
         <Grid item container lg={7} xl={8} xs={12}>
           <Grid item container xs={12} sx={{ textAlign: 'left', alignItems: 'end' }} spacing={2}>
             <Grid item xs={12} mt={10} ml={1}>
-              <Typography variant='body2'>Contributor(s):</Typography>
+              <Typography variant='body2'>Assignee(s):</Typography>
             </Grid>
             {resume?.contributors?.length > 0 &&
               resume?.contributors?.map((contributorUser: any, index: number) => (
@@ -704,15 +713,6 @@ const ResumeDialogHeader = ({
           sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'inherit', flexDirection: 'column' }}
         >
           <Grid item sx={{ textAlign: 'right' }}>
-            <BootstrapTooltip title={copyText} placement='top'>
-              <Button
-                onClick={() => handleCopyClick(resumeLink, setCopyText)}
-                sx={{ p: 0, mt: 2, mr: 2, justifyContent: 'end', minWidth: 0 }}
-                color='secondary'
-              >
-                <Icon icon='mdi:content-copy' fontSize={32} />
-              </Button>
-            </BootstrapTooltip>
             <BootstrapTooltip title='Views' placement='top'>
               <Button
                 onClick={handleClickViews}
@@ -724,8 +724,15 @@ const ResumeDialogHeader = ({
                   color='primary'
                   overlap='circular'
                   invisible={!Boolean(resume?.summary_count?.view)}
+                  sx={{
+                    '& .MuiBadge-badge': {
+                      width: 16,
+                      height: 16,
+                      fontSize: 10
+                    }
+                  }}
                 >
-                  <Icon icon='teenyicons:eye-outline' fontSize={35} />
+                  <Icon icon='teenyicons:eye-outline' fontSize={30} />
                 </Badge>
               </Button>
             </BootstrapTooltip>

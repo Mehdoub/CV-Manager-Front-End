@@ -37,7 +37,7 @@ import { Stack } from '@mui/system'
 import { getCompanies } from 'src/store/company'
 import CompanyEditDialog from 'src/views/pages/company/view/CompanyEditDialog'
 import AddCompanyDrawer from 'src/views/pages/company/list/AddCompanyDrawer'
-import { getFullName, getImagePath, showDate } from 'src/helpers/functions'
+import { getFullName, getImagePath, showDate, uppercaseFirstLetters } from 'src/helpers/functions'
 import { useTranslation } from 'react-i18next'
 
 const statusColors: any = {
@@ -152,7 +152,7 @@ const CompanyList = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href={`/companies/view/${row.id}/overview`}>{name}</StyledLink>
+              <StyledLink href={`/companies/view/${row.id}/overview`}>{uppercaseFirstLetters(name)}</StyledLink>
             </Box>
           </Box>
         )

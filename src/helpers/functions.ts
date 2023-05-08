@@ -167,7 +167,7 @@ export const getColorCodes = (color: string) => {
 
 export const getMaxTextLen = (text: string, maxLen = 15): string => {
   const dots = text?.length > maxLen ? '...' : ''
-  return text?.substring(0, maxLen) + dots
+  return uppercaseFirstLetters(text?.substring(0, maxLen) + dots)
 }
 
 export const popObjectItemByKey = (subjectObj: any, key: string) => {
