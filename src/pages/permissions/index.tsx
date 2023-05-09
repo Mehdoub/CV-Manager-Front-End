@@ -11,7 +11,7 @@ import Dialog from '@mui/material/Dialog'
 import { DataGrid } from '@mui/x-data-grid'
 import Checkbox from '@mui/material/Checkbox'
 import FormGroup from '@mui/material/FormGroup'
-import TextField from '@mui/material/TextField'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import AlertTitle from '@mui/material/AlertTitle'
@@ -42,7 +42,6 @@ export type PermissionRowType = {
   createdDate: string
   assignedTo: string[]
 }
-
 
 interface Colors {
   [key: string]: ThemeColor
@@ -187,7 +186,7 @@ const PermissionsTable = () => {
 
           <Box component='form' sx={{ mt: 8 }} onSubmit={onSubmit}>
             <FormGroup sx={{ mb: 2, alignItems: 'center', flexDirection: 'row', flexWrap: ['wrap', 'nowrap'] }}>
-              <TextField
+              <CustomTextField
                 fullWidth
                 size='small'
                 value={editValue}

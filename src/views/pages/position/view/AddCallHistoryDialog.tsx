@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 // ** MUI Imports
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
-import TextField from '@mui/material/TextField'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import Grid from '@mui/material/Grid'
@@ -241,7 +241,7 @@ const AddCallHistoryDialog = ({ open, handleClose }: AddCallHistoryDialogProps) 
 
               <Grid item xs={12} mt={5}>
                 <FormControl fullWidth>
-                  <TextField
+                  <CustomTextField
                     fullWidth
                     value={description}
                     onChange={(e: any) => setDescription(e.target.value)}

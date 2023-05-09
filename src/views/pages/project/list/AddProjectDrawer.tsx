@@ -5,7 +5,7 @@ import { Fragment, useEffect, useState } from 'react'
 import Drawer from '@mui/material/Drawer'
 import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
-import TextField from '@mui/material/TextField'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Box, { BoxProps } from '@mui/material/Box'
@@ -249,7 +249,7 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
                 getOptionLabel={(company: any) => company?.name}
                 ListboxComponent={List}
                 renderInput={params => (
-                  <TextField
+                  <CustomTextField
                     {...params}
                     label='Company'
                     onChange={searchCompanies}
@@ -285,7 +285,7 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange, onBlur } }) => (
-                <TextField
+                <CustomTextField
                   value={value}
                   label='Name'
                   onChange={onChange}
@@ -303,7 +303,7 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange, onBlur } }) => (
-                <TextField
+                <CustomTextField
                   value={value}
                   multiline
                   rows={4}

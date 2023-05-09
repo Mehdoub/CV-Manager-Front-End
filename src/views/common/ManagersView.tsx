@@ -23,9 +23,9 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Skeleton,
-  TextField
+  Skeleton
 } from '@mui/material'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import { getInitials } from 'src/@core/utils/get-initials'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
@@ -248,7 +248,12 @@ const ManagersView = (props: Props) => {
                   ListboxComponent={List}
                   getOptionLabel={(user: any) => getFullName(user)}
                   renderInput={params => (
-                    <TextField {...params} onChange={searchUsers} size='small' placeholder='Search for managers...' />
+                    <CustomTextField
+                      {...params}
+                      onChange={searchUsers}
+                      size='small'
+                      placeholder='Search for managers...'
+                    />
                   )}
                   renderOption={(props, user) => (
                     <ListItem {...props}>

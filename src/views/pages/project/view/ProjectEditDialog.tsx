@@ -14,9 +14,9 @@ import {
   List,
   ListItem,
   ListItemAvatar,
-  ListItemText,
-  TextField
+  ListItemText
 } from '@mui/material'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import * as yup from 'yup'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import { getInitials } from 'src/@core/utils/get-initials'
@@ -230,7 +230,7 @@ const ProjectEditDialog = (props: Props) => {
                   name='name'
                   control={control}
                   render={({ field: { value, onChange, onBlur } }) => (
-                    <TextField
+                    <CustomTextField
                       label='Name'
                       placeholder='Example: BPM'
                       value={value}
@@ -254,7 +254,7 @@ const ProjectEditDialog = (props: Props) => {
                   ListboxComponent={List}
                   defaultValue={{ name: projectDataFromList?.company_id?.name ?? company?.name }}
                   renderInput={params => (
-                    <TextField
+                    <CustomTextField
                       label='Company'
                       {...params}
                       onChange={searchCompanies}
@@ -282,9 +282,6 @@ const ProjectEditDialog = (props: Props) => {
                   )}
                 />
                 {companyErr && <FormHelperText sx={{ color: 'error.main' }}>{companyErr}</FormHelperText>}
-                {errors.name && <FormHelperText sx={{ color: 'error.main' }}>{errors.name.message}</FormHelperText>}
-
-                {/* {companyErr && <FormHelperText sx={{ color: 'error.main' }}>{companyErr}</FormHelperText>} */}
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
@@ -293,7 +290,7 @@ const ProjectEditDialog = (props: Props) => {
                   name='description'
                   control={control}
                   render={({ field: { value, onBlur, onChange } }) => (
-                    <TextField
+                    <CustomTextField
                       label='Description'
                       placeholder='Project Description Shuould Be Here ...'
                       multiline

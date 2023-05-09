@@ -200,6 +200,20 @@ const App = (props: ExtendedAppProps) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOnline])
 
+  // Below Code Commented Temporarily
+
+  // // Blocking Right Click
+  // document.addEventListener('contextmenu', e => e.preventDefault())
+
+  // document.onkeydown = ev => {
+  //   if (ev.keyCode == 123) {
+  //     // Blocking F12
+  //     return false
+  //   } else if (ev.shiftKey && ev.ctrlKey) {
+  //     return false
+  //   }
+  // }
+
   return (
     <Provider store={store}>
       <CacheProvider value={emotionCache}>
@@ -227,7 +241,11 @@ const App = (props: ExtendedAppProps) => {
                       </Guard>
                     </WindowWrapper>
                     <ReactHotToast>
-                      <Toaster position={settings.toastPosition} toastOptions={{ className: 'react-hot-toast' }} containerStyle={{zIndex: '10000 !important'}} />
+                      <Toaster
+                        position={settings.toastPosition}
+                        toastOptions={{ className: 'react-hot-toast' }}
+                        containerStyle={{ zIndex: '10000 !important' }}
+                      />
                     </ReactHotToast>
                   </ThemeComponent>
                 )

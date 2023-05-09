@@ -20,11 +20,11 @@ import {
   Rating,
   Stack,
   Tab,
-  TextField,
   Typography,
   createFilterOptions,
   styled
 } from '@mui/material'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import {
   getColorCodes,
   getFullName,
@@ -535,7 +535,12 @@ const ResumeDialogHeader = ({
                     size='small'
                     id='autocomplete-size-small-multi'
                     renderInput={params => (
-                      <TextField {...params} label='Add Tag' placeholder='Search Tags ...' onChange={searchTags} />
+                      <CustomTextField
+                        {...params}
+                        label='Add Tag'
+                        placeholder='Search Tags ...'
+                        onChange={searchTags}
+                      />
                     )}
                     renderOption={(props, tag: any) =>
                       tag.name.includes('Add "') ? (
@@ -684,7 +689,9 @@ const ResumeDialogHeader = ({
                     limitTags={2}
                     getOptionLabel={user => getFullName(user)}
                     onChange={(e: any, newValue: any) => addContributorToResumeHandler(newValue?._id)}
-                    renderInput={params => <TextField {...params} label='Contributor' placeholder='Search Users ...' />}
+                    renderInput={params => (
+                      <CustomTextField {...params} label='Contributor' placeholder='Search Users ...' />
+                    )}
                     renderOption={(props, user) => (
                       <ListItem {...props}>
                         <ListItemAvatar>

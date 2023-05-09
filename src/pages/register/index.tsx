@@ -6,7 +6,7 @@ import Link from 'next/link'
 
 // ** MUI Components
 import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import InputLabel from '@mui/material/InputLabel'
 import IconButton from '@mui/material/IconButton'
 import Box, { BoxProps } from '@mui/material/Box'
@@ -123,7 +123,7 @@ const Register = () => {
   const schema = yup.object().shape({
     firstname: yup.string().label('First name').min(3).required(),
     lastname: yup.string().label('Last name').min(3).required(),
-    username: yup.string().label('Username').min(8).max(10).required(),
+    username: yup.string().label('Username').min(3).max(10).required(),
     mobile: yup
       .string()
       .label('Mobile')
@@ -298,7 +298,7 @@ const Register = () => {
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
-                    <TextField
+                    <CustomTextField
                       autoFocus
                       value={value}
                       onBlur={onBlur}
@@ -319,7 +319,7 @@ const Register = () => {
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onChange, onBlur } }) => (
-                    <TextField
+                    <CustomTextField
                       value={value}
                       label='Last Name'
                       onBlur={onBlur}
@@ -339,7 +339,7 @@ const Register = () => {
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onBlur, onChange } }) => (
-                    <TextField
+                    <CustomTextField
                       value={value}
                       label='Username'
                       onBlur={e => {
@@ -365,7 +365,7 @@ const Register = () => {
                   name='mobile'
                   control={control}
                   render={({ field: { value, onChange, onBlur } }) => (
-                    <TextField
+                    <CustomTextField
                       label='Mobile'
                       value={value}
                       onBlur={onBlur}

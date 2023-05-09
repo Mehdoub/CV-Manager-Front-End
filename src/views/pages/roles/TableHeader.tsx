@@ -2,7 +2,7 @@
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import MenuItem from '@mui/material/MenuItem'
-import TextField from '@mui/material/TextField'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import InputLabel from '@mui/material/InputLabel'
 import FormControl from '@mui/material/FormControl'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
@@ -27,7 +27,7 @@ const TableHeader = (props: TableHeaderProps) => {
         Export
       </Button>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-        <TextField
+        <CustomTextField
           size='small'
           value={value}
           placeholder='Search User'

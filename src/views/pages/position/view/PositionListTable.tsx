@@ -224,7 +224,7 @@ const ProjectPositionListTable = () => {
         <Card>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
             <CardHeader title='Latest Positions' />
-            {/* <TextField size='small' value={value} sx={{ mr: 6, mb: 2 }} placeholder='Search Project' /> */}
+            {/* <CustomTextField size='small' value={value} sx={{ mr: 6, mb: 2 }} placeholder='Search Project' /> */}
             <Button sx={{ mt: 2, mr: 5 }} variant='contained' onClick={toggleAddProjectDrawer}>
               Add Position
             </Button>

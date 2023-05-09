@@ -7,9 +7,9 @@ import {
   DialogTitle,
   FormControl,
   FormHelperText,
-  Grid,
-  TextField
+  Grid
 } from '@mui/material'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import * as yup from 'yup'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import { getInitials } from 'src/@core/utils/get-initials'
@@ -164,7 +164,7 @@ const CompanyEditDialog = (props: Props) => {
   const onSubmit = (data: CompanyFormData) => {
     let editCompanyData: CompanyEditData = { ...data, companyId: company?.id }
     if (files[0]) {
-      editCompanyData = {...editCompanyData, logo: files[0]}
+      editCompanyData = { ...editCompanyData, logo: files[0] }
     }
     dispatch(editCompany(editCompanyData))
     reset()
@@ -241,7 +241,7 @@ const CompanyEditDialog = (props: Props) => {
                   name='name'
                   control={control}
                   render={({ field: { value, onChange, onBlur } }) => (
-                    <TextField
+                    <CustomTextField
                       label='Name'
                       placeholder='Example: PSP'
                       value={value}
@@ -260,7 +260,7 @@ const CompanyEditDialog = (props: Props) => {
                   name='phone'
                   control={control}
                   render={({ field: { value, onBlur, onChange } }) => (
-                    <TextField
+                    <CustomTextField
                       label='Phone'
                       placeholder='02188651256'
                       value={value}
@@ -279,7 +279,7 @@ const CompanyEditDialog = (props: Props) => {
                   name='address'
                   control={control}
                   render={({ field: { value, onBlur, onChange } }) => (
-                    <TextField
+                    <CustomTextField
                       label='Address'
                       placeholder='Company Address Shuould Be Here ...'
                       multiline
@@ -302,7 +302,7 @@ const CompanyEditDialog = (props: Props) => {
                   name='description'
                   control={control}
                   render={({ field: { value, onBlur, onChange } }) => (
-                    <TextField
+                    <CustomTextField
                       label='Description'
                       placeholder='Company Description Shuould Be Here ...'
                       multiline

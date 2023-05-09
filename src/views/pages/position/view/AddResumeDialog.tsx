@@ -8,7 +8,7 @@ import Dialog from '@mui/material/Dialog'
 import Divider from '@mui/material/Divider'
 import { styled } from '@mui/material/styles'
 import MenuItem from '@mui/material/MenuItem'
-import TextField from '@mui/material/TextField'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import Typography, { TypographyProps } from '@mui/material/Typography'
 import InputLabel from '@mui/material/InputLabel'
 import CardHeader from '@mui/material/CardHeader'
@@ -33,6 +33,7 @@ import {
 } from '@mui/material'
 import * as yup from 'yup'
 import {
+  convertPersianNumsToEnglish,
   getAllowedFormats,
   getImagePath,
   mobileHandler,
@@ -430,7 +431,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                               getOptionLabel={(projectItem: any) => projectItem?.name}
                               ListboxComponent={List}
                               renderInput={params => (
-                                <TextField
+                                <CustomTextField
                                   {...params}
                                   label='Project'
                                   onChange={searchProjects}
@@ -475,7 +476,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                               getOptionLabel={(positionItem: any) => positionItem?.title}
                               ListboxComponent={List}
                               renderInput={params => (
-                                <TextField
+                                <CustomTextField
                                   {...params}
                                   label='Position'
                                   // onChange={searchPositions}
@@ -519,7 +520,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                           control={control}
                           rules={{ required: true }}
                           render={({ field: { value, onChange, onBlur } }) => (
-                            <TextField
+                            <CustomTextField
                               value={value}
                               fullWidth
                               label='First Name'
@@ -541,7 +542,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                           name='lastname'
                           control={control}
                           render={({ field: { value, onChange, onBlur } }) => (
-                            <TextField
+                            <CustomTextField
                               value={value}
                               fullWidth
                               label='Last Name'
@@ -595,8 +596,8 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                           name='mobile'
                           control={control}
                           render={({ field: { value, onChange, onBlur } }) => (
-                            <TextField
-                              value={value}
+                            <CustomTextField
+                              value={convertPersianNumsToEnglish(value)}
                               fullWidth
                               label='Mobile'
                               placeholder='919 123 4567'
@@ -623,7 +624,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                           name='email'
                           control={control}
                           render={({ field: { value, onChange, onBlur } }) => (
-                            <TextField
+                            <CustomTextField
                               value={value}
                               fullWidth
                               type='email'
@@ -646,8 +647,8 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                           name='phone'
                           control={control}
                           render={({ field: { value, onChange, onBlur } }) => (
-                            <TextField
-                              value={value}
+                            <CustomTextField
+                              value={convertPersianNumsToEnglish(value)}
                               fullWidth
                               label='Phone Number'
                               placeholder='21 8846 7889'

@@ -9,7 +9,7 @@ import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
 import Divider from '@mui/material/Divider'
 import { styled } from '@mui/material/styles'
-import TextField from '@mui/material/TextField'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import Typography from '@mui/material/Typography'
 import CardContent from '@mui/material/CardContent'
 import CardActions from '@mui/material/CardActions'
@@ -201,11 +201,15 @@ const ProjectViewLeft = ({ positionId }: Props) => {
             <Divider sx={{ mt: theme => `${theme.spacing(4)} !important` }} />
             <Box sx={{ display: 'flex', mb: 2.7 }}>
               <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Company:</Typography>
-              <StyledLink href={`/companies/view/${position?.company_id?.id}/overview`}>{position?.company_id?.name}</StyledLink>
+              <StyledLink href={`/companies/view/${position?.company_id?.id}/overview`}>
+                {position?.company_id?.name}
+              </StyledLink>
             </Box>
             <Box sx={{ display: 'flex', mb: 2.7 }}>
               <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Project:</Typography>
-              <StyledLink href={`/projects/view/${position?.project_id?.id}/overview`}>{position?.project_id?.name}</StyledLink>
+              <StyledLink href={`/projects/view/${position?.project_id?.id}/overview`}>
+                {position?.project_id?.name}
+              </StyledLink>
             </Box>
             <Box sx={{ display: 'flex', mb: 2.7 }}>
               <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Level:</Typography>

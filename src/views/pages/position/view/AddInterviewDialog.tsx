@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 // ** MUI Imports
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
-import TextField from '@mui/material/TextField'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import Grid from '@mui/material/Grid'
@@ -261,7 +261,9 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                   id='autocomplete-multi-contributors'
                   getOptionLabel={user => getFullName(user)}
                   onChange={(e: any, newValue: any) => setContributors(newValue)}
-                  renderInput={params => <TextField {...params} label='Contributors' placeholder='Search Users ...' />}
+                  renderInput={params => (
+                    <CustomTextField {...params} label='Contributors' placeholder='Search Users ...' />
+                  )}
                   renderOption={(props, user) => (
                     <ListItem {...props}>
                       <ListItemAvatar>
@@ -398,7 +400,7 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                     name='description'
                     control={control}
                     render={({ field: { value, onChange, onBlur } }) => (
-                      <TextField
+                      <CustomTextField
                         value={value}
                         onChange={onChange}
                         onBlur={onBlur}

@@ -7,7 +7,7 @@ import Select from '@mui/material/Select'
 import Button from '@mui/material/Button'
 import MenuItem from '@mui/material/MenuItem'
 import { styled } from '@mui/material/styles'
-import TextField from '@mui/material/TextField'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import IconButton from '@mui/material/IconButton'
 import InputLabel from '@mui/material/InputLabel'
 import Typography from '@mui/material/Typography'
@@ -79,18 +79,9 @@ const schema = yup.object().shape({
   company: yup.string().required(),
   country: yup.string().required(),
   email: yup.string().email().required(),
-  firstname: yup
-    .string()
-    .min(3)
-    .required(),
-  lastname: yup
-    .string()
-    .min(3)
-    .required(),
-  username: yup
-    .string()
-    .min(3)
-    .required(),
+  firstname: yup.string().min(3).required(),
+  lastname: yup.string().min(3).required(),
+  username: yup.string().min(3).required(),
   mobile: yup
     .string()
     .label('Mobile')
@@ -201,7 +192,7 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
       </Header>
       <Box sx={{ p: 5 }}>
         <form onSubmit={handleSubmit(onSubmit)}>
-        <Fragment>
+          <Fragment>
             <div {...getRootProps({ className: 'dropzone' })}>
               <input {...getInputProps()} />
               <Box sx={{ textAlign: 'center' }}>
@@ -237,7 +228,7 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
-                <TextField
+                <CustomTextField
                   value={value}
                   label='First Name'
                   onChange={onChange}
@@ -256,7 +247,7 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
-                <TextField
+                <CustomTextField
                   value={value}
                   label='Last Name'
                   onChange={onChange}
@@ -273,7 +264,7 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
-                <TextField
+                <CustomTextField
                   value={value}
                   label='Username'
                   onChange={onChange}
@@ -290,7 +281,7 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
-                <TextField
+                <CustomTextField
                   value={value}
                   label='Mobile'
                   onChange={onChange}
@@ -307,7 +298,7 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
-                <TextField
+                <CustomTextField
                   type='email'
                   value={value}
                   label='Email'

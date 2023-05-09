@@ -6,7 +6,7 @@ import Link from 'next/link'
 
 // ** MUI Components
 import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import InputLabel from '@mui/material/InputLabel'
 import IconButton from '@mui/material/IconButton'
 import Box, { BoxProps } from '@mui/material/Box'
@@ -255,7 +255,7 @@ const LoginPage = () => {
                     maxLength: { value: 10, message: 'Mobile is not valid' }
                   }}
                   render={({ field: { value, onChange, onBlur } }) => (
-                    <TextField
+                    <CustomTextField
                       autoFocus
                       label='Mobile'
                       value={value}

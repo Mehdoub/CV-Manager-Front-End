@@ -6,7 +6,7 @@ import Box from '@mui/material/Box'
 import Dialog from '@mui/material/Dialog'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
-import TextField from '@mui/material/TextField'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import Typography from '@mui/material/Typography'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
@@ -36,7 +36,7 @@ const TableHeader = (props: TableHeaderProps) => {
       <Box
         sx={{ p: 5, pb: 3, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}
       >
-        <TextField
+        <CustomTextField
           size='small'
           value={value}
           sx={{ mr: 4, mb: 2.5 }}
@@ -60,7 +60,7 @@ const TableHeader = (props: TableHeaderProps) => {
             onSubmit={e => onSubmit(e)}
             sx={{ mt: 4, display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}
           >
-            <TextField
+            <CustomTextField
               fullWidth
               label='Permission Name'
               sx={{ mb: 1, maxWidth: 360 }}

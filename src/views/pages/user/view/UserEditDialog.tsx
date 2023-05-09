@@ -10,7 +10,6 @@ import {
   FormHelperText,
   Grid,
   ListItem,
-  TextField,
   Typography,
   styled
 } from '@mui/material'
@@ -26,6 +25,7 @@ import { useDispatch } from 'react-redux'
 import { checkUsername } from 'src/store/auth'
 import { clearUserEdit, editUser, getUser, getUsers } from 'src/store/user'
 import { getRoles } from 'src/store/role'
+import CustomTextField from 'src/@core/components/custom-textfield'
 
 interface UserEditDialogProps {
   open: boolean
@@ -200,7 +200,7 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
                   name='firstname'
                   control={control}
                   render={({ field: { onBlur, onChange, value } }) => (
-                    <TextField
+                    <CustomTextField
                       label='First Name'
                       placeholder='John'
                       value={value}
@@ -221,7 +221,7 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
                   name='lastname'
                   control={control}
                   render={({ field: { onBlur, onChange, value } }) => (
-                    <TextField
+                    <CustomTextField
                       label='Last Name'
                       placeholder='Doe'
                       value={value}
@@ -242,7 +242,7 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
                   name='email'
                   control={control}
                   render={({ field: { onBlur, onChange, value } }) => (
-                    <TextField
+                    <CustomTextField
                       label='Email'
                       placeholder='Example@email.com'
                       value={value}
@@ -262,7 +262,7 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
                   control={control}
                   rules={{ required: true }}
                   render={({ field: { value, onBlur, onChange } }) => (
-                    <TextField
+                    <CustomTextField
                       value={value}
                       label='Username'
                       onBlur={e => {
@@ -286,15 +286,15 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
             </Grid>
             <Grid item xs={12}>
               <Autocomplete
-                options={roles}
+                options={roles?.length > 0 ? roles : []}
                 id='autocomplete-size-small-multi'
                 defaultValue={{ name: user?.role ? user?.role[0] : '' }}
-                renderInput={params => <TextField {...params} label='Edit Role' placeholder='Search Roles ...' />}
-                renderOption={(props, role: any) => <ListItem {...props}>{role.name}</ListItem>}
+                renderInput={params => <CustomTextField {...params} label='Edit Role' placeholder='Search Roles ...' />}
+                renderOption={(props, role: any) => <ListItem {...props}>{role?.name}</ListItem>}
                 selectOnFocus
                 clearOnBlur
                 handleHomeEndKeys
-                getOptionLabel={option => option.name}
+                getOptionLabel={option => option?.name}
               />
             </Grid>
           </Grid>

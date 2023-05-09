@@ -232,7 +232,12 @@ const ProjectViewManagers = () => {
                   ListboxComponent={List}
                   getOptionLabel={(user: any) => getFullName(user)}
                   renderInput={params => (
-                    <TextField {...params} onChange={searchUsers} size='small' placeholder='Search for managers...' />
+                    <CustomTextField
+                      {...params}
+                      onChange={searchUsers}
+                      size='small'
+                      placeholder='Search for managers...'
+                    />
                   )}
                   renderOption={(props, user) => (
                     <ListItem {...props}>

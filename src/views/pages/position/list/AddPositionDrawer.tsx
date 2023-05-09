@@ -5,7 +5,7 @@ import { Fragment, useEffect, useState } from 'react'
 import Drawer from '@mui/material/Drawer'
 import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
-import TextField from '@mui/material/TextField'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Box, { BoxProps } from '@mui/material/Box'
@@ -148,7 +148,6 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
       else dispatch(getPositions())
       dispatch(clearPositionCreate())
       setProjectErr('')
-      setPositionProject({})
       toggle()
       reset()
     }
@@ -264,7 +263,7 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
-                <TextField
+                <CustomTextField
                   value={value}
                   label='Title'
                   onChange={onChange}
@@ -288,7 +287,7 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
                 getOptionLabel={(projectItem: any) => projectItem?.name}
                 ListboxComponent={List}
                 renderInput={params => (
-                  <TextField
+                  <CustomTextField
                     {...params}
                     label='Project'
                     onChange={searchProjects}
@@ -315,7 +314,7 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
                         sx={{ height: 28, width: 28 }}
                       />
                     </ListItemAvatar>
-                    <ListItemText primary={projectItem?.name} />
+                    <ListItemText primary={projectItem?.name} secondary={projectItem?.company_id?.name} />
                   </ListItem>
                 )}
               />
@@ -356,7 +355,7 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
-                <TextField
+                <CustomTextField
                   value={value}
                   multiline
                   rows={4}

@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 // ** MUI Imports
 import Button from '@mui/material/Button'
 import Dialog from '@mui/material/Dialog'
-import TextField from '@mui/material/TextField'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import DialogTitle from '@mui/material/DialogTitle'
 import DialogContent from '@mui/material/DialogContent'
 import Grid from '@mui/material/Grid'
@@ -139,7 +139,7 @@ const ResumeRejectingDialog = ({ open, handleClose }: ResumeRejectingDialogProps
                     name='reject_description'
                     control={control}
                     render={({ field: { value, onChange, onBlur } }) => (
-                      <TextField
+                      <CustomTextField
                         value={value}
                         onChange={onChange}
                         onBlur={onBlur}

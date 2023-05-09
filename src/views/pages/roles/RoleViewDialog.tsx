@@ -20,10 +20,10 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  TextField,
   Tooltip,
   Typography
 } from '@mui/material'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
@@ -142,7 +142,7 @@ const RoleViewDialog = ({ open, toggle, dialogTitle, editRoleData }: RoleViewDia
       <DialogContent sx={{ p: { xs: 6, sm: 12 }, minHeight: '450px' }}>
         <Box sx={{ my: 4 }}>
           <FormControl fullWidth>
-            <TextField
+            <CustomTextField
               value={roleName}
               onChange={e => setRoleName(e.target.value)}
               label='Role Name'

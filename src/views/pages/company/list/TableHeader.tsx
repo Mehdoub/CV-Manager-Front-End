@@ -1,7 +1,7 @@
 // ** MUI Imports
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
+import CustomTextField from 'src/@core/components/custom-textfield'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
@@ -27,7 +27,7 @@ const TableHeader = (props: TableHeaderProps) => {
         Export
       </Button>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
-        <TextField
+        <CustomTextField
           size='small'
           value={searchQuery}
           sx={{ mr: 6, mb: 2 }}

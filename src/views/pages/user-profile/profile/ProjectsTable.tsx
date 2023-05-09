@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import { DataGrid } from '@mui/x-data-grid'
-import TextField from '@mui/material/TextField'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import AvatarGroup from '@mui/material/AvatarGroup'
@@ -161,7 +161,7 @@ const ProfileTable = () => {
             <Typography variant='body2' sx={{ mr: 2 }}>
               Search:
             </Typography>
-            <TextField size='small' value={value} onChange={e => handleFilter(e.target.value)} />
+            <CustomTextField size='small' value={value} onChange={e => handleFilter(e.target.value)} />
           </Box>
         }
       />

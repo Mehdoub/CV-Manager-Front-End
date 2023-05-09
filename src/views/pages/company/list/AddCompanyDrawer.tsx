@@ -5,7 +5,7 @@ import { Fragment, useEffect, useState } from 'react'
 import Drawer from '@mui/material/Drawer'
 import Button from '@mui/material/Button'
 import { styled } from '@mui/material/styles'
-import TextField from '@mui/material/TextField'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import IconButton from '@mui/material/IconButton'
 import Typography from '@mui/material/Typography'
 import Box, { BoxProps } from '@mui/material/Box'
@@ -260,7 +260,7 @@ const AddCompanyDrawer = (props: Props) => {
               control={control}
               rules={{ required: true }}
               render={({ field: { value, onChange, onBlur } }) => (
-                <TextField
+                <CustomTextField
                   value={value}
                   label='Name'
                   onBlur={onBlur}
@@ -277,7 +277,7 @@ const AddCompanyDrawer = (props: Props) => {
               name='phone'
               control={control}
               render={({ field: { value, onChange, onBlur } }) => (
-                <TextField
+                <CustomTextField
                   value={value}
                   label='Phone'
                   onChange={onChange}
@@ -294,7 +294,7 @@ const AddCompanyDrawer = (props: Props) => {
               name='address'
               control={control}
               render={({ field: { value, onChange, onBlur } }) => (
-                <TextField
+                <CustomTextField
                   value={value}
                   multiline
                   rows={4}
@@ -313,7 +313,7 @@ const AddCompanyDrawer = (props: Props) => {
               name='description'
               control={control}
               render={({ field: { value, onChange, onBlur } }) => (
-                <TextField
+                <CustomTextField
                   value={value}
                   multiline
                   rows={4}

@@ -6,7 +6,7 @@ import Link from 'next/link'
 
 // ** MUI Components
 import Button from '@mui/material/Button'
-import TextField from '@mui/material/TextField'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import Box, { BoxProps } from '@mui/material/Box'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { styled, useTheme } from '@mui/material/styles'
@@ -211,7 +211,7 @@ const ForgotPassword = () => {
               </Typography>
             </Box>
             <form noValidate autoComplete='off' onSubmit={handleSubmit}>
-              <TextField autoFocus type='email' label='Email' sx={{ display: 'flex', mb: 4 }} />
+              <CustomTextField autoFocus type='email' label='Email' sx={{ display: 'flex', mb: 4 }} />
               <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 5.25 }}>
                 Send reset link
               </Button>

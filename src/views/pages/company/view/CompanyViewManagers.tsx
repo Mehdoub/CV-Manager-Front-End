@@ -11,9 +11,9 @@ import {
   ListItemAvatar,
   ListItemText,
   Skeleton,
-  TextField,
   Typography
 } from '@mui/material'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import Icon from 'src/@core/components/icon'
 import { useEffect, useState } from 'react'
 import { styled } from '@mui/material/styles'
@@ -224,7 +224,12 @@ const CompanyViewManagers = () => {
                   ListboxComponent={List}
                   getOptionLabel={(user: any) => getFullName(user)}
                   renderInput={params => (
-                    <TextField {...params} onChange={searchUsers} size='small' placeholder='Search for managers...' />
+                    <CustomTextField
+                      {...params}
+                      onChange={searchUsers}
+                      size='small'
+                      placeholder='Search for managers...'
+                    />
                   )}
                   renderOption={(props, user) => (
                     <ListItem {...props}>

@@ -114,15 +114,23 @@ export const showDate = (date: string) => {
   return returnVal
 }
 
-export const uppercaseFirstLetters = (text: any, removeUnderLines: boolean = false) => {
+export const uppercaseFirstLetters = (text: any, removeUnderLines: boolean = false, hasInputSpace: boolean = false) => {
   let returnVal = ''
   let modifiedText = text
   if (removeUnderLines && text?.includes('_')) {
     modifiedText = ''
     text?.split('_').map((word: string) => modifiedText += word + ' ')
   }
-  modifiedText?.split(' ').map((item: string) => returnVal += item.substring(0, 1).toUpperCase() + item.substring(1).toLowerCase() + ' ')
-  return returnVal.trim()
+  const textArr = modifiedText?.split(' ')
+  textArr?.map((item: string, index: number) => {
+    const extraSpace = textArr?.length - 1 == index ? '' : ' '
+    returnVal += item.substring(0, 1).toUpperCase() + item.substring(1).toLowerCase() + extraSpace
+  })
+  if (hasInputSpace) returnVal =
+    returnVal.substring(returnVal.length - 1, returnVal.length) == ' ' && returnVal.substring(returnVal.length - 2, returnVal.length - 1) == ' '
+      ? returnVal.substring(0, returnVal.length - 1)
+      : returnVal
+  return returnVal.trimStart()
 }
 
 export const shuffle = (array: any): any => {
@@ -180,6 +188,10 @@ Number.prototype.format = function (n: number) {
   var re = '\\d(?=(\\d{3})+' + (n > 0 ? '\\.' : '$') + ')';
   return this.toFixed(Math.max(0, ~~n)).replace(new RegExp(re, 'g'), '$&,');
 };
+
+String.prototype.format = (s: string) => {
+  return uppercaseFirstLetters(s)
+}
 
 export const mobileHandler = (mobileValue: string, value: string, setValue: any, fieldName: string = 'mobile') => {
   mobileValue = mobileValue.substring(0, 1) == '0' ? mobileValue.substring(1) : mobileValue
@@ -268,3 +280,13 @@ export const handleCopyClick = (copyText: string, setCopyText: any) => {
       console.log(err);
     });
 }
+
+const
+  persianNumbers = [/۰/g, /۱/g, /۲/g, /۳/g, /۴/g, /۵/g, /۶/g, /۷/g, /۸/g, /۹/g],
+  arabicNumbers = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g]
+export const convertPersianNumsToEnglish = (str: string) => {
+  for (let i: number = 0; i < 10; i++) {
+    str = str.replace(persianNumbers[i], i.toString()).replace(arabicNumbers[i], i.toString());
+  }
+  return str;
+};

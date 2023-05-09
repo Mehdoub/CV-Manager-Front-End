@@ -14,9 +14,9 @@ import {
   List,
   ListItem,
   ListItemAvatar,
-  ListItemText,
-  TextField
+  ListItemText
 } from '@mui/material'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import * as yup from 'yup'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import { getInitials } from 'src/@core/utils/get-initials'
@@ -237,7 +237,7 @@ const PositionEditDialog = (props: Props) => {
                   name='title'
                   control={control}
                   render={({ field: { value, onChange, onBlur } }) => (
-                    <TextField
+                    <CustomTextField
                       label='Title'
                       placeholder='Example: BPM'
                       value={value}
@@ -261,7 +261,7 @@ const PositionEditDialog = (props: Props) => {
                   ListboxComponent={List}
                   defaultValue={{ name: positionDataFromList?.project_id?.name ?? project?.name }}
                   renderInput={params => (
-                    <TextField
+                    <CustomTextField
                       label='Project'
                       {...params}
                       onChange={searchProjects}
@@ -282,7 +282,11 @@ const PositionEditDialog = (props: Props) => {
                   renderOption={(props, projectItem: any) => (
                     <ListItem {...props}>
                       <ListItemAvatar>
-                        <Avatar src={getImagePath(projectItem?.logo)} alt={projectItem?.name} sx={{ height: 28, width: 28 }} />
+                        <Avatar
+                          src={getImagePath(projectItem?.logo)}
+                          alt={projectItem?.name}
+                          sx={{ height: 28, width: 28 }}
+                        />
                       </ListItemAvatar>
                       <ListItemText primary={projectItem?.name} />
                     </ListItem>
@@ -297,7 +301,7 @@ const PositionEditDialog = (props: Props) => {
                   name='description'
                   control={control}
                   render={({ field: { value, onBlur, onChange } }) => (
-                    <TextField
+                    <CustomTextField
                       label='Description'
                       placeholder='Project Description Shuould Be Here ...'
                       multiline

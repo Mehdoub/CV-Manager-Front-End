@@ -7,7 +7,7 @@ import Select from '@mui/material/Select'
 import Divider from '@mui/material/Divider'
 import { styled } from '@mui/material/styles'
 import MenuItem from '@mui/material/MenuItem'
-import TextField from '@mui/material/TextField'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import Typography, { TypographyProps } from '@mui/material/Typography'
 import InputLabel from '@mui/material/InputLabel'
 import CardHeader from '@mui/material/CardHeader'
@@ -386,7 +386,7 @@ const ResumeDetailsTab = () => {
                       control={control}
                       rules={{ required: true }}
                       render={({ field: { value, onChange, onBlur } }) => (
-                        <TextField
+                        <CustomTextField
                           value={value}
                           fullWidth
                           label='First Name'
@@ -408,7 +408,7 @@ const ResumeDetailsTab = () => {
                       name='lastname'
                       control={control}
                       render={({ field: { value, onChange, onBlur } }) => (
-                        <TextField
+                        <CustomTextField
                           value={value}
                           fullWidth
                           label='Last Name'
@@ -462,7 +462,7 @@ const ResumeDetailsTab = () => {
                       name='mobile'
                       control={control}
                       render={({ field: { value, onChange, onBlur } }) => (
-                        <TextField
+                        <CustomTextField
                           value={value}
                           fullWidth
                           label='Mobile'
@@ -490,7 +490,7 @@ const ResumeDetailsTab = () => {
                       name='email'
                       control={control}
                       render={({ field: { value, onChange, onBlur } }) => (
-                        <TextField
+                        <CustomTextField
                           value={value}
                           fullWidth
                           type='email'
@@ -513,7 +513,7 @@ const ResumeDetailsTab = () => {
                       name='phone'
                       control={control}
                       render={({ field: { value, onChange, onBlur } }) => (
-                        <TextField
+                        <CustomTextField
                           value={value}
                           fullWidth
                           label='Phone Number'

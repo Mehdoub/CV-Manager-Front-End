@@ -9,10 +9,10 @@ import {
   Grid,
   IconButton,
   Stack,
-  TextField,
   Typography,
   styled
 } from '@mui/material'
+import CustomTextField from 'src/@core/components/custom-textfield'
 import { useEffect, useRef, useState, MouseEvent, SyntheticEvent } from 'react'
 import Icon from 'src/@core/components/icon'
 import { getInitials } from 'src/@core/utils/get-initials'
@@ -174,7 +174,7 @@ const ResumeViewRightDialog = ({ handleClickOpenAddCallDialog, cahtExample }: an
                 </IconButton>
               </Box>
               <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', p: 3, maxHeight: '100px' }}>
-                <TextField
+                <CustomTextField
                   fullWidth
                   value={msg}
                   size='small'
