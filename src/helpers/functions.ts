@@ -33,12 +33,12 @@ export const allowedFormats = {
 }
 
 export const toastError = (msg: string, duration: number = 5000, position: ToastPosition = 'bottom-left') => {
-  if (msg?.length > 0) toast.error(msg, { duration, position, style: { maxWidth: '650px' } })
+  if (msg?.length > 0) toast.error(uppercaseFirstLetters(msg), { duration, position, style: { maxWidth: '650px' } })
 }
 
 export const toastSuccess = (msg: string, duration: number = 5000, position: ToastPosition = 'bottom-left') => {
   const textMsg = msg?.length > 0 ? msg : 'Successfully Done!'
-  toast.success(textMsg, { duration, position, style: { maxWidth: '650px' } })
+  toast.success(uppercaseFirstLetters(textMsg), { duration, position, style: { maxWidth: '650px' } })
 }
 
 export const getImagePath = (imgAddress: string): string => {

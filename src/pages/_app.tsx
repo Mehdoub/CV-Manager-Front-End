@@ -65,6 +65,8 @@ import { store } from 'src/store'
 import { Icon } from '@iconify/react'
 import Language from 'src/helpers/Language'
 
+import CustomToast from 'src/views/common/CustomToast'
+
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {
   Component: NextPage
@@ -146,39 +148,24 @@ const App = (props: ExtendedAppProps) => {
 
     toast.dismiss()
     if (isOnline && !wasOnline) {
-      toast(
-        () => (
-          <div>
-            <div>
-              <strong>You Back To Online!</strong>
-            </div>
-            <div>
-              <span style={{ color: '#fff' }}>You Can Make Changes Now</span>
-            </div>
-          </div>
-        ),
-        {
-          icon: <Icon fontSize={'30px'} icon='mdi:access-point-check' />,
-          duration: 5000,
-          position: 'bottom-left',
-          style: {
-            borderRadius: '10px',
-            background: '#787EFF',
-            color: '#fff'
-          }
+      toast(() => <CustomToast title={'you back to online!'} body={'you can make changes now'} color={'#fff'} />, {
+        icon: <Icon fontSize={'30px'} icon='mdi:access-point-check' />,
+        duration: 5000,
+        position: 'bottom-left',
+        style: {
+          borderRadius: '10px',
+          background: '#787EFF',
+          color: '#fff'
         }
-      )
+      })
     } else if (!isOnline) {
       toast(
         () => (
-          <div>
-            <div>
-              <strong>You Are Offline!</strong>
-            </div>
-            <div>
-              <span style={{ color: 'rgb(106 106 106 / 87%)' }}>Your Changes Will Not Be Saved</span>
-            </div>
-          </div>
+          <CustomToast
+            title={'you are offline!'}
+            body={'your changes will not be saved'}
+            color={'rgb(106 106 106 / 87%)'}
+          />
         ),
         {
           icon: <Icon fontSize={'30px'} icon='mdi:access-point-remove' />,
@@ -197,7 +184,6 @@ const App = (props: ExtendedAppProps) => {
       window.removeEventListener('online', handleConnStateChange)
       window.removeEventListener('offline', handleConnStateChange)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOnline])
 
   // Below Code Commented Temporarily
