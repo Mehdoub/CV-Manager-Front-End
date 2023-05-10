@@ -23,7 +23,6 @@ import { useAuth } from 'src/hooks/useAuth'
 // ** Type Imports
 import { Settings } from 'src/@core/context/settingsContext'
 import { getFullName, getImagePath } from 'src/helpers/functions'
-import { useSelector } from 'react-redux'
 
 interface Props {
   settings: Settings
@@ -47,9 +46,7 @@ const UserDropdown = (props: Props) => {
 
   // ** Hooks
   const router = useRouter()
-  const { logout } = useAuth()
-
-  const { data: user } = useSelector((state: any) => state.user)
+  const { logout, user } = useAuth()
 
   // ** Vars
   const { direction } = settings

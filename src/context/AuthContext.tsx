@@ -61,7 +61,7 @@ const AuthProvider = ({ children }: Props) => {
         setLoading(false)
         const result = await ApiRequest.builder().auth().request('get', 'users/get-me')
 
-        const userData = { ...result.data.data[0], role: 'admin' }
+        const userData = { ...result.data.data[0] }
         setUser(userData)
         localStorage.setItem('userData', JSON.stringify(userData))
         dispatch(getConstants())

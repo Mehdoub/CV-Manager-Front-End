@@ -17,10 +17,8 @@ import CustomChip from 'src/@core/components/mui/chip'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
-import { useEffect, useState } from 'react'
-import { UserDataType } from 'src/context/types'
-import { useSelector } from 'react-redux'
-import { getFullName, getImagePath } from 'src/helpers/functions'
+import { getFullName, getImagePath, showDate } from 'src/helpers/functions'
+import { useAuth } from 'src/hooks/useAuth'
 
 // ** Types
 // import { ProfileHeaderType } from 'src/@fake-db/types'
@@ -41,14 +39,7 @@ const ProfilePicture = styled('img')(({ theme }) => ({
 }))
 
 const UserProfileHeader = () => {
-  // ** State
-  const [data, setData] = useState<UserDataType | null>(null)
-
-  const { data: user } = useSelector((state: any) => state.user)
-
-  useEffect(() => {
-    setData(JSON.parse(localStorage.getItem('userData') as string))
-  }, [])
+  const { user } = useAuth()
 
   const designationIcon = 'mdi:briefcase-outline'
 
@@ -122,7 +113,7 @@ const UserProfileHeader = () => {
               <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}>
                 <Icon icon='mdi:calendar-blank-outline' />
                 <Typography sx={{ color: 'text.secondary', fontWeight: 600 }}>
-                  Joined At {new Date(data?.createdAt as string).toDateString()}
+                  Joined At {showDate(user?.createdAt)}
                 </Typography>
               </Box>
             </Box>
