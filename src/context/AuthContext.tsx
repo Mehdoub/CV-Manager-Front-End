@@ -18,6 +18,8 @@ import CustomToast from 'src/views/common/CustomToast'
 import { getColorCodes, toastError } from 'src/helpers/functions'
 
 import { Icon } from '@iconify/react'
+import { Avatar, Box, IconButton, Typography } from '@mui/material'
+import CustomAvatar from 'src/@core/components/mui/avatar'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -55,24 +57,68 @@ const AuthProvider = ({ children }: Props) => {
         .onMessageListener()
         .then((payload: any) => {
           toast(
-            () => (
-              <CustomToast title={payload?.notification?.title} body={payload?.notification?.body} color={'#fff'} />
+            t => (
+              <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                  <CustomAvatar
+                    color='primary'
+                    skin='light'
+                    alt='Notification Icon'
+                    sx={{ mr: 3, width: 40, height: 40 }}
+                  >
+                    <Icon icon='ion:notifcations' fontSize={30} />
+                  </CustomAvatar>
+                  <div>
+                    <Typography sx={{ fontWeight: 500 }}>Hello!</Typography>
+                    <Typography variant='caption'>This Is A test Notification</Typography>
+                  </div>
+                </Box>
+                <IconButton onClick={() => toast.dismiss(t.id)}>
+                  <Icon icon='mdi:close' fontSize={20} />
+                </IconButton>
+              </Box>
             ),
             {
-              duration: 10000,
+              duration: 1000000,
               style: {
-                borderRadius: '10px',
-                background: getColorCodes('info'),
-                color: '#fff'
-              },
-              icon: <Icon fontSize={'30px'} icon='material-symbols:info-outline' />
+                minWidth: '300px'
+              }
             }
           )
         })
         .catch(err => toastError('notification show failed!'))
     }
+
     initAuth()
   }, [])
+
+  // toast(
+  //   t => (
+  //     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+  //       <Box sx={{ display: 'flex', alignItems: 'center' }}>
+  //         <CustomAvatar skin='filled' alt='Notification Icon' sx={{ mr: 3, width: 40, height: 40 }}>
+  //           <Icon icon='ion:notifcations' fontSize={30} />
+  //         </CustomAvatar>
+  //         <div>
+  //           <Typography sx={{ fontWeight: 500, color: '#fff' }}>Hello!</Typography>
+  //           <Typography variant='caption' sx={{ color: '#fff' }}>
+  //             This Is A test Notification
+  //           </Typography>
+  //         </div>
+  //       </Box>
+  //       <IconButton onClick={() => toast.dismiss(t.id)}>
+  //         <Icon style={{ color: '#fff' }} icon='mdi:close' fontSize={20} />
+  //       </IconButton>
+  //     </Box>
+  //   ),
+  //   {
+  //     duration: 1000000,
+  //     style: {
+  //       minWidth: '300px',
+  //       backgroundColor: getColorCodes('primary')
+  //     }
+  //   }
+  // )
 
   const patchClientToken = async () => {
     if (user?._id) {
