@@ -26,16 +26,20 @@ export default class FirebaseCloudMessaging {
     return new FirebaseCloudMessaging()
   }
 
-  public fetchToken = async () => {
+  public fetchToken = async (setClientToken?: (token: string) => void) => {
     return getToken(this.messaging, { vapidKey: this.vapidKey }).then((currentToken) => {
       if (currentToken) {
         this.registrationToken = currentToken
+        if (setClientToken) {
+          setClientToken(currentToken)
+          console.log('setClientToken: ', currentToken)
+        } else console.log('currentToken: ', currentToken)
         return currentToken
       } else {
         toastError('No registration token available. Request permission to generate one.');
       }
-    }).catch((err) => {
-      toastError('An error occurred while retrieving FCM Registration Token.', err);
+    }).catch(() => {
+      toastError('An error occurred while retrieving FCM Registration Token.');
     });
   }
 
@@ -46,8 +50,10 @@ export default class FirebaseCloudMessaging {
       });
     });
 
-  public resetRegistrationToken = async () => {
-    await deleteToken(this.messaging)
-    return await this.fetchToken()
+  public deleteRegistrationToken = async (setClientToken: (token: string) => void) => {
+    deleteToken(this.messaging).then(() => setClientToken('')).catch(() => {
+      toastError('An error occurred while Deleting FCM Registration Token.');
+    })
+
   }
 }

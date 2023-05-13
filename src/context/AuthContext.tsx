@@ -38,7 +38,7 @@ type Props = {
 
 const AuthProvider = ({ children }: Props) => {
   // ** States
-  const [user, setUser] = useState<any>(defaultProvider.user)
+  const [user, setUser] = useState<any>({})
   const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
   const [clientToken, setClientToken] = useState<string>('')
 
@@ -49,10 +49,8 @@ const AuthProvider = ({ children }: Props) => {
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
       const fcm = FirebaseCloudMessaging.builder()
-      const registrationToken: any = await fcm.fetchToken()
-      setClientToken(registrationToken)
       setLoading(true)
-      getUserData(registrationToken)
+      getUserData()
       fcm
         .onMessageListener()
         .then((payload: any) => {
@@ -76,6 +74,20 @@ const AuthProvider = ({ children }: Props) => {
     initAuth()
   }, [])
 
+  const patchClientToken = async () => {
+    if (user?._id) {
+      const fcmtokens = user?.fcmtokens?.length > 0 ? user?.fcmtokens?.map((fcmtoken: any) => fcmtoken?.token) : []
+      if (clientToken && !fcmtokens.includes(clientToken)) {
+        if (clientToken)
+          await ApiRequest.builder().auth().request('patch', `users/${user?._id}/fcm-token`, { token: clientToken })
+      }
+    }
+  }
+
+  useEffect(() => {
+    patchClientToken()
+  }, [clientToken, user])
+
   const clearLogin = () => {
     setLoading(false)
 
@@ -92,31 +104,17 @@ const AuthProvider = ({ children }: Props) => {
     router.replace(routerObj)
   }
 
-  const getUserData = async (currentFcmTkn: string = '', fcmTknFromLogin: string = '') => {
+  const getUserData = async () => {
     if (localStorage.getItem('accessToken')) {
       try {
-        setLoading(false)
         const result = await ApiRequest.builder().auth().request('get', 'users/get-me')
 
         const userData = { ...result.data.data[0] }
-        if (fcmTknFromLogin) {
-          await ApiRequest.builder()
-            .auth()
-            .request('patch', `users/${userData?._id}/fcm-token`, { token: fcmTknFromLogin })
-        }
-
-        const fcmtokens =
-          userData?.fcmtokens?.length > 0 ? userData?.fcmtokens?.map((fcmtoken: any) => fcmtoken?.token) : []
-
-        if (currentFcmTkn && !fcmtokens.includes(currentFcmTkn)) {
-          const registrationToken = await FirebaseCloudMessaging.builder().resetRegistrationToken()
-          if (registrationToken)
-            await ApiRequest.builder()
-              .auth()
-              .request('patch', `users/${userData?._id}/fcm-token`, { token: registrationToken })
-        }
 
         setUser(userData)
+        const fcm = FirebaseCloudMessaging.builder()
+        fcm.fetchToken(setClientToken)
+        setLoading(false)
         localStorage.setItem('userData', JSON.stringify(userData))
         dispatch(getConstants())
       } catch (err) {
@@ -135,7 +133,7 @@ const AuthProvider = ({ children }: Props) => {
       localStorage.setItem(authConfig.refreshTokenKeyName, response.data.data[0].refresh_token)
 
       const returnUrl = router.query.returnUrl
-      getUserData('', clientToken)
+      getUserData()
 
       const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
 
@@ -147,9 +145,13 @@ const AuthProvider = ({ children }: Props) => {
 
   const handleLogout = async () => {
     if (clientToken) {
-      const newClientToken: any = await FirebaseCloudMessaging.builder().resetRegistrationToken()
-      setClientToken(newClientToken)
-      await ApiRequest.builder().auth().request('delete', `users/${user._id}/fcm-token`, { token: clientToken })
+      FirebaseCloudMessaging.builder().deleteRegistrationToken(setClientToken)
+      await ApiRequest.builder()
+        .auth()
+        .request('delete', `users/${user._id}/fcm-token`, { token: clientToken })
+        .catch(() => {
+          toastError('an error occurred while deleting client token!')
+        })
     }
     await ApiRequest.builder().auth().request('post', 'auth/logout')
 
