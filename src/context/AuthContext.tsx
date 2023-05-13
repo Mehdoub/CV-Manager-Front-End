@@ -8,14 +8,13 @@ import { useRouter } from 'next/router'
 import authConfig from 'src/configs/auth'
 
 // ** Types
-import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType, UserDataType } from './types'
+import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType } from './types'
 import ApiRequest from 'src/helpers/ApiRequest'
 import { useDispatch } from 'react-redux'
 import { getConstants } from 'src/store/common'
 import FirebaseCloudMessaging from 'src/pages/FirebaseCloudMessaging'
 import { toast } from 'react-hot-toast'
-import CustomToast from 'src/views/common/CustomToast'
-import { getColorCodes, toastError } from 'src/helpers/functions'
+import { toastError } from 'src/helpers/functions'
 
 import { Icon } from '@iconify/react'
 import { Avatar, Box, IconButton, Typography } from '@mui/material'
@@ -69,8 +68,8 @@ const AuthProvider = ({ children }: Props) => {
                     <Icon icon='ion:notifcations' fontSize={30} />
                   </CustomAvatar>
                   <div>
-                    <Typography sx={{ fontWeight: 500 }}>Hello!</Typography>
-                    <Typography variant='caption'>This Is A test Notification</Typography>
+                    <Typography sx={{ fontWeight: 500 }}>{payload?.notification?.title}</Typography>
+                    <Typography variant='caption'>{payload?.notification?.body}</Typography>
                   </div>
                 </Box>
                 <IconButton onClick={() => toast.dismiss(t.id)}>
@@ -91,34 +90,6 @@ const AuthProvider = ({ children }: Props) => {
 
     initAuth()
   }, [])
-
-  // toast(
-  //   t => (
-  //     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-  //       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-  //         <CustomAvatar skin='filled' alt='Notification Icon' sx={{ mr: 3, width: 40, height: 40 }}>
-  //           <Icon icon='ion:notifcations' fontSize={30} />
-  //         </CustomAvatar>
-  //         <div>
-  //           <Typography sx={{ fontWeight: 500, color: '#fff' }}>Hello!</Typography>
-  //           <Typography variant='caption' sx={{ color: '#fff' }}>
-  //             This Is A test Notification
-  //           </Typography>
-  //         </div>
-  //       </Box>
-  //       <IconButton onClick={() => toast.dismiss(t.id)}>
-  //         <Icon style={{ color: '#fff' }} icon='mdi:close' fontSize={20} />
-  //       </IconButton>
-  //     </Box>
-  //   ),
-  //   {
-  //     duration: 1000000,
-  //     style: {
-  //       minWidth: '300px',
-  //       backgroundColor: getColorCodes('primary')
-  //     }
-  //   }
-  // )
 
   const patchClientToken = async () => {
     if (user?._id) {
