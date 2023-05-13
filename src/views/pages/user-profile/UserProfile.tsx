@@ -2,7 +2,8 @@
 import {
   useState,
   useEffect,
-  ReactElement
+  ReactElement,
+  SyntheticEvent
 
   //  SyntheticEvent
 } from 'react'
@@ -17,73 +18,41 @@ import Grid from '@mui/material/Grid'
 import TabPanel from '@mui/lab/TabPanel'
 import TabContext from '@mui/lab/TabContext'
 import Typography from '@mui/material/Typography'
-import {
-  styled
-
-  // Theme
-} from '@mui/material/styles'
 
 // import useMediaQuery from '@mui/material/useMediaQuery'
-import MuiTabList, { TabListProps } from '@mui/lab/TabList'
 import CircularProgress from '@mui/material/CircularProgress'
+import Icon from 'src/@core/components/icon'
 
-// ** Type Import
-// import {
-//   TeamsTabType,
-//   ProfileTabType,
-//   ProjectsTabType,
-//   ConnectionsTabType,
-//   UserProfileActiveTab
-// } from 'src/@fake-db/types'
-
-// ** Icon Imports
-// import Icon from 'src/@core/components/icon'
-
-// ** Demo Components
-// import Teams from 'src/views/pages/user-profile/teams'
 import Profile from 'src/views/pages/user-profile/profile'
 
-// import Projects from 'src/views/pages/user-profile/projects'
-// import Connections from 'src/views/pages/user-profile/connections'
 import UserProfileHeader from 'src/views/pages/user-profile/UserProfileHeader'
+import { useRouter } from 'next/router'
+import { Tab, Theme, useMediaQuery } from '@mui/material'
+import TabList from '@mui/lab/TabList'
+import NotificationsTab from './NotificationsTab'
 
-// const TabList = styled(MuiTabList)<TabListProps>(({ theme }) => ({
-//   '& .MuiTabs-indicator': {
-//     display: 'none'
-//   },
-//   '& .Mui-selected': {
-//     backgroundColor: theme.palette.primary.main,
-//     color: `${theme.palette.common.white} !important`
-//   },
-//   '& .MuiTab-root': {
-//     minWidth: 65,
-//     minHeight: 38,
-//     borderRadius: theme.shape.borderRadius,
-//     [theme.breakpoints.up('sm')]: {
-//       minWidth: 130
-//     }
-//   }
-// }))
-
-const UserProfile = ({ tab, data }: { tab: string; data: any }) => {
+const UserProfile = ({ data }: { data: any }) => {
+  const {
+    query: { tab }
+  } = useRouter() as any
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
 
   // ** Hooks
-  // const router = useRouter()
+  const router = useRouter()
 
-  // const hideText = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'))
+  const hideText = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'))
 
-  // const handleChange = (event: SyntheticEvent, value: string) => {
-  //   setIsLoading(true)
-  //   setActiveTab(value)
-  //   router
-  //     .push({
-  //       pathname: `/user-profile/${value.toLowerCase()}`
-  //     })
-  //     .then(() => setIsLoading(false))
-  // }
+  const handleChange = (event: SyntheticEvent, value: string) => {
+    setIsLoading(true)
+    setActiveTab(value)
+    router
+      .push({
+        pathname: `/user-profile/${value.toLowerCase()}`
+      })
+      .then(() => setIsLoading(false))
+  }
 
   useEffect(() => {
     if (data) {
@@ -95,12 +64,11 @@ const UserProfile = ({ tab, data }: { tab: string; data: any }) => {
     if (tab && tab !== activeTab) {
       setActiveTab(tab)
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab])
 
   const tabContentList: { [key: string]: ReactElement } = {
-    profile: <Profile data={data as any} />
+    profile: <Profile data={data as any} />,
+    notifications: <NotificationsTab />
   }
 
   return (
@@ -112,6 +80,33 @@ const UserProfile = ({ tab, data }: { tab: string; data: any }) => {
         <Grid item xs={12}>
           <TabContext value={activeTab}>
             <Grid container spacing={6}>
+              <Grid item xs={12}>
+                <TabList
+                  variant='scrollable'
+                  scrollButtons='auto'
+                  onChange={handleChange}
+                  aria-label='customized tabs example'
+                >
+                  <Tab
+                    value='profile'
+                    label={
+                      <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 2 } }) }}>
+                        <Icon icon='mdi:account-outline' />
+                        {!hideText && 'Profile'}
+                      </Box>
+                    }
+                  />
+                  <Tab
+                    value='notifications'
+                    label={
+                      <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 2 } }) }}>
+                        <Icon icon='ion:notifcations' />
+                        {!hideText && 'Notifications'}
+                      </Box>
+                    }
+                  />
+                </TabList>
+              </Grid>
               <Grid item xs={12}>
                 {isLoading ? (
                   <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>

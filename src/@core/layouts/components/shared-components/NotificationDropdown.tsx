@@ -29,6 +29,7 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 
 // ** Util Import
 import { getInitials } from 'src/@core/utils/get-initials'
+import Link from 'next/link'
 
 export type NotificationsType = {
   meta: string
@@ -201,7 +202,15 @@ const NotificationDropdown = (props: Props) => {
           {notifications.map((notification: NotificationsType, index: number) => (
             <MenuItem key={index} onClick={handleDropdownClose}>
               <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
-                <RenderAvatar notification={notification} />
+                {/* <RenderAvatar notification={notification} /> */}
+                <CustomAvatar
+                  color='primary'
+                  skin='light'
+                  alt='Notification Icon'
+                  sx={{ mr: 3, width: 40, height: 40 }}
+                >
+                  <Icon icon='ion:notifcations' fontSize={30} />
+                </CustomAvatar>
                 <Box sx={{ mx: 4, flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>
                   <MenuItemTitle>{notification.title}</MenuItemTitle>
                   <MenuItemSubtitle variant='body2'>{notification.subtitle}</MenuItemSubtitle>
@@ -226,7 +235,9 @@ const NotificationDropdown = (props: Props) => {
           }}
         >
           <Button fullWidth variant='contained' onClick={handleDropdownClose}>
-            Read All Notifications
+            <Link style={{ textDecoration: 'none', color: 'white' }} href='/user-profile/notifications/'>
+              View All Notifications
+            </Link>
           </Button>
         </MenuItem>
       </Menu>
