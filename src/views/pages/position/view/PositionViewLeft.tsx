@@ -42,7 +42,7 @@ import {
   deactivePosition,
   getPosition
 } from 'src/store/position'
-import { getImagePath } from 'src/helpers/functions'
+import { getImagePath, uppercaseFirstLetters } from 'src/helpers/functions'
 import { Skeleton } from '@mui/material'
 import Link from 'next/link'
 import Translations from 'src/layouts/components/Translations'
@@ -176,7 +176,7 @@ const ProjectViewLeft = ({ positionId }: Props) => {
             )}
             {loading && <Skeleton animation='wave' width='35%' height={30} style={{ marginBottom: '7px' }} />}
             <Typography variant='h6' sx={{ mb: 2 }}>
-              {position?.title}
+              {uppercaseFirstLetters(position?.title)}
             </Typography>
             {loading ? (
               <Skeleton animation='wave' width='15%' height={30} style={{ marginBottom: '7px' }} />
@@ -202,22 +202,22 @@ const ProjectViewLeft = ({ positionId }: Props) => {
             <Box sx={{ display: 'flex', mb: 2.7 }}>
               <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Company:</Typography>
               <StyledLink href={`/companies/view/${position?.company_id?.id}/overview`}>
-                {position?.company_id?.name}
+                {uppercaseFirstLetters(position?.company_id?.name)}
               </StyledLink>
             </Box>
             <Box sx={{ display: 'flex', mb: 2.7 }}>
               <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Project:</Typography>
               <StyledLink href={`/projects/view/${position?.project_id?.id}/overview`}>
-                {position?.project_id?.name}
+                {uppercaseFirstLetters(position?.project_id?.name)}
               </StyledLink>
             </Box>
             <Box sx={{ display: 'flex', mb: 2.7 }}>
               <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Level:</Typography>
-              <Typography variant='body2'>{position?.level}</Typography>
+              <Typography variant='body2'>{uppercaseFirstLetters(position?.level)}</Typography>
             </Box>
             <Box sx={{ display: 'flex', mb: 2.7 }}>
               <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Description:</Typography>
-              <Typography variant='body2'>{position?.description}</Typography>
+              <Typography variant='body2'>{uppercaseFirstLetters(position?.description)}</Typography>
             </Box>
           </CardContent>
 

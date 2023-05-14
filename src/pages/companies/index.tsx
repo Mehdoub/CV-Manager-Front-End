@@ -172,7 +172,7 @@ const CompanyList = () => {
                 title={`${item?.user_id?.firstname} ${item?.user_id?.lastname}`}
                 placement='top'
               >
-                <CustomAvatar src={item?.user_id?.avatar} sx={{ height: 26, width: 26 }} />
+                <CustomAvatar src={getImagePath(item?.user_id?.avatar)} sx={{ height: 26, width: 26 }} />
               </BootstrapTooltip>
             ))}
           </AvatarGroup>

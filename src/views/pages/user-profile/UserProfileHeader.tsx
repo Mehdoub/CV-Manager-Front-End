@@ -102,14 +102,14 @@ const UserProfileHeader = () => {
                 justifyContent: ['center', 'flex-start']
               }}
             >
-              <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}>
+              {/* <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}>
                 <Icon icon={designationIcon} />
                 <Typography sx={{ color: 'text.secondary', fontWeight: 600 }}>Web Developer</Typography>
               </Box>
               <Box sx={{ mr: 4, display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}>
                 <Icon icon='mdi:map-marker-outline' />
                 <Typography sx={{ color: 'text.secondary', fontWeight: 600 }}>Tehran</Typography>
-              </Box>
+              </Box> */}
               <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}>
                 <Icon icon='mdi:calendar-blank-outline' />
                 <Typography sx={{ color: 'text.secondary', fontWeight: 600 }}>

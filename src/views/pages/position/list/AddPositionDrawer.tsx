@@ -38,7 +38,12 @@ import {
 } from '@mui/material'
 import { useDispatch } from 'react-redux'
 import { clearPositionCreate, createPosition, getPositions } from 'src/store/position'
-import { getAllowedFormats, getImagePath, setServerValidationErrors } from 'src/helpers/functions'
+import {
+  getAllowedFormats,
+  getImagePath,
+  setServerValidationErrors,
+  uppercaseFirstLetters
+} from 'src/helpers/functions'
 import { useSelector } from 'react-redux'
 import { getProjectPositions, getProjects } from 'src/store/project'
 
@@ -311,10 +316,13 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
                       <Avatar
                         src={getImagePath(projectItem?.logo)}
                         alt={projectItem?.name}
-                        sx={{ height: 28, width: 28 }}
+                        sx={{ height: 35, width: 35 }}
                       />
                     </ListItemAvatar>
-                    <ListItemText primary={projectItem?.name} secondary={projectItem?.company_id?.name} />
+                    <ListItemText
+                      primary={uppercaseFirstLetters(projectItem?.name)}
+                      secondary={uppercaseFirstLetters(projectItem?.company_id?.name)}
+                    />
                   </ListItem>
                 )}
               />

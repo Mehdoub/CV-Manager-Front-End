@@ -172,7 +172,9 @@ const ProjectList = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             {renderClient(row?.company_id)}
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <StyledLink href={`/companies/view/${row?.company_id?.id}/overview/`}>{row?.company_id?.name}</StyledLink>
+              <StyledLink href={`/companies/view/${row?.company_id?.id}/overview/`}>
+                {uppercaseFirstLetters(row?.company_id?.name)}
+              </StyledLink>
             </Box>
           </Box>
         )
@@ -192,7 +194,7 @@ const ProjectList = () => {
                 title={`${manager?.user_id?.firstname} ${manager?.user_id?.lastname}`}
                 placement='top'
               >
-                <CustomAvatar src={manager?.user_id?.avatar} sx={{ height: 26, width: 26 }} />
+                <CustomAvatar src={getImagePath(manager?.user_id?.avatar)} sx={{ height: 26, width: 26 }} />
               </BootstrapTooltip>
             ))}
           </AvatarGroup>

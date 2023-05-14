@@ -232,7 +232,7 @@ const AddCompanyDrawer = (props: Props) => {
                   <Img
                     width={150}
                     alt='Upload img'
-                    src='/images/logos/datalogo2.avif'
+                    src='/images/logos/white-company.png'
                     sx={{ borderRadius: '50%', border: '1px solid black' }}
                   />
                 )}

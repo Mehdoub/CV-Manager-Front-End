@@ -30,17 +30,8 @@ const navigation = (): VerticalNavItemsType => {
     },
     {
       title: 'sidebar.roles_permissions',
+      path: '/roles',
       icon: 'mdi:shield-outline',
-      children: [
-        {
-          title: 'sidebar.roles',
-          path: '/roles',
-        },
-        {
-          title: 'sidebar.permissions',
-          path: '/permissions',
-        },
-      ],
     },
   ]
 }

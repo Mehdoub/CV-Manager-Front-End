@@ -280,59 +280,59 @@ const UserViewSecurity = () => {
       </Grid>
       <Grid item xs={12}>
         <Card>
-
-
           <TableContainer>
             <Skelet
               loading={loadingLoginHistory}
               height={400}
               component={
                 <>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-            <CardHeader title='Recent Devices' />
-            <Button
+                  <Box
+                    sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}
+                  >
+                    <CardHeader title='Recent Devices' />
+                    {/* <Button
               sx={{ mt: 2, mr: 5 }}
               variant='contained'
               color='error'
               onClick={() => setRemoveSessionDialogOpen(true)}
             >
               Remove All Other Sessions
-            </Button>
-          </Box>
+            </Button> */}
+                  </Box>
 
-          <Divider sx={{ m: '0 !important' }} />
-                <Table sx={{ minWidth: 500 }}>
-                  <TableHead
-                    sx={{
-                      backgroundColor: theme => (theme.palette.mode === 'light' ? 'grey.50' : 'background.default')
-                    }}
-                  >
-                    <TableRow>
-                      <TableCell>Browser</TableCell>
-                      <TableCell>OS</TableCell>
-                      <TableCell>IP</TableCell>
-                      <TableCell>Logged In At</TableCell>
-                    </TableRow>
-                  </TableHead>
-
-                  <TableBody>
-                    {loginHistories?.docs?.map((item: any, index: number) => (
-                      <TableRow hover key={index} sx={{ '&:last-of-type td': { border: 0 } }}>
-                        <TableCell>
-                          <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                            <img width='22' height='22' alt='Chrome' src='/images/logos/chrome.png' />
-                            <Typography sx={{ ml: 2, fontWeight: 500, fontSize: '0.875rem' }}>
-                              {item.browser}
-                            </Typography>
-                          </Box>
-                        </TableCell>
-                        <TableCell>{item?.os}</TableCell>
-                        <TableCell>{item?.ip4}</TableCell>
-                        <TableCell>{showDate(item?.createdAt)}</TableCell>
+                  <Divider sx={{ m: '0 !important' }} />
+                  <Table sx={{ minWidth: 500 }}>
+                    <TableHead
+                      sx={{
+                        backgroundColor: theme => (theme.palette.mode === 'light' ? 'grey.50' : 'background.default')
+                      }}
+                    >
+                      <TableRow>
+                        <TableCell>Browser</TableCell>
+                        <TableCell>OS</TableCell>
+                        <TableCell>IP</TableCell>
+                        <TableCell>Logged In At</TableCell>
                       </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
+                    </TableHead>
+
+                    <TableBody>
+                      {loginHistories?.docs?.map((item: any, index: number) => (
+                        <TableRow hover key={index} sx={{ '&:last-of-type td': { border: 0 } }}>
+                          <TableCell>
+                            <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                              <img width='22' height='22' alt='Chrome' src='/images/logos/chrome.png' />
+                              <Typography sx={{ ml: 2, fontWeight: 500, fontSize: '0.875rem' }}>
+                                {item.browser}
+                              </Typography>
+                            </Box>
+                          </TableCell>
+                          <TableCell>{item?.os}</TableCell>
+                          <TableCell>{item?.ip4}</TableCell>
+                          <TableCell>{showDate(item?.createdAt)}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
                 </>
               }
             />

@@ -70,52 +70,46 @@ const ResumeDialogMain = ({ open, toggle, resumeData }: ResumeDialogMainProps) =
         // sx={{ height: '100vh' }}
         PaperProps={{ style: { margin: '1.5rem 0' } }}
       >
-        {resumeLoading ? (
-          <Grid container sx={{ height: '85vh' }}>
-            <Skeleton variant='rounded' animation='wave' width='100%' height='100%' />
+        <Grid container xs={12} flexDirection='row' sx={{ borderBottom: '1px solid rgba(76, 78, 100, 0.12)' }}>
+          <Grid lg={12} item container sx={{ borderBottom: '1px solid rgba(76, 78, 100, 0.12)' }}>
+            <ResumeDialogHeader
+              handleClickOpenAddCallDialog={handleClickOpenAddCallDialog}
+              handleClickOpenAddInterviewDialog={handleClickOpenAddInterviewDialog}
+              tags={tags}
+              closeToggle={handleCloseResumeDialog}
+              smActiveTab={smActiveTab}
+              handleSmTabChange={handleSmTabChange}
+              isSmallScreen={isSmallScreen}
+            />
           </Grid>
-        ) : (
-          <Grid container xs={12} flexDirection='row' sx={{ borderBottom: '1px solid rgba(76, 78, 100, 0.12)' }}>
-            <Grid lg={12} item container sx={{ borderBottom: '1px solid rgba(76, 78, 100, 0.12)' }}>
-              <ResumeDialogHeader
+          {(!isSmallScreen || (isSmallScreen && smActiveTab == 'resumedata')) && (
+            <Grid
+              lg={6}
+              item
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                borderRight: '1px solid rgba(76, 78, 100, 0.12)',
+                position: 'relative'
+              }}
+            >
+              <ResumeViewLeftDialog
                 handleClickOpenAddCallDialog={handleClickOpenAddCallDialog}
-                handleClickOpenAddInterviewDialog={handleClickOpenAddInterviewDialog}
+                activeTab={activeTab}
                 tags={tags}
-                closeToggle={handleCloseResumeDialog}
-                smActiveTab={smActiveTab}
-                handleSmTabChange={handleSmTabChange}
-                isSmallScreen={isSmallScreen}
+                handleTabChange={handleTabChange}
               />
             </Grid>
-            {(!isSmallScreen || (isSmallScreen && smActiveTab == 'resumedata')) && (
-              <Grid
-                lg={6}
-                item
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  borderRight: '1px solid rgba(76, 78, 100, 0.12)',
-                  position: 'relative'
-                }}
-              >
-                <ResumeViewLeftDialog
-                  handleClickOpenAddCallDialog={handleClickOpenAddCallDialog}
-                  activeTab={activeTab}
-                  tags={tags}
-                  handleTabChange={handleTabChange}
-                />
-              </Grid>
-            )}
-            {(!isSmallScreen || (isSmallScreen && smActiveTab == 'comment')) && (
-              <Grid lg={6} item sx={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
-                <ResumeViewRightDialog
-                  handleClickOpenAddCallDialog={handleClickOpenAddCallDialog}
-                  cahtExample={cahtExample}
-                />
-              </Grid>
-            )}
-          </Grid>
-        )}
+          )}
+          {(!isSmallScreen || (isSmallScreen && smActiveTab == 'comment')) && (
+            <Grid lg={6} item sx={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
+              <ResumeViewRightDialog
+                handleClickOpenAddCallDialog={handleClickOpenAddCallDialog}
+                cahtExample={cahtExample}
+              />
+            </Grid>
+          )}
+        </Grid>
       </Dialog>
       {constants?.resume && (
         <>

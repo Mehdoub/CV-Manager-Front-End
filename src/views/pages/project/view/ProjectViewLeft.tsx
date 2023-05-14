@@ -29,7 +29,7 @@ import { Skeleton } from '@mui/material'
 import Translations from 'src/layouts/components/Translations'
 import Link from 'next/link'
 import ProjectEditDialog from './ProjectEditDialog'
-import { getImagePath } from 'src/helpers/functions'
+import { getImagePath, uppercaseFirstLetters } from 'src/helpers/functions'
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -99,7 +99,7 @@ const ProjectViewLeft = ({ projectId }: Props) => {
               </CustomAvatar>
             )}
             <Typography variant='h6' sx={{ mb: 2 }}>
-              {project?.name}
+              {uppercaseFirstLetters(project?.name)}
             </Typography>
             {loading && <Skeleton animation='wave' width='35%' height={30} style={{ marginBottom: '7px' }} />}
             {loading ? (
@@ -126,13 +126,13 @@ const ProjectViewLeft = ({ projectId }: Props) => {
             <Box sx={{ display: 'flex', mb: 2.7 }}>
               <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Company:</Typography>
               <StyledLink href={`/companies/view/${project?.company_id?.id}/overview`}>
-                {project?.company_id?.name}
+                {uppercaseFirstLetters(project?.company_id?.name)}
               </StyledLink>
             </Box>
             <Box sx={{ pt: 2, pb: 1 }}>
               <Box sx={{ display: 'flex', mb: 2.7 }}>
                 <Typography sx={{ mr: 2, fontWeight: 500, fontSize: '0.875rem' }}>Description:</Typography>
-                <Typography variant='body2'>{project?.description}</Typography>
+                <Typography variant='body2'>{uppercaseFirstLetters(project?.description)}</Typography>
               </Box>
             </Box>
           </CardContent>
@@ -154,7 +154,7 @@ const ProjectViewLeft = ({ projectId }: Props) => {
             </CardActions>
           )}
 
-          <ProjectEditDialog open={openEdit} closeHandler={handleEditClose}  />
+          <ProjectEditDialog open={openEdit} closeHandler={handleEditClose} />
 
           <ProjectSuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
         </Card>

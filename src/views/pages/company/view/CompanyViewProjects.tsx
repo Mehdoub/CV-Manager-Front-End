@@ -16,7 +16,7 @@ import { renderClient } from 'src/pages/projects'
 import Link from 'next/link'
 import { Grid, Skeleton } from '@mui/material'
 import { getCompanyProjects } from 'src/store/company'
-import { getFullName, statusColors } from 'src/helpers/functions'
+import { getFullName, statusColors, uppercaseFirstLetters } from 'src/helpers/functions'
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -42,7 +42,7 @@ const columns = [
         <Box sx={{ display: 'flex', alignItems: 'center' }}>
           {renderClient(row)}
           <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-            <StyledLink href={`/projects/view/${id}/overview/`}>{name}</StyledLink>
+            <StyledLink href={`/projects/view/${id}/overview/`}>{uppercaseFirstLetters(name)}</StyledLink>
           </Box>
         </Box>
       )
@@ -79,9 +79,7 @@ const columns = [
     renderCell: ({ row }: any) => {
       return (
         <Typography variant='subtitle1' noWrap sx={{ textTransform: 'capitalize' }}>
-          <StyledLink href={`/users/view/${row?.created_by?.id}/overview`}>
-            {getFullName(row?.created_by)}
-          </StyledLink>
+          <StyledLink href={`/users/view/${row?.created_by?.id}/overview`}>{getFullName(row?.created_by)}</StyledLink>
         </Typography>
       )
     }

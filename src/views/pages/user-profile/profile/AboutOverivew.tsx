@@ -36,39 +36,10 @@ const renderList = (arr: ProfileTabCommonType[]) => {
           <Icon icon={item.icon} />
 
           <Typography sx={{ mx: 2, fontWeight: 600, color: 'text.secondary' }}>
-            {`${item.property.charAt(0).toUpperCase() + item.property.slice(1)}:`}
+            {`${item?.property?.charAt(0).toUpperCase() + item?.property?.slice(1)}:`}
           </Typography>
           <Typography sx={{ color: 'text.secondary' }}>
-            {item.value.charAt(0).toUpperCase() + item.value.slice(1)}
-          </Typography>
-        </Box>
-      )
-    })
-  } else {
-    return null
-  }
-}
-
-const renderTeams = (arr: ProfileTeamsType[]) => {
-  if (arr && arr.length) {
-    return arr.map((item, index) => {
-      return (
-        <Box
-          key={index}
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            '&:not(:last-of-type)': { mb: 4 },
-            '& svg': { color: `${item.color}.main` }
-          }}
-        >
-          <Icon icon='item.icon' />
-
-          <Typography sx={{ mx: 2, fontWeight: 600, color: 'text.secondary' }}>
-            {item.property.charAt(0).toUpperCase() + item.property.slice(1)}
-          </Typography>
-          <Typography sx={{ color: 'text.secondary' }}>
-            {item.value.charAt(0).toUpperCase() + item.value.slice(1)}
+            {item?.value?.charAt(0).toUpperCase() + item?.value?.slice(1)}
           </Typography>
         </Box>
       )

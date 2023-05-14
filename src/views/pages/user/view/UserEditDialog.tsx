@@ -26,6 +26,9 @@ import { checkUsername } from 'src/store/auth'
 import { clearUserEdit, editUser, getUser, getUsers } from 'src/store/user'
 import { getRoles } from 'src/store/role'
 import CustomTextField from 'src/@core/components/custom-textfield'
+import { useRouter } from 'next/router'
+import { useAuth } from 'src/hooks/useAuth'
+import ApiRequest from 'src/helpers/ApiRequest'
 
 interface UserEditDialogProps {
   open: boolean
@@ -61,6 +64,10 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
 
   const dispatch = useDispatch()
 
+  const router = useRouter()
+
+  const auth = useAuth()
+
   const { data: userDataFromView } = useSelector((state: any) => state.user)
   const { isAvailable } = useSelector((state: any) => state.usernameCheck)
   const { status: userEditStatus, loading: userEditLoading } = useSelector((state: any) => state.userEdit)
@@ -84,7 +91,8 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
   }, [])
 
   useEffect(() => {
-    if (userDataFromList?.id?.length > 0) setUser(userDataFromList)
+    if (router.pathname == '/user-profile/[tab]') setUser(auth.user)
+    else if (userDataFromList?.id?.length > 0) setUser(userDataFromList)
     else if (userDataFromView?.id?.length > 0) setUser(userDataFromView)
   }, [userDataFromList, userDataFromView])
 
@@ -98,9 +106,21 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
 
   useEffect(() => {
     if (userEditStatus) {
-      dispatch(getUsers())
-      dispatch(getUser(user?.id))
-      reset()
+      if (router.pathname == '/user-profile/[tab]') {
+        const getMe = async () => {
+          ApiRequest.builder()
+            .auth()
+            .request('get', 'users/get-me')
+            .then(res => {
+              auth.setUser(res?.data?.data[0])
+            })
+            .catch(() => toastError('an error occurred while getting profile data!'))
+        }
+        getMe()
+      } else {
+        dispatch(getUsers())
+        dispatch(getUser(user?.id))
+      }
       dispatch(clearUserEdit())
       handleClose()
     }
@@ -288,7 +308,7 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
               <Autocomplete
                 options={roles?.length > 0 ? roles : []}
                 id='autocomplete-size-small-multi'
-                defaultValue={{ name: user?.role ? user?.role[0] : '' }}
+                defaultValue={{ name: user?.role ? user?.role[0]?.name ?? user?.role[0] : '' }}
                 renderInput={params => <CustomTextField {...params} label='Edit Role' placeholder='Search Roles ...' />}
                 renderOption={(props, role: any) => <ListItem {...props}>{role?.name}</ListItem>}
                 selectOnFocus

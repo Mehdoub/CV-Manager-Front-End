@@ -48,7 +48,7 @@ import { useDispatch } from 'react-redux'
 import { clearCreateResume, createResume } from 'src/store/resume'
 import { useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
-import { getCitiesByProvince, getProvinces } from 'src/store/province'
+import { getCitiesByProvince } from 'src/store/province'
 import { getPositionResumes } from 'src/store/position'
 import { getProjectPositions, getProjects } from 'src/store/project'
 
@@ -170,10 +170,6 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   const workCitiesValues = workCities.length > 0 ? workCities.map((workCity: any) => workCity._id) : []
   const residanceCitiesValues =
     residanceCities.length > 0 ? residanceCities.map((residanceCity: any) => residanceCity._id) : []
-
-  useEffect(() => {
-    dispatch(getProvinces())
-  }, [])
 
   useEffect(() => {
     if (provinceCities) {

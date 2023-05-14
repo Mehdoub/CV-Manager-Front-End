@@ -144,9 +144,14 @@ export default class ApiRequest {
     return this
   }
 
-  public async request(method: string, url: string, data = {}) {
+  public async request(method: string, url: string, data: any = {}) {
     const cancelToken = axios.CancelToken.source()
     const requestName = `${method}/${url}`
+
+    for (const [key, value] of Object.entries(data)) {
+      if (typeof value == 'string') data[key] = value.trim()
+    }
+
     const requestMethod = (accessToken = '') =>
       axios.request({
         method,

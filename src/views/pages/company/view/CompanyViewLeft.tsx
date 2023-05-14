@@ -30,7 +30,7 @@ import { useSelector } from 'react-redux'
 import { Skeleton } from '@mui/material'
 import CompanyEditDialog from './CompanyEditDialog'
 import Translations from 'src/layouts/components/Translations'
-import { getImagePath } from 'src/helpers/functions'
+import { getImagePath, uppercaseFirstLetters } from 'src/helpers/functions'
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -93,7 +93,7 @@ const CompanyViewLeft = ({ companyId }: Props) => {
               </CustomAvatar>
             )}
             <Typography variant='h6' sx={{ mb: 2 }}>
-              {company?.name}
+              {uppercaseFirstLetters(company?.name)}
             </Typography>
             {loading && <Skeleton animation='wave' width='35%' height={30} style={{ marginBottom: '7px' }} />}
             {loading ? (
@@ -133,7 +133,9 @@ const CompanyViewLeft = ({ companyId }: Props) => {
                 {loading ? (
                   <Skeleton animation='wave' width='50%' />
                 ) : (
-                  <Typography variant='body2'>{company?.address?.length > 0 ? company?.address : '---'}</Typography>
+                  <Typography variant='body2'>
+                    {company?.address?.length > 0 ? uppercaseFirstLetters(company?.address) : '---'}
+                  </Typography>
                 )}
               </Box>
               <Box sx={{ display: 'flex' }}>
@@ -142,7 +144,7 @@ const CompanyViewLeft = ({ companyId }: Props) => {
                   <Skeleton animation='wave' width='50%' />
                 ) : (
                   <Typography variant='body2'>
-                    {company?.description?.length > 0 ? company?.description : '---'}
+                    {company?.description?.length > 0 ? uppercaseFirstLetters(company?.description) : '---'}
                   </Typography>
                 )}
               </Box>

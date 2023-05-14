@@ -6,6 +6,7 @@ import {
   getMaxTextLen,
   getTimeText,
   ratingTextsObj,
+  roundNumber,
   uppercaseFirstLetters
 } from 'src/helpers/functions'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
@@ -80,9 +81,9 @@ const ResumeKanbanCard = ({ cardData: card, setOpen, index, handleClick }: Resum
                   />
                 </div>
               </BootstrapTooltip>
-              <BootstrapTooltip placement='top' title={ratingTextsObj[(card.rating as any) ?? 0]}>
+              <BootstrapTooltip placement='top' title={ratingTextsObj[roundNumber(card?.rating) ?? 0]}>
                 <div>
-                  <Rating readOnly value={card.rating ?? 0} name='read-only' size='small' />
+                  <Rating readOnly value={roundNumber(card.rating) ?? 0} name='read-only' size='small' />
                 </div>
               </BootstrapTooltip>
             </Box>

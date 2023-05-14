@@ -58,6 +58,7 @@ const ProjectViewRight = ({ tab, projectId }: Props) => {
 
   const projectStore = useSelector((state: any) => state.projectFind)
   const projectResumesStore = useSelector((state: any) => state.projectResumes)
+  const { data: constants } = useSelector((state: any) => state.constants)
 
   const handleChange = (event: SyntheticEvent, value: string) => {
     setIsLoading(true)
@@ -137,7 +138,13 @@ const ProjectViewRight = ({ tab, projectId }: Props) => {
           )}
         </Box>
       </TabContext>
-      <AddPositionDrawer open={addPositionOpen} toggle={toggleAddPositionDrawer} dispatchProjectPositionsList={true} />
+      {constants?.position ? (
+        <AddPositionDrawer
+          open={addPositionOpen}
+          toggle={toggleAddPositionDrawer}
+          dispatchProjectPositionsList={true}
+        />
+      ) : null}
     </>
   )
 }

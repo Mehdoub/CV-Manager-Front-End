@@ -19,6 +19,7 @@ import { toastError } from 'src/helpers/functions'
 import { Icon } from '@iconify/react'
 import { Avatar, Box, IconButton, Typography } from '@mui/material'
 import CustomAvatar from 'src/@core/components/mui/avatar'
+import { getProvinces } from 'src/store/province'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -78,7 +79,7 @@ const AuthProvider = ({ children }: Props) => {
               </Box>
             ),
             {
-              duration: 1000000,
+              duration: 6000,
               style: {
                 minWidth: '300px'
               }
@@ -134,6 +135,7 @@ const AuthProvider = ({ children }: Props) => {
         setLoading(false)
         localStorage.setItem('userData', JSON.stringify(userData))
         dispatch(getConstants())
+        dispatch(getProvinces())
       } catch (err) {
         clearLogin()
       }

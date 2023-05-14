@@ -33,6 +33,7 @@ import {
   handleCopyClick,
   isForbiddenState,
   ratingTextsObj,
+  roundNumber,
   showDate,
   uppercaseFirstLetters
 } from 'src/helpers/functions'
@@ -104,7 +105,7 @@ const ResumeDialogHeader = ({
   const dispatch = useDispatch()
   const router = useRouter()
 
-  const { data: resume } = useSelector((state: any) => state.resume)
+  const { data: resume, loading: resumeLoading } = useSelector((state: any) => state.resume)
   const { data: positionResumes } = useSelector((state: any) => state.positionResumes)
   const { status: resumeStateUpdateStatus, loading: resumeStateUpdateLoading } = useSelector(
     (state: any) => state.resumeUpdateStatus
@@ -215,7 +216,7 @@ const ResumeDialogHeader = ({
   const openAddContributor = Boolean(anchorElAddContributor)
   const openViews = Boolean(anchorElViews)
 
-  const resumeLink = process.env.NEXT_PUBLIC_APP_BASE_URL + router.asPath
+  const resumeLink = location.origin + router.asPath
 
   const previousState = stateKeys[stateKeys.indexOf(resume?.status) - 1]
   const nextState = stateKeys[stateKeys.indexOf(resume?.status) + 1]
@@ -607,9 +608,9 @@ const ResumeDialogHeader = ({
           </Stack>
         </Grid>
         <Grid item mt={7} lg={6} xs={12} sx={{ textAlign: 'right' }}>
-          <BootstrapTooltip placement='top' title={ratingTextsObj[resume?.rating ?? 0]}>
+          <BootstrapTooltip placement='top' title={ratingTextsObj[roundNumber(resume?.rating) ?? 0]}>
             <div style={{ display: 'inline', cursor: 'pointer' }}>
-              <Rating readOnly value={resume?.rating ?? 0} sx={{ mr: 5 }} name='read-only' size='small' />
+              <Rating readOnly value={roundNumber(resume?.rating) ?? 0} sx={{ mr: 5 }} name='read-only' size='small' />
             </div>
           </BootstrapTooltip>
         </Grid>
@@ -750,7 +751,7 @@ const ResumeDialogHeader = ({
               anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
               PaperProps={{
                 style: {
-                  width: '350px',
+                  width: '450px',
                   maxHeight: '400px',
                   overflowY: 'scroll'
                 }
@@ -781,7 +782,7 @@ const ResumeDialogHeader = ({
                             </ListItemText>
                           </StyledLink>
                           <ListItemSecondaryAction sx={{ pt: 5 }}>
-                            <Typography fontSize={13}>{showDate(viewer?.createdAt)}</Typography>
+                            <Typography fontSize={13}>{showDate(viewer?.createdAt, true)}</Typography>
                           </ListItemSecondaryAction>
                         </ListItemButton>
                       ))

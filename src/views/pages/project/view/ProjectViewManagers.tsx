@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography'
 import CustomChip from 'src/@core/components/mui/chip'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import Icon from 'src/@core/components/icon'
+import CustomTextField from 'src/@core/components/custom-textfield'
 
 // ** Type Imports
 import Link from 'next/link'
@@ -23,8 +24,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Skeleton,
-  TextField
+  Skeleton
 } from '@mui/material'
 import { getInitials } from 'src/@core/utils/get-initials'
 import { useDispatch } from 'react-redux'
