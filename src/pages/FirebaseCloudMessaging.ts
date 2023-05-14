@@ -32,7 +32,6 @@ export default class FirebaseCloudMessaging {
         this.registrationToken = currentToken
         if (setClientToken) {
           setClientToken(currentToken)
-          console.log('setClientToken: ', currentToken)
         } else console.log('currentToken: ', currentToken)
         return currentToken
       } else {
