@@ -32,11 +32,11 @@ export const allowedFormats = {
   file: [".pdf"],
 }
 
-export const toastError = (msg: string, duration: number = 5000, position: ToastPosition = 'bottom-left') => {
+export const toastError = (msg: string, duration: number = 7000, position: ToastPosition = 'bottom-left') => {
   if (msg?.length > 0) toast.error(uppercaseFirstLetters(msg), { duration, position, style: { maxWidth: '650px' } })
 }
 
-export const toastSuccess = (msg: string, duration: number = 5000, position: ToastPosition = 'bottom-left') => {
+export const toastSuccess = (msg: string, duration: number = 7000, position: ToastPosition = 'bottom-left') => {
   const textMsg = msg?.length > 0 ? msg : 'Successfully Done!'
   toast.success(uppercaseFirstLetters(textMsg), { duration, position, style: { maxWidth: '650px' } })
 }

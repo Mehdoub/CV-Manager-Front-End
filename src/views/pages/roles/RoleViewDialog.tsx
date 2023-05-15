@@ -14,13 +14,6 @@ import {
   FormHelperText,
   Grid,
   Tab,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Tooltip,
   Typography
 } from '@mui/material'
 import CustomTextField from 'src/@core/components/custom-textfield'
@@ -28,7 +21,7 @@ import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import Icon from 'src/@core/components/icon'
-import { getEntityIcon, shuffle, uppercaseFirstLetters } from 'src/helpers/functions'
+import { getEntityIcon, uppercaseFirstLetters } from 'src/helpers/functions'
 import { clearCreateRole, clearEditRole, createRole, editRole, getRoles } from 'src/store/role'
 
 interface RoleViewDialogProps {
@@ -43,7 +36,6 @@ const RoleViewDialog = ({ open, toggle, dialogTitle, editRoleData }: RoleViewDia
   const [roleName, setRoleName] = useState<string>('')
   const [roleNameErr, setRoleNameErr] = useState<string>('')
   const [selectedPermissions, setSelectedPermissions] = useState<string[]>([])
-  const [isIndeterminateCheckbox, setIsIndeterminateCheckbox] = useState<boolean>(false)
 
   const dispatch = useDispatch()
 
@@ -102,19 +94,6 @@ const RoleViewDialog = ({ open, toggle, dialogTitle, editRoleData }: RoleViewDia
       </Grid>
     )
   }
-
-  // const handleSelectAllCheckbox = () => {
-  //   if (isIndeterminateCheckbox) {
-  //     setSelectedPermissions([])
-  //   } else {
-  //     rolesArr.forEach(row => {
-  //       const id = row.toLowerCase().split(' ').join('-')
-  //       togglePermission(`${id}-read`)
-  //       togglePermission(`${id}-write`)
-  //       togglePermission(`${id}-create`)
-  //     })
-  //   }
-  // }
 
   const handleTabChange = (e: any, value: string) => {
     setActiveTab(value)
@@ -187,106 +166,6 @@ const RoleViewDialog = ({ open, toggle, dialogTitle, editRoleData }: RoleViewDia
               ))}
           </Box>
         </TabContext>
-        {/* <Typography variant='h6'>Role Permissions</Typography>
-        <TableContainer>
-          <Table size='small'>
-            <TableHead>
-              <TableRow>
-                <TableCell sx={{ pl: '0 !important' }}>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      fontSize: '0.875rem',
-                      whiteSpace: 'nowrap',
-                      alignItems: 'center',
-                      textTransform: 'capitalize',
-                      '& svg': { ml: 1, cursor: 'pointer' }
-                    }}
-                  >
-                    Administrator Access
-                    <Tooltip placement='top' title='Allows a full access to the system'>
-                      <Box sx={{ display: 'flex' }}>
-                        <Icon icon='mdi:information-outline' fontSize='1rem' />
-                      </Box>
-                    </Tooltip>
-                  </Box>
-                </TableCell>
-                <TableCell colSpan={3}>
-                  <FormControlLabel
-                    label='Select All'
-                    sx={{ '& .MuiTypography-root': { textTransform: 'capitalize' } }}
-                    control={
-                      <Checkbox
-                        size='small'
-                        onChange={handleSelectAllCheckbox}
-                        indeterminate={isIndeterminateCheckbox}
-                        checked={selectedPermissions.length === rolesArr.length * 3}
-                      />
-                    }
-                  />
-                </TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rolesArr.map((i: string, index: number) => {
-                const id = i.toLowerCase().split(' ').join('-')
-
-                return (
-                  <TableRow key={index} sx={{ '& .MuiTableCell-root:first-of-type': { pl: '0 !important' } }}>
-                    <TableCell
-                      sx={{
-                        fontWeight: 600,
-                        whiteSpace: 'nowrap',
-                        color: theme => `${theme.palette.text.primary} !important`
-                      }}
-                    >
-                      {i}
-                    </TableCell>
-                    <TableCell>
-                      <FormControlLabel
-                        label='Read'
-                        control={
-                          <Checkbox
-                            size='small'
-                            id={`${id}-read`}
-                            onChange={() => togglePermission(`${id}-read`)}
-                            checked={selectedPermissions.includes(`${id}-read`)}
-                          />
-                        }
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <FormControlLabel
-                        label='Write'
-                        control={
-                          <Checkbox
-                            size='small'
-                            id={`${id}-write`}
-                            onChange={() => togglePermission(`${id}-write`)}
-                            checked={selectedPermissions.includes(`${id}-write`)}
-                          />
-                        }
-                      />
-                    </TableCell>
-                    <TableCell>
-                      <FormControlLabel
-                        label='Create'
-                        control={
-                          <Checkbox
-                            size='small'
-                            id={`${id}-create`}
-                            onChange={() => togglePermission(`${id}-create`)}
-                            checked={selectedPermissions.includes(`${id}-create`)}
-                          />
-                        }
-                      />
-                    </TableCell>
-                  </TableRow>
-                )
-              })}
-            </TableBody>
-          </Table>
-        </TableContainer> */}
       </DialogContent>
       <DialogActions sx={{ pt: 0, display: 'flex', justifyContent: 'center' }}>
         <Box className='demo-space-x'>

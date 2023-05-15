@@ -23,11 +23,12 @@ import { UsersType } from 'src/types/apps/userTypes'
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
 import { useDispatch } from 'react-redux'
-import { getUser } from 'src/store/user'
+import { banUser, clearUserBan, clearUserPermit, getUser, permitUser } from 'src/store/user'
 import { useSelector } from 'react-redux'
 import { getFullName, getImagePath } from 'src/helpers/functions'
 import Skelet from 'src/@core/components/loading/Skelet'
 import UserEditDialog from './UserEditDialog'
+import SuspendDialog from 'src/views/common/SuspendDialog'
 
 const data: UsersType = {
   id: 1,
@@ -173,13 +174,30 @@ const UserViewLeft = ({ userId }: Props) => {
             <Button variant='contained' sx={{ mr: 2 }} onClick={handleEditClickOpen}>
               Edit
             </Button>
-            <Button color='error' variant='outlined' onClick={() => setSuspendDialogOpen(true)}>
-              Suspend
+            <Button
+              color={user?.is_banned ? 'success' : 'error'}
+              variant='outlined'
+              onClick={() => setSuspendDialogOpen(true)}
+            >
+              {user?.is_banned ? 'Avtivate' : 'Suspend'}
             </Button>
           </CardActions>
 
           <UserEditDialog open={openEdit} handleClose={handleEditClose} data={data} />
-          <UserSuspendDialog open={suspendDialogOpen} setOpen={setSuspendDialogOpen} />
+          <SuspendDialog
+            open={suspendDialogOpen}
+            setOpen={setSuspendDialogOpen}
+            type='user'
+            entity={user}
+            activeStore={useSelector((state: any) => state.userPermit)}
+            deactiveStore={useSelector((state: any) => state.userBan)}
+            getEntityAction={getUser}
+            activeAction={permitUser}
+            deactiveAction={banUser}
+            clearActiveAction={clearUserPermit}
+            clearDeactiveAction={clearUserBan}
+            activeField='is_banned'
+          />
         </Card>
       </Grid>
     </Grid>

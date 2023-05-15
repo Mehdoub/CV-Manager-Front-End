@@ -12,7 +12,7 @@ import { AuthValuesType, RegisterParams, LoginParams, ErrCallbackType } from './
 import ApiRequest from 'src/helpers/ApiRequest'
 import { useDispatch } from 'react-redux'
 import { getConstants } from 'src/store/common'
-import FirebaseCloudMessaging from 'src/pages/FirebaseCloudMessaging'
+import FirebaseCloudMessaging from 'src/helpers/FirebaseCloudMessaging'
 import { toast } from 'react-hot-toast'
 import { toastError } from 'src/helpers/functions'
 
@@ -97,8 +97,28 @@ const AuthProvider = ({ children }: Props) => {
       const fcmtokens = user?.fcmtokens?.length > 0 ? user?.fcmtokens?.map((fcmtoken: any) => fcmtoken?.token) : []
       if (clientToken && !fcmtokens.includes(clientToken)) {
         if (clientToken)
-          await ApiRequest.builder().auth().request('patch', `users/${user?._id}/fcm-token`, { token: clientToken })
+          try {
+            await ApiRequest.builder().auth().request('patch', `users/${user?._id}/fcm-token`, { token: clientToken })
+          } catch (err) {
+            toastError('An Error Occurred While Sending FCM Token!')
+          }
       }
+    }
+  }
+
+  const deleteFcmToken = async () => {
+    try {
+      if (clientToken) {
+        FirebaseCloudMessaging.builder().deleteRegistrationToken(setClientToken)
+        await ApiRequest.builder()
+          .auth()
+          .request('delete', `users/${user._id}/fcm-token`, { token: clientToken })
+          .catch(() => {
+            toastError('an error occurred while deleting client token!')
+          })
+      }
+    } catch (error) {
+      toastError('An Error Occurred While Deleting FCM Token!')
     }
   }
 
@@ -140,6 +160,7 @@ const AuthProvider = ({ children }: Props) => {
         clearLogin()
       }
     } else {
+      deleteFcmToken()
       clearLogin()
     }
   }
@@ -163,15 +184,7 @@ const AuthProvider = ({ children }: Props) => {
   }
 
   const handleLogout = async () => {
-    if (clientToken) {
-      FirebaseCloudMessaging.builder().deleteRegistrationToken(setClientToken)
-      await ApiRequest.builder()
-        .auth()
-        .request('delete', `users/${user._id}/fcm-token`, { token: clientToken })
-        .catch(() => {
-          toastError('an error occurred while deleting client token!')
-        })
-    }
+    deleteFcmToken()
     await ApiRequest.builder().auth().request('post', 'auth/logout')
 
     clearLogin()

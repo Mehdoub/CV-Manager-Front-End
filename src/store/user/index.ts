@@ -88,6 +88,32 @@ const userBanSlice = createSlice({
   }
 })
 
+export const permitUser = createAsyncThunk(
+  'permitUser',
+  async (_, { rejectWithValue, getState }) => {
+    try {
+      const { user: { data: user } } = getState() as any
+      const response = await ApiRequest.builder().auth().request('post', `users/${user?.id}/unban`)
+
+      return response
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const userPermitSlice = createSlice({
+  name: 'userPermit',
+  initialState: sliceInitialStateWithStatus,
+  reducers: {
+    clearUserPermit: (state) => {
+      clearStatesAction(state)
+    }
+  },
+  extraReducers: (builder) => {
+    createExtraReducers(builder, permitUser)
+  }
+})
+
 
 export interface ChangePasswordParams {
   user_id: string
@@ -175,11 +201,13 @@ const userEditSlice = createSlice({
 })
 
 export const { clearUserBan } = userBanSlice.actions
+export const { clearUserPermit } = userPermitSlice.actions
 export const { clearChangePassword } = userChangePasswordSlice.actions
 export const { clearUserEdit } = userEditSlice.actions
 export const usersListReducer = usersListSlice.reducer
 export const userReducer = userSlice.reducer
 export const userBanReducer = userBanSlice.reducer
+export const userPermitReducer = userPermitSlice.reducer
 export const userChangePasswordReducer = userChangePasswordSlice.reducer
 export const userLoginHistoryReducer = userLoginHistorySlice.reducer
 export const userEditReducer = userEditSlice.reducer

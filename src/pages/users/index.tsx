@@ -189,8 +189,8 @@ const UserList = () => {
           <CustomChip
             skin='light'
             size='small'
-            label={!row.is_baned ? 'Active' : 'Banned'}
-            color={showIsActiveColor(!row.is_baned)}
+            label={!row?.is_banned ? 'Active' : 'Banned'}
+            color={showIsActiveColor(!row?.is_banned)}
             sx={{ textTransform: 'capitalize', '& .MuiChip-label': { lineHeight: '18px' } }}
           />
         )

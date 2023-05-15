@@ -4,6 +4,7 @@ import Typography from '@mui/material/Typography'
 
 // ** Custom Components Imports
 import PageHeader from 'src/@core/components/page-header'
+import { uppercaseFirstLetters } from 'src/helpers/functions'
 
 // ** Demo Components Imports
 import RoleCards from 'src/views/pages/roles/RoleCards'
@@ -15,8 +16,9 @@ const RolesComponent = () => {
         title={<Typography variant='h5'>Roles List</Typography>}
         subtitle={
           <Typography variant='body2'>
-            A role provided access to predefined menus and features so that depending on assigned role an administrator
-            can have access to what he need
+            {uppercaseFirstLetters(
+              'A role provided access to predefined menus and features so that depending on assigned role an administrator can have access to what he need'
+            )}
           </Typography>
         }
       />

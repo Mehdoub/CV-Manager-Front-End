@@ -63,8 +63,6 @@ const UserViewRight = ({ tab, userId }: any) => {
     if (tab && tab !== activeTab) {
       setActiveTab(tab)
     }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab])
 
   useEffect(() => {
@@ -84,10 +82,10 @@ const UserViewRight = ({ tab, userId }: any) => {
           sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}`, position: 'relative' }}
         >
           <Tab value='overview' label='Overview' icon={<Icon icon='mdi:account-outline' />} />
-          <Tab value='project' label='Projects' icon={<Icon icon='pajamas:project' />} />
-          <Tab value='company' label='Companies' icon={<Icon icon='carbon:location-company' />} />
+          {/* <Tab value='project' label='Projects' icon={<Icon icon='pajamas:project' />} />
+          <Tab value='company' label='Companies' icon={<Icon icon='carbon:location-company' />} /> */}
           <Tab value='security' label='Security' icon={<Icon icon='mdi:lock-outline' />} />
-          {activeTab == 'company' ? (
+          {/* {activeTab == 'company' ? (
               <Button sx={{ mb: 2, position: 'absolute', right: '5px', top: '5px' }} onClick={toggleAddCompanyDrawer} variant='outlined'>
                 Add Company
               </Button>
@@ -95,7 +93,7 @@ const UserViewRight = ({ tab, userId }: any) => {
             <Button sx={{ mb: 2, position: 'absolute', right: '5px', top: '5px' }} onClick={toggleAddProjectDrawer} variant='outlined'>
                 Add Project
               </Button>
-          ) : ''}
+          ) : ''} */}
         </TabList>
         <Box sx={{ mt: 6 }}>
           {isLoading ? (
@@ -108,12 +106,12 @@ const UserViewRight = ({ tab, userId }: any) => {
               <TabPanel sx={{ p: 0 }} value='overview'>
                 <UserViewOverview />
               </TabPanel>
-              <TabPanel sx={{ p: 0 }} value='project'>
+              {/* <TabPanel sx={{ p: 0 }} value='project'>
                 <UserViewProject />
               </TabPanel>
               <TabPanel sx={{ p: 0 }} value='company'>
                 <UserViewCompany />
-              </TabPanel>
+              </TabPanel> */}
               <TabPanel sx={{ p: 0 }} value='security'>
                 <UserViewSecurity />
               </TabPanel>
@@ -121,8 +119,8 @@ const UserViewRight = ({ tab, userId }: any) => {
           )}
         </Box>
       </TabContext>
-      <AddCompanyDrawer open={addCompanyOpen} toggle={toggleAddCompanyDrawer} />
-      <AddProjectDrawer open={addProjectOpen} toggle={toggleAddProjectDrawer} />
+      {/* <AddCompanyDrawer open={addCompanyOpen} toggle={toggleAddCompanyDrawer} />
+      <AddProjectDrawer open={addProjectOpen} toggle={toggleAddProjectDrawer} /> */}
     </>
   )
 }

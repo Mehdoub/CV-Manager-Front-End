@@ -105,7 +105,7 @@ const ResumeDialogHeader = ({
   const dispatch = useDispatch()
   const router = useRouter()
 
-  const { data: resume, loading: resumeLoading } = useSelector((state: any) => state.resume)
+  const { data: resume } = useSelector((state: any) => state.resume)
   const { data: positionResumes } = useSelector((state: any) => state.positionResumes)
   const { status: resumeStateUpdateStatus, loading: resumeStateUpdateLoading } = useSelector(
     (state: any) => state.resumeUpdateStatus
@@ -562,23 +562,17 @@ const ResumeDialogHeader = ({
                     }
                     onChange={(event, newValue) => {
                       if (newValue?._id) {
-                        // setNewTag({
-                        //   name: newValue?._id
-                        // })
                         addTagToResumeHandler(newValue?._id)
                         handleCloseAddTag()
                       } else if (newValue && newValue.inputValue) {
                         createTagHandler(newValue.inputValue)
                       }
-                      // else {
-                      //   setNewTag(newValue)
-                      // }
                     }}
                     filterOptions={(options, params) => {
                       const filtered = filter(options, params)
 
                       const { inputValue } = params
-                      // Suggest the creation of a new value
+                      // Suggest the creation of a new tag
                       const isExisting = options.some(option => inputValue === option?.name)
                       if (inputValue !== '' && !isExisting) {
                         filtered.push({
@@ -593,9 +587,6 @@ const ResumeDialogHeader = ({
                     clearOnBlur
                     handleHomeEndKeys
                     getOptionLabel={option => {
-                      // if (typeof option === 'string') {
-                      //   return option
-                      // }
                       if (option.inputValue) {
                         return option.inputValue
                       }

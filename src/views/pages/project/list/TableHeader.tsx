@@ -17,15 +17,15 @@ const TableHeader = (props: TableHeaderProps) => {
   const { handleFilter, toggle, searchQuery } = props
 
   return (
-    <Box sx={{ p: 5, pb: 3, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}>
-      <Button
+    <Box sx={{ p: 5, pb: 3, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'end' }}>
+      {/* <Button
         sx={{ mr: 4, mb: 2 }}
         color='secondary'
         variant='outlined'
         startIcon={<Icon icon='mdi:export-variant' fontSize={20} />}
       >
         Export
-      </Button>
+      </Button> */}
       <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
         <CustomTextField
           size='small'

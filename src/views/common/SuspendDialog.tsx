@@ -16,7 +16,7 @@ import { useDispatch } from 'react-redux'
 type Props = {
   open: boolean
   setOpen: (val: boolean) => void
-  type: 'company' | 'project' | 'position'
+  type: 'company' | 'project' | 'position' | 'user'
   entity: any
   activeStore: any
   deactiveStore: any
@@ -25,6 +25,7 @@ type Props = {
   deactiveAction: any
   clearActiveAction: any
   clearDeactiveAction: any
+  activeField?: string
 }
 
 const SuspendDialog = (props: Props) => {
@@ -43,15 +44,21 @@ const SuspendDialog = (props: Props) => {
     clearDeactiveAction
   } = props
 
+  const activeField = props?.activeField
+    ? ['is_banned'].includes(props.activeField)
+      ? !entity[props.activeField]
+      : entity[props.activeField]
+    : entity?.is_active
+
   // ** States
   const [userInput, setUserInput] = useState<string>('yes')
   const [secondDialogOpen, setSecondDialogOpen] = useState<boolean>(false)
 
   const dispatch = useDispatch()
 
-  const { status: deactiveStatus, errors: deactiveErrors } = activeStore
+  const { status: activeStatus, errors: activeErrors } = activeStore
 
-  const { status: activeStatus, errors: activeErrors } = deactiveStore
+  const { status: deactiveStatus, errors: deactiveErrors } = deactiveStore
 
   const entityId = entity?.id
 
@@ -79,7 +86,7 @@ const SuspendDialog = (props: Props) => {
 
   const handleConfirmation = (value: string) => {
     if (value == 'yes') {
-      if (entity?.is_active) dispatch(deactiveAction())
+      if (activeField) dispatch(deactiveAction())
       else dispatch(activeAction())
     } else {
       handleClose()
@@ -88,9 +95,9 @@ const SuspendDialog = (props: Props) => {
     setUserInput(value)
   }
 
-  const action = entity?.is_active ? 'Suspend' : 'Activate'
-  const operation = !entity?.is_active ? 'Suspention' : 'Activation'
-  const operationStatus = !entity?.is_active ? 'Suspended' : 'Activated'
+  const action = activeField ? 'Suspend' : 'Activate'
+  const operation = !activeField ? 'Suspention' : 'Activation'
+  const operationStatus = !activeField ? 'Suspended' : 'Activated'
 
   return (
     <>

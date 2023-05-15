@@ -1,19 +1,7 @@
 import CustomAvatar from 'src/@core/components/mui/avatar'
-import {
-  Avatar,
-  Box,
-  BoxProps,
-  Button,
-  Chip,
-  Divider,
-  Grid,
-  IconButton,
-  Stack,
-  Typography,
-  styled
-} from '@mui/material'
+import { Box, BoxProps, Button, Divider, Grid, IconButton, Typography, styled } from '@mui/material'
 import CustomTextField from 'src/@core/components/custom-textfield'
-import { useEffect, useRef, useState, MouseEvent, SyntheticEvent } from 'react'
+import { useEffect, useRef, useState, SyntheticEvent } from 'react'
 import Icon from 'src/@core/components/icon'
 import { getInitials } from 'src/@core/utils/get-initials'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
@@ -44,7 +32,7 @@ const ChatFormWrapper = styled(Grid)<BoxProps>(({ theme }) => ({
   backgroundColor: theme.palette.background.paper
 }))
 
-const ResumeViewRightDialog = ({ handleClickOpenAddCallDialog, cahtExample }: any) => {
+const ResumeViewRightDialog = ({ cahtExample }: any) => {
   const isSender = false
   let avatarId = 3
 
@@ -129,7 +117,6 @@ const ResumeViewRightDialog = ({ handleClickOpenAddCallDialog, cahtExample }: an
                           fontSize: '0.875rem',
                           p: theme => theme.spacing(3, 4),
                           color: 'primary.main'
-                          // backgroundColor: 'primary.main',
                         }}
                       >
                         Mahdi Amereh
@@ -143,8 +130,6 @@ const ResumeViewRightDialog = ({ handleClickOpenAddCallDialog, cahtExample }: an
                         fontSize: '0.875rem',
                         fontWeight: 500,
                         p: theme => theme.spacing(3, 4)
-                        // color: 'common.white',
-                        // backgroundColor: 'primary.main',
                       }}
                     >
                       {chat.message}
