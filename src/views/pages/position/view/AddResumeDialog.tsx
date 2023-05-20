@@ -593,7 +593,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                           control={control}
                           render={({ field: { value, onChange, onBlur } }) => (
                             <CustomTextField
-                              value={convertPersianNumsToEnglish(value)}
+                              value={value?.substring(0, 10)}
                               fullWidth
                               label='Mobile'
                               placeholder='919 123 4567'
@@ -602,7 +602,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                               }}
                               onChange={e => {
                                 onChange(e)
-                                mobileHandler(e.target.value, value, setValue)
+                                mobileHandler(e.target.value, setValue)
                               }}
                               onBlur={onBlur}
                               error={Boolean(errors.mobile)}

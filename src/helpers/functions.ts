@@ -119,19 +119,20 @@ export const showDate = (date: string, showTime: boolean = false) => {
 }
 
 export const uppercaseFirstLetters = (text: any, removeUnderLines: boolean = false) => {
-  let returnVal = ''
-  let modifiedText = text
-  if (removeUnderLines && text?.includes('_')) {
-    modifiedText = ''
-    text?.split('_').map((word: string) => modifiedText += word + ' ')
-  }
-  const textArr = modifiedText?.split(' ')
-  textArr?.map((item: string, index: number) => {
-    const extraSpace = textArr?.length - 1 == index ? '' : ' '
-    returnVal += item.substring(0, 1).toUpperCase() + item.substring(1) + extraSpace
-  })
+  return text
+  // let returnVal = ''
+  // let modifiedText = text
+  // if (removeUnderLines && text?.includes('_')) {
+  //   modifiedText = ''
+  //   text?.split('_').map((word: string) => modifiedText += word + ' ')
+  // }
+  // const textArr = modifiedText?.split(' ')
+  // textArr?.map((item: string, index: number) => {
+  //   const extraSpace = textArr?.length - 1 == index ? '' : ' '
+  //   returnVal += item.substring(0, 1).toUpperCase() + item.substring(1) + extraSpace
+  // })
 
-  return returnVal.trimStart()
+  // return returnVal.trimStart()
 }
 
 export const shuffle = (array: any): any => {
@@ -195,10 +196,10 @@ export const roundNumber = (num: number) => {
   return decimal >= 0.5 ? Math.ceil(num) : Math.floor(num)
 }
 
-export const mobileHandler = (mobileValue: string, value: string, setValue: any, fieldName: string = 'mobile') => {
-  mobileValue = mobileValue.substring(0, 1) == '0' ? mobileValue.substring(1) : mobileValue
-  mobileValue = mobileValue.substring(0, 2) == '98' ? mobileValue.substring(2) : mobileValue
-  mobileValue = mobileValue.length > 10 ? value : mobileValue
+export const mobileHandler = (mobileValue: string, setValue: any, fieldName: string = 'mobile') => {
+  mobileValue = convertPersianNumsToEnglish(mobileValue.substring(0, 1)) == '0' ? mobileValue.substring(1) : mobileValue
+  mobileValue = convertPersianNumsToEnglish(mobileValue.substring(0, 2)) == '98' ? mobileValue.substring(2) : mobileValue
+  mobileValue = convertPersianNumsToEnglish(mobileValue.substring(0, 10))
   setValue(fieldName, mobileValue)
 }
 

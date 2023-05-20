@@ -83,7 +83,7 @@ const ProjectEditDialog = (props: Props) => {
     if (status) {
       dispatch(getProjects())
       dispatch(getProject(project?.id))
-      clearInputs()
+      // clearInputs()
       dispatch(clearProjectEdit())
       closeHandler()
     }
@@ -155,7 +155,7 @@ const ProjectEditDialog = (props: Props) => {
         projectEditData = { ...projectEditData, logo: files[0] }
       }
       dispatch(editProject(projectEditData))
-      reset()
+      // reset()
     }
   }
 

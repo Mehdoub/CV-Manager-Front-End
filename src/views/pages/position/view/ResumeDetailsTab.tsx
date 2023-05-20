@@ -458,7 +458,7 @@ const ResumeDetailsTab = () => {
                       control={control}
                       render={({ field: { value, onChange, onBlur } }) => (
                         <CustomTextField
-                          value={value}
+                          value={value?.substring(0, 10)}
                           fullWidth
                           label='Mobile'
                           placeholder='919 123 4567'
@@ -467,7 +467,7 @@ const ResumeDetailsTab = () => {
                           }}
                           onChange={e => {
                             onChange(e)
-                            mobileHandler(e.target.value, value, setValue)
+                            mobileHandler(e.target.value, setValue)
                           }}
                           onBlur={onBlur}
                           error={Boolean(errors.mobile)}
@@ -509,14 +509,17 @@ const ResumeDetailsTab = () => {
                       control={control}
                       render={({ field: { value, onChange, onBlur } }) => (
                         <CustomTextField
-                          value={value}
+                          value={value?.substring(0, 10)}
                           fullWidth
                           label='Phone Number'
                           placeholder='21 8846 7889'
                           InputProps={{
                             startAdornment: <InputAdornment position='start'>IR (+98)</InputAdornment>
                           }}
-                          onChange={onChange}
+                          onChange={e => {
+                            onChange(e)
+                            mobileHandler(e.target.value, setValue, 'phone')
+                          }}
                           onBlur={onBlur}
                           error={Boolean(errors.phone)}
                         />

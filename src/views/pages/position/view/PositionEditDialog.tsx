@@ -94,7 +94,7 @@ const PositionEditDialog = (props: Props) => {
     if (status) {
       dispatch(getPositions())
       dispatch(getPosition(position?.id))
-      clearInputs()
+      // clearInputs()
       dispatch(clearPositionEdit())
       closeHandler()
     }
@@ -170,7 +170,7 @@ const PositionEditDialog = (props: Props) => {
         projectEditData = { ...projectEditData, logo: files[0] }
       }
       dispatch(editPosition(projectEditData))
-      reset()
+      // reset()
     }
   }
 

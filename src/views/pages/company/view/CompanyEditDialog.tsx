@@ -99,7 +99,7 @@ const CompanyEditDialog = (props: Props) => {
     if (status) {
       dispatch(getCompanies())
       dispatch(getCompany(company?.id))
-      clearInputs()
+      // clearInputs()
       dispatch(clearEditCompany())
       closeHandler()
     }
@@ -167,7 +167,7 @@ const CompanyEditDialog = (props: Props) => {
       editCompanyData = { ...editCompanyData, logo: files[0] }
     }
     dispatch(editCompany(editCompanyData))
-    reset()
+    // reset()
   }
 
   return (
