@@ -52,14 +52,14 @@ import ResumeRejectingDialog from './ResumeRejectingDialog'
 import { useSelector } from 'react-redux'
 import { resumesStates } from './ViewResumes'
 import {
-  addContributorToResume,
+  addAssigneeToResume,
   addTagToResume,
-  clearResumeAddContributor,
+  clearResumeAddAssignee,
   clearResumeAddTag,
-  clearResumeRemoveContributor,
+  clearResumeRemoveAssignee,
   clearResumeRemoveTag,
   getResume,
-  removeContributorFromResume,
+  removeAssigneeFromResume,
   removeTagFromResume,
   updateResumeStatus
 } from 'src/store/resume'
@@ -114,9 +114,10 @@ const ResumeDialogHeader = ({
   const { data: createdTag } = useSelector((state: any) => state.tagCreate)
   const { status: resumeAddTagStatus } = useSelector((state: any) => state.resumeAddTag)
   const { status: resumeRemoveTagStatus } = useSelector((state: any) => state.resumeRemoveTag)
-  const { status: resumeAddContributorStatus } = useSelector((state: any) => state.resumeAddContributor)
-  const { status: resumeRemoveContributorStatus } = useSelector((state: any) => state.resumeRemoveContributor)
+  const { status: resumeAddAssigneeStatus } = useSelector((state: any) => state.resumeAddAssignee)
+  const { status: resumeRemoveAssigneeStatus } = useSelector((state: any) => state.resumeRemoveAssignee)
   const { data: users } = useSelector((state: any) => state.usersList)
+  const { data: constants } = useSelector((state: any) => state.constants)
 
   useEffect(() => {
     dispatch(getUsers())
@@ -146,21 +147,21 @@ const ResumeDialogHeader = ({
   }, [resumeRemoveTagStatus])
 
   useEffect(() => {
-    if (resumeAddContributorStatus) {
+    if (resumeAddAssigneeStatus) {
       dispatch(getResume(resume.id))
       dispatch(getPositionResumes(resume?.position_id?._id))
-      dispatch(clearResumeAddContributor())
+      dispatch(clearResumeAddAssignee())
       handleCloseAddContributor()
     }
-  }, [resumeAddContributorStatus])
+  }, [resumeAddAssigneeStatus])
 
   useEffect(() => {
-    if (resumeRemoveContributorStatus) {
+    if (resumeRemoveAssigneeStatus) {
       dispatch(getResume(resume.id))
       dispatch(getPositionResumes(resume?.position_id?._id))
-      dispatch(clearResumeRemoveContributor())
+      dispatch(clearResumeRemoveAssignee())
     }
-  }, [resumeRemoveContributorStatus])
+  }, [resumeRemoveAssigneeStatus])
 
   useEffect(() => {
     if (createdTag?.name?.length > 0) {
@@ -242,12 +243,12 @@ const ResumeDialogHeader = ({
     dispatch(removeTagFromResume({ resumeId: resume?.id, tagId }))
   }
 
-  const addContributorToResumeHandler = (userId: string) => {
-    dispatch(addContributorToResume({ resumeId: resume?.id, userId }))
+  const addAssigneeToResumeHandler = (userId: string) => {
+    dispatch(addAssigneeToResume({ resumeId: resume?.id, userId }))
   }
 
-  const removeContributorFromResumeHandler = (userId: string) => {
-    dispatch(removeContributorFromResume({ resumeId: resume?.id, userId }))
+  const removeAssigneeFromResumeHandler = (userId: string) => {
+    dispatch(removeAssigneeFromResume({ resumeId: resume?.id, userId }))
   }
 
   const createTagHandler = (name: string) => {
@@ -612,8 +613,8 @@ const ResumeDialogHeader = ({
             <Grid item xs={12} mt={10} ml={1}>
               <Typography variant='body2'>Assignee(s):</Typography>
             </Grid>
-            {resume?.contributors?.length > 0 &&
-              resume?.contributors?.map((contributorUser: any, index: number) => (
+            {resume?.assigners?.length > 0 &&
+              resume?.assigners?.map((contributorUser: any, index: number) => (
                 <Grid item>
                   <BootstrapTooltip placement='top' title={uppercaseFirstLetters(getFullName(contributorUser))}>
                     <Chip
@@ -628,7 +629,7 @@ const ResumeDialogHeader = ({
                           }
                         }
                       }}
-                      onDelete={() => removeContributorFromResumeHandler(contributorUser?._id)}
+                      onDelete={() => removeAssigneeFromResumeHandler(contributorUser?._id)}
                       label={uppercaseFirstLetters(getMaxTextLen(getFullName(contributorUser)))}
                       avatar={
                         contributorUser?.avatar ? (
@@ -680,7 +681,7 @@ const ResumeDialogHeader = ({
                     options={users?.docs ?? []}
                     limitTags={2}
                     getOptionLabel={user => getFullName(user)}
-                    onChange={(e: any, newValue: any) => addContributorToResumeHandler(newValue?._id)}
+                    onChange={(e: any, newValue: any) => addAssigneeToResumeHandler(newValue?._id)}
                     renderInput={params => (
                       <CustomTextField {...params} label='Contributor' placeholder='Search Users ...' />
                     )}
@@ -809,9 +810,13 @@ const ResumeDialogHeader = ({
           </ButtonGroup>
         </Grid>
       </Grid>
-      <ResumeHiringDialog open={openResumeHiringDialog} handleClose={handleCloseResumeHiringDialog} />
-      <ResumeRejectingDialog open={openResumeRejectingDialog} handleClose={handleCloseResumeRejectingDialog} />
-      <ResumeEndWorkDialog open={openResumeEndWorkDialog} handleClose={handleCloseResumeEndWorkDialog} />
+      {constants?.resume && (
+        <>
+          <ResumeHiringDialog open={openResumeHiringDialog} handleClose={handleCloseResumeHiringDialog} />
+          <ResumeRejectingDialog open={openResumeRejectingDialog} handleClose={handleCloseResumeRejectingDialog} />
+          <ResumeEndWorkDialog open={openResumeEndWorkDialog} handleClose={handleCloseResumeEndWorkDialog} />
+        </>
+      )}
     </>
   )
 }

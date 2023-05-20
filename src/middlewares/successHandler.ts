@@ -30,8 +30,8 @@ const successHandler = ({ }) => (next: any) => async (action: any) => {
     'createTag/fulfilled',
     'addTagToResume/fulfilled',
     'removeTagFromResume/fulfilled',
-    'addContributorToResume/fulfilled',
-    'removeContributorFromResume/fulfilled',
+    'addAssigneeToResume/fulfilled',
+    'removeAssigneeFromResume/fulfilled',
     'endWorkResume/fulfilled',
   ]
 

@@ -38,7 +38,12 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 // ** Demo Imports
 import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 import Translations from 'src/layouts/components/Translations'
-import { mobileHandler, setServerValidationErrors, toastError } from 'src/helpers/functions'
+import {
+  convertPersianNumsToEnglish,
+  mobileHandler,
+  setServerValidationErrors,
+  toastError
+} from 'src/helpers/functions'
 import { clearUsernameCheck } from 'src/store/auth'
 import { useDispatch } from 'react-redux'
 
@@ -258,7 +263,7 @@ const LoginPage = () => {
                     <CustomTextField
                       autoFocus
                       label='Mobile'
-                      value={value}
+                      value={convertPersianNumsToEnglish(value)}
                       onBlur={onBlur}
                       onChange={e => {
                         onChange(e)

@@ -113,6 +113,7 @@ const ProjectViewLeft = ({ positionId }: Props) => {
 
   const positionStore = useSelector((state: any) => state.position)
   const { data: position, loading, errors } = positionStore
+  const { data: constants } = useSelector((state: any) => state.constants)
 
   useEffect(() => {
     if ([404, 400].includes(errors?.status)) location.href = '/404'
@@ -235,8 +236,7 @@ const ProjectViewLeft = ({ positionId }: Props) => {
               </Button>
             )}
           </CardActions>
-
-          <PositionEditDialog open={openEdit} closeHandler={handleEditClose} />
+          {constants?.position && <PositionEditDialog open={openEdit} closeHandler={handleEditClose} />}
 
           <SuspendDialog
             open={suspendDialogOpen}

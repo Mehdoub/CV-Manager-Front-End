@@ -266,7 +266,7 @@ const resumeRejectSlice = createSlice({
 export const addTagToResume: any = createAsyncThunk('addTagToResume', async (data: any, { rejectWithValue }) => {
   try {
     const { resumeId, tagId } = data
-    const response = await ApiRequest.builder().auth().request('patch', `resumes/${resumeId}/tag/${tagId}`)
+    const response = await ApiRequest.builder().auth().request('patch', `resumes/${resumeId}/tags/`, { tag_id: tagId })
 
     return response
   } catch (err: any) {
@@ -291,7 +291,7 @@ const resumeAddTagSlice = createSlice({
 export const removeTagFromResume: any = createAsyncThunk('removeTagFromResume', async (data: any, { rejectWithValue }) => {
   try {
     const { resumeId, tagId } = data
-    const response = await ApiRequest.builder().auth().request('delete', `resumes/${resumeId}/tag/${tagId}`)
+    const response = await ApiRequest.builder().auth().request('delete', `resumes/${resumeId}/tags/`, { tag_id: tagId })
 
     return response
   } catch (err: any) {
@@ -313,10 +313,10 @@ const resumeRemoveTagSlice = createSlice({
 })
 
 
-export const addContributorToResume: any = createAsyncThunk('addContributorToResume', async (data: any, { rejectWithValue }) => {
+export const addAssigneeToResume: any = createAsyncThunk('addAssigneeToResume', async (data: any, { rejectWithValue }) => {
   try {
     const { resumeId, userId } = data
-    const response = await ApiRequest.builder().auth().request('patch', `resumes/${resumeId}/contributor/${userId}`)
+    const response = await ApiRequest.builder().auth().request('patch', `resumes/${resumeId}/assigners/`, { user_id: userId })
 
     return response
   } catch (err: any) {
@@ -324,24 +324,24 @@ export const addContributorToResume: any = createAsyncThunk('addContributorToRes
   }
 })
 
-const resumeAddContributorSlice = createSlice({
-  name: 'resumeAddContributor',
+const resumeAddAssigneeSlice = createSlice({
+  name: 'resumeAddAssignee',
   initialState: sliceInitialStateWithStatus,
   reducers: {
-    clearResumeAddContributor: (state) => {
+    clearResumeAddAssignee: (state) => {
       clearStatesAction(state)
     }
   },
   extraReducers: (builder) => {
-    createExtraReducers(builder, addContributorToResume)
+    createExtraReducers(builder, addAssigneeToResume)
   }
 })
 
 
-export const removeContributorFromResume: any = createAsyncThunk('removeContributorFromResume', async (data: any, { rejectWithValue }) => {
+export const removeAssigneeFromResume: any = createAsyncThunk('removeAssigneeFromResume', async (data: any, { rejectWithValue }) => {
   try {
     const { resumeId, userId } = data
-    const response = await ApiRequest.builder().auth().request('delete', `resumes/${resumeId}/contributor/${userId}`)
+    const response = await ApiRequest.builder().auth().request('delete', `resumes/${resumeId}/assigners/`, { user_id: userId })
 
     return response
   } catch (err: any) {
@@ -349,16 +349,16 @@ export const removeContributorFromResume: any = createAsyncThunk('removeContribu
   }
 })
 
-const resumeRemoveContributorSlice = createSlice({
-  name: 'resumeRemoveContributor',
+const resumeRemoveAssigneeSlice = createSlice({
+  name: 'resumeRemoveAssignee',
   initialState: sliceInitialStateWithStatus,
   reducers: {
-    clearResumeRemoveContributor: (state) => {
+    clearResumeRemoveAssignee: (state) => {
       clearStatesAction(state)
     }
   },
   extraReducers: (builder) => {
-    createExtraReducers(builder, removeContributorFromResume)
+    createExtraReducers(builder, removeAssigneeFromResume)
   }
 })
 
@@ -398,8 +398,8 @@ export const { clearResumeHire } = resumeHireSlice.actions
 export const { clearResumeReject } = resumeRejectSlice.actions
 export const { clearResumeAddTag } = resumeAddTagSlice.actions
 export const { clearResumeRemoveTag } = resumeRemoveTagSlice.actions
-export const { clearResumeAddContributor } = resumeAddContributorSlice.actions
-export const { clearResumeRemoveContributor } = resumeRemoveContributorSlice.actions
+export const { clearResumeAddAssignee } = resumeAddAssigneeSlice.actions
+export const { clearResumeRemoveAssignee } = resumeRemoveAssigneeSlice.actions
 export const { clearResumeEndWork } = resumeEndWorkSlice.actions
 
 export const resumeCreateReducer = resumeCreateSlice.reducer
@@ -413,6 +413,6 @@ export const resumeHireReducer = resumeHireSlice.reducer
 export const resumeRejectReducer = resumeRejectSlice.reducer
 export const resumeAddTagReducer = resumeAddTagSlice.reducer
 export const resumeRemoveTagReducer = resumeRemoveTagSlice.reducer
-export const resumeAddContributorReducer = resumeAddContributorSlice.reducer
-export const resumeRemoveContributorReducer = resumeRemoveContributorSlice.reducer
+export const resumeAddAssigneeReducer = resumeAddAssigneeSlice.reducer
+export const resumeRemoveAssigneeReducer = resumeRemoveAssigneeSlice.reducer
 export const resumeEndWorkReducer = resumeEndWorkSlice.reducer

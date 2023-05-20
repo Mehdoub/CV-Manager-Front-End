@@ -128,7 +128,7 @@ export const uppercaseFirstLetters = (text: any, removeUnderLines: boolean = fal
   const textArr = modifiedText?.split(' ')
   textArr?.map((item: string, index: number) => {
     const extraSpace = textArr?.length - 1 == index ? '' : ' '
-    returnVal += item.substring(0, 1).toUpperCase() + item.substring(1).toLowerCase() + extraSpace
+    returnVal += item.substring(0, 1).toUpperCase() + item.substring(1) + extraSpace
   })
 
   return returnVal.trimStart()
@@ -288,7 +288,7 @@ const
   arabicNumbers = [/٠/g, /١/g, /٢/g, /٣/g, /٤/g, /٥/g, /٦/g, /٧/g, /٨/g, /٩/g]
 export const convertPersianNumsToEnglish = (str: string) => {
   for (let i: number = 0; i < 10; i++) {
-    str = str.replace(persianNumbers[i], i.toString()).replace(arabicNumbers[i], i.toString());
+    str = str?.replace(persianNumbers[i], i?.toString())?.replace(arabicNumbers[i], i?.toString());
   }
   return str;
 };

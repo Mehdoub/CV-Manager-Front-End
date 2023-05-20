@@ -95,8 +95,8 @@ const defaultValues = {
   work_city: '',
   residence_province: '',
   residence_city: '',
-  birth_year: years.at(-1) as number,
-  work_experience: years.at(-1) as number,
+  birth_year: undefined,
+  work_experience: undefined,
   mobile: '',
   phone: '',
   email: ''
@@ -160,7 +160,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
         marital_status: maritalOptions
       }
     }
-  } = useSelector((state: any) => state.constants)
+  } = useSelector((state: any) => state.constants) as any
 
   const {
     query: { positionId }
@@ -677,6 +677,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                                 onBlur={onBlur}
                                 error={Boolean(errors.birth_year)}
                               >
+                                <MenuItem>---</MenuItem>
                                 {years.map((item: number, index: number) => (
                                   <MenuItem key={index} value={item}>
                                     {item}
@@ -706,6 +707,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                                 onBlur={onBlur}
                                 error={Boolean(errors.work_experience)}
                               >
+                                <MenuItem>---</MenuItem>
                                 {years.map(
                                   (item: number, index: number) =>
                                     item >= 1980 && (

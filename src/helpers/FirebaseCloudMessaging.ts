@@ -39,7 +39,7 @@ export default class FirebaseCloudMessaging {
         toastError('No registration token available. Request permission to generate one.');
       }
     }).catch(() => {
-      toastError('An error occurred while retrieving FCM Registration Token.');
+      if (Notification.permission == 'granted') toastError('An error occurred while retrieving FCM Registration Token.');
     });
   }
 
@@ -52,7 +52,7 @@ export default class FirebaseCloudMessaging {
 
   public deleteRegistrationToken = async (setClientToken: (token: string) => void) => {
     deleteToken(this.messaging).then(() => setClientToken('')).catch(() => {
-      toastError('An error occurred while Deleting FCM Registration Token.');
+      if (Notification.permission == 'granted') toastError('An error occurred while Deleting FCM Registration Token.');
     })
 
   }

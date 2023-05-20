@@ -231,8 +231,8 @@ const ResumeKanbanCard = ({ cardData: card, setOpen, index, handleClick }: Resum
                   '& .MuiAvatar-root': { width: 30, height: 30, fontSize: 15 }
                 }}
               >
-                {card?.contributors.length > 0 ? (
-                  card?.contributors.map((contributor: any, index: number) => (
+                {card?.assigners?.length > 0 ? (
+                  card?.assigners?.map((contributor: any, index: number) => (
                     <BootstrapTooltip key={index} title={getFullName(contributor)} placement='top'>
                       <CustomAvatar src={getImagePath(contributor?.avatar)} sx={{ height: 26, width: 26 }} />
                     </BootstrapTooltip>

@@ -41,7 +41,12 @@ import FooterIllustrationsV2 from 'src/views/pages/auth/FooterIllustrationsV2'
 import { useDispatch } from 'react-redux'
 import { checkUsername } from 'src/store/auth'
 import { useSelector } from 'react-redux'
-import { mobileHandler, setServerValidationErrors, toastError } from 'src/helpers/functions'
+import {
+  convertPersianNumsToEnglish,
+  mobileHandler,
+  setServerValidationErrors,
+  toastError
+} from 'src/helpers/functions'
 
 const defaultValues = {
   firstname: '',
@@ -367,7 +372,7 @@ const Register = () => {
                   render={({ field: { value, onChange, onBlur } }) => (
                     <CustomTextField
                       label='Mobile'
-                      value={value}
+                      value={convertPersianNumsToEnglish(value)}
                       onBlur={onBlur}
                       onChange={e => {
                         onChange(e)

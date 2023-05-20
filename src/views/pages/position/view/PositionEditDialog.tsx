@@ -11,10 +11,14 @@ import {
   FormControl,
   FormHelperText,
   Grid,
+  InputLabel,
   List,
   ListItem,
   ListItemAvatar,
-  ListItemText
+  ListItemText,
+  MenuItem,
+  Select,
+  Typography
 } from '@mui/material'
 import CustomTextField from 'src/@core/components/custom-textfield'
 import * as yup from 'yup'
@@ -33,14 +37,6 @@ import { getProjects } from 'src/store/project'
 import { getImagePath } from 'src/helpers/functions'
 import { clearPositionEdit, editPosition, getPosition, getPositions } from 'src/store/position'
 import { PositionFormData } from '../list/AddPositionDrawer'
-
-const levelOptions = ['senior', 'mid', 'junior']
-
-const schema = yup.object().shape({
-  title: yup.string().label('Title').required().min(3),
-  level: yup.string().label('Level').oneOf(levelOptions),
-  description: yup.string().label('Description').min(10).max(100).required()
-})
 
 const defaultValues = {
   title: '',
@@ -77,6 +73,17 @@ const PositionEditDialog = (props: Props) => {
 
   const { status } = useSelector((state: any) => state.positionEdit)
   const { data: positionDataFromView } = useSelector((state: any) => state.position)
+  const {
+    data: {
+      position: { level: levelOptions }
+    }
+  } = useSelector((state: any) => state.constants)
+
+  const schema = yup.object().shape({
+    title: yup.string().label('Title').required().min(3),
+    level: yup.string().label('Level').oneOf(levelOptions),
+    description: yup.string().label('Description').min(10).max(100).required()
+  })
 
   useEffect(() => {
     if (positionDataFromList?.id?.length > 0) setPosition(positionDataFromList)
@@ -154,6 +161,7 @@ const PositionEditDialog = (props: Props) => {
   }
 
   const onSubmit = (data: PositionFormData) => {
+    setProjectErr('')
     if (!project?.id) {
       setProjectErr('Project cannot be empty!')
     } else {
@@ -230,7 +238,7 @@ const PositionEditDialog = (props: Props) => {
               </Box>
             </div>
           </Fragment>
-          <Grid container spacing={6}>
+          <Grid container spacing={3}>
             <Grid item xs={12} sm={6}>
               <FormControl>
                 <Controller
@@ -293,6 +301,36 @@ const PositionEditDialog = (props: Props) => {
                   )}
                 />
                 {projectErr && <FormHelperText sx={{ color: 'error.main' }}>{projectErr}</FormHelperText>}
+              </FormControl>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <FormControl fullWidth sx={{ mb: 6 }}>
+                <Controller
+                  name='level'
+                  control={control}
+                  rules={{ required: true }}
+                  render={({ field: { value, onChange } }) => (
+                    <>
+                      <InputLabel id='level-select'>Select Level</InputLabel>
+                      <Select
+                        fullWidth
+                        label='Select Level'
+                        labelId='level-select'
+                        inputProps={{ placeholder: 'Select Level' }}
+                        value={value}
+                        onChange={onChange}
+                        error={Boolean(errors.level)}
+                      >
+                        {levelOptions.map((item: string) => (
+                          <MenuItem value={item}>
+                            <Typography sx={{ textTransform: 'capitalize' }}>{item}</Typography>
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </>
+                  )}
+                />
+                {errors.level && <FormHelperText sx={{ color: 'error.main' }}>{errors.level.message}</FormHelperText>}
               </FormControl>
             </Grid>
             <Grid item xs={12} sm={12} md={12}>

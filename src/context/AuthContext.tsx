@@ -92,24 +92,28 @@ const AuthProvider = ({ children }: Props) => {
     initAuth()
   }, [])
 
+  const isClientTokenDuplicate = (token: string, subjectUser: any) => {
+    const fcmtokens =
+      subjectUser?.fcmtokens?.length > 0 ? subjectUser?.fcmtokens?.map((fcmtoken: any) => fcmtoken?.token) : []
+    return fcmtokens.includes(token)
+  }
+
   const patchClientToken = async () => {
     if (user?._id) {
-      const fcmtokens = user?.fcmtokens?.length > 0 ? user?.fcmtokens?.map((fcmtoken: any) => fcmtoken?.token) : []
-      if (clientToken && !fcmtokens.includes(clientToken)) {
-        if (clientToken)
-          try {
-            await ApiRequest.builder().auth().request('patch', `users/${user?._id}/fcm-token`, { token: clientToken })
-          } catch (err) {
-            toastError('An Error Occurred While Sending FCM Token!')
-          }
+      if (clientToken && !isClientTokenDuplicate(clientToken, user) && Notification.permission == 'granted') {
+        try {
+          await ApiRequest.builder().auth().request('patch', `users/${user?._id}/fcm-token`, { token: clientToken })
+        } catch (err: any) {
+          toastError('An Error Occurred While Sending FCM Token!')
+        }
       }
     }
   }
 
   const deleteFcmToken = async () => {
     try {
-      if (clientToken) {
-        FirebaseCloudMessaging.builder().deleteRegistrationToken(setClientToken)
+      if (clientToken && Notification.permission == 'granted' && isClientTokenDuplicate(clientToken, user)) {
+        await FirebaseCloudMessaging.builder().deleteRegistrationToken(setClientToken)
         await ApiRequest.builder()
           .auth()
           .request('delete', `users/${user._id}/fcm-token`, { token: clientToken })
@@ -137,9 +141,11 @@ const AuthProvider = ({ children }: Props) => {
     const completePath = window.location.href
     const originPath = window.location.origin
     const returnUrl = completePath.split(originPath)[1]
-    let routerObj: any = { pathname: '/login' }
-    if (!['/login', '/register', '/forgot-password'].includes(router.pathname)) routerObj.query = { returnUrl }
-    router.replace(routerObj)
+    if (!['/login', '/register', '/forgot-password'].includes(router.pathname)) {
+      let routerObj: any = { pathname: '/login' }
+      routerObj.query = { returnUrl }
+      router.replace(routerObj)
+    }
   }
 
   const getUserData = async () => {
