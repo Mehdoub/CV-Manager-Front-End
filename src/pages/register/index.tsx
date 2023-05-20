@@ -372,11 +372,11 @@ const Register = () => {
                   render={({ field: { value, onChange, onBlur } }) => (
                     <CustomTextField
                       label='Mobile'
-                      value={convertPersianNumsToEnglish(value)}
+                      value={value?.substring(0, 10)}
                       onBlur={onBlur}
                       onChange={e => {
                         onChange(e)
-                        mobileHandler(e.target.value, value, setValue)
+                        mobileHandler(e.target.value, setValue)
                       }}
                       InputProps={{
                         startAdornment: <InputAdornment position='start'>IR (+98)</InputAdornment>

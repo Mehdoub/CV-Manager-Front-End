@@ -44,52 +44,17 @@ import { getUsers } from 'src/store/user'
 import { addInterviewToResume, clearResumeAddInterview, getResume } from 'src/store/resume'
 import { getPositionResumes } from 'src/store/position'
 
-const fakeUsers = [
-  {
-    id: 1,
-    firstname: 'Aliakbar',
-    lastname: 'Rezaei',
-    avatar: '/images/avatars/7.png'
-  },
-  {
-    id: 2,
-    firstname: 'Mahdi',
-    lastname: 'Amereh',
-    avatar: '/images/avatars/3.png'
-  },
-  {
-    id: 3,
-    firstname: 'Ali',
-    lastname: 'Hamzehei',
-    avatar: '/images/avatars/5.png'
-  },
-  {
-    id: 4,
-    firstname: 'Saeed',
-    lastname: 'Esfehani',
-    avatar: '/images/avatars/2.png'
-  }
-]
-
-const ratingLabels: { [index: string]: string } = {
-  1: 'Useless',
-  2: 'Poor',
-  3: 'Ok',
-  4: 'Good',
-  5: 'Excellent!'
-}
-
 interface AddInterviewDialogProps {
   open: boolean
   handleClose: any
 }
 const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
-  const [ratingValue, setRatingValue] = useState<any>(0)
-  const [hoverRatingValue, setHoverRatingValue] = useState<any>(0)
+  // const [ratingValue, setRatingValue] = useState<any>(0)
+  // const [hoverRatingValue, setHoverRatingValue] = useState<any>(0)
   const [eventStartTime, setEventStartTime] = useState<any>('')
   const [eventStartTimeErr, setEventStartTimeErr] = useState<any>('')
-  const [eventEndTime, setEventEndTime] = useState<any>('')
-  const [eventEndTimeErr, setEventEndTimeErr] = useState<any>('')
+  // const [eventEndTime, setEventEndTime] = useState<any>('')
+  // const [eventEndTimeErr, setEventEndTimeErr] = useState<any>('')
   const [contributors, setContributors] = useState<any>([])
 
   const { data: constants } = useSelector((state: any) => state.constants)
@@ -117,9 +82,9 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
 
   const schema = yup.object().shape({
     event_type: yup.string().label('Event Type').oneOf(constants?.interview?.event_type).required(),
-    status: yup.string().label('Status').oneOf(constants?.interview?.status).required(),
+    // status: yup.string().label('Status').oneOf(constants?.interview?.status).required(),
     type: yup.string().label('Interview Type').oneOf(constants?.interview?.type).required(),
-    result: yup.string().label('Result').oneOf(constants?.interview?.result).optional(),
+    // result: yup.string().label('Result').oneOf(constants?.interview?.result).optional(),
     description: yup.string().label('Description').optional()
   })
 
@@ -135,9 +100,9 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
 
   const resetForm = () => {
     setValue('event_type', '')
-    setValue('status', '')
+    // setValue('status', '')
     setValue('type', '')
-    setValue('result', '')
+    // setValue('result', '')
     setValue('description', '')
     setEventStartTimeErr('')
     setContributors([])
@@ -156,7 +121,7 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
     else {
       data.contribution = contributors.map((contributor: any) => contributor?._id)
       data.event_time = getIsoTime(eventStartTime?.unix)
-      data.rating = ratingValue
+      // data.rating = ratingValue
       dispatch(addInterviewToResume({ ...data, resumeId: resume?.id }))
     }
   }
@@ -171,7 +136,7 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
         <DialogContent>
           <form onSubmit={handleSubmit(submitHandler)} style={{ marginTop: '15px' }}>
             <Grid container spacing={3}>
-              <Grid item xs={12}>
+              {/* <Grid item xs={12}>
                 <Box sx={{ display: 'flex', alignItems: 'left', flexDirection: 'column' }}>
                   <Typography sx={{ fontWeight: 500, ml: 1 }}>How Was The Interview?</Typography>
                   <Box sx={{ display: 'flex', alignItems: 'left', flexDirection: 'row', mt: 3 }}>
@@ -183,12 +148,12 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                     />
                     {ratingValue !== null && (
                       <Typography sx={{ ml: 3 }}>
-                        {ratingLabels[hoverRatingValue !== -1 ? hoverRatingValue : ratingValue]}
+                        {ratingTextsObj[hoverRatingValue !== -1 ? hoverRatingValue : ratingValue]}
                       </Typography>
                     )}
                   </Box>
                 </Box>
-              </Grid>
+              </Grid> */}
               <Grid item md={6} xs={12}>
                 <FormControl fullWidth>
                   <Typography fontSize={14} sx={{ fontWeight: 400, mb: 1, ml: 1, color: 'text.secondary' }}>
@@ -219,6 +184,35 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                   />
                   {eventStartTimeErr && (
                     <FormHelperText sx={{ color: 'error.main' }}>{eventStartTimeErr}</FormHelperText>
+                  )}
+                </FormControl>
+              </Grid>
+              <Grid item md={6} xs={12} mt={6.5}>
+                <FormControl fullWidth>
+                  <Controller
+                    name='event_type'
+                    control={control}
+                    render={({ field: { value, onChange, onBlur } }) => (
+                      <>
+                        <InputLabel>Event Type</InputLabel>
+                        <Select
+                          label='Event Type'
+                          value={value}
+                          onChange={onChange}
+                          onBlur={onBlur}
+                          error={Boolean(errors?.event_type)}
+                        >
+                          {constants?.interview?.event_type.map((item: string, index: number) => (
+                            <MenuItem key={`${item}-${index}`} value={item}>
+                              {uppercaseFirstLetters(item)}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                      </>
+                    )}
+                  />
+                  {errors?.event_type && (
+                    <FormHelperText sx={{ color: 'error.main' }}>{errors?.event_type?.message}</FormHelperText>
                   )}
                 </FormControl>
               </Grid>
@@ -307,36 +301,7 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                   )}
                 </FormControl>
               </Grid>
-              <Grid item md={6} xs={12} mt={5}>
-                <FormControl fullWidth>
-                  <Controller
-                    name='event_type'
-                    control={control}
-                    render={({ field: { value, onChange, onBlur } }) => (
-                      <>
-                        <InputLabel>Event Type</InputLabel>
-                        <Select
-                          label='Event Type'
-                          value={value}
-                          onChange={onChange}
-                          onBlur={onBlur}
-                          error={Boolean(errors?.event_type)}
-                        >
-                          {constants?.interview?.event_type.map((item: string, index: number) => (
-                            <MenuItem key={`${item}-${index}`} value={item}>
-                              {uppercaseFirstLetters(item)}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </>
-                    )}
-                  />
-                  {errors?.event_type && (
-                    <FormHelperText sx={{ color: 'error.main' }}>{errors?.event_type?.message}</FormHelperText>
-                  )}
-                </FormControl>
-              </Grid>
-              <Grid item md={6} xs={12} mt={5}>
+              {/* <Grid item md={6} xs={12} mt={5}>
                 <FormControl fullWidth>
                   <Controller
                     name='result'
@@ -393,7 +358,7 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                     <FormHelperText sx={{ color: 'error.main' }}>{errors?.status?.message}</FormHelperText>
                   )}
                 </FormControl>
-              </Grid>
+              </Grid> */}
               <Grid item xs={12} mt={5}>
                 <FormControl fullWidth>
                   <Controller

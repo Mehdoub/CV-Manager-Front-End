@@ -45,12 +45,12 @@ const RoleViewDialog = ({ open, toggle, dialogTitle, editRoleData }: RoleViewDia
 
   useEffect(() => {
     if (statusCreate) {
-      clearCreateRole()
+      dispatch(clearCreateRole())
       dispatch(getRoles())
       toggle()
     }
     if (statusEdit) {
-      clearEditRole()
+      dispatch(clearEditRole())
       dispatch(getRoles())
       toggle()
     }
