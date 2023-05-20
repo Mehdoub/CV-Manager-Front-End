@@ -178,7 +178,7 @@ const Register = () => {
   }, [isAvailable])
 
   const usernameHandler = (value: string) => {
-    if (value.length >= 8 && value.length <= 10) {
+    if (value.length >= 3 && value.length <= 10) {
       dispatch(checkUsername(value))
     }
   }
