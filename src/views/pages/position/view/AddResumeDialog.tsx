@@ -22,6 +22,7 @@ import {
   Avatar,
   Box,
   CircularProgress,
+  FormControlLabel,
   FormHelperText,
   IconButton,
   Link,
@@ -29,7 +30,8 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Slider
+  Slider,
+  Switch
 } from '@mui/material'
 import * as yup from 'yup'
 import {
@@ -145,6 +147,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   const [resumePosition, setResumePosition] = useState<any>({})
   const [positionErr, setPositionErr] = useState<string>('')
   const [resumeProject, setResumeProject] = useState<any>({})
+  const [isSalaryActive, setIsSalaryActive] = useState<boolean>(true)
 
   const { data: provinceCities } = useSelector((state: any) => state.citiesByProvince)
   const { data: provinces } = useSelector((state: any) => state.provinces)
@@ -343,7 +346,9 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
       }
       popObjectItemByKey(data, 'work_province')
       popObjectItemByKey(data, 'residence_province')
-      ;[data.min_salary, data.max_salary] = salaryRange
+      if (isSalaryActive) {
+        ;[data.min_salary, data.max_salary] = salaryRange
+      }
       dispatch(createResume({ ...data, position_id: newPosition }))
     }
   }
@@ -360,6 +365,10 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   const searchProjects = (value: any) => {
     const query = value?.target?.value
     if (query?.length > 0) dispatch(getProjects({ query }))
+  }
+
+  const handleChangeisSalaryActive = () => {
+    setIsSalaryActive(!isSalaryActive)
   }
 
   return (
@@ -941,20 +950,29 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                       </FormControl>
                     </Grid>
                     <Grid item xs={12} mt={5} px={7}>
-                      <InputLabel>Requested Salary Range (Toman)</InputLabel>
-                      <Slider
-                        sx={{ mt: 4 }}
-                        defaultValue={[9000000, 20000000]}
-                        value={salaryRange}
-                        onChange={(e, value) => setSalaryRange(value)}
-                        valueLabelDisplay='auto'
-                        aria-labelledby='range-slider'
-                        min={8000000}
-                        max={80000000}
-                        step={1000000}
-                        valueLabelFormat={(value: any) => value.format()}
+                      <FormControlLabel
+                        label='Declare Requested Salary Range'
+                        control={<Switch checked={isSalaryActive} onChange={handleChangeisSalaryActive} />}
                       />
-                      <Typography>{`${salaryRange[0].format()} - ${salaryRange[1].format()} Toman`}</Typography>
+                      {isSalaryActive && (
+                        <>
+                          <InputLabel>Requested Salary Range (Toman)</InputLabel>
+                          <Slider
+                            sx={{ mt: 4 }}
+                            defaultValue={[9000000, 20000000]}
+                            value={salaryRange}
+                            onChange={(e, value) => setSalaryRange(value)}
+                            valueLabelDisplay='auto'
+                            aria-labelledby='range-slider'
+                            min={8000000}
+                            max={80000000}
+                            step={1000000}
+                            valueLabelFormat={(value: any) => value.format()}
+                            // disabled={!isSalaryActive}
+                          />
+                          <Typography>{`${salaryRange[0].format()} - ${salaryRange[1].format()} Toman`}</Typography>
+                        </>
+                      )}
                     </Grid>
                     <Grid item xs={12} mt={5}>
                       <Fragment>

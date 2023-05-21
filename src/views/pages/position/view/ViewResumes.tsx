@@ -25,7 +25,6 @@ export const resumesStates: any = {
 
 const ViewResumes = () => {
   const [open, setOpen] = useState<boolean>(false)
-  const handleClose = () => setOpen(false)
   // const scrollContainer = useScrollContainer()
 
   const dispatch = useDispatch()
@@ -36,8 +35,17 @@ const ViewResumes = () => {
   )
 
   const router = useRouter()
-
   const { positionId, resumeId } = router?.query as any
+
+  const handleClose = () => {
+    setOpen(false)
+    const baseResumesUrl = `/positions/view/${positionId}/resume/`
+    delete router?.query?.resumeId
+    router.replace(baseResumesUrl, undefined, { shallow: true })
+    setTimeout(() => {
+      router.replace(baseResumesUrl, undefined, { shallow: true })
+    }, 1)
+  }
 
   useEffect(() => {
     if (resumeId?.length > 0) {

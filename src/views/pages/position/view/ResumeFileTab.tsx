@@ -8,6 +8,7 @@ import '@react-pdf-viewer/default-layout/lib/styles/index.css'
 import { Card, Grid, Typography } from '@mui/material'
 import { useSelector } from 'react-redux'
 import { getImagePath } from 'src/helpers/functions'
+import Link from 'next/link'
 
 function ResumeFileTab() {
   const defaultLayoutPluginInstance = defaultLayoutPlugin()
@@ -47,10 +48,12 @@ function ResumeFileTab() {
                       }
                     }}
                   >
-                    <img style={{ height: '50%', width: '45px' }} src='/images/pdf-file.avif' />
-                    <Typography textAlign='center' fontSize={12}>
-                      file{index + 1}.pdf
-                    </Typography>
+                    <Link href={pdfUrl} target='_blank' style={{ textDecoration: 'none' }}>
+                      <img style={{ height: '50%', width: '45px' }} src='/images/pdf-file.avif' />
+                      <Typography textAlign='center' fontSize={12}>
+                        file{index + 1}.pdf
+                      </Typography>
+                    </Link>
                   </Card>
                 </Grid>
               ))}
