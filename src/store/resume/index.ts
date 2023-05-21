@@ -266,7 +266,7 @@ const resumeRejectSlice = createSlice({
 export const addTagToResume: any = createAsyncThunk('addTagToResume', async (data: any, { rejectWithValue }) => {
   try {
     const { resumeId, tagId } = data
-    const response = await ApiRequest.builder().auth().request('patch', `resumes/${resumeId}/tags/`, { tag_id: tagId })
+    const response = await ApiRequest.builder().auth().request('patch', `resumes/${resumeId}/tags`, { tag_id: tagId })
 
     return response
   } catch (err: any) {
@@ -291,7 +291,7 @@ const resumeAddTagSlice = createSlice({
 export const removeTagFromResume: any = createAsyncThunk('removeTagFromResume', async (data: any, { rejectWithValue }) => {
   try {
     const { resumeId, tagId } = data
-    const response = await ApiRequest.builder().auth().request('delete', `resumes/${resumeId}/tags/`, { tag_id: tagId })
+    const response = await ApiRequest.builder().auth().request('delete', `resumes/${resumeId}/tags`, { tag_id: tagId })
 
     return response
   } catch (err: any) {
@@ -316,7 +316,7 @@ const resumeRemoveTagSlice = createSlice({
 export const addAssigneeToResume: any = createAsyncThunk('addAssigneeToResume', async (data: any, { rejectWithValue }) => {
   try {
     const { resumeId, userId } = data
-    const response = await ApiRequest.builder().auth().request('patch', `resumes/${resumeId}/assigners/`, { user_id: userId })
+    const response = await ApiRequest.builder().auth().request('patch', `resumes/${resumeId}/assigners`, { user_id: userId })
 
     return response
   } catch (err: any) {
@@ -341,7 +341,7 @@ const resumeAddAssigneeSlice = createSlice({
 export const removeAssigneeFromResume: any = createAsyncThunk('removeAssigneeFromResume', async (data: any, { rejectWithValue }) => {
   try {
     const { resumeId, userId } = data
-    const response = await ApiRequest.builder().auth().request('delete', `resumes/${resumeId}/assigners/`, { user_id: userId })
+    const response = await ApiRequest.builder().auth().request('delete', `resumes/${resumeId}/assigners`, { user_id: userId })
 
     return response
   } catch (err: any) {
