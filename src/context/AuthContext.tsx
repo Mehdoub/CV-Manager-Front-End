@@ -41,52 +41,55 @@ type Props = {
 const AuthProvider = ({ children }: Props) => {
   // ** States
   const [user, setUser] = useState<any>({})
-  const [loading, setLoading] = useState<boolean>(defaultProvider.loading)
+  const [loading, setLoading] = useState<boolean>(false)
   const [clientToken, setClientToken] = useState<string>('')
 
   // ** Hooks
   const router = useRouter()
   const dispatch = useDispatch()
 
+  console.log('loading: ', loading)
+
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
       const fcm = FirebaseCloudMessaging.builder()
       setLoading(true)
       getUserData()
-      fcm
-        .onMessageListener()
-        .then((payload: any) => {
-          toast(
-            t => (
-              <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                  <CustomAvatar
-                    color='primary'
-                    skin='light'
-                    alt='Notification Icon'
-                    sx={{ mr: 3, width: 40, height: 40 }}
-                  >
-                    <Icon icon='ion:notifcations' fontSize={30} />
-                  </CustomAvatar>
-                  <div>
-                    <Typography sx={{ fontWeight: 500 }}>{payload?.notification?.title}</Typography>
-                    <Typography variant='caption'>{payload?.notification?.body}</Typography>
-                  </div>
+      fcm &&
+        fcm
+          ?.onMessageListener()
+          .then((payload: any) => {
+            toast(
+              t => (
+                <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                    <CustomAvatar
+                      color='primary'
+                      skin='light'
+                      alt='Notification Icon'
+                      sx={{ mr: 3, width: 40, height: 40 }}
+                    >
+                      <Icon icon='ion:notifcations' fontSize={30} />
+                    </CustomAvatar>
+                    <div>
+                      <Typography sx={{ fontWeight: 500 }}>{payload?.notification?.title}</Typography>
+                      <Typography variant='caption'>{payload?.notification?.body}</Typography>
+                    </div>
+                  </Box>
+                  <IconButton onClick={() => toast.dismiss(t.id)}>
+                    <Icon icon='mdi:close' fontSize={20} />
+                  </IconButton>
                 </Box>
-                <IconButton onClick={() => toast.dismiss(t.id)}>
-                  <Icon icon='mdi:close' fontSize={20} />
-                </IconButton>
-              </Box>
-            ),
-            {
-              duration: 6000,
-              style: {
-                minWidth: '300px'
+              ),
+              {
+                duration: 6000,
+                style: {
+                  minWidth: '300px'
+                }
               }
-            }
-          )
-        })
-        .catch(err => toastError('notification show failed!'))
+            )
+          })
+          .catch(err => toastError('notification show failed!'))
     }
 
     initAuth()
@@ -113,7 +116,8 @@ const AuthProvider = ({ children }: Props) => {
   const deleteFcmToken = async () => {
     try {
       if (clientToken && Notification.permission == 'granted' && isClientTokenDuplicate(clientToken, user)) {
-        await FirebaseCloudMessaging.builder().deleteRegistrationToken(setClientToken)
+        const fcm = FirebaseCloudMessaging.builder()
+        fcm && (await fcm?.deleteRegistrationToken(setClientToken))
         await ApiRequest.builder()
           .auth()
           .request('delete', `users/${user._id}/fcm-token`, { token: clientToken })
@@ -157,7 +161,7 @@ const AuthProvider = ({ children }: Props) => {
 
         setUser(userData)
         const fcm = FirebaseCloudMessaging.builder()
-        fcm.fetchToken(setClientToken)
+        fcm && fcm?.fetchToken(setClientToken)
         setLoading(false)
         localStorage.setItem('userData', JSON.stringify(userData))
         dispatch(getConstants())

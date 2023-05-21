@@ -32,10 +32,10 @@ const AuthGuard = (props: AuthGuardProps) => {
         } else {
           router.replace('/login')
         }
-      }
+      } else if (['/login', '/register', '/forgot-password'].includes(router.pathname)) router.replace('/home')
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [router.route]
+    [auth]
   )
 
   if (auth.loading || auth.user === null) {

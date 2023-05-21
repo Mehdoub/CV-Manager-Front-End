@@ -23,7 +23,7 @@ export default class FirebaseCloudMessaging {
   }
 
   static builder() {
-    return new FirebaseCloudMessaging()
+    if (typeof navigator.serviceWorker !== 'undefined') return new FirebaseCloudMessaging()
   }
 
   public fetchToken = async (setClientToken?: (token: string) => void) => {

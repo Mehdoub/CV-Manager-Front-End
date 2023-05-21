@@ -21,6 +21,7 @@ import {
   Avatar,
   Box,
   CircularProgress,
+  FormControlLabel,
   FormHelperText,
   IconButton,
   Link,
@@ -28,7 +29,8 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Slider
+  Slider,
+  Switch
 } from '@mui/material'
 import * as yup from 'yup'
 import {
@@ -140,6 +142,12 @@ const ResumeDetailsTab = () => {
       }
     }
   } = useSelector((state: any) => state.constants)
+
+  const [isSalaryActive, setIsSalaryActive] = useState<boolean>(resume?.min_salary ? true : false)
+
+  const handleChangeisSalaryActive = () => {
+    setIsSalaryActive(!isSalaryActive)
+  }
 
   const {
     query: { positionId }
@@ -319,7 +327,9 @@ const ResumeDetailsTab = () => {
     }
     popObjectItemByKey(data, 'work_province')
     popObjectItemByKey(data, 'residence_province')
-    ;[data.min_salary, data.max_salary] = salaryRange
+    if (isSalaryActive) {
+      ;[data.min_salary, data.max_salary] = salaryRange
+    }
     dispatch(editResume({ ...data, resumeId: resume?._id }))
   }
 
@@ -803,6 +813,10 @@ const ResumeDetailsTab = () => {
                   </FormControl>
                 </Grid> */}
                 <Grid item xs={12} mt={5} px={7}>
+                  <FormControlLabel
+                    label='Active'
+                    control={<Switch checked={isSalaryActive} onChange={handleChangeisSalaryActive} />}
+                  />
                   <InputLabel>Requested Salary Range (Toman)</InputLabel>
                   <Slider
                     sx={{ mt: 4 }}
@@ -815,6 +829,7 @@ const ResumeDetailsTab = () => {
                     max={80000000}
                     step={1000000}
                     valueLabelFormat={(value: any) => value.format()}
+                    disabled={!isSalaryActive}
                   />
                   <Typography>{`${salaryRange[0].format()} - ${salaryRange[1].format()} Toman`}</Typography>
                 </Grid>
