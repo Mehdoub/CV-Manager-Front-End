@@ -1,37 +1,43 @@
 // ** Type import
 import { VerticalNavItemsType } from 'src/@core/layouts/types'
+import HomeIcon from '@mui/icons-material/Home';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import BusinessIcon from '@mui/icons-material/Business';
+import FolderCopyIcon from '@mui/icons-material/FolderCopy';
+import WorkIcon from '@mui/icons-material/Work';
+import SecurityIcon from '@mui/icons-material/Security';
 
-const navigation = (): VerticalNavItemsType => {
+const navigation = (): any => {
   return [
     {
       title: 'sidebar.home',
       path: '/home',
-      icon: 'mdi:home-outline',
+      icon: HomeIcon,
     },
     {
       title: 'sidebar.users',
       path: '/users',
-      icon: 'mdi:users-outline',
+      icon: PeopleAltIcon,
     },
     {
       title: 'sidebar.companies',
       path: '/companies',
-      icon: 'carbon:location-company',
+      icon: BusinessIcon,
     },
     {
       title: 'sidebar.projects',
       path: '/projects',
-      icon: 'pajamas:project',
+      icon: FolderCopyIcon,
     },
     {
       title: 'sidebar.positions',
       path: '/positions',
-      icon: 'ic:baseline-work-outline',
+      icon: WorkIcon,
     },
     {
       title: 'sidebar.roles_permissions',
       path: '/roles',
-      icon: 'mdi:shield-outline',
+      icon: SecurityIcon,
     },
   ]
 }

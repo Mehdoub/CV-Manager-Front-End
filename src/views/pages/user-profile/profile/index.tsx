@@ -12,6 +12,13 @@ import AboutOverivew from 'src/views/pages/user-profile/profile/AboutOverivew'
 import ActivityTimeline from 'src/views/pages/user-profile/profile/ActivityTimeline'
 import ConnectionsTeams from 'src/views/pages/user-profile/profile/ConnectionsTeams'
 
+import PersonIcon from '@mui/icons-material/Person'
+import ShieldIcon from '@mui/icons-material/Shield'
+import AccountCircleIcon from '@mui/icons-material/AccountCircle'
+import TranslateIcon from '@mui/icons-material/Translate'
+import CallIcon from '@mui/icons-material/Call'
+import EmailIcon from '@mui/icons-material/Email'
+
 // ** Types
 // import { ProfileTabType } from 'src/@fake-db/types'
 
@@ -23,14 +30,14 @@ const ProfileTab = ({ data }: { data: any }) => {
   useEffect(() => {
     if (user?.id) {
       setAbout([
-        { property: 'Full Name', value: getFullName(user), icon: 'mdi:account-outline' },
-        { property: 'Role', value: user?.role[0]?.name, icon: 'mdi:star-outline' },
-        { property: 'Username', value: user?.username, icon: 'mdi:flag-outline' },
-        { property: 'Language', value: Language.builder().lang, icon: 'mdi:translate' }
+        { property: 'Full Name', value: getFullName(user), icon: PersonIcon },
+        { property: 'Role', value: user?.role[0]?.name, icon: ShieldIcon },
+        { property: 'Username', value: user?.username, icon: AccountCircleIcon },
+        { property: 'Language', value: Language.builder().lang, icon: TranslateIcon }
       ])
       setContact([
-        { property: 'Contact', value: `+${user?.mobile}`, icon: 'mdi:phone-outline' },
-        { property: 'Email', value: user?.email ?? 'john.doe@example.com', icon: 'mdi:email-outline' }
+        { property: 'Contact', value: `+${user?.mobile}`, icon: CallIcon },
+        { property: 'Email', value: user?.email ?? 'john.doe@example.com', icon: EmailIcon }
       ])
     }
   }, [user])

@@ -20,6 +20,7 @@ import { Icon } from '@iconify/react'
 import { Avatar, Box, IconButton, Typography } from '@mui/material'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import { getProvinces } from 'src/store/province'
+import CloseIcon from '@mui/icons-material/Close'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -75,7 +76,7 @@ const AuthProvider = ({ children }: Props) => {
                     </div>
                   </Box>
                   <IconButton onClick={() => toast.dismiss(t.id)}>
-                    <Icon icon='mdi:close' fontSize={20} />
+                    <CloseIcon />
                   </IconButton>
                 </Box>
               ),

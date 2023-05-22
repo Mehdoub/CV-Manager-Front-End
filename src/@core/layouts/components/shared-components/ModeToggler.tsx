@@ -8,6 +8,9 @@ import Icon from 'src/@core/components/icon'
 import { Mode } from 'src/@core/layouts/types'
 import { Settings } from 'src/@core/context/settingsContext'
 
+import NightsStayIcon from '@mui/icons-material/NightsStay'
+import WbSunnyIcon from '@mui/icons-material/WbSunny'
+
 interface Props {
   settings: Settings
   saveSettings: (values: Settings) => void
@@ -31,7 +34,7 @@ const ModeToggler = (props: Props) => {
 
   return (
     <IconButton color='inherit' aria-haspopup='true' onClick={handleModeToggle}>
-      <Icon icon={settings.mode === 'dark' ? 'mdi:weather-sunny' : 'mdi:weather-night'} />
+      {settings.mode === 'dark' ? <WbSunnyIcon /> : <NightsStayIcon />}
     </IconButton>
   )
 }

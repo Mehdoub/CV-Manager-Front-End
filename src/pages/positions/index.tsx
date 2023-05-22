@@ -41,6 +41,8 @@ import { getPositions } from 'src/store/position'
 import PositionEditDialog from 'src/views/pages/position/view/PositionEditDialog'
 import { getFullName, getImagePath, getMaxTextLen, showDate } from 'src/helpers/functions'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
+import EditIcon from '@mui/icons-material/Edit'
+import VisibilityIcon from '@mui/icons-material/Visibility'
 
 const StyledLink = styled(Link)(({ theme }) => ({
   fontWeight: 600,
@@ -292,7 +294,7 @@ const PositionList = () => {
         <Stack direction='row' spacing={2}>
           <BootstrapTooltip title='view' placement='top'>
             <StyledLink href={`/positions/view/${row?.id}/overview`}>
-              <Icon icon='mdi:eye-outline' fontSize={20} />
+              <VisibilityIcon />
             </StyledLink>
           </BootstrapTooltip>
           <BootstrapTooltip title='edit' placement='top'>
@@ -303,7 +305,7 @@ const PositionList = () => {
                 toggleEditPositionDialog()
               }}
             >
-              <Icon icon='mdi:pencil-outline' fontSize={20} />
+              <EditIcon />
             </div>
           </BootstrapTooltip>
         </Stack>

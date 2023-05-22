@@ -23,6 +23,7 @@ interface Props {
 const renderList = (arr: ProfileTabCommonType[]) => {
   if (arr && arr.length) {
     return arr.map((item, index) => {
+      const IconComponent = item.icon
       return (
         <Box
           key={index}
@@ -33,7 +34,7 @@ const renderList = (arr: ProfileTabCommonType[]) => {
             '& svg': { color: 'text.secondary' }
           }}
         >
-          <Icon icon={item.icon} />
+          {typeof item.icon == 'string' ? <Icon icon={item.icon} /> : <IconComponent />}
 
           <Typography sx={{ mx: 2, fontWeight: 600, color: 'text.secondary' }}>
             {`${item?.property?.charAt(0).toUpperCase() + item?.property?.slice(1)}:`}
@@ -80,7 +81,7 @@ const AboutOverivew = (props: Props) => {
             </CardActions>
           </Card>
         </Grid>
-        <Grid item xs={12}>
+        {/* <Grid item xs={12}>
           <Card>
             <CardContent>
               <div>
@@ -91,7 +92,7 @@ const AboutOverivew = (props: Props) => {
               </div>
             </CardContent>
           </Card>
-        </Grid>
+        </Grid> */}
       </Grid>
       <UserEditDialog open={editUserOpen} handleClose={closeEditUserDialog} data={{}} />
     </>

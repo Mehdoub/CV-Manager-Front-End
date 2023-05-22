@@ -50,6 +50,7 @@ import { useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { getCitiesByProvince } from 'src/store/province'
 import { getPositionResumes } from 'src/store/position'
+import CloseIcon from '@mui/icons-material/Close'
 
 interface FileProp {
   name: string
@@ -278,7 +279,7 @@ const ResumeDetailsTab = () => {
       </Grid>
       <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'right' }}>
         <IconButton onClick={() => handleRemoveFile(file)}>
-          <Icon icon='mdi:close' fontSize={20} />
+          <CloseIcon />
         </IconButton>
       </Grid>
     </ListItem>

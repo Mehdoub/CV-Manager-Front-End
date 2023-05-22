@@ -15,6 +15,7 @@ import MuiTimeline, { TimelineProps } from '@mui/lab/Timeline'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted'
 
 // ** Custom Components Import
 import OptionsMenu from 'src/@core/components/option-menu'
@@ -37,7 +38,7 @@ const ActivityTimeline = () => {
       <CardHeader
         title='Activity History (Comming Soon ... )'
         sx={{ '& .MuiCardHeader-avatar': { mr: 2.5 } }}
-        avatar={<Icon icon='mdi:format-list-bulleted' />}
+        avatar={<FormatListBulletedIcon />}
         titleTypographyProps={{ sx: { color: 'text.primary' } }}
         action={
           <OptionsMenu
@@ -46,7 +47,7 @@ const ActivityTimeline = () => {
           />
         }
       />
-      <CardContent style={{filter: 'blur(3px)'}}>
+      <CardContent style={{ filter: 'blur(3px)' }}>
         <Timeline sx={{ my: 0, py: 0 }}>
           <TimelineItem>
             <TimelineSeparator>

@@ -39,6 +39,8 @@ import CompanyEditDialog from 'src/views/pages/company/view/CompanyEditDialog'
 import AddCompanyDrawer from 'src/views/pages/company/list/AddCompanyDrawer'
 import { getFullName, getImagePath, showDate, uppercaseFirstLetters } from 'src/helpers/functions'
 import { useTranslation } from 'react-i18next'
+import EditIcon from '@mui/icons-material/Edit'
+import VisibilityIcon from '@mui/icons-material/Visibility'
 
 const statusColors: any = {
   active: 'success',
@@ -257,7 +259,7 @@ const CompanyList = () => {
         <Stack direction='row' spacing={2}>
           <BootstrapTooltip title='view' placement='top'>
             <StyledLink href={`/companies/view/${row.id}/overview`}>
-              <Icon icon='mdi:eye-outline' fontSize={20} />
+              <VisibilityIcon />
             </StyledLink>
           </BootstrapTooltip>
           <BootstrapTooltip title='edit' placement='top'>
@@ -268,7 +270,7 @@ const CompanyList = () => {
                 toggleEditCompanyDialog()
               }}
             >
-              <Icon icon='mdi:pencil-outline' fontSize={20} />
+              <EditIcon />
             </div>
           </BootstrapTooltip>
         </Stack>

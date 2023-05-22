@@ -15,6 +15,7 @@ import {
 } from 'src/store/resume'
 import { useDispatch } from 'react-redux'
 import { getFullName, getImagePath, getTimeText, toastError } from 'src/helpers/functions'
+import ChatBubbleIcon from '@mui/icons-material/ChatBubble'
 
 const useOutsideBox = (ref: any, setState: any, setMsgRow: any) => {
   useEffect(() => {
@@ -191,7 +192,7 @@ const ResumeViewRightDialog = ({ cahtExample }: any) => {
             >
               <Box sx={{ display: 'flex', alignItems: 'center', mt: 3, mr: 3 }}>
                 <IconButton className='chat-icon' size='small' sx={{ mr: 1.5, color: 'rgb(76 78 100 / 14%)' }}>
-                  <Icon icon='mdi:comment' fontSize='2.25rem' />
+                  <ChatBubbleIcon fontSize='large' />
                 </IconButton>
               </Box>
               <Box sx={{ flexGrow: 1, display: 'flex', alignItems: 'center', p: 3, maxHeight: '100px' }}>

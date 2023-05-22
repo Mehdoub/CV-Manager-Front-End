@@ -71,6 +71,17 @@ import Link from 'next/link'
 import { getUsers } from 'src/store/user'
 import { useRouter } from 'next/router'
 import ResumeEndWorkDialog from './ResumeEndWorkDialog'
+import InsertLinkIcon from '@mui/icons-material/InsertLink'
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
+import HighlightOffIcon from '@mui/icons-material/HighlightOff'
+import BookmarkAddIcon from '@mui/icons-material/BookmarkAdd'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
+import InterpreterModeIcon from '@mui/icons-material/InterpreterMode'
+import CallIcon from '@mui/icons-material/Call'
+import VisibilityIcon from '@mui/icons-material/Visibility'
+import CloseIcon from '@mui/icons-material/Close'
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 
 const filter = createFilterOptions<any>()
 
@@ -258,7 +269,7 @@ const ResumeDialogHeader = ({
   return (
     <>
       <IconButton size='small' onClick={closeToggle} sx={{ position: 'absolute', right: '0.05rem', top: '0.05rem' }}>
-        <Icon icon='mdi:close' />
+        <CloseIcon />
       </IconButton>
       {isSmallScreen && (
         <Grid
@@ -330,7 +341,7 @@ const ResumeDialogHeader = ({
                     sx={{ p: 0, mb: 1, ml: 1, justifyContent: 'end', minWidth: 0 }}
                     color='secondary'
                   >
-                    <Icon icon='mdi:link-variant' fontSize={25} />
+                    <InsertLinkIcon />
                   </Button>
                 </BootstrapTooltip>
               </Typography>
@@ -372,7 +383,7 @@ const ResumeDialogHeader = ({
                   )
                 }
               >
-                <Icon icon='material-symbols:arrow-back-ios-new-rounded' />
+                <ArrowBackIosNewIcon />
               </IconButton>
             </BootstrapTooltip>
             <BootstrapTooltip placement='top' title='Change Status'>
@@ -432,7 +443,7 @@ const ResumeDialogHeader = ({
                   )
                 }
               >
-                <Icon icon='material-symbols:arrow-forward-ios-rounded' />
+                <ArrowForwardIosIcon />
               </IconButton>
             </BootstrapTooltip>
           </Box>
@@ -450,7 +461,7 @@ const ResumeDialogHeader = ({
           ) : (
             <ButtonGroup size='small' variant='outlined' sx={{ mt: 3, mr: 1 }}>
               <Button
-                startIcon={<Icon icon='mdi:tick-circle-outline' />}
+                startIcon={<CheckCircleOutlineIcon />}
                 color='success'
                 onClick={() => setOpenResumeHiringDialog(true)}
                 disabled={isForbiddenState(resume?.status)}
@@ -458,7 +469,7 @@ const ResumeDialogHeader = ({
                 Hiring
               </Button>
               <Button
-                startIcon={<Icon icon='material-symbols:cancel-outline' />}
+                startIcon={<HighlightOffIcon />}
                 color='error'
                 onClick={() => setOpenResumeRejectingDialog(true)}
                 disabled={isForbiddenState(resume?.status)}
@@ -508,7 +519,7 @@ const ResumeDialogHeader = ({
                 sx={{ border: '1px dashed gray', width: '28px', height: '28px', p: 0 }}
                 onClick={handleClickAddTag}
               >
-                <Icon fontSize={16} icon='mdi:tag-plus' />
+                <BookmarkAddIcon sx={{ fontSize: 20 }} />
               </IconButton>
             </BootstrapTooltip>
             <Popover
@@ -651,7 +662,7 @@ const ResumeDialogHeader = ({
                   sx={{ border: '1px dashed gray', width: '28px', height: '28px', p: 0, mb: 0.5 }}
                   onClick={handleClickAddContributor}
                 >
-                  <Icon fontSize={16} icon='pajamas:assignee' />
+                  <PersonAddIcon sx={{ fontSize: 19 }} />
                 </IconButton>
               </BootstrapTooltip>
             </Grid>
@@ -732,7 +743,7 @@ const ResumeDialogHeader = ({
                     }
                   }}
                 >
-                  <Icon icon='teenyicons:eye-outline' fontSize={30} />
+                  <VisibilityIcon sx={{ fontSize: 36 }} />
                 </Badge>
               </Button>
             </BootstrapTooltip>
@@ -793,7 +804,7 @@ const ResumeDialogHeader = ({
               onClick={handleClickOpenAddCallDialog}
               variant='outlined'
               color='secondary'
-              startIcon={<Icon icon='ic:round-call' />}
+              startIcon={<CallIcon />}
               sx={{ fontSize: '0.75rem', p: 2 }}
             >
               Call History
@@ -803,7 +814,7 @@ const ResumeDialogHeader = ({
               sx={{ fontSize: '0.75rem', p: 2 }}
               variant='outlined'
               color='secondary'
-              startIcon={<Icon icon='mdi:virtual-meeting' />}
+              startIcon={<InterpreterModeIcon />}
             >
               Add Interview
             </Button>

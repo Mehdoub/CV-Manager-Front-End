@@ -1,5 +1,12 @@
 import { ToastPosition, toast } from "react-hot-toast"
 import Language from "./Language"
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
+import InterpreterModeIcon from '@mui/icons-material/InterpreterMode';
+import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
+import BusinessIcon from '@mui/icons-material/Business';
+import FolderCopyIcon from '@mui/icons-material/FolderCopy';
+import WorkIcon from '@mui/icons-material/Work';
+import ShieldIcon from '@mui/icons-material/Shield';
 
 export const sliceInitialStateWithData = {
   loading: false,
@@ -151,15 +158,15 @@ export const shuffle = (array: any): any => {
 
 export const getEntityIcon = (entity: string) => {
   const entityIcons: any = {
-    companies: 'carbon:location-company',
-    projects: 'pajamas:project',
-    positions: 'ic:baseline-work-outline',
-    users: 'mdi:users-outline',
-    interviews: 'mdi:virtual-meeting',
-    resumes: 'pepicons-pop:cv',
+    companies: BusinessIcon,
+    projects: FolderCopyIcon,
+    positions: WorkIcon,
+    users: PeopleAltIcon,
+    interviews: InterpreterModeIcon,
+    resumes: AssignmentIndIcon,
   }
 
-  return Object.keys(entityIcons).includes(entity) ? entityIcons[entity] : 'mdi:shield-outline'
+  return Object.keys(entityIcons).includes(entity) ? entityIcons[entity] : ShieldIcon
 }
 
 export const getColorCodes = (color: string) => {

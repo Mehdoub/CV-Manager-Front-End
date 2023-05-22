@@ -31,6 +31,9 @@ import CustomAvatar from 'src/@core/components/mui/avatar'
 import { getInitials } from 'src/@core/utils/get-initials'
 import Link from 'next/link'
 
+import NotificationsIcon from '@mui/icons-material/Notifications'
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
+
 export type NotificationsType = {
   meta: string
   title: string
@@ -172,7 +175,7 @@ const NotificationDropdown = (props: Props) => {
             '& .MuiBadge-badge': { top: 4, right: 4, boxShadow: theme => `0 0 0 2px ${theme.palette.background.paper}` }
           }}
         >
-          <Icon icon='mdi:bell-outline' />
+          <NotificationsIcon />
         </Badge>
       </IconButton>
       <Menu
@@ -209,7 +212,7 @@ const NotificationDropdown = (props: Props) => {
                   alt='Notification Icon'
                   sx={{ mr: 3, width: 40, height: 40 }}
                 >
-                  <Icon icon='ion:notifcations' fontSize={30} />
+                  <NotificationsActiveIcon />
                 </CustomAvatar>
                 <Box sx={{ mx: 4, flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>
                   <MenuItemTitle>{notification.title}</MenuItemTitle>

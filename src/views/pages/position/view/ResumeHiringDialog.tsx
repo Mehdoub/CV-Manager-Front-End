@@ -29,6 +29,7 @@ import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { clearResumeHire, getResume, hireResume } from 'src/store/resume'
 import { getPositionResumes } from 'src/store/position'
+import CloseIcon from '@mui/icons-material/Close'
 
 let salaries: Array<number> = []
 for (let salary = 10; salary <= 50; salary++) salaries.push(salary * 1000000)
@@ -100,7 +101,7 @@ const ResumeHiringDialog = ({ open, handleClose }: ResumeHiringDialogProps) => {
         PaperProps={{ style: { overflowY: overflowVisibility } }}
       >
         <IconButton size='small' onClick={handleClose} sx={{ position: 'absolute', right: '1rem', top: '1rem' }}>
-          <Icon icon='mdi:close' />
+          <CloseIcon />
         </IconButton>
         <DialogTitle id='form-dialog-title'>Resume Hiring Form</DialogTitle>
         <DialogContent sx={{ overflowY: overflowVisibility }}>

@@ -16,6 +16,9 @@ import Icon from 'src/@core/components/icon'
 import { getInitials } from 'src/@core/utils/get-initials'
 import { Draggable } from 'react-beautiful-dnd'
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
+import AttachmentIcon from '@mui/icons-material/Attachment'
+import CallIcon from '@mui/icons-material/Call'
+import MessageIcon from '@mui/icons-material/Message'
 
 interface ResumeKanbanCardProps {
   cardData: any
@@ -191,10 +194,10 @@ const ResumeKanbanCard = ({ cardData: card, setOpen, index, handleClick }: Resum
                   <Chip
                     size='small'
                     label={card.summary_count.file}
-                    sx={{ fontSize: 10, height: 19, width: 41 }}
+                    sx={{ fontSize: 10, height: 19, minWidth: 41 }}
                     avatar={
                       <Avatar>
-                        <Icon icon='ri:attachment-2' fontSize={15} />
+                        <AttachmentIcon sx={{ fontSize: 17 }} />
                       </Avatar>
                     }
                   />
@@ -203,10 +206,10 @@ const ResumeKanbanCard = ({ cardData: card, setOpen, index, handleClick }: Resum
                   <Chip
                     size='small'
                     label={card.summary_count.call_history}
-                    sx={{ fontSize: 10, height: 19, width: 41 }}
+                    sx={{ fontSize: 10, height: 19, minWidth: 41 }}
                     avatar={
                       <Avatar>
-                        <Icon icon='ic:baseline-call' fontSize={15} />
+                        <CallIcon sx={{ fontSize: 17 }} />
                       </Avatar>
                     }
                   />
@@ -215,10 +218,10 @@ const ResumeKanbanCard = ({ cardData: card, setOpen, index, handleClick }: Resum
                   <Chip
                     size='small'
                     label={card.summary_count.comment}
-                    sx={{ fontSize: 10, height: 19, width: 41 }}
+                    sx={{ fontSize: 10, height: 19, minWidth: 41 }}
                     avatar={
                       <Avatar>
-                        <Icon icon='material-symbols:chat-outline-rounded' fontSize={15} />
+                        <MessageIcon sx={{ fontSize: 17 }} />
                       </Avatar>
                     }
                   />

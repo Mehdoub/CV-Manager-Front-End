@@ -24,6 +24,10 @@ import AddProjectDrawer from 'src/views/pages/project/list/AddProjectDrawer'
 import { Button } from '@mui/material'
 import CompanyViewProjects from './CompanyViewProjects'
 import CompanyViewResumes from './CompanyViewResumes'
+import BusinessIcon from '@mui/icons-material/Business'
+import FolderCopyIcon from '@mui/icons-material/FolderCopy'
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd'
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 
 // ** Types
 // import { InvoiceType } from 'src/types/apps/invoiceTypes'
@@ -88,10 +92,10 @@ const CompanyViewRight = ({ tab, companyId }: Props) => {
           aria-label='forced scroll tabs example'
           sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
         >
-          <Tab value='overview' label='Overview' icon={<Icon icon='mdi:account-outline' />} />
-          <Tab value='project' label='Projects' icon={<Icon icon='pajamas:project' />} />
-          <Tab value='resume' label='Resumes' icon={<Icon icon='pepicons-pop:cv' />} />
-          <Tab value='manager' label='Managers' icon={<Icon icon='grommet-icons:user-manager' />} />
+          <Tab value='overview' label='Overview' icon={<BusinessIcon />} />
+          <Tab value='project' label='Projects' icon={<FolderCopyIcon />} />
+          <Tab value='resume' label='Resumes' icon={<AssignmentIndIcon />} />
+          <Tab value='manager' label='Managers' icon={<ManageAccountsIcon />} />
           {activeTab == 'project' ? (
             <Button
               sx={{ mb: 2, position: 'absolute', right: '5px', top: '5px' }}
@@ -128,7 +132,12 @@ const CompanyViewRight = ({ tab, companyId }: Props) => {
           )}
         </Box>
       </TabContext>
-      <AddProjectDrawer open={addProjectOpen} toggle={toggleAddProjectDrawer} companyId={companyId} dispatchCompanyProjects={true} />
+      <AddProjectDrawer
+        open={addProjectOpen}
+        toggle={toggleAddProjectDrawer}
+        companyId={companyId}
+        dispatchCompanyProjects={true}
+      />
     </>
   )
 }
