@@ -48,8 +48,6 @@ const AuthProvider = ({ children }: Props) => {
   const router = useRouter()
   const dispatch = useDispatch()
 
-  console.log('loading: ', loading)
-
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
       const fcm = FirebaseCloudMessaging.builder()

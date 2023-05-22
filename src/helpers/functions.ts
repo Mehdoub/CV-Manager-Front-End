@@ -235,6 +235,9 @@ export const getTimeText = (time: string, hasRange: boolean = false) => {
         if (diffMinutes > 0) {
           dateText = Math.abs(diffMinutes) + ' Minute(s) Later'
           dateColor = 'primary'
+        } else if (diffMinutes == 0) {
+          dateText = 'Just Now'
+          dateColor = 'secondary'
         } else {
           dateText = Math.abs(diffMinutes) + ' Minute(s) Ago'
           dateColor = 'secondary'

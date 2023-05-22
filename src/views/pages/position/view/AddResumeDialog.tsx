@@ -24,6 +24,7 @@ import {
   CircularProgress,
   FormControlLabel,
   FormHelperText,
+  Grow,
   IconButton,
   Link,
   List,
@@ -370,6 +371,26 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   const handleChangeisSalaryActive = () => {
     setIsSalaryActive(!isSalaryActive)
   }
+
+  const salaryRangeComponent = (
+    <Grid item xs={12} px={7}>
+      <InputLabel>Requested Salary Range (Toman)</InputLabel>
+      <Slider
+        sx={{ mt: 4 }}
+        defaultValue={[9000000, 20000000]}
+        value={salaryRange}
+        onChange={(e, value) => setSalaryRange(value)}
+        valueLabelDisplay='auto'
+        aria-labelledby='range-slider'
+        min={8000000}
+        max={80000000}
+        step={1000000}
+        valueLabelFormat={(value: any) => value.format()}
+        // disabled={!isSalaryActive}
+      />
+      <Typography>{`${salaryRange[0].format()} - ${salaryRange[1].format()} Toman`}</Typography>
+    </Grid>
+  )
 
   return (
     <>
@@ -949,31 +970,13 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} mt={5} px={7}>
+                    <Grid item xs={12} mt={2} px={7}>
                       <FormControlLabel
                         label='Declare Requested Salary Range'
                         control={<Switch checked={isSalaryActive} onChange={handleChangeisSalaryActive} />}
                       />
-                      {isSalaryActive && (
-                        <>
-                          <InputLabel>Requested Salary Range (Toman)</InputLabel>
-                          <Slider
-                            sx={{ mt: 4 }}
-                            defaultValue={[9000000, 20000000]}
-                            value={salaryRange}
-                            onChange={(e, value) => setSalaryRange(value)}
-                            valueLabelDisplay='auto'
-                            aria-labelledby='range-slider'
-                            min={8000000}
-                            max={80000000}
-                            step={1000000}
-                            valueLabelFormat={(value: any) => value.format()}
-                            // disabled={!isSalaryActive}
-                          />
-                          <Typography>{`${salaryRange[0].format()} - ${salaryRange[1].format()} Toman`}</Typography>
-                        </>
-                      )}
                     </Grid>
+                    <Grow in={isSalaryActive}>{salaryRangeComponent}</Grow>
                     <Grid item xs={12} mt={5}>
                       <Fragment>
                         <div

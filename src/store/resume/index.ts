@@ -388,6 +388,31 @@ const resumeEndWorkSlice = createSlice({
 })
 
 
+export const addCommentToResume: any = createAsyncThunk('addCommentToResume', async (data: any, { rejectWithValue }) => {
+  try {
+    const { resumeId, body } = data
+    const response = await ApiRequest.builder().auth().request('patch', `resumes/${resumeId}/comments`, { body })
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const resumeAddCommentSlice = createSlice({
+  name: 'resumeAddComment',
+  initialState: sliceInitialStateWithStatus,
+  reducers: {
+    clearResumeAddComment: (state) => {
+      clearStatesAction(state)
+    }
+  },
+  extraReducers: (builder) => {
+    createExtraReducers(builder, addCommentToResume)
+  }
+})
+
+
 export const { clearCreateResume } = resumeCreateSlice.actions
 export const { clearEditResume } = resumeEditSlice.actions
 export const { clearResumeAddFiles } = resumeAddFilesSlice.actions
@@ -401,6 +426,7 @@ export const { clearResumeRemoveTag } = resumeRemoveTagSlice.actions
 export const { clearResumeAddAssignee } = resumeAddAssigneeSlice.actions
 export const { clearResumeRemoveAssignee } = resumeRemoveAssigneeSlice.actions
 export const { clearResumeEndWork } = resumeEndWorkSlice.actions
+export const { clearResumeAddComment } = resumeAddCommentSlice.actions
 
 export const resumeCreateReducer = resumeCreateSlice.reducer
 export const resumeEditReducer = resumeEditSlice.reducer
@@ -416,3 +442,7 @@ export const resumeRemoveTagReducer = resumeRemoveTagSlice.reducer
 export const resumeAddAssigneeReducer = resumeAddAssigneeSlice.reducer
 export const resumeRemoveAssigneeReducer = resumeRemoveAssigneeSlice.reducer
 export const resumeEndWorkReducer = resumeEndWorkSlice.reducer
+export const resumeAddCommentReducer = resumeAddCommentSlice.reducer
+
+export const selectResume = (state: any) => state.resume
+export const selectResumeAddComment = (state: any) => state.resumeAddComment

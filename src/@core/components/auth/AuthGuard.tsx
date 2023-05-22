@@ -19,11 +19,11 @@ const AuthGuard = (props: AuthGuardProps) => {
 
   useEffect(
     () => {
-      if (!router.isReady) {
-        return
-      }
+      // if (!router.isReady) {
+      //   return
+      // }
 
-      if (auth.user === null && !window.localStorage.getItem('userData')) {
+      if (auth.user === null) {
         if (router.asPath !== '/') {
           router.replace({
             pathname: '/login',

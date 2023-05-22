@@ -5,6 +5,16 @@ import { useEffect, useRef, useState, SyntheticEvent } from 'react'
 import Icon from 'src/@core/components/icon'
 import { getInitials } from 'src/@core/utils/get-initials'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
+import { useSelector } from 'react-redux'
+import {
+  addCommentToResume,
+  clearResumeAddComment,
+  getResume,
+  selectResume,
+  selectResumeAddComment
+} from 'src/store/resume'
+import { useDispatch } from 'react-redux'
+import { getFullName, getImagePath, getTimeText, toastError } from 'src/helpers/functions'
 
 const useOutsideBox = (ref: any, setState: any, setMsgRow: any) => {
   useEffect(() => {
@@ -40,12 +50,33 @@ const ResumeViewRightDialog = ({ cahtExample }: any) => {
   const [msgRow, setMsgRow] = useState<number>(1)
   const [commentClass, setCommentClass] = useState<string>('')
 
+  const { data: resume } = useSelector(selectResume)
+  const { status: resumeAddCommentStatus, loading: resumeAddCommentLoading } = useSelector(selectResumeAddComment)
+
+  const dispatch = useDispatch()
+
+  const resumeId = resume?._id
+
   const wrapperRef = useRef(null)
   useOutsideBox(wrapperRef, setCommentClass, setMsgRow)
 
+  useEffect(() => {
+    if (resumeAddCommentStatus) {
+      setMsg('')
+      setCommentClass('')
+      setMsgRow(1)
+      dispatch(clearResumeAddComment())
+      dispatch(getResume(resumeId))
+    }
+  }, [resumeAddCommentStatus])
+
   const handleSendMsg = (e: SyntheticEvent) => {
     e.preventDefault()
-    setMsg('')
+    if (msg?.length >= 5) {
+      if (resumeId) {
+        dispatch(addCommentToResume({ resumeId, body: msg }))
+      }
+    } else toastError('Comment Message Should Be Atleast 5 Characters')
   }
 
   return (
@@ -60,85 +91,90 @@ const ResumeViewRightDialog = ({ cahtExample }: any) => {
             backgroundColor: '#4c4e640d',
             display: 'flex',
             alignItems: 'start',
-            flexDirection: 'column'
+            flexDirection: 'column',
+            userSelect: 'text'
           }}
         >
-          {cahtExample.chat.map((chat: any, index: number, { length }: { length: number }) => {
-            avatarId = avatarId == 3 ? 5 : 3
-            return (
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: !isSender ? 'row' : 'row-reverse',
-                  p: 2,
-                  width: '100%'
-                }}
-              >
-                <div>
-                  <CustomAvatar
-                    skin='light'
-                    color={'error'}
-                    sx={{
-                      width: '2.45rem',
-                      height: '2.45rem',
-                      fontSize: '0.875rem',
-                      ml: isSender ? 4 : undefined,
-                      mr: !isSender ? 4 : undefined
-                    }}
-                    {...{
-                      src: `/images/avatars/${avatarId}.png`,
-                      alt: 'John Doe'
-                    }}
-                  >
-                    {getInitials('John Doe')}
-                  </CustomAvatar>
-                </div>
+          {resume?.comments?.length > 0 &&
+            [...resume?.comments].reverse().map((comment: any, index: number) => {
+              const [dateText, dateColor, dateString] = getTimeText(comment?.createdAt)
+              return (
                 <Box
-                  key={index}
+                  key={comment?._id}
                   sx={{
-                    '&:not(:last-of-type)': { mb: 3.5 },
-                    width: '100%',
-                    border: 'solid rgba(76, 78, 100, 0.12) 1px',
-                    borderRadius: 1,
-                    backgroundColor: 'background.paper',
-                    color: 'text.primary'
+                    display: 'flex',
+                    flexDirection: !isSender ? 'row' : 'row-reverse',
+                    p: 2,
+                    width: '100%'
                   }}
                 >
                   <div>
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between'
+                    <CustomAvatar
+                      skin='light'
+                      color={'error'}
+                      sx={{
+                        width: '2.45rem',
+                        height: '2.45rem',
+                        fontSize: '0.875rem',
+                        ml: isSender ? 4 : undefined,
+                        mr: !isSender ? 4 : undefined
+                      }}
+                      {...{
+                        src: comment?.created_by?.avatar ? getImagePath(comment?.created_by?.avatar) : undefined,
+                        alt: getFullName(comment?.created_by)
                       }}
                     >
+                      {getInitials(getFullName(comment?.created_by))}
+                    </CustomAvatar>
+                  </div>
+                  <Box
+                    key={index}
+                    sx={{
+                      '&:not(:last-of-type)': { mb: 3.5 },
+                      width: '100%',
+                      border: 'solid rgba(76, 78, 100, 0.12) 1px',
+                      borderRadius: 1,
+                      backgroundColor: 'background.paper',
+                      color: 'text.primary'
+                    }}
+                  >
+                    <div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between'
+                        }}
+                      >
+                        <Typography
+                          sx={{
+                            fontSize: '0.875rem',
+                            p: theme => theme.spacing(3, 4),
+                            color: 'primary.main'
+                          }}
+                        >
+                          {getFullName(comment?.created_by)}
+                        </Typography>
+                        <BootstrapTooltip placement='top' title={dateString}>
+                          <Typography variant='caption' sx={{ color: 'text.disabled', mr: 2 }}>
+                            {dateText}
+                          </Typography>
+                        </BootstrapTooltip>
+                      </div>
                       <Typography
                         sx={{
                           fontSize: '0.875rem',
-                          p: theme => theme.spacing(3, 4),
-                          color: 'primary.main'
+                          fontWeight: 500,
+                          p: theme => theme.spacing(3, 4)
                         }}
                       >
-                        Mahdi Amereh
-                      </Typography>
-                      <Typography variant='caption' sx={{ color: 'text.disabled', mr: 2 }}>
-                        {chat.time}
+                        {comment?.body}
                       </Typography>
                     </div>
-                    <Typography
-                      sx={{
-                        fontSize: '0.875rem',
-                        fontWeight: 500,
-                        p: theme => theme.spacing(3, 4)
-                      }}
-                    >
-                      {chat.message}
-                    </Typography>
-                  </div>
+                  </Box>
                 </Box>
-              </Box>
-            )
-          })}
+              )
+            })}
           <Box sx={{ display: 'flex', p: 6, width: '100%' }}></Box>
         </Box>
         <Box sx={{ width: '100%', position: 'absolute', bottom: 0 }}>
@@ -168,6 +204,7 @@ const ResumeViewRightDialog = ({ cahtExample }: any) => {
                   multiline
                   rows={msgRow}
                   sx={{ '& .MuiOutlinedInput-input': { pl: 0 }, '& fieldset': { border: '0 !important' } }}
+                  disabled={resumeAddCommentLoading}
                 />
               </Box>
               <Grid item md={12} sx={{ mb: 12 }}>
@@ -192,6 +229,7 @@ const ResumeViewRightDialog = ({ cahtExample }: any) => {
                       component='label'
                       htmlFor='upload-img'
                       sx={{ mr: 2.75, color: 'text.secondary' }}
+                      disabled
                     >
                       <Icon icon='material-symbols:alternate-email' fontSize='1.375rem' />
                     </IconButton>
@@ -202,9 +240,10 @@ const ResumeViewRightDialog = ({ cahtExample }: any) => {
                       component='label'
                       htmlFor='upload-img'
                       sx={{ mr: 2.75, color: 'text.secondary' }}
+                      disabled
                     >
                       <Icon icon='majesticons:attachment-line' fontSize='1.375rem' />
-                      <input hidden type='file' id='upload-img' />
+                      {/* <input hidden type='file' id='upload-img' /> */}
                     </IconButton>
                   </BootstrapTooltip>
                   <BootstrapTooltip placement='top' title='Add Emoji'>
@@ -213,9 +252,10 @@ const ResumeViewRightDialog = ({ cahtExample }: any) => {
                       component='label'
                       htmlFor='upload-img'
                       sx={{ mr: 2.75, color: 'text.secondary' }}
+                      disabled
                     >
                       <Icon icon='ic:round-emoji-emotions' fontSize='1.375rem' />
-                      <input hidden type='file' id='upload-img' />
+                      {/* <input hidden type='file' id='upload-img' /> */}
                     </IconButton>
                   </BootstrapTooltip>
                   <BootstrapTooltip placement='top' title='Record Voice'>
@@ -224,9 +264,10 @@ const ResumeViewRightDialog = ({ cahtExample }: any) => {
                       component='label'
                       htmlFor='upload-img'
                       sx={{ mr: 2.75, color: 'text.secondary' }}
+                      disabled
                     >
                       <Icon icon='material-symbols:auto-detect-voice' fontSize='1.375rem' />
-                      <input hidden type='file' id='upload-img' />
+                      {/* <input hidden type='file' id='upload-img' /> */}
                     </IconButton>
                   </BootstrapTooltip>
                   <BootstrapTooltip placement='top' title='Mention A Task'>
@@ -235,13 +276,14 @@ const ResumeViewRightDialog = ({ cahtExample }: any) => {
                       component='label'
                       htmlFor='upload-img'
                       sx={{ mr: 2.75, color: 'text.secondary' }}
+                      disabled
                     >
                       <Icon icon='fluent:document-mention-16-regular' fontSize='1.375rem' />
-                      <input hidden type='file' id='upload-img' />
+                      {/* <input hidden type='file' id='upload-img' /> */}
                     </IconButton>
                   </BootstrapTooltip>
                 </div>
-                <Button type='submit' variant='contained'>
+                <Button type='submit' variant='contained' disabled={resumeAddCommentLoading}>
                   Send
                 </Button>
               </Grid>

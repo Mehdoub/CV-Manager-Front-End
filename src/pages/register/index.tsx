@@ -158,7 +158,6 @@ const Register = () => {
         message: 'Password and repeat password should be the same'
       })
     } else if (isAvailable) {
-      console.log('register')
       mobile = '98' + mobile
       register({ firstname, lastname, mobile, password, repeatpassword, username }, (err: any) => {
         const errors = err?.response?.data?.errors[0]
@@ -166,7 +165,6 @@ const Register = () => {
         toastError(err?.response?.data?.message)
       })
     }
-    console.log('isAvailable: ', isAvailable)
   }
 
   const imageSource = skin === 'bordered' ? 'auth-v2-register-illustration-bordered' : 'auth-v2-register-illustration'
