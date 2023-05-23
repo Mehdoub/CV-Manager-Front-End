@@ -21,6 +21,7 @@ import Customizer from 'src/@core/components/customizer'
 import Navigation from './components/vertical/navigation'
 import Footer from './components/shared-components/footer'
 import ScrollToTop from 'src/@core/components/scroll-to-top'
+import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward'
 
 const VerticalLayoutWrapper = styled('div')({
   height: '100%',
@@ -131,7 +132,7 @@ const VerticalLayout = (props: LayoutProps) => {
       ) : (
         <ScrollToTop className='mui-fixed'>
           <Fab color='primary' size='small' aria-label='scroll back to top'>
-            <Icon icon='mdi:arrow-up' />
+            <ArrowUpwardIcon />
           </Fab>
         </ScrollToTop>
       )}

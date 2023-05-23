@@ -140,17 +140,19 @@ const RoleViewDialog = ({ open, toggle, dialogTitle, editRoleData }: RoleViewDia
             sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
           >
             {entities.length > 0 &&
-              entities?.map(
-                (item: any, index: number) =>
+              entities?.map((item: any, index: number) => {
+                const IconComponent = getEntityIcon(item?.entity)
+                return (
                   item?.entity?.length > 0 && (
                     <Tab
                       key={`${item?.entity}-${index}`}
                       value={item?.entity}
                       label={uppercaseFirstLetters(item?.entity)}
-                      icon={<Icon icon={getEntityIcon(item?.entity)} />}
+                      icon={<IconComponent />}
                     />
                   )
-              )}
+                )
+              })}
           </TabList>
           <Box sx={{ mt: 6 }}>
             {entities.length > 0 &&

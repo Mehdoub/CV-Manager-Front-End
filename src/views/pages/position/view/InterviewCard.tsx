@@ -11,33 +11,12 @@ import Icon from 'src/@core/components/icon'
 import { AvatarGroup, Divider, IconButton, Stack } from '@mui/material'
 import { getFullName, getImagePath, getTimeText, ratingTextsObj, uppercaseFirstLetters } from 'src/helpers/functions'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
-
-const fakeUsers = [
-  {
-    id: 1,
-    firstname: 'Aliakbar',
-    lastname: 'Rezaei',
-    avatar: '/images/avatars/7.png'
-  },
-  {
-    id: 2,
-    firstname: 'Mahdi',
-    lastname: 'Amereh',
-    avatar: '/images/avatars/3.png'
-  },
-  {
-    id: 3,
-    firstname: 'Ali',
-    lastname: 'Hamzehei',
-    avatar: '/images/avatars/5.png'
-  },
-  {
-    id: 4,
-    firstname: 'Saeed',
-    lastname: 'Esfehani',
-    avatar: '/images/avatars/2.png'
-  }
-]
+import AccessAlarmIcon from '@mui/icons-material/AccessAlarm'
+import PendingIcon from '@mui/icons-material/Pending'
+import PersonIcon from '@mui/icons-material/Person'
+import OnlinePredictionIcon from '@mui/icons-material/OnlinePrediction'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import PersonSearchIcon from '@mui/icons-material/PersonSearch'
 
 // Styled Grid component
 const StyledGrid1 = styled(Grid)<GridProps>(({ theme }) => ({
@@ -103,7 +82,7 @@ const InterviewCard = ({ interview }: { interview: any }) => {
                     '& svg': { color: 'primary.main', mr: 2.5 }
                   }}
                 >
-                  <Icon icon='heroicons-outline:status-online' fontSize={20} />
+                  <OnlinePredictionIcon />
                   <Typography variant='body2'>{uppercaseFirstLetters(interview?.event_type)}</Typography>
                 </Box>
                 <Box
@@ -114,7 +93,7 @@ const InterviewCard = ({ interview }: { interview: any }) => {
                     '& svg': { color: 'primary.main', mr: 2.5 }
                   }}
                 >
-                  <Icon icon='mdi:account-outline' fontSize={20} />
+                  <PersonIcon />
                   <Typography variant='body2'>{uppercaseFirstLetters(interview?.type)}</Typography>
                 </Box>
               </StyledBox>
@@ -129,14 +108,14 @@ const InterviewCard = ({ interview }: { interview: any }) => {
                   '& svg': { color: 'primary.main', mr: 2.5 }
                 }}
               >
-                <Icon icon='material-symbols:pending-outline' fontSize={20} />
+                <PendingIcon sx={{ fontSize: 20 }} />
                 <Typography variant='body2'>{uppercaseFirstLetters(interview?.status)}</Typography>
               </Box>
               {interview?.result && (
                 <Box
                   sx={{ py: 1.25, display: 'flex', alignItems: 'center', '& svg': { color: 'primary.main', mr: 2.5 } }}
                 >
-                  <Icon icon='mdi:account-tick' fontSize={20} />
+                  <PersonSearchIcon />
                   <Typography variant='body2'>{uppercaseFirstLetters(interview?.result)}</Typography>
                 </Box>
               )}
@@ -151,7 +130,7 @@ const InterviewCard = ({ interview }: { interview: any }) => {
         >
           <Grid sx={{ display: 'flex', justifyContent: 'end', width: '100%' }}>
             <IconButton>
-              <Icon icon='material-symbols:more-vert' />
+              <MoreVertIcon />
             </IconButton>
           </Grid>
           <CardContent sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
@@ -163,11 +142,7 @@ const InterviewCard = ({ interview }: { interview: any }) => {
                   skin='light'
                   sx={{ width: 100, height: 100, mb: 2 }}
                 >
-                  <Icon
-                    className={interviewDateText == 'right now' ? 'blinking' : ''}
-                    icon='mdi:alarm-clock'
-                    fontSize='3rem'
-                  />
+                  <AccessAlarmIcon sx={{ fontSize: '3.5rem' }} />
                 </CustomAvatar>
                 <Typography fontWeight={200} fontSize={14}>
                   {uppercaseFirstLetters(interviewDateText)}

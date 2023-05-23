@@ -19,6 +19,7 @@ import CustomChip from 'src/@core/components/mui/chip'
 import Icon from 'src/@core/components/icon'
 import { getFullName, getImagePath, showDate } from 'src/helpers/functions'
 import { useAuth } from 'src/hooks/useAuth'
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday'
 
 // ** Types
 // import { ProfileHeaderType } from 'src/@fake-db/types'
@@ -111,7 +112,7 @@ const UserProfileHeader = () => {
                 <Typography sx={{ color: 'text.secondary', fontWeight: 600 }}>Tehran</Typography>
               </Box> */}
               <Box sx={{ display: 'flex', alignItems: 'center', '& svg': { mr: 1, color: 'text.secondary' } }}>
-                <Icon icon='mdi:calendar-blank-outline' />
+                <CalendarTodayIcon />
                 <Typography sx={{ color: 'text.secondary', fontWeight: 600 }}>
                   Joined At {showDate(user?.createdAt)}
                 </Typography>

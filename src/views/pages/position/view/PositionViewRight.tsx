@@ -32,6 +32,9 @@ import {
   removePositionManager
 } from 'src/store/position'
 import AddResumeDialog from './AddResumeDialog'
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd'
+import WorkIcon from '@mui/icons-material/Work'
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 
 interface Props {
   tab: string
@@ -113,10 +116,10 @@ const PositionViewRight: any = ({ tab, positionId }: Props) => {
           aria-label='forced scroll tabs example'
           sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
         >
-          <Tab value='overview' label='Overview' icon={<Icon icon='mdi:account-outline' />} />
+          <Tab value='overview' label='Overview' icon={<WorkIcon />} />
           {/* <Tab value='interview' label='Interviews' icon={<Icon icon='mdi:virtual-meeting' />} /> */}
-          <Tab value='resume' label='Resumes' icon={<Icon icon='pepicons-pop:cv' />} />
-          <Tab value='manager' label='Managers' icon={<Icon icon='grommet-icons:user-manager' />} />
+          <Tab value='resume' label='Resumes' icon={<AssignmentIndIcon />} />
+          <Tab value='manager' label='Managers' icon={<ManageAccountsIcon />} />
           {activeTab == 'resume' ? (
             <ResponsiveBtn variant='outlined' onClick={() => setOpenAddResumeDialog(true)}>
               Add Resume

@@ -43,6 +43,7 @@ import { useDispatch } from 'react-redux'
 import { getUsers } from 'src/store/user'
 import { addInterviewToResume, clearResumeAddInterview, getResume } from 'src/store/resume'
 import { getPositionResumes } from 'src/store/position'
+import CloseIcon from '@mui/icons-material/Close'
 
 interface AddInterviewDialogProps {
   open: boolean
@@ -130,7 +131,7 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
     <>
       <Dialog open={open} onClose={handleClose} aria-labelledby='form-dialog-title'>
         <IconButton size='small' onClick={handleClose} sx={{ position: 'absolute', right: '1rem', top: '1rem' }}>
-          <Icon icon='mdi:close' />
+          <CloseIcon />
         </IconButton>
         <DialogTitle id='form-dialog-title'>Add Interview</DialogTitle>
         <DialogContent>

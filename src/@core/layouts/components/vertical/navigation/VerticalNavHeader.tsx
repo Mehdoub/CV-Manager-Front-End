@@ -12,6 +12,7 @@ import { LayoutProps } from 'src/@core/layouts/types'
 
 // ** Custom Icon Import
 import Icon from 'src/@core/components/icon'
+import CloseIcon from '@mui/icons-material/Close'
 
 // ** Configs
 import themeConfig from 'src/configs/themeConfig'
@@ -211,7 +212,7 @@ const VerticalNavHeader = (props: Props) => {
           onClick={toggleNavVisibility}
           sx={{ p: 0, backgroundColor: 'transparent !important' }}
         >
-          <Icon icon='mdi:close' fontSize={20} />
+          <CloseIcon />
         </IconButton>
       ) : userMenuLockedIcon === null && userMenuUnlockedIcon === null ? null : (
         <IconButton

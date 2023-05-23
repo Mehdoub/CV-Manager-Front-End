@@ -46,6 +46,7 @@ import {
 } from 'src/helpers/functions'
 import { useSelector } from 'react-redux'
 import { getProjectPositions, getProjects } from 'src/store/project'
+import CloseIcon from '@mui/icons-material/Close'
 
 interface FileProp {
   name: string
@@ -227,7 +228,7 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
       <Header>
         <Typography variant='h6'>Add Position</Typography>
         <IconButton size='small' onClick={handleClose} sx={{ color: 'text.primary' }}>
-          <Icon icon='mdi:close' fontSize={20} />
+          <CloseIcon />
         </IconButton>
       </Header>
       <Box sx={{ p: 5 }}>

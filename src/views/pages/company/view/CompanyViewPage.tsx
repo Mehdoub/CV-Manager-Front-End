@@ -14,6 +14,9 @@ import { Skeleton } from '@mui/material'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { getCompanyStatisticsResumeByStates, getCompanyStatisticsResumeStatesInLastMonth } from 'src/store/company'
+import PersonSearchIcon from '@mui/icons-material/PersonSearch'
+import PersonOffIcon from '@mui/icons-material/PersonOff'
+import TaskIcon from '@mui/icons-material/Task'
 
 type Props = {
   tab: string
@@ -54,7 +57,7 @@ const CompanyView = ({ tab, companyId }: Props) => {
                 trendNumber='0%'
                 title='Total Received Resumes'
                 chipText='Last Month'
-                icon={<Icon icon='material-symbols:quick-reference-all-outline-rounded' />}
+                icon={<PersonSearchIcon />}
                 statsData={statisticsResumeStatesInLastMonth}
                 type='received'
               />
@@ -70,7 +73,7 @@ const CompanyView = ({ tab, companyId }: Props) => {
                 trendNumber='0%'
                 title='Rejected Resumes'
                 chipText='Last Month'
-                icon={<Icon icon='mdi:account-cancel' />}
+                icon={<PersonOffIcon />}
                 statsData={statisticsResumeStatesInLastMonth}
                 type='rejected'
               />
@@ -86,7 +89,7 @@ const CompanyView = ({ tab, companyId }: Props) => {
                 trendNumber='0%'
                 title='Hired Resumes'
                 chipText='Last Month'
-                icon={<Icon icon='mdi:user-check' />}
+                icon={<TaskIcon />}
                 statsData={statisticsResumeStatesInLastMonth}
                 type='hired'
               />

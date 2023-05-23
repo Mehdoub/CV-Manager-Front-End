@@ -44,6 +44,8 @@ import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 import { getProjects } from 'src/store/project'
 import ProjectEditDialog from 'src/views/pages/project/view/ProjectEditDialog'
 import { getImagePath, showDate, uppercaseFirstLetters } from 'src/helpers/functions'
+import EditIcon from '@mui/icons-material/Edit'
+import VisibilityIcon from '@mui/icons-material/Visibility'
 
 const statusColors: any = {
   active: 'success',
@@ -263,7 +265,7 @@ const ProjectList = () => {
         <Stack direction='row' spacing={2}>
           <BootstrapTooltip title='view' placement='top'>
             <StyledLink href={`/projects/view/${row.id}/overview`} onClick={e => e.preventDefault()}>
-              <Icon icon='mdi:eye-outline' fontSize={20} />
+              <VisibilityIcon />
             </StyledLink>
           </BootstrapTooltip>
           <BootstrapTooltip title='edit' placement='top'>
@@ -274,7 +276,7 @@ const ProjectList = () => {
                 toggleEditProjectDialog()
               }}
             >
-              <Icon icon='mdi:pencil-outline' fontSize={20} />
+              <EditIcon />
             </div>
           </BootstrapTooltip>
         </Stack>

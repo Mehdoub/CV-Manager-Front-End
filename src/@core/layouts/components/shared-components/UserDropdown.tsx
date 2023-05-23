@@ -16,6 +16,8 @@ import Typography from '@mui/material/Typography'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+import PersonIcon from '@mui/icons-material/Person'
+import LogoutIcon from '@mui/icons-material/Logout'
 
 // ** Context
 import { useAuth } from 'src/hooks/useAuth'
@@ -136,7 +138,7 @@ const UserDropdown = (props: Props) => {
         <Divider sx={{ mt: '0 !important' }} />
         <MenuItem sx={{ p: 0 }} onClick={() => handleDropdownClose('/user-profile/profile')}>
           <Box sx={styles}>
-            <Icon icon='mdi:account-outline' />
+            <PersonIcon />
             Profile
           </Box>
         </MenuItem>
@@ -145,7 +147,7 @@ const UserDropdown = (props: Props) => {
           onClick={handleLogout}
           sx={{ py: 2, '& svg': { mr: 2, fontSize: '1.375rem', color: 'text.primary' } }}
         >
-          <Icon icon='mdi:logout-variant' />
+          <LogoutIcon />
           Logout
         </MenuItem>
       </Menu>

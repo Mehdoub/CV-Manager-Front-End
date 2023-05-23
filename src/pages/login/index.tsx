@@ -41,6 +41,7 @@ import Translations from 'src/layouts/components/Translations'
 import {
   convertPersianNumsToEnglish,
   mobileHandler,
+  passwordVisibilityIcon,
   setServerValidationErrors,
   toastError
 } from 'src/helpers/functions'
@@ -136,6 +137,8 @@ const LoginPage = () => {
   }
 
   const imageSource = skin === 'bordered' ? 'auth-v2-login-illustration-bordered' : 'auth-v2-login-illustration'
+
+  const IconComponent = passwordVisibilityIcon(showPassword)
 
   return (
     <Box className='content-right'>
@@ -307,7 +310,7 @@ const LoginPage = () => {
                             onMouseDown={e => e.preventDefault()}
                             onClick={() => setShowPassword(!showPassword)}
                           >
-                            <Icon icon={showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} fontSize={20} />
+                            <IconComponent />
                           </IconButton>
                         </InputAdornment>
                       }

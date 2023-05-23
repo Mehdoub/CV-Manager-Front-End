@@ -25,6 +25,7 @@ import { useDispatch } from 'react-redux'
 import { addResumeFiles, clearResumeAddFiles, getResume } from 'src/store/resume'
 import { getAllowedFormats, toastError } from 'src/helpers/functions'
 import { getPositionResumes } from 'src/store/position'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 
 const UploadFileWrapper = styled(Grid)<BoxProps>(({ theme }) => ({
   display: 'flex',
@@ -134,7 +135,7 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
                   {!uploadResumeFilesLoading ? (
                     <>
                       <IconButton size='small' sx={{ mr: 1.5, color: 'rgb(76 78 100 / 14%)' }}>
-                        <Icon icon='ic:round-cloud-upload' fontSize='2.25rem' />
+                        <CloudUploadIcon fontSize='large' />
                       </IconButton>
                       <Typography sx={{ color: 'text.secondary' }}>Drop Resume File Or Click To Upload</Typography>
                     </>

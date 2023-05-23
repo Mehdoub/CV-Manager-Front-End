@@ -34,6 +34,7 @@ import { AppDispatch } from 'src/store'
 import { useDropzone } from 'react-dropzone'
 import { toast } from 'react-hot-toast'
 import { AnyAaaaRecord } from 'dns'
+import CloseIcon from '@mui/icons-material/Close'
 
 interface SidebarAddUserType {
   open: boolean
@@ -187,7 +188,7 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
       <Header>
         <Typography variant='h6'>Add User</Typography>
         <IconButton size='small' onClick={handleClose} sx={{ color: 'text.primary' }}>
-          <Icon icon='mdi:close' fontSize={20} />
+          <CloseIcon />
         </IconButton>
       </Header>
       <Box sx={{ p: 5 }}>

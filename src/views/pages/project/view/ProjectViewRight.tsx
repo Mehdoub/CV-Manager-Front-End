@@ -26,6 +26,10 @@ import AddPositionDrawer from '../../position/list/AddPositionDrawer'
 import ResumesView from 'src/views/common/ResumesView'
 import { useSelector } from 'react-redux'
 import { getProjectResumes } from 'src/store/project'
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd'
+import WorkIcon from '@mui/icons-material/Work'
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
+import FolderCopyIcon from '@mui/icons-material/FolderCopy'
 
 // ** Types
 // import { InvoiceType } from 'src/types/apps/invoiceTypes'
@@ -94,10 +98,10 @@ const ProjectViewRight = ({ tab, projectId }: Props) => {
           aria-label='forced scroll tabs example'
           sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
         >
-          <Tab value='overview' label='Overview' icon={<Icon icon='mdi:account-outline' />} />
-          <Tab value='position' label='Positions' icon={<Icon icon='ic:baseline-work-outline' />} />
-          <Tab value='resume' label='Resumes' icon={<Icon icon='pepicons-pop:cv' />} />
-          <Tab value='manager' label='Managers' icon={<Icon icon='grommet-icons:user-manager' />} />
+          <Tab value='overview' label='Overview' icon={<FolderCopyIcon />} />
+          <Tab value='position' label='Positions' icon={<WorkIcon />} />
+          <Tab value='resume' label='Resumes' icon={<AssignmentIndIcon />} />
+          <Tab value='manager' label='Managers' icon={<ManageAccountsIcon />} />
           {activeTab == 'position' ? (
             <Button
               sx={{ mb: 2, position: 'absolute', right: '5px', top: '5px' }}

@@ -21,6 +21,7 @@ import { TypographyProps } from '@mui/material/Typography'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+import CloseIcon from '@mui/icons-material/Close'
 
 // ** Third Party Components
 import toast from 'react-hot-toast'
@@ -214,7 +215,7 @@ const AddCompanyDrawer = (props: Props) => {
       <Header>
         <Typography variant='h6'>Add Company</Typography>
         <IconButton size='small' onClick={handleClose} sx={{ color: 'text.primary' }}>
-          <Icon icon='mdi:close' fontSize={20} />
+          <CloseIcon />
         </IconButton>
       </Header>
       <Box sx={{ p: 5 }}>

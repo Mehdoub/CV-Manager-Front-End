@@ -38,6 +38,7 @@ import * as yup from 'yup'
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { getPositionResumes } from 'src/store/position'
+import CloseIcon from '@mui/icons-material/Close'
 
 interface AddCallHistoryDialogProps {
   open: boolean
@@ -132,7 +133,7 @@ const AddCallHistoryDialog = ({ open, handleClose }: AddCallHistoryDialogProps) 
         PaperProps={{ style: { overflowY: overflowVisibility, maxHeight: '100% !important' } }}
       >
         <IconButton size='small' onClick={handleClose} sx={{ position: 'absolute', right: '1rem', top: '1rem' }}>
-          <Icon icon='mdi:close' />
+          <CloseIcon />
         </IconButton>
         <DialogTitle id='form-dialog-title'>Add Call History</DialogTitle>
         <DialogContent sx={{ overflowY: overflowVisibility }}>

@@ -13,6 +13,7 @@ import AddCompanyDrawer from 'src/views/pages/company/list/AddCompanyDrawer'
 import SidebarAddProject from 'src/views/pages/project/list/AddProjectDrawer'
 import AddResumeDialog from 'src/views/pages/position/view/AddResumeDialog'
 import { useSelector } from 'react-redux'
+import { getEntityIcon } from 'src/helpers/functions'
 
 const Home = () => {
   const [isSpeedDialChecked, setIsSpeedDialChecked] = useState<boolean | undefined>(undefined)
@@ -34,10 +35,10 @@ const Home = () => {
   }, [isSpeedDialChecked])
 
   const actions = [
-    { icon: 'carbon:location-company', name: 'Create New Company', onclick: toggleAddCompanyDrawer },
-    { icon: 'pajamas:project', name: 'Create New Project', onclick: toggleAddProjectDrawer },
-    { icon: 'ic:baseline-work-outline', name: 'Create New Position', onclick: toggleAddPositionDrawer },
-    { icon: 'pepicons-pop:cv', name: 'Create New Resume', onclick: toggleAddResumeDialog }
+    { icon: getEntityIcon('companies'), name: 'Create New Company', onclick: toggleAddCompanyDrawer },
+    { icon: getEntityIcon('projects'), name: 'Create New Project', onclick: toggleAddProjectDrawer },
+    { icon: getEntityIcon('positions'), name: 'Create New Position', onclick: toggleAddPositionDrawer },
+    { icon: getEntityIcon('resumes'), name: 'Create New Resume', onclick: toggleAddResumeDialog }
   ]
 
   return (
@@ -57,20 +58,23 @@ const Home = () => {
             <span className='sd-hamburger sd-hamburger-3'></span>
           </label>
         </BootstrapTooltip>
-        {actions.map(action => (
-          <BootstrapTooltip title={action.name} placement='top'>
-            <a
-              href='#'
-              className='sd-menu-item'
-              onClick={() => {
-                action.onclick()
-                setIsSpeedDialChecked(false)
-              }}
-            >
-              <Icon style={{ marginBottom: '7px' }} icon={action.icon} />
-            </a>
-          </BootstrapTooltip>
-        ))}
+        {actions.map(action => {
+          const IconComponent = action.icon
+          return (
+            <BootstrapTooltip title={action.name} placement='top'>
+              <a
+                href='#'
+                className='sd-menu-item'
+                onClick={() => {
+                  action.onclick()
+                  setIsSpeedDialChecked(false)
+                }}
+              >
+                <IconComponent sx={{ marginBottom: '7px' }} />
+              </a>
+            </BootstrapTooltip>
+          )
+        })}
       </nav>
       <Grid container spacing={6}>
         <Grid item xs={12}>

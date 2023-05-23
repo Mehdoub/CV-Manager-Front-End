@@ -38,14 +38,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useDispatch } from 'react-redux'
 import { clearResumeEndWork, clearResumeReject, endWorkResume, getResume, rejectResume } from 'src/store/resume'
 import { getPositionResumes } from 'src/store/position'
-
-const ratingLabels: { [index: string]: string } = {
-  1: 'Useless',
-  2: 'Poor',
-  3: 'Ok',
-  4: 'Good',
-  5: 'Excellent!'
-}
+import CloseIcon from '@mui/icons-material/Close'
 
 interface ResumeEndWorkDialogProps {
   open: boolean
@@ -124,7 +117,7 @@ const ResumeEndWorkDialog = ({ open, handleClose }: ResumeEndWorkDialogProps) =>
         PaperProps={{ style: { overflowY: overflowVisibility, maxHeight: '100% !important' } }}
       >
         <IconButton size='small' onClick={handleClose} sx={{ position: 'absolute', right: '1rem', top: '1rem' }}>
-          <Icon icon='mdi:close' />
+          <CloseIcon />
         </IconButton>
         <DialogTitle id='form-dialog-title'>End Work Resume Form</DialogTitle>
         <DialogContent sx={{ overflowY: overflowVisibility }}>

@@ -54,6 +54,7 @@ import { useRouter } from 'next/router'
 import { getCitiesByProvince } from 'src/store/province'
 import { getPositionResumes } from 'src/store/position'
 import { getProjectPositions, getProjects } from 'src/store/project'
+import CloseIcon from '@mui/icons-material/Close'
 
 interface FileProp {
   name: string
@@ -316,7 +317,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
       </Grid>
       <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'right' }}>
         <IconButton onClick={() => handleRemoveFile(file)}>
-          <Icon icon='mdi:close' fontSize={20} />
+          <CloseIcon />
         </IconButton>
       </Grid>
     </ListItem>
@@ -396,7 +397,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
     <>
       <Dialog fullWidth scroll='body' onClose={handleClose} open={open} maxWidth='md'>
         <IconButton size='small' onClick={handleClose} sx={{ position: 'absolute', right: '0.5rem', top: '0.5rem' }}>
-          <Icon icon='mdi:close' />
+          <CloseIcon />
         </IconButton>
         <Grid
           container

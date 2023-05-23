@@ -18,6 +18,7 @@ import MuiDrawer, { DrawerProps } from '@mui/material/Drawer'
 
 // ** Icon Imports
 import Icon from 'src/@core/components/icon'
+import CloseIcon from '@mui/icons-material/Close'
 
 // ** Type Import
 import { Settings } from 'src/@core/context/settingsContext'
@@ -126,7 +127,7 @@ const Customizer = () => {
               transform: 'translateY(-50%)'
             }}
           >
-            <Icon icon='mdi:close' fontSize={20} />
+            <CloseIcon />
           </IconButton>
         </Box>
         <PerfectScrollbar options={{ wheelPropagation: false }}>

@@ -44,6 +44,7 @@ import { useSelector } from 'react-redux'
 import {
   convertPersianNumsToEnglish,
   mobileHandler,
+  passwordVisibilityIcon,
   setServerValidationErrors,
   toastError
 } from 'src/helpers/functions'
@@ -182,6 +183,9 @@ const Register = () => {
       dispatch(checkUsername(value))
     }
   }
+
+  const PasswordIconComponent = passwordVisibilityIcon(showPassword)
+  const RepeatPasswordIconComponent = passwordVisibilityIcon(showRepeatPassword)
 
   return (
     <Box className='content-right'>
@@ -417,7 +421,7 @@ const Register = () => {
                             onMouseDown={e => e.preventDefault()}
                             onClick={() => setShowPassword(!showPassword)}
                           >
-                            <Icon icon={showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
+                            <PasswordIconComponent />
                           </IconButton>
                         </InputAdornment>
                       }
@@ -455,7 +459,7 @@ const Register = () => {
                             onMouseDown={e => e.preventDefault()}
                             onClick={() => setShowRepeatPassword(!showRepeatPassword)}
                           >
-                            <Icon icon={showRepeatPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
+                            <RepeatPasswordIconComponent />
                           </IconButton>
                         </InputAdornment>
                       }

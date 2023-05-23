@@ -22,6 +22,8 @@ import Typography from '@mui/material/Typography'
 // import useMediaQuery from '@mui/material/useMediaQuery'
 import CircularProgress from '@mui/material/CircularProgress'
 import Icon from 'src/@core/components/icon'
+import NotificationsIcon from '@mui/icons-material/Notifications'
+import PersonIcon from '@mui/icons-material/Person'
 
 import Profile from 'src/views/pages/user-profile/profile'
 
@@ -91,7 +93,7 @@ const UserProfile = ({ data }: { data: any }) => {
                     value='profile'
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 2 } }) }}>
-                        <Icon icon='mdi:account-outline' />
+                        <PersonIcon />
                         {!hideText && 'Profile'}
                       </Box>
                     }
@@ -100,7 +102,7 @@ const UserProfile = ({ data }: { data: any }) => {
                     value='notifications'
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 2 } }) }}>
-                        <Icon icon='ion:notifcations' />
+                        <NotificationsIcon />
                         {!hideText && 'Notifications'}
                       </Box>
                     }

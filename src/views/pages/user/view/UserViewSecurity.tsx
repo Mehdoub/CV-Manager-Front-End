@@ -33,48 +33,7 @@ import { useDispatch } from 'react-redux'
 import { ChangePasswordParams, changePassword, clearChangePassword, getUserLoginHistory } from 'src/store/user'
 import { useSelector } from 'react-redux'
 import Skelet from 'src/@core/components/loading/Skelet'
-import { showDate } from 'src/helpers/functions'
-
-interface State {
-  newPassword: string
-  showNewPassword: boolean
-  confirmNewPassword: string
-  showConfirmNewPassword: boolean
-}
-
-interface DataType {
-  device: string
-  browser: string
-  location: string
-  recentActivity: string
-}
-
-const data: DataType[] = [
-  {
-    device: 'Dell XPS 15',
-    location: 'United States',
-    browser: 'Chrome on Windows',
-    recentActivity: '10, Jan 2020 20:07'
-  },
-  {
-    location: 'Ghana',
-    device: 'Google Pixel 3a',
-    browser: 'Chrome on Android',
-    recentActivity: '11, Jan 2020 10:16'
-  },
-  {
-    location: 'Mayotte',
-    device: 'Apple iMac',
-    browser: 'Chrome on MacOS',
-    recentActivity: '11, Jan 2020 12:10'
-  },
-  {
-    location: 'Mauritania',
-    device: 'Apple iPhone XR',
-    browser: 'Chrome on iPhone',
-    recentActivity: '12, Jan 2020 8:29'
-  }
-]
+import { passwordVisibilityIcon, showDate } from 'src/helpers/functions'
 
 const schema = yup.object().shape({
   old_password: yup.string().label('Old Password').min(8).max(10).required(),
@@ -139,6 +98,10 @@ const UserViewSecurity = () => {
     }
   }
 
+  const PasswordIconComponent = passwordVisibilityIcon(showPassword)
+  const RepeatPasswordIconComponent = passwordVisibilityIcon(showRepeatPassword)
+  const OldPasswordIconComponent = passwordVisibilityIcon(showOldPassword)
+
   return (
     <Grid container spacing={6}>
       <Grid item xs={12}>
@@ -178,7 +141,7 @@ const UserViewSecurity = () => {
                                 onMouseDown={e => e.preventDefault()}
                                 onClick={() => setShowPassword(!showPassword)}
                               >
-                                <Icon icon={showPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
+                                <PasswordIconComponent />
                               </IconButton>
                             </InputAdornment>
                           }
@@ -216,7 +179,7 @@ const UserViewSecurity = () => {
                                 onMouseDown={e => e.preventDefault()}
                                 onClick={() => setShowRepeatPassword(!showRepeatPassword)}
                               >
-                                <Icon icon={showRepeatPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
+                                <RepeatPasswordIconComponent />
                               </IconButton>
                             </InputAdornment>
                           }
@@ -254,7 +217,7 @@ const UserViewSecurity = () => {
                                 onMouseDown={e => e.preventDefault()}
                                 onClick={() => setShowOldPassword(!showOldPassword)}
                               >
-                                <Icon icon={showOldPassword ? 'mdi:eye-outline' : 'mdi:eye-off-outline'} />
+                                <OldPasswordIconComponent />
                               </IconButton>
                             </InputAdornment>
                           }
@@ -290,14 +253,6 @@ const UserViewSecurity = () => {
                     sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between' }}
                   >
                     <CardHeader title='Recent Devices' />
-                    {/* <Button
-              sx={{ mt: 2, mr: 5 }}
-              variant='contained'
-              color='error'
-              onClick={() => setRemoveSessionDialogOpen(true)}
-            >
-              Remove All Other Sessions
-            </Button> */}
                   </Box>
 
                   <Divider sx={{ m: '0 !important' }} />

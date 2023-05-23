@@ -30,6 +30,7 @@ import { clearCreateProject, createProject, getProjects } from 'src/store/projec
 import { getCompanies, getCompanyProjects } from 'src/store/company'
 import { getAllowedFormats, getImagePath, setServerValidationErrors } from 'src/helpers/functions'
 import { Autocomplete, Avatar, CircularProgress, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material'
+import CloseIcon from '@mui/icons-material/Close'
 
 interface FileProp {
   name: string
@@ -196,7 +197,7 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
       <Header>
         <Typography variant='h6'>Add Project</Typography>
         <IconButton size='small' onClick={handleClose} sx={{ color: 'text.primary' }}>
-          <Icon icon='mdi:close' fontSize={20} />
+          <CloseIcon />
         </IconButton>
       </Header>
       <Box sx={{ p: 5 }}>
