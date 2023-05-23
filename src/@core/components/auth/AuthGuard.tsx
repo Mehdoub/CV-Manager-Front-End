@@ -32,10 +32,12 @@ const AuthGuard = (props: AuthGuardProps) => {
         } else {
           router.replace('/login')
         }
+        // } else if (auth?.user?._id && auth?.user?.is_banned && router.pathname !== '/verification') {
+        //   router.replace('/verification')
       } else if (['/login', '/register', '/forgot-password'].includes(router.pathname)) router.replace('/home')
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [auth]
+    [auth.user]
   )
 
   if (auth.loading || auth.user === null) {

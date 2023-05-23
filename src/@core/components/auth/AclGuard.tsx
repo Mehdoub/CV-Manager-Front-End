@@ -19,6 +19,8 @@ import BlankLayout from 'src/@core/layouts/BlankLayout'
 
 // ** Hooks
 import { useAuth } from 'src/hooks/useAuth'
+import Verification from 'src/pages/verification'
+import UserLayout from 'src/layouts/UserLayout'
 
 interface AclGuardProps {
   children: ReactNode
@@ -39,6 +41,14 @@ const AclGuard = (props: AclGuardProps) => {
   // If guestGuard is true and user is not logged in or its an error page, render the page without checking access
   if (guestGuard || router.route === '/404' || router.route === '/500' || router.route === '/') {
     return <>{children}</>
+  }
+
+  if (auth?.user?._id && auth?.user?.is_banned) {
+    return (
+      <UserLayout>
+        <Verification />
+      </UserLayout>
+    )
   }
 
   // User is logged in, build ability for the user based on his role

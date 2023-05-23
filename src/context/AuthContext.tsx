@@ -210,9 +210,9 @@ const AuthProvider = ({ children }: Props) => {
         const returnUrl = router.query.returnUrl
         getUserData()
 
-        const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
+        // const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
 
-        router.replace(redirectURL as string)
+        router.replace('/verification')
       }
     } catch (err: any) {
       if (errorCallback) errorCallback(err)
