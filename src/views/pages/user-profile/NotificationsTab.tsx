@@ -6,6 +6,9 @@ import TabContext from '@mui/lab/TabContext'
 import TabList from '@mui/lab/TabList'
 import { useState } from 'react'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
+import MarkChatReadIcon from '@mui/icons-material/MarkChatRead'
+import MarkChatUnreadIcon from '@mui/icons-material/MarkChatUnread'
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
 
 const NotificationsTab = () => {
   const [activeTab, setActiveTab] = useState<string>('new')
@@ -47,7 +50,7 @@ const NotificationsTab = () => {
               value='new'
               label={
                 <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 2 } }) }}>
-                  <Icon icon='ic:outline-mark-chat-unread' />
+                  <MarkChatUnreadIcon />
                   {!hideText && 'new'}
                 </Box>
               }
@@ -56,7 +59,7 @@ const NotificationsTab = () => {
               value='read'
               label={
                 <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 2 } }) }}>
-                  <Icon icon='ic:outline-mark-chat-read' />
+                  <MarkChatReadIcon />
                   {!hideText && 'read'}
                 </Box>
               }
@@ -81,7 +84,7 @@ const NotificationsTab = () => {
             >
               {/* <RenderAvatar notification={notification} /> */}
               <CustomAvatar color='primary' skin='light' alt='Notification Icon' sx={{ mr: 3, width: 40, height: 40 }}>
-                <Icon icon='ion:notifcations' fontSize={30} />
+                <NotificationsActiveIcon fontSize='large' />
               </CustomAvatar>
               <Box sx={{ mx: 4, flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>
                 <Typography fontWeight={600}>{notification.title}</Typography>

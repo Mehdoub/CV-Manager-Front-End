@@ -8,9 +8,9 @@ import Dialog from '@mui/material/Dialog'
 import Typography from '@mui/material/Typography'
 import DialogContent from '@mui/material/DialogContent'
 import DialogActions from '@mui/material/DialogActions'
-
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline'
+import HighlightOffIcon from '@mui/icons-material/HighlightOff'
 import { useDispatch } from 'react-redux'
 import { activeProject, clearActiveProject, clearDeactiveProject, deactiveProject, getProject } from 'src/store/project'
 import { useSelector } from 'react-redux'
@@ -84,7 +84,7 @@ const ProjectSuspendDialog = (props: Props) => {
         <DialogContent>
           <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column' }}>
             <Box sx={{ mb: 4, maxWidth: '85%', textAlign: 'center', '& svg': { mb: 12.25, color: 'warning.main' } }}>
-              <Icon icon='mdi:alert-circle-outline' fontSize='5.5rem' />
+              <ErrorOutlineIcon sx={{ fontSize: '5.5rem' }} />
               <Typography variant='h4' sx={{ color: 'text.secondary' }}>
                 Are you sure?
               </Typography>
@@ -119,14 +119,17 @@ const ProjectSuspendDialog = (props: Props) => {
               }
             }}
           >
-            <Icon
-              fontSize='5.5rem'
-              icon={userInput === 'yes' ? 'mdi:check-circle-outline' : 'mdi:close-circle-outline'}
-            />
+            {userInput === 'yes' ? (
+              <CheckCircleOutlineIcon sx={{ fontSize: '5.5rem' }} />
+            ) : (
+              <HighlightOffIcon sx={{ fontSize: '5.5rem' }} />
+            )}
             <Typography variant='h4' sx={{ mb: 8 }}>
               {userInput === 'yes' ? operationStatus + '!' : 'Cancelled'}
             </Typography>
-            <Typography>{userInput === 'yes' ? `Project has been ${operationStatus}.` : `Cancelled ${operation} :)`}</Typography>
+            <Typography>
+              {userInput === 'yes' ? `Project has been ${operationStatus}.` : `Cancelled ${operation} :)`}
+            </Typography>
           </Box>
         </DialogContent>
         <DialogActions sx={{ justifyContent: 'center' }}>

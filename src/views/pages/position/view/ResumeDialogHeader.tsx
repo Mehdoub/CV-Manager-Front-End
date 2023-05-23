@@ -82,6 +82,7 @@ import VisibilityIcon from '@mui/icons-material/Visibility'
 import CloseIcon from '@mui/icons-material/Close'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
 
 const filter = createFilterOptions<any>()
 
@@ -431,7 +432,6 @@ const ResumeDialogHeader = ({
             </Menu>
             <BootstrapTooltip placement='top' title={uppercaseFirstLetters(resumesStates[nextState]?.title)}>
               <IconButton
-                aria-label='capture screenshot'
                 sx={{ pr: 0 }}
                 onClick={() => updateStateHandler(nextState)}
                 disabled={
@@ -449,7 +449,7 @@ const ResumeDialogHeader = ({
           </Box>
           {resume?.status == 'hired' ? (
             <Button
-              startIcon={<Icon icon='bi:exclamation-circle' />}
+              startIcon={<ErrorOutlineIcon />}
               color='warning'
               onClick={() => setOpenResumeEndWorkDialog(true)}
               variant='outlined'

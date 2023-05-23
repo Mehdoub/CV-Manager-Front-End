@@ -13,19 +13,24 @@ import Icon from 'src/@core/components/icon'
 import { Stack } from '@mui/material'
 import { getTimeText, ratingTextsObj, showDate, uppercaseFirstLetters } from 'src/helpers/functions'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
+import TaskAltIcon from '@mui/icons-material/TaskAlt'
+import PhoneMissedIcon from '@mui/icons-material/PhoneMissed'
+import ContactPhoneIcon from '@mui/icons-material/ContactPhone'
+import PhoneDisabledIcon from '@mui/icons-material/PhoneDisabled'
+import RestartAltIcon from '@mui/icons-material/RestartAlt'
 
 const callHostoryResultIcons: any = {
   rejected: {
-    icon: 'solar:call-cancel-linear',
+    icon: PhoneMissedIcon,
     color: 'error'
   },
   answered: {
-    icon: 'charm:circle-tick',
+    icon: TaskAltIcon,
     color: 'success'
   },
-  busy: { icon: 'ic:baseline-call-missed-outgoing', color: 'warning' },
-  'wrong-number': { icon: 'material-symbols:call-quality', color: 'secondary' },
-  recall: { icon: 'material-symbols:restart-alt', color: 'primary' }
+  busy: { icon: ContactPhoneIcon, color: 'warning' },
+  'wrong-number': { icon: PhoneDisabledIcon, color: 'secondary' },
+  recall: { icon: RestartAltIcon, color: 'primary' }
 }
 
 // Styled Grid component
@@ -67,6 +72,9 @@ const CallHistoryCard = ({ callHistory }: { callHistory: any }) => {
   const [callingDateText, callingColor, callingDateString] = getTimeText(callHistory?.calling_date)
   const [recallDateText, recallColor, recallDateString] =
     callHistory?.recall_at?.length > 0 ? getTimeText(callHistory?.recall_at) : ['', '', '']
+
+  const IconComponent = callHostoryResultIcons[callHistory?.result].icon
+
   return (
     <Card
     // sx={{ backgroundColor: '#4c4e640d' }}
@@ -114,7 +122,7 @@ const CallHistoryCard = ({ callHistory }: { callHistory: any }) => {
                 skin='light'
                 sx={{ width: 100, height: 100, mb: 2 }}
               >
-                <Icon icon={callHostoryResultIcons[callHistory?.result].icon} fontSize='3rem' />
+                <IconComponent sx={{ fontSize: '3rem' }} />
               </CustomAvatar>
               <Typography>{uppercaseFirstLetters(callHistory?.result)}</Typography>
               <BootstrapTooltip title={callingDateString} placement='top'>

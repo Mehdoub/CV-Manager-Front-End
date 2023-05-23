@@ -14,6 +14,7 @@ import { useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 import { getCompanyStatisticsResumeCountByProjects, getCompanyStatisticsResumeCountFromMonth } from 'src/store/company'
 import Skelet from 'src/@core/components/loading/Skelet'
+import LinkIcon from '@mui/icons-material/Link'
 
 const CompanyViewOverview = () => {
   const { data: company } = useSelector((state: any) => state.company)
@@ -58,7 +59,7 @@ const CompanyViewOverview = () => {
                 trendNumber='+62%'
                 chipText='Last One Year'
                 title='Total Positions'
-                icon={<Icon icon='mdi:link' />}
+                icon={<LinkIcon />}
               />
             )}
           </Grid>

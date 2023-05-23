@@ -7,6 +7,8 @@ import BusinessIcon from '@mui/icons-material/Business';
 import FolderCopyIcon from '@mui/icons-material/FolderCopy';
 import WorkIcon from '@mui/icons-material/Work';
 import ShieldIcon from '@mui/icons-material/Shield';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 
 export const sliceInitialStateWithData = {
   loading: false,
@@ -303,3 +305,7 @@ export const convertPersianNumsToEnglish = (str: string) => {
   }
   return str;
 };
+
+export const passwordVisibilityIcon = (showPassword: boolean) => {
+  return !showPassword ? VisibilityIcon : VisibilityOffIcon
+}
