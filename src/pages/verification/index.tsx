@@ -127,7 +127,7 @@ const Verification = () => {
         setInputBorderColor('')
         dispatch(clearVerificationCodeCheck())
         router.push('/home')
-      }, 3000)
+      }, 1000)
     } else if (checkVerificationCodeErrors?.data?.message) setInputBorderColor(`${getColorCodes('error')} !important`)
   }, [checkVerificationCodeStatus, checkVerificationCodeErrors])
 
@@ -353,9 +353,6 @@ const Verification = () => {
               {errorsArray.length ? (
                 <FormHelperText sx={{ color: 'error.main' }}>Please enter a valid OTP</FormHelperText>
               ) : null}
-              {checkVerificationCodeStatus && (
-                <FormHelperText sx={{ color: 'success.main' }}>Your Mobile Successfully Verified!</FormHelperText>
-              )}
               {/* <Button
                 fullWidth
                 type='submit'
@@ -368,8 +365,8 @@ const Verification = () => {
               <Box sx={{ mt: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {showTimer > 0 ? (
                   <Typography sx={{ display: 'inline' }}>
-                    Sent Code Expires In:{' '}
-                    <Typography sx={{ color: getColorCodes('primary'), display: 'inline' }}>
+                    Resend Code In{' '}
+                    <Typography sx={{ color: getColorCodes('primary'), display: 'inline', fontWeight: 600 }}>
                       {Math.ceil(showTimer / 1000)}s
                     </Typography>
                   </Typography>

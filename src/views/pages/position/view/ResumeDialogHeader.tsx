@@ -641,7 +641,14 @@ const ResumeDialogHeader = ({
                         }
                       }}
                       onDelete={() => removeAssigneeFromResumeHandler(contributorUser?._id)}
-                      label={uppercaseFirstLetters(getMaxTextLen(getFullName(contributorUser)))}
+                      label={
+                        <Link
+                          style={{ textDecoration: 'none', color: '#4c4e64de' }}
+                          href={`/users/view/${contributorUser?._id}/overview`}
+                        >
+                          {uppercaseFirstLetters(getMaxTextLen(getFullName(contributorUser)))}
+                        </Link>
+                      }
                       avatar={
                         contributorUser?.avatar ? (
                           <Avatar src={getImagePath(contributorUser?.avatar)} alt={getFullName(contributorUser)} />

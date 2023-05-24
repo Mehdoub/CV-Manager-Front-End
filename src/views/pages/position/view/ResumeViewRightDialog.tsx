@@ -16,6 +16,7 @@ import {
 import { useDispatch } from 'react-redux'
 import { getFullName, getImagePath, getTimeText, toastError } from 'src/helpers/functions'
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble'
+import Link from 'next/link'
 
 const useOutsideBox = (ref: any, setState: any, setMsgRow: any) => {
   useEffect(() => {
@@ -147,15 +148,20 @@ const ResumeViewRightDialog = ({ cahtExample }: any) => {
                           justifyContent: 'space-between'
                         }}
                       >
-                        <Typography
-                          sx={{
-                            fontSize: '0.875rem',
-                            p: theme => theme.spacing(3, 4),
-                            color: 'primary.main'
-                          }}
+                        <Link
+                          style={{ textDecoration: 'none' }}
+                          href={`/users/view/${comment?.created_by?._id}/overview`}
                         >
-                          {getFullName(comment?.created_by)}
-                        </Typography>
+                          <Typography
+                            sx={{
+                              fontSize: '0.875rem',
+                              p: theme => theme.spacing(3, 4),
+                              color: 'primary.main'
+                            }}
+                          >
+                            {getFullName(comment?.created_by)}
+                          </Typography>
+                        </Link>
                         <BootstrapTooltip placement='top' title={dateString}>
                           <Typography variant='caption' sx={{ color: 'text.disabled', mr: 2 }}>
                             {dateText}
