@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ApiRequest from "src/helpers/ApiRequest";
+import { clearStatesAction, createExtraReducers, sliceInitialStateWithStatus } from "src/helpers/functions";
 
 
 export const checkUsername: any = createAsyncThunk('checkUsername', async (username: string, { rejectWithValue }) => {
@@ -45,5 +46,57 @@ const usernameCheckSlice = createSlice({
   }
 })
 
+
+export const sendVerificationCode: any = createAsyncThunk('sendVerificationCode', async (data: any, { rejectWithValue }) => {
+  try {
+    const response = await ApiRequest.builder().auth().request('post', `auth/send-verify`)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const verificationCodeSendSlice = createSlice({
+  name: 'verificationCodeSend',
+  initialState: sliceInitialStateWithStatus,
+  reducers: {
+    clearVerificationCodeSend: (state) => {
+      clearStatesAction(state)
+    }
+  },
+  extraReducers: (builder) => {
+    createExtraReducers(builder, sendVerificationCode)
+  }
+})
+
+
+export const checkVerificationCode: any = createAsyncThunk('checkVerificationCode', async (verificationCode: string, { rejectWithValue }) => {
+  try {
+    const response = await ApiRequest.builder().auth().request('post', `auth/check-verify`, { 'verify_code': verificationCode })
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const verificationCodeCheckSlice = createSlice({
+  name: 'verificationCodeCheck',
+  initialState: sliceInitialStateWithStatus,
+  reducers: {
+    clearVerificationCodeCheck: (state) => {
+      clearStatesAction(state)
+    }
+  },
+  extraReducers: (builder) => {
+    createExtraReducers(builder, checkVerificationCode)
+  }
+})
+
 export const { clearUsernameCheck } = usernameCheckSlice.actions
+export const { clearVerificationCodeSend } = verificationCodeSendSlice.actions
+export const { clearVerificationCodeCheck } = verificationCodeCheckSlice.actions
 export const usernameCheckReducer = usernameCheckSlice.reducer
+export const verificationCodeSendReducer = verificationCodeSendSlice.reducer
+export const verificationCodeCheckReducer = verificationCodeCheckSlice.reducer

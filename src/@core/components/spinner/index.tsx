@@ -13,8 +13,11 @@ const FallbackSpinner = ({ sx }: { sx?: BoxProps['sx'] }) => {
   const router = useRouter()
 
   useEffect(() => {
-    if (auth?.user?._id && ['/login', '/register'].includes(router.pathname) && router?.query?.returnUrl) {
-      router.replace(router?.query?.returnUrl as string)
+    if (auth?.user?._id && ['/login', '/register', ''].includes(router.pathname)) {
+      let targetUrl = '/home'
+      if (router?.query?.returnUrl) targetUrl = router?.query?.returnUrl as string
+      else if (router.pathname == '/register') targetUrl = '/verification'
+      router.replace(targetUrl)
     }
   }, [router])
 

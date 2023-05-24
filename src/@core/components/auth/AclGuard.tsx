@@ -43,7 +43,7 @@ const AclGuard = (props: AclGuardProps) => {
     return <>{children}</>
   }
 
-  if (auth?.user?._id && auth?.user?.is_banned) {
+  if (auth?.user?._id && !auth?.user?.mobile_verified_at) {
     return (
       <UserLayout>
         <Verification />

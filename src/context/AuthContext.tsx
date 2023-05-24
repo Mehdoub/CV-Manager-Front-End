@@ -30,7 +30,8 @@ const defaultProvider: AuthValuesType = {
   setLoading: () => Boolean,
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
-  register: () => Promise.resolve()
+  register: () => Promise.resolve(),
+  getUserData: () => Promise.resolve()
 }
 
 const AuthContext = createContext(defaultProvider)
@@ -226,7 +227,8 @@ const AuthProvider = ({ children }: Props) => {
     setLoading,
     login: handleLogin,
     logout: handleLogout,
-    register: handleRegister
+    register: handleRegister,
+    getUserData
   }
 
   return <AuthContext.Provider value={values}>{children}</AuthContext.Provider>

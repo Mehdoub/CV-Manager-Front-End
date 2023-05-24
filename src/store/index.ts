@@ -36,7 +36,7 @@ import {
 } from './project'
 import { userBanReducer, userChangePasswordReducer, userEditReducer, userLoginHistoryReducer, userPermitReducer, userReducer, usersListReducer } from './user'
 import successHandler from 'src/middlewares/successHandler'
-import { usernameCheckReducer } from './auth'
+import { usernameCheckReducer, verificationCodeCheckReducer, verificationCodeSendReducer } from './auth'
 import errorHandler from 'src/middlewares/errorHandler'
 import { positionActiveReducer, positionCreateReducer, positionDeactiveReducer, positionEditReducer, positionManagerAddReducer, positionManagerRemoveReducer, positionManagersReducer, positionReducer, positionResumesReducer, positionsListReducer } from './position'
 import { constantsReducer } from './common'
@@ -99,6 +99,8 @@ export const store = configureStore({
     userEdit: userEditReducer,
 
     usernameCheck: usernameCheckReducer,
+    verificationCodeSend: verificationCodeSendReducer,
+    verificationCodeCheck: verificationCodeCheckReducer,
 
     constants: constantsReducer,
 
