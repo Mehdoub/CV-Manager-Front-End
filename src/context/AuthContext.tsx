@@ -155,7 +155,7 @@ const AuthProvider = ({ children }: Props) => {
   const getUserData = async () => {
     if (localStorage.getItem('accessToken')) {
       try {
-        const result = await ApiRequest.builder().auth().request('get', 'users/get-me')
+        const result = await ApiRequest.builder().auth().request('get', 'auth/get-me')
 
         const userData = { ...result.data.data[0] }
 

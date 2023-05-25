@@ -110,7 +110,7 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
         const getMe = async () => {
           ApiRequest.builder()
             .auth()
-            .request('get', 'users/get-me')
+            .request('get', 'auth/get-me')
             .then(res => {
               auth.setUser(res?.data?.data[0])
             })
