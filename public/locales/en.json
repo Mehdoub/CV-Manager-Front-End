@@ -1,28 +1,29 @@
 {
-    "sidebar": {
-      "home": "Home",
-      "users": "Users",
-      "companies": "Companies",
-      "projects": "Projects",
-      "positions": "Positions",
-      "roles_permissions": "Roles & Permissions",
-      "roles": "Roles",
-      "permissions": "Permissions"
+  "sidebar": {
+    "home": "Home",
+    "users": "Users",
+    "companies": "Companies",
+    "projects": "Projects",
+    "positions": "Positions",
+    "roles_permissions": "Roles & Permissions",
+    "resumes": "Resumes",
+    "roles": "Roles",
+    "permissions": "Permissions"
+  },
+  "companies": {
+    "list": {
+      "company": "Company",
+      "managers": "Managers"
     },
-    "companies": {
-      "list": {
-        "company": "Company",
-        "managers": "Managers"
-      },
-      "view": {
-        "details": "Details",
-        "edit": "Edit",
-        "suspend": "Suspend",
-        "activate": "Activate"
-      }
-    },
-    "home": {
-      "title": "Welcome To The CVManager App! 🚀",
-      "description": " Here you can manage the resumes you received by creating companies, related projects, add and open positions, set meeting and etc. Please make sure to read our Please make sure to read our Template Documentation to understand where to go from here and how to use our template."
+    "view": {
+      "details": "Details",
+      "edit": "Edit",
+      "suspend": "Suspend",
+      "activate": "Activate"
     }
+  },
+  "home": {
+    "title": "Welcome To The CVManager App! 🚀",
+    "description": " Here you can manage the resumes you received by creating companies, related projects, add and open positions, set meeting and etc. Please make sure to read our Please make sure to read our Template Documentation to understand where to go from here and how to use our template."
+  }
 }

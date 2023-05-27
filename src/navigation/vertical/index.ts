@@ -6,6 +6,7 @@ import BusinessIcon from '@mui/icons-material/Business';
 import FolderCopyIcon from '@mui/icons-material/FolderCopy';
 import WorkIcon from '@mui/icons-material/Work';
 import SecurityIcon from '@mui/icons-material/Security';
+import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
 
 const navigation = (): any => {
   return [
@@ -39,6 +40,11 @@ const navigation = (): any => {
     //   path: '/roles',
     //   icon: SecurityIcon,
     // },
+    {
+      title: 'sidebar.resumes',
+      path: '/resumes',
+      icon: AssignmentIndIcon,
+    },
   ]
 }
 

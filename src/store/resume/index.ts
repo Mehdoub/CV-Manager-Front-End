@@ -413,6 +413,26 @@ const resumeAddCommentSlice = createSlice({
 })
 
 
+export const getResumes: any = createAsyncThunk('getResumes', async (_, { rejectWithValue }) => {
+  try {
+    const response = await ApiRequest.builder().auth().request('get', `resumes`)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const resumesListSlice = createSlice({
+  name: 'resumesList',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    createExtraReducers(builder, getResumes, true, true)
+  }
+})
+
+
 export const { clearCreateResume } = resumeCreateSlice.actions
 export const { clearEditResume } = resumeEditSlice.actions
 export const { clearResumeAddFiles } = resumeAddFilesSlice.actions
@@ -443,6 +463,7 @@ export const resumeAddAssigneeReducer = resumeAddAssigneeSlice.reducer
 export const resumeRemoveAssigneeReducer = resumeRemoveAssigneeSlice.reducer
 export const resumeEndWorkReducer = resumeEndWorkSlice.reducer
 export const resumeAddCommentReducer = resumeAddCommentSlice.reducer
+export const resumesListReducer = resumesListSlice.reducer
 
 export const selectResume = (state: any) => state.resume
 export const selectResumeAddComment = (state: any) => state.resumeAddComment

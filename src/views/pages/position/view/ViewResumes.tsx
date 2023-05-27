@@ -10,7 +10,7 @@ import { getPositionResumes } from 'src/store/position'
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
-import { clearResumeUpdateStatus, getResume, updateResumeStatus } from 'src/store/resume'
+import { clearResumeUpdateStatus, getResume, getResumes, updateResumeStatus } from 'src/store/resume'
 
 export const resumesStates: any = {
   pending: { title: 'pending', color: 'warning' },
@@ -23,7 +23,11 @@ export const resumesStates: any = {
   end_cooperation: { title: 'end cooperation', color: 'secondary' }
 }
 
-const ViewResumes = () => {
+interface ViewResumesProps {
+  allResumes?: boolean
+}
+
+const ViewResumes = ({ allResumes = false }: ViewResumesProps) => {
   const [open, setOpen] = useState<boolean>(false)
   // const scrollContainer = useScrollContainer()
 
@@ -64,7 +68,8 @@ const ViewResumes = () => {
   }, [resumeStateUpdateStatus])
 
   useEffect(() => {
-    dispatch(getPositionResumes(positionId))
+    if (allResumes) dispatch(getResumes())
+    else dispatch(getPositionResumes(positionId))
   }, [])
 
   const dragEndHandler = (result: any) => {
