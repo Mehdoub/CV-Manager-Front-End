@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app'
 import { deleteToken, getMessaging, getToken, onMessage } from 'firebase/messaging'
 import { toastError } from 'src/helpers/functions';
+import showNotificationToast from './showNotificationToast';
 
 export default class FirebaseCloudMessaging {
   private firebaseConfig: any
@@ -43,17 +44,13 @@ export default class FirebaseCloudMessaging {
     });
   }
 
-  public onMessageListener = () =>
-    new Promise((resolve) => {
-      onMessage(this.messaging, (payload) => {
-        resolve(payload);
-      });
-    });
+  public onMessageListener = () => onMessage(this.messaging, (payload) => {
+    showNotificationToast(payload?.notification?.title as string, payload?.notification?.body as string)
+  })
 
   public deleteRegistrationToken = async (setClientToken: (token: string) => void) => {
     deleteToken(this.messaging).then(() => setClientToken('')).catch(() => {
       if (Notification.permission == 'granted') toastError('An error occurred while Deleting FCM Registration Token.');
     })
-
   }
 }

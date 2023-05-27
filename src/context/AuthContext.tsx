@@ -52,46 +52,11 @@ const AuthProvider = ({ children }: Props) => {
 
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
-      const fcm = FirebaseCloudMessaging.builder()
       setLoading(true)
       getUserData()
-      fcm &&
-        fcm
-          ?.onMessageListener()
-          .then((payload: any) => {
-            toast(
-              t => (
-                <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                    <CustomAvatar
-                      color='primary'
-                      skin='light'
-                      alt='Notification Icon'
-                      sx={{ mr: 3, width: 40, height: 40 }}
-                    >
-                      <Icon icon='ion:notifcations' fontSize={30} />
-                    </CustomAvatar>
-                    <div>
-                      <Typography sx={{ fontWeight: 500 }}>{payload?.notification?.title}</Typography>
-                      <Typography variant='caption'>{payload?.notification?.body}</Typography>
-                    </div>
-                  </Box>
-                  <IconButton onClick={() => toast.dismiss(t.id)}>
-                    <CloseIcon />
-                  </IconButton>
-                </Box>
-              ),
-              {
-                duration: 6000,
-                style: {
-                  minWidth: '300px'
-                }
-              }
-            )
-          })
-          .catch(err => toastError('notification show failed!'))
+      const fcm = FirebaseCloudMessaging.builder()
+      fcm && fcm?.onMessageListener()
     }
-
     initAuth()
   }, [])
 
