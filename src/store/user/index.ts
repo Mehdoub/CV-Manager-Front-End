@@ -122,7 +122,7 @@ export interface ChangePasswordParams {
 }
 export const changePassword: any = createAsyncThunk('changePassword', async (data: ChangePasswordParams, { rejectWithValue }) => {
   try {
-    const response = await ApiRequest.builder().auth().request('patch', 'users/change-password', data)
+    const response = await ApiRequest.builder().auth().request('patch', 'auth/change-password', data)
 
     return response
   } catch (err: any) {

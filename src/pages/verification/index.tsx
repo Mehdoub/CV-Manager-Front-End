@@ -97,6 +97,7 @@ const Verification = () => {
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors }
   } = useForm({ defaultValues })
 
@@ -133,17 +134,35 @@ const Verification = () => {
 
   // ** Vars
 
-  const handleChange = (event: ChangeEvent, onChange: (...event: any[]) => void) => {
+  const handleChange = (event: any, onChange: (...event: any[]) => void) => {
     if (!isBackspace) {
-      onChange(event)
       setInputBorderColor('')
-
-      // @ts-ignore
       const form = event.target.form
-      const index = [...form].indexOf(event.target)
-      if (form[index]?.value && form[index]?.value?.length) {
-        form?.elements[index + 1]?.focus()
+      const eventVal = form[0].value.replace(',', '').trim()
+      console.log('eventVal: ', eventVal)
+      console.log('form: ', event?.target?.value?.replace(',', '').trim())
+      if (eventVal.length == 5 && event?.target?.value?.replace(',', '').trim() == eventVal) {
+        for (let i = 1; i <= 5; i++) {
+          const field = 'val' + i
+          const value = eventVal.substring(i - 1, i)
+          console.log('field: ', field)
+          console.log('val: ', value)
+          event.target.form[i - 1].value = value
+          setValue(field, value)
+        }
+        // form.elements[4].focus()
+        event.target.value = event.target.value.trim().substring(0, 1)
+        onChange(event)
+      } else {
+        event.target.value = event.target.value.trim().substring(0, 1)
+        onChange(event)
+        // @ts-ignore
+        const index = [...form].indexOf(event.target)
+        if (form[index]?.value && form[index]?.value?.length) {
+          form?.elements[index + 1]?.focus()
+        }
       }
+
       let data: any = []
       for (let i = 0; i <= 5; i++) {
         if (form[i]?.value && form[i]?.value?.length) data.push(form[i]?.value?.trim())
@@ -180,7 +199,6 @@ const Verification = () => {
         render={({ field: { value, onChange } }) => (
           <Box
             type='tel'
-            maxLength={1}
             value={value}
             autoFocus={index === 0}
             component={CleaveInput}
