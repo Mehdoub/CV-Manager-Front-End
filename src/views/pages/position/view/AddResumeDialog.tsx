@@ -149,7 +149,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   const [resumePosition, setResumePosition] = useState<any>({})
   const [positionErr, setPositionErr] = useState<string>('')
   const [resumeProject, setResumeProject] = useState<any>({})
-  const [isSalaryActive, setIsSalaryActive] = useState<boolean>(true)
+  const [isSalaryActive, setIsSalaryActive] = useState<boolean>(false)
 
   const { data: provinceCities } = useSelector((state: any) => state.citiesByProvince)
   const { data: provinces } = useSelector((state: any) => state.provinces)
@@ -977,7 +977,8 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         control={<Switch checked={isSalaryActive} onChange={handleChangeisSalaryActive} />}
                       />
                     </Grid>
-                    <Grow in={isSalaryActive}>{salaryRangeComponent}</Grow>
+                    {isSalaryActive && <Grow in={isSalaryActive}>{salaryRangeComponent}</Grow>}
+                    {/* <Grow in={isSalaryActive}>{salaryRangeComponent}</Grow> */}
                     <Grid item xs={12} mt={5}>
                       <Fragment>
                         <div

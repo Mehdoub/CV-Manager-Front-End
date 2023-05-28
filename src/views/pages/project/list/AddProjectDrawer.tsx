@@ -71,10 +71,19 @@ const Header = styled(Box)<BoxProps>(({ theme }) => ({
   backgroundColor: theme.palette.background.default
 }))
 
-const schema = yup.object().shape({
-  name: yup.string().min(3).required(),
-  description: yup.string().min(10).max(100).required()
-})
+const schema = yup.object().shape(
+  {
+    name: yup.string().min(3).required(),
+    description: yup.string().when('description', (val, schema) => {
+      if (val?.length > 0) {
+        return yup.string().label('Description').min(10).max(100).required()
+      } else {
+        return yup.string().notRequired()
+      }
+    })
+  },
+  [['description', 'description']]
+)
 
 export interface ProjectFormData {
   name: string

@@ -83,6 +83,7 @@ const PositionViewRight: any = ({ tab, positionId }: Props) => {
   const positionManagerRemoveStore = useSelector((state: any) => state.positionManagerRemove)
 
   const { data: constants } = useSelector((state: any) => state.constants)
+  const { data: provinces } = useSelector((state: any) => state.provinces)
 
   const handleChange = (event: SyntheticEvent, value: string) => {
     setIsLoading(true)
@@ -166,7 +167,7 @@ const PositionViewRight: any = ({ tab, positionId }: Props) => {
           )}
         </Box>
       </TabContext>
-      {constants?.system ? (
+      {constants?.system && provinces?.length ? (
         <AddResumeDialog open={openAddResumeDialog} handleClose={handleCloseAddResumeDialog} />
       ) : null}
     </>

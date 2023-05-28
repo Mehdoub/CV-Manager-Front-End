@@ -66,6 +66,8 @@ import { Icon } from '@iconify/react'
 import Language from 'src/helpers/Language'
 
 import CustomToast from 'src/views/common/CustomToast'
+import ErrorBoundary from './ErrorBoundary'
+import Error500 from './500'
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {
@@ -220,11 +222,13 @@ const App = (props: ExtendedAppProps) => {
                 return (
                   <ThemeComponent settings={settings}>
                     <WindowWrapper>
-                      <Guard authGuard={authGuard} guestGuard={guestGuard}>
-                        <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
-                          {getLayout(<Component {...pageProps} />)}
-                        </AclGuard>
-                      </Guard>
+                      <ErrorBoundary fallback={<Error500 />}>
+                        <Guard authGuard={authGuard} guestGuard={guestGuard}>
+                          <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
+                            {getLayout(<Component {...pageProps} />)}
+                          </AclGuard>
+                        </Guard>
+                      </ErrorBoundary>
                     </WindowWrapper>
                     <ReactHotToast>
                       <Toaster

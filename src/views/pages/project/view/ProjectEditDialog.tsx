@@ -34,10 +34,19 @@ import { clearProjectEdit, editProject, getProject, getProjects } from 'src/stor
 import { getImagePath } from 'src/helpers/functions'
 import { getCompanies } from 'src/store/company'
 
-const schema = yup.object().shape({
-  name: yup.string().label('Name').required().min(3),
-  description: yup.string().label('Description').min(10).max(100).required()
-})
+const schema = yup.object().shape(
+  {
+    name: yup.string().label('Name').required().min(3),
+    description: yup.string().when('description', (val, schema) => {
+      if (val?.length > 0) {
+        return yup.string().label('Description').min(10).max(100).required()
+      } else {
+        return yup.string().notRequired()
+      }
+    })
+  },
+  [['description', 'description']]
+)
 
 export interface ProjectEditData extends ProjectFormData {
   projectId?: string

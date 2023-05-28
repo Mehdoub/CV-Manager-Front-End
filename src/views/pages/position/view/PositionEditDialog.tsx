@@ -79,11 +79,20 @@ const PositionEditDialog = (props: Props) => {
     }
   } = useSelector((state: any) => state.constants)
 
-  const schema = yup.object().shape({
-    title: yup.string().label('Title').required().min(3),
-    level: yup.string().label('Level').oneOf(levelOptions),
-    description: yup.string().label('Description').min(10).max(100).required()
-  })
+  const schema = yup.object().shape(
+    {
+      title: yup.string().label('Title').required().min(3),
+      level: yup.string().label('Level').oneOf(levelOptions),
+      description: yup.string().when('description', (val, schema) => {
+        if (val?.length > 0) {
+          return yup.string().label('Description').min(10).max(100).required()
+        } else {
+          return yup.string().notRequired()
+        }
+      })
+    },
+    [['description', 'description']]
+  )
 
   useEffect(() => {
     if (positionDataFromList?.id?.length > 0) setPosition(positionDataFromList)

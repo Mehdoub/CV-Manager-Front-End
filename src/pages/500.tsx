@@ -36,7 +36,10 @@ const Img = styled('img')(({ theme }) => ({
   }
 }))
 
-const Error500 = () => {
+const Error500 = ({ clearError = undefined }: { clearError?: any }) => {
+  const handleHomeClick = () => {
+    window.location.href = '/home'
+  }
   return (
     <Box className='content-center'>
       <Box sx={{ p: 5, display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>
@@ -48,9 +51,10 @@ const Error500 = () => {
             Internal server error 👨🏻‍💻
           </Typography>
           <Typography variant='body2'>Oops, something went wrong!</Typography>
+          <Typography variant='body2'>We will check this soon</Typography>
         </BoxWrapper>
         <Img alt='error-illustration' src='/images/pages/500.png' />
-        <Button href='/' component={Link} variant='contained' sx={{ px: 5.5 }}>
+        <Button variant='contained' sx={{ px: 5.5 }} onClick={handleHomeClick}>
           Back to Home
         </Button>
       </Box>

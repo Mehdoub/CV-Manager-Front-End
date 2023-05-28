@@ -125,12 +125,21 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
 
   const projectId = dispatchProjectPositionsList && project?.id ? project?.id : null
 
-  const schema = yup.object().shape({
-    title: yup.string().label('Title').min(3).max(50).required(),
-    // project: yup.string().label('Project').optional(),
-    level: yup.string().label('Level').oneOf(levelOptions),
-    description: yup.string().label('Description').min(10).max(100).required()
-  })
+  const schema = yup.object().shape(
+    {
+      title: yup.string().label('Title').min(3).max(50).required(),
+      // project: yup.string().label('Project').optional(),
+      level: yup.string().label('Level').oneOf(levelOptions),
+      description: yup.string().when('description', (val, schema) => {
+        if (val?.length > 0) {
+          return yup.string().label('Description').min(10).max(100).required()
+        } else {
+          return yup.string().notRequired()
+        }
+      })
+    },
+    [['description', 'description']]
+  )
 
   const {
     reset,

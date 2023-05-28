@@ -267,6 +267,11 @@ const ResumeDialogHeader = ({
     dispatch(createTag({ name }))
   }
 
+  const searchUsers = (value: any) => {
+    const query = value?.target?.value
+    if (query?.length > 0) dispatch(getUsers({ query }))
+  }
+
   return (
     <>
       <IconButton size='small' onClick={closeToggle} sx={{ position: 'absolute', right: '0.05rem', top: '0.05rem' }}>
@@ -701,7 +706,12 @@ const ResumeDialogHeader = ({
                     getOptionLabel={user => getFullName(user)}
                     onChange={(e: any, newValue: any) => addAssigneeToResumeHandler(newValue?._id)}
                     renderInput={params => (
-                      <CustomTextField {...params} label='Contributor' placeholder='Search Users ...' />
+                      <CustomTextField
+                        {...params}
+                        label='Contributor'
+                        placeholder='Search Users ...'
+                        onChange={searchUsers}
+                      />
                     )}
                     renderOption={(props, user) => (
                       <ListItem {...props}>

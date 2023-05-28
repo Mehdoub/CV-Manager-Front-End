@@ -5,7 +5,6 @@ import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import Translations from 'src/layouts/components/Translations'
-import Icon from 'src/@core/components/icon'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 import AddPositionDrawer from 'src/views/pages/position/list/AddPositionDrawer'
 import { useEffect, useState } from 'react'
@@ -27,6 +26,7 @@ const Home = () => {
   const toggleAddResumeDialog = () => setAddResumeOpen(!addResumeOpen)
 
   const { data: constants } = useSelector((state: any) => state.constants)
+  const { data: provinces } = useSelector((state: any) => state.provinces)
 
   useEffect(() => {
     if (isSpeedDialChecked === false) {
@@ -108,7 +108,7 @@ const Home = () => {
           <AddCompanyDrawer open={addCompanyOpen} toggle={toggleAddCompanyDrawer} />
           <SidebarAddProject open={addProjectOpen} toggle={toggleAddProjectDrawer} />
           <AddPositionDrawer open={addPositionOpen} toggle={toggleAddPositionDrawer} />
-          <AddResumeDialog open={addResumeOpen} handleClose={toggleAddResumeDialog} />
+          {provinces?.length && <AddResumeDialog open={addResumeOpen} handleClose={toggleAddResumeDialog} />}
         </>
       )}
     </>

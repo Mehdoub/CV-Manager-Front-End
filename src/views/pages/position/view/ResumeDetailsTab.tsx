@@ -23,6 +23,7 @@ import {
   CircularProgress,
   FormControlLabel,
   FormHelperText,
+  Grow,
   IconButton,
   Link,
   List,
@@ -120,19 +121,19 @@ const ResumeDetailsTab = () => {
   const [avatar, setAvatar] = useState<File[]>([])
   const [resumeFiles, setResumeFiles] = useState<File[]>([])
   const [gender, setGender] = useState<string>('')
-  const [salaryRange, setSalaryRange] = useState<any>([9000000, 20000000] || '')
-  const [workCities, setWorkCities] = useState([])
-  const [residanceCities, setResidanceCities] = useState([])
-  const [fillCities, setFillCities] = useState('')
-  const [resumePosition, setResumePosition] = useState<any>({})
-  const [positionErr, setPositionErr] = useState<string>('')
+  const [salaryRange, setSalaryRange] = useState<any>([9000000, 20000000])
+  // const [workCities, setWorkCities] = useState([])
+  // const [residanceCities, setResidanceCities] = useState([])
+  // const [fillCities, setFillCities] = useState('')
+  // const [resumePosition, setResumePosition] = useState<any>({})
+  // const [positionErr, setPositionErr] = useState<string>('')
 
   const { data: resume } = useSelector((state: any) => state.resume)
-  const { data: provinceCities } = useSelector((state: any) => state.citiesByProvince)
-  const { data: provinces } = useSelector((state: any) => state.provinces)
-  const { data: positions, loading: loadingSearchPositions } = useSelector((state: any) => state.projectPositions)
+  // const { data: provinceCities } = useSelector((state: any) => state.citiesByProvince)
+  // const { data: provinces } = useSelector((state: any) => state.provinces)
+  // const { data: positions, loading: loadingSearchPositions } = useSelector((state: any) => state.projectPositions)
   const { status: statusResumeEdit, loading: loadingResumeEdit } = useSelector((state: any) => state.resumeEdit)
-  const { data: projects, loading: loadingSearchProjects } = useSelector((state: any) => state.projectsList)
+  // const { data: projects, loading: loadingSearchProjects } = useSelector((state: any) => state.projectsList)
   const {
     data: {
       system: {
@@ -154,22 +155,22 @@ const ResumeDetailsTab = () => {
     query: { positionId }
   } = useRouter()
 
-  const provincesValues = provinces.length > 0 ? provinces.map((province: any) => province._id) : []
-  const workCitiesValues = workCities.length > 0 ? workCities.map((workCity: any) => workCity._id) : []
-  const residanceCitiesValues =
-    residanceCities.length > 0 ? residanceCities.map((residanceCity: any) => residanceCity._id) : []
+  // const provincesValues = provinces.length > 0 ? provinces.map((province: any) => province._id) : []
+  // const workCitiesValues = workCities.length > 0 ? workCities.map((workCity: any) => workCity._id) : []
+  // const residanceCitiesValues =
+  //   residanceCities.length > 0 ? residanceCities.map((residanceCity: any) => residanceCity._id) : []
 
-  useEffect(() => {
-    if (provinceCities) {
-      if (fillCities == 'work') {
-        setWorkCities(provinceCities)
-        setFillCities('')
-      } else if (fillCities == 'residance') {
-        setResidanceCities(provinceCities)
-        setFillCities('')
-      }
-    }
-  }, [provinceCities])
+  // useEffect(() => {
+  //   if (provinceCities) {
+  //     if (fillCities == 'work') {
+  //       setWorkCities(provinceCities)
+  //       setFillCities('')
+  //     } else if (fillCities == 'residance') {
+  //       setResidanceCities(provinceCities)
+  //       setFillCities('')
+  //     }
+  //   }
+  // }, [provinceCities])
 
   const dispatch = useDispatch()
 
@@ -319,6 +320,7 @@ const ResumeDetailsTab = () => {
     // setValue('residence_city', resume?.residence_city)
     setSalaryRange([resume?.min_salary, resume?.max_salary])
     setGender(resume?.gender)
+    setIsSalaryActive(resume?.min_salary ? true : false)
   }
 
   const submitHandler = (data: any) => {
@@ -334,10 +336,30 @@ const ResumeDetailsTab = () => {
     dispatch(editResume({ ...data, resumeId: resume?._id }))
   }
 
-  const handleCities = (provinceId: string, field: string) => {
-    setFillCities(field)
-    dispatch(getCitiesByProvince(provinceId))
-  }
+  // const handleCities = (provinceId: string, field: string) => {
+  //   setFillCities(field)
+  //   dispatch(getCitiesByProvince(provinceId))
+  // }
+
+  const salaryRangeComponent = (
+    <Grid item xs={12} px={7}>
+      <InputLabel>Requested Salary Range (Toman)</InputLabel>
+      <Slider
+        sx={{ mt: 4 }}
+        defaultValue={[9000000, 20000000]}
+        value={salaryRange}
+        onChange={(e, value) => setSalaryRange(value)}
+        valueLabelDisplay='auto'
+        aria-labelledby='range-slider'
+        min={8000000}
+        max={80000000}
+        step={1000000}
+        valueLabelFormat={(value: any) => value.format()}
+        // disabled={!isSalaryActive}
+      />
+      <Typography>{`${salaryRange[0]?.format() ?? 0} - ${salaryRange[1]?.format() ?? 0} Toman`}</Typography>
+    </Grid>
+  )
 
   return (
     <Grid
@@ -813,7 +835,14 @@ const ResumeDetailsTab = () => {
                     )}
                   </FormControl>
                 </Grid> */}
-                <Grid item xs={12} mt={5} px={7}>
+                <Grid item xs={12} mt={2} px={7}>
+                  <FormControlLabel
+                    label='Declare Requested Salary Range'
+                    control={<Switch checked={isSalaryActive} onChange={handleChangeisSalaryActive} />}
+                  />
+                </Grid>
+                {isSalaryActive && <Grow in={isSalaryActive}>{salaryRangeComponent}</Grow>}
+                {/* <Grid item xs={12} mt={5} px={7}>
                   <FormControlLabel
                     label='Active'
                     control={<Switch checked={isSalaryActive} onChange={handleChangeisSalaryActive} />}
@@ -832,8 +861,10 @@ const ResumeDetailsTab = () => {
                     valueLabelFormat={(value: any) => value.format()}
                     disabled={!isSalaryActive}
                   />
-                  <Typography>{`${salaryRange[0].format()} - ${salaryRange[1].format()} Toman`}</Typography>
-                </Grid>
+                  <Typography>{`${salaryRange[0] && salaryRange[0]?.format()} - ${
+                    salaryRange[0] && salaryRange[1]?.format()
+                  } Toman`}</Typography>
+                </Grid> */}
                 <Grid item xs={12} mt={3}>
                   <Button type='submit' variant='contained' sx={{ mr: 3, mt: 2 }} disabled={loadingResumeEdit}>
                     Save Changes

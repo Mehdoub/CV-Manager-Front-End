@@ -20,7 +20,7 @@ export const createResume: any = createAsyncThunk('createResume', async (data: R
         .request('patch', `resumes/${newResumeId}/avatar`, { avatar: resumeAvatar })
     }
 
-    if (resumeFiles.length && newResumeId) {
+    if (resumeFiles?.length && newResumeId) {
       for (const resumeFile of resumeFiles) {
         await ApiRequest.builder()
           .auth()
