@@ -654,10 +654,9 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                             <CustomTextField
                               value={value}
                               fullWidth
-                              type='email'
                               label='Email'
                               placeholder='john.doe@example.com'
-                              onChange={onChange}
+                              onChange={(e: any) => setValue('email', e.target.value.trim())}
                               onBlur={onBlur}
                               error={Boolean(errors.email)}
                             />

@@ -126,10 +126,17 @@ const Verification = () => {
       setTimeout(() => {
         auth.getUserData()
         setInputBorderColor('')
-        dispatch(clearVerificationCodeCheck())
+        // dispatch(clearVerificationCodeCheck())
         router.push('/home')
       }, 1000)
-    } else if (checkVerificationCodeErrors?.data?.message) setInputBorderColor(`${getColorCodes('error')} !important`)
+    } else if (checkVerificationCodeErrors?.data?.message) {
+      setInputBorderColor(`${getColorCodes('error')} !important`)
+      setTimeout(() => {
+        for (let i = 1; i <= 5; i++) {
+          setValue(`val${i}`, '')
+        }
+      }, 1000)
+    }
   }, [checkVerificationCodeStatus, checkVerificationCodeErrors])
 
   // ** Vars
@@ -138,19 +145,17 @@ const Verification = () => {
     if (!isBackspace) {
       setInputBorderColor('')
       const form = event.target.form
-      const eventVal = form[0].value.replace(',', '').trim()
-      console.log('eventVal: ', eventVal)
-      console.log('form: ', event?.target?.value?.replace(',', '').trim())
-      if (eventVal.length == 5 && event?.target?.value?.replace(',', '').trim() == eventVal) {
+      const eventVal = event.target.value.replace(',', '').trim()
+      if (
+        eventVal.length == 5
+        // && event?.target?.value?.replace(',', '').trim() == eventVal
+      ) {
         for (let i = 1; i <= 5; i++) {
           const field = 'val' + i
           const value = eventVal.substring(i - 1, i)
-          console.log('field: ', field)
-          console.log('val: ', value)
           event.target.form[i - 1].value = value
           setValue(field, value)
         }
-        // form.elements[4].focus()
         event.target.value = event.target.value.trim().substring(0, 1)
         onChange(event)
       } else {
