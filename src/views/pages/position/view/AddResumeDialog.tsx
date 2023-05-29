@@ -143,7 +143,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   const [resumeFiles, setResumeFiles] = useState<File[]>([])
   const [gender, setGender] = useState<string>('')
   const [salaryRange, setSalaryRange] = useState<any>([9000000, 20000000] || '')
-  const [workCities, setWorkCities] = useState([])
+  // const [workCities, setWorkCities] = useState([])
   const [residanceCities, setResidanceCities] = useState([])
   const [fillCities, setFillCities] = useState('')
   const [resumePosition, setResumePosition] = useState<any>({})
@@ -172,16 +172,17 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   } = useRouter()
 
   const provincesValues = provinces.length > 0 ? provinces.map((province: any) => province._id) : []
-  const workCitiesValues = workCities.length > 0 ? workCities.map((workCity: any) => workCity._id) : []
+  // const workCitiesValues = workCities.length > 0 ? workCities.map((workCity: any) => workCity._id) : []
   const residanceCitiesValues =
     residanceCities.length > 0 ? residanceCities.map((residanceCity: any) => residanceCity._id) : []
 
   useEffect(() => {
     if (provinceCities) {
-      if (fillCities == 'work') {
-        setWorkCities(provinceCities)
-        setFillCities('')
-      } else if (fillCities == 'residance') {
+      // if (fillCities == 'work') {
+      //   setWorkCities(provinceCities)
+      //   setFillCities('')
+      // } else
+      if (fillCities == 'residance') {
         setResidanceCities(provinceCities)
         setFillCities('')
       }
@@ -204,8 +205,8 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
           return yup.string().notRequired()
         }
       }),
-      work_province: yup.string().label('Work Province').oneOf(provincesValues).required(),
-      work_city: yup.string().label('Work City').oneOf(workCitiesValues).required(),
+      // work_province: yup.string().label('Work Province').oneOf(provincesValues).required(),
+      // work_city: yup.string().label('Work City').oneOf(workCitiesValues).required(),
       residence_province: yup.string().label('Residence Province').oneOf(provincesValues).required(),
       residence_city: yup.string().label('Residence City').oneOf(residanceCitiesValues).required(),
       birth_year: yup.number().label('Birth Year').oneOf(years).required(),
@@ -346,7 +347,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
       if (resumeFiles.length) {
         data = { ...data, resumeFiles }
       }
-      popObjectItemByKey(data, 'work_province')
+      // popObjectItemByKey(data, 'work_province')
       popObjectItemByKey(data, 'residence_province')
       if (isSalaryActive) {
         ;[data.min_salary, data.max_salary] = salaryRange
@@ -755,7 +756,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} mt={5} md={4}>
+                    <Grid item xs={12} mt={5} md={gender != 'women' ? 4 : 6}>
                       <FormControl fullWidth>
                         <Controller
                           name='education'
@@ -784,7 +785,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} mt={5} md={4}>
+                    <Grid item xs={12} mt={5} md={gender != 'women' ? 4 : 6}>
                       <FormControl fullWidth>
                         <Controller
                           name='marital_status'
@@ -813,8 +814,8 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} mt={5} md={4}>
-                      {gender != 'women' && (
+                    {gender != 'women' && (
+                      <Grid item xs={12} mt={5} md={4}>
                         <FormControl fullWidth>
                           <Controller
                             name='military_status'
@@ -844,9 +845,9 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                             </FormHelperText>
                           )}
                         </FormControl>
-                      )}
-                    </Grid>
-                    <Grid item xs={12} mt={5} md={6}>
+                      </Grid>
+                    )}
+                    {/* <Grid item xs={12} mt={5} md={6}>
                       <FormControl fullWidth>
                         <Controller
                           name='work_province'
@@ -906,7 +907,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                           <FormHelperText sx={{ color: 'error.main' }}>{errors.work_city.message}</FormHelperText>
                         )}
                       </FormControl>
-                    </Grid>
+                    </Grid> */}
                     <Grid item xs={12} mt={5} md={6}>
                       <FormControl fullWidth>
                         <Controller

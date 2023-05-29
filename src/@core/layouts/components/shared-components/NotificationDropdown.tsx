@@ -57,7 +57,7 @@ export type NotificationsType = {
 )
 interface Props {
   settings: Settings
-  notifications: NotificationsType[]
+  notifications?: NotificationsType[]
 }
 
 // ** Styled Menu component
@@ -125,7 +125,8 @@ const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: bool
 
 const NotificationDropdown = (props: Props) => {
   // ** Props
-  const { settings, notifications } = props
+  const { settings } = props
+  const notifications: any = []
 
   // ** States
   const [anchorEl, setAnchorEl] = useState<(EventTarget & Element) | null>(null)
@@ -192,38 +193,46 @@ const NotificationDropdown = (props: Props) => {
         >
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
             <Typography sx={{ cursor: 'text', fontWeight: 600 }}>Notifications</Typography>
-            <CustomChip
-              skin='light'
-              size='small'
-              color='primary'
-              label={`${notifications.length} New`}
-              sx={{ height: 20, fontSize: '0.75rem', fontWeight: 500, borderRadius: '10px' }}
-            />
+            {notifications?.length > 0 && (
+              <CustomChip
+                skin='light'
+                size='small'
+                color='primary'
+                label={`${notifications.length} New`}
+                sx={{ height: 20, fontSize: '0.75rem', fontWeight: 500, borderRadius: '10px' }}
+              />
+            )}
           </Box>
         </MenuItem>
         <ScrollWrapper hidden={hidden}>
-          {notifications.map((notification: NotificationsType, index: number) => (
-            <MenuItem key={index} onClick={handleDropdownClose}>
-              <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
-                {/* <RenderAvatar notification={notification} /> */}
-                <CustomAvatar
-                  color='primary'
-                  skin='light'
-                  alt='Notification Icon'
-                  sx={{ mr: 3, width: 40, height: 40 }}
-                >
-                  <NotificationsActiveIcon />
-                </CustomAvatar>
-                <Box sx={{ mx: 4, flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>
-                  <MenuItemTitle>{notification.title}</MenuItemTitle>
-                  <MenuItemSubtitle variant='body2'>{notification.subtitle}</MenuItemSubtitle>
+          {notifications?.length ? (
+            notifications.map((notification: NotificationsType, index: number) => (
+              <MenuItem key={index} onClick={handleDropdownClose}>
+                <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
+                  {/* <RenderAvatar notification={notification} /> */}
+                  <CustomAvatar
+                    color='primary'
+                    skin='light'
+                    alt='Notification Icon'
+                    sx={{ mr: 3, width: 40, height: 40 }}
+                  >
+                    <NotificationsActiveIcon />
+                  </CustomAvatar>
+                  <Box sx={{ mx: 4, flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>
+                    <MenuItemTitle>{notification.title}</MenuItemTitle>
+                    <MenuItemSubtitle variant='body2'>{notification.subtitle}</MenuItemSubtitle>
+                  </Box>
+                  <Typography variant='caption' sx={{ color: 'text.disabled' }}>
+                    {notification.meta}
+                  </Typography>
                 </Box>
-                <Typography variant='caption' sx={{ color: 'text.disabled' }}>
-                  {notification.meta}
-                </Typography>
-              </Box>
+              </MenuItem>
+            ))
+          ) : (
+            <MenuItem onClick={handleDropdownClose} sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Typography variant='body2'>There Is No Any New Notification To Show :)</Typography>
             </MenuItem>
-          ))}
+          )}
         </ScrollWrapper>
         <MenuItem
           disableRipple

@@ -40,6 +40,7 @@ import {
 } from 'src/store/auth'
 import { useSelector } from 'react-redux'
 import FallbackSpinner from 'src/@core/components/spinner'
+import { useSettings } from 'src/@core/hooks/useSettings'
 
 // ** Styled Components
 const Card = styled(MuiCard)<CardProps>(({ theme }) => ({
@@ -89,6 +90,7 @@ const Verification = () => {
   } = useSelector((state: any) => state.verificationCodeCheck)
 
   // ** Hooks
+  const { saveSettings, settings } = useSettings()
   const router = useRouter()
   const dispatch = useDispatch()
   const theme = useTheme()
@@ -126,7 +128,7 @@ const Verification = () => {
       setTimeout(() => {
         auth.getUserData()
         setInputBorderColor('')
-        // dispatch(clearVerificationCodeCheck())
+        saveSettings({ ...settings, navCollapsed: false })
         router.push('/home')
       }, 1000)
     } else if (checkVerificationCodeErrors?.data?.message) {

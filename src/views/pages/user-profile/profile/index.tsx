@@ -24,7 +24,6 @@ import EmailIcon from '@mui/icons-material/Email'
 
 const ProfileTab = ({ data }: { data: any }) => {
   const [about, setAbout] = useState<any>([])
-  const [contact, setContact] = useState<any>([])
   const { user } = useAuth()
 
   useEffect(() => {
@@ -33,10 +32,8 @@ const ProfileTab = ({ data }: { data: any }) => {
         { property: 'Full Name', value: getFullName(user), icon: PersonIcon },
         { property: 'Role', value: user?.role[0]?.name, icon: ShieldIcon },
         { property: 'Username', value: user?.username, icon: AccountCircleIcon },
-        { property: 'Language', value: Language.builder().lang, icon: TranslateIcon }
-      ])
-      setContact([
-        { property: 'Contact', value: `+${user?.mobile}`, icon: CallIcon },
+        { property: 'Language', value: Language.builder().lang, icon: TranslateIcon },
+        { property: 'Mobile', value: `+98 ${user?.mobile?.substring(2)}`, icon: CallIcon },
         { property: 'Email', value: user?.email ?? 'john.doe@example.com', icon: EmailIcon }
       ])
     }
@@ -45,7 +42,7 @@ const ProfileTab = ({ data }: { data: any }) => {
   return data && Object.values(data).length ? (
     <Grid container spacing={6}>
       <Grid item xl={4} md={5} xs={12}>
-        <AboutOverivew about={about} contacts={contact} overview={data.overview} />
+        <AboutOverivew about={about} overview={data.overview} />
       </Grid>
       <Grid item xl={8} md={7} xs={12}>
         <Grid container spacing={6}>

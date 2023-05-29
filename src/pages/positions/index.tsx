@@ -315,7 +315,7 @@ const PositionList = () => {
 
   return (
     <Grid container spacing={6}>
-      <Grid item xs={12}>
+      {/* <Grid item xs={12}>
         {apiData && (
           <Grid container spacing={6}>
             {apiData.statsHorizontal.map((item: any, index: number) => {
@@ -327,7 +327,7 @@ const PositionList = () => {
             })}
           </Grid>
         )}
-      </Grid>
+      </Grid> */}
       <Grid item xs={12}>
         <Card>
           <TableHeader value={searchQuery} handleFilter={handleFilter} toggle={toggleAddPositionDrawer} />

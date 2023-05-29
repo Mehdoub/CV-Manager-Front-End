@@ -73,7 +73,7 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
   const { isAvailable } = useSelector((state: any) => state.usernameCheck)
   // const { status: userEditStatus, loading: userEditLoading } = useSelector((state: any) => state.userEdit)
   const { status: userEditStatus, loading: userEditLoading } = useSelector((state: any) => state.profileEdit)
-  const { data: roles } = useSelector((state: any) => state.roles)
+  // const { data: roles } = useSelector((state: any) => state.roles)
 
   const {
     control,
@@ -88,9 +88,9 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
     resolver: yupResolver(schema)
   })
 
-  useEffect(() => {
-    dispatch(getRoles())
-  }, [])
+  // useEffect(() => {
+  //   dispatch(getRoles())
+  // }, [])
 
   useEffect(() => {
     if (router.pathname == '/user-profile/[tab]') setUser(auth.user)
@@ -311,7 +311,7 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
                 )}
               </FormControl>
             </Grid>
-            <Grid item xs={12}>
+            {/* <Grid item xs={12}>
               <Autocomplete
                 options={roles?.length > 0 ? roles : []}
                 id='autocomplete-size-small-multi'
@@ -323,7 +323,7 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
                 handleHomeEndKeys
                 getOptionLabel={option => option?.name}
               />
-            </Grid>
+            </Grid> */}
           </Grid>
           <DialogActions sx={{ justifyContent: 'center', pb: 0, mt: 5 }}>
             <Button disabled={userEditLoading} type='submit' variant='contained' sx={{ mr: 1 }}>

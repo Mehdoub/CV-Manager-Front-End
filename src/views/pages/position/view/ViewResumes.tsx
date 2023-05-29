@@ -114,8 +114,6 @@ const ViewResumes = () => {
     setOpen(true)
   }
 
-  console.log('open in view resumes: ', open)
-
   return (
     <>
       {isLoading && (

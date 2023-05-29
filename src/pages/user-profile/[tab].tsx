@@ -3,7 +3,6 @@ import UserProfile from 'src/views/pages/user-profile/UserProfile'
 
 // ** Types
 import { useEffect, useState } from 'react'
-import Language from 'src/helpers/Language'
 import { useRouter } from 'next/router'
 
 const UserProfileTab = () => {
@@ -12,20 +11,7 @@ const UserProfileTab = () => {
     query: { tab }
   } = useRouter()
   useEffect(() => {
-    const jsonData = JSON.parse(localStorage.getItem('userData') as string)
-    const lang = Language.builder().getLanguage() == 'en' ? 'English' : 'Farsi'
     setUserData({
-      about: [
-        { property: 'Full Name', value: `${jsonData?.firstname} ${jsonData?.lastname}`, icon: 'mdi:account-outline' },
-        // { property: 'Status', value: 'active', icon: 'mdi:check' },
-        { property: 'Role', value: jsonData?.role, icon: 'mdi:star-outline' },
-        { property: 'Country', value: 'Iran', icon: 'mdi:flag-outline' },
-        { property: 'Language', value: lang, icon: 'mdi:translate' }
-      ],
-      contacts: [
-        { property: 'Contact', value: `+${jsonData?.mobile}`, icon: 'mdi:phone-outline' },
-        { property: 'Email', value: jsonData?.email ?? 'john.doe@example.com', icon: 'mdi:email-outline' }
-      ],
       teamsTech: [
         {
           members: 72,

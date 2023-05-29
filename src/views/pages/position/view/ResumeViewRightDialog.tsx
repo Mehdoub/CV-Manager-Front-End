@@ -97,7 +97,7 @@ const ResumeViewRightDialog = ({ cahtExample }: any) => {
             userSelect: 'text'
           }}
         >
-          {resume?.comments?.length > 0 &&
+          {resume?.comments?.length > 0 ? (
             [...resume?.comments].reverse().map((comment: any, index: number) => {
               const [dateText, dateColor, dateString] = getTimeText(comment?.createdAt)
               return (
@@ -181,7 +181,12 @@ const ResumeViewRightDialog = ({ cahtExample }: any) => {
                   </Box>
                 </Box>
               )
-            })}
+            })
+          ) : (
+            <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%', mt: 5 }}>
+              <Typography variant='body2'>There Is No Comment To Show Here!</Typography>
+            </Box>
+          )}
           <Box sx={{ display: 'flex', p: 6, width: '100%' }}></Box>
         </Box>
         <Box sx={{ width: '100%', position: 'absolute', bottom: 0 }}>

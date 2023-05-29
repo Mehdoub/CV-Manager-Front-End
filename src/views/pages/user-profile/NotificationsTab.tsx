@@ -1,5 +1,5 @@
 import { Box, Card, Grid, Tab, Theme, Typography, useMediaQuery } from '@mui/material'
-import { notifications } from 'src/layouts/components/vertical/AppBarContent'
+// import { notifications } from 'src/layouts/components/vertical/AppBarContent'
 import Icon from 'src/@core/components/icon'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import TabContext from '@mui/lab/TabContext'
@@ -9,6 +9,8 @@ import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 import MarkChatReadIcon from '@mui/icons-material/MarkChatRead'
 import MarkChatUnreadIcon from '@mui/icons-material/MarkChatUnread'
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
+
+const notifications: any = []
 
 const NotificationsTab = () => {
   const [activeTab, setActiveTab] = useState<string>('new')
@@ -67,36 +69,47 @@ const NotificationsTab = () => {
           </TabList>
         </div>
       </TabContext>
-      {notifications.map((notification: any, index: number) => (
-        <Grid key={`notification-${index}`} item sx={{ width: '80%' }}>
-          <BootstrapTooltip placement='top' title='Tap To Read'>
-            <Card
-              sx={{
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                p: 5,
-                cursor: 'pointer',
-                '&:hover': {
-                  boxShadow: '0px 2px 10px 5px rgb(76 78 100 / 22%)'
-                }
-              }}
-            >
-              {/* <RenderAvatar notification={notification} /> */}
-              <CustomAvatar color='primary' skin='light' alt='Notification Icon' sx={{ mr: 3, width: 40, height: 40 }}>
-                <NotificationsActiveIcon fontSize='large' />
-              </CustomAvatar>
-              <Box sx={{ mx: 4, flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>
-                <Typography fontWeight={600}>{notification.title}</Typography>
-                <Typography variant='body2'>{notification.subtitle}</Typography>
-              </Box>
-              <Typography variant='caption' sx={{ color: 'text.disabled' }}>
-                {notification.meta}
-              </Typography>
-            </Card>
-          </BootstrapTooltip>
-        </Grid>
-      ))}
+      {notifications?.length > 0 ? (
+        notifications.map((notification: any, index: number) => (
+          <Grid key={`notification-${index}`} item sx={{ width: '80%' }}>
+            <BootstrapTooltip placement='top' title='Tap To Read'>
+              <Card
+                sx={{
+                  width: '100%',
+                  display: 'flex',
+                  alignItems: 'center',
+                  p: 5,
+                  cursor: 'pointer',
+                  '&:hover': {
+                    boxShadow: '0px 2px 10px 5px rgb(76 78 100 / 22%)'
+                  }
+                }}
+              >
+                {/* <RenderAvatar notification={notification} /> */}
+                <CustomAvatar
+                  color='primary'
+                  skin='light'
+                  alt='Notification Icon'
+                  sx={{ mr: 3, width: 40, height: 40 }}
+                >
+                  <NotificationsActiveIcon fontSize='large' />
+                </CustomAvatar>
+                <Box sx={{ mx: 4, flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>
+                  <Typography fontWeight={600}>{notification.title}</Typography>
+                  <Typography variant='body2'>{notification.subtitle}</Typography>
+                </Box>
+                <Typography variant='caption' sx={{ color: 'text.disabled' }}>
+                  {notification.meta}
+                </Typography>
+              </Card>
+            </BootstrapTooltip>
+          </Grid>
+        ))
+      ) : (
+        <Typography variant='body2' mt={5}>
+          There Is No Any Notification To Show Here :)
+        </Typography>
+      )}
     </Grid>
   )
 }

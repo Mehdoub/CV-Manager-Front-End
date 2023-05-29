@@ -16,7 +16,6 @@ import { useState } from 'react'
 
 interface Props {
   about: ProfileTabCommonType[]
-  contacts: ProfileTabCommonType[]
   overview: ProfileTabCommonType[]
 }
 
@@ -51,7 +50,7 @@ const renderList = (arr: ProfileTabCommonType[]) => {
 }
 
 const AboutOverivew = (props: Props) => {
-  const { about, contacts, overview } = props
+  const { about, overview } = props
   const [editUserOpen, setEditUserOpen] = useState<boolean>(false)
   const closeEditUserDialog = () => setEditUserOpen(false)
 
@@ -67,12 +66,12 @@ const AboutOverivew = (props: Props) => {
                 </Typography>
                 {renderList(about)}
               </Box>
-              <Box sx={{ mb: 7 }}>
+              {/* <Box sx={{ mb: 7 }}>
                 <Typography variant='body2' sx={{ mb: 4, color: 'text.disabled', textTransform: 'uppercase' }}>
                   Contacts
                 </Typography>
                 {renderList(contacts)}
-              </Box>
+              </Box> */}
             </CardContent>
             <CardActions sx={{ display: 'flex', justifyContent: 'right' }}>
               <Button variant='contained' sx={{ mr: 2 }} onClick={() => setEditUserOpen(true)}>
