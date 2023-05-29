@@ -172,6 +172,7 @@ const AddCallHistoryDialog = ({ open, handleClose }: AddCallHistoryDialogProps) 
                     placeholder='Click To Select Time'
                     calendar={persianDate}
                     locale={persianDateFa}
+                    maxDate={new DateObject()}
                     required
                     style={{
                       backgroundColor: theme.palette.mode == 'dark' ? '#30334E' : '',

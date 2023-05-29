@@ -14,11 +14,11 @@ const navigation = (): any => {
       path: '/home',
       icon: HomeIcon,
     },
-    {
-      title: 'sidebar.users',
-      path: '/users',
-      icon: PeopleAltIcon,
-    },
+    // {
+    //   title: 'sidebar.users',
+    //   path: '/users',
+    //   icon: PeopleAltIcon,
+    // },
     {
       title: 'sidebar.companies',
       path: '/companies',
@@ -34,11 +34,11 @@ const navigation = (): any => {
       path: '/positions',
       icon: WorkIcon,
     },
-    {
-      title: 'sidebar.roles_permissions',
-      path: '/roles',
-      icon: SecurityIcon,
-    },
+    // {
+    //   title: 'sidebar.roles_permissions',
+    //   path: '/roles',
+    //   icon: SecurityIcon,
+    // },
   ]
 }
 

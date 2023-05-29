@@ -88,29 +88,35 @@ const CallHistoryCard = ({ callHistory }: { callHistory: any }) => {
                 {callHistory?.rating ?? 0} Star | {ratingTextsObj[callHistory?.rating ?? 0]}!
               </Typography>
             </Box>
-            <Typography variant='body2'>{callHistory?.description}</Typography>
-            {callHistory?.recall_at?.length > 0 && (
-              <Box
-                sx={{
-                  mt: 14,
-                  display: 'flex',
-                  alignItems: 'center',
-                  '&:not(:last-of-type)': { mb: 4 },
-                  '& svg': { color: 'text.primary' }
-                }}
-              >
-                <Icon fontSize={24} icon='mdi:alarm-clock' />
+            <Typography variant='body2'>
+              {callHistory?.description?.length ? callHistory?.description : 'There Is No Description For This Call'}
+            </Typography>
+            <Box
+              sx={{
+                mt: 14,
+                display: 'flex',
+                alignItems: 'center',
+                '&:not(:last-of-type)': { mb: 4 },
+                '& svg': { color: 'text.primary' }
+              }}
+            >
+              <Icon fontSize={24} icon='mdi:alarm-clock' />
 
-                <Typography fontSize={14} sx={{ fontWeight: 600, mr: 2, ml: 1 }}>
-                  Recall Time:
-                </Typography>
+              <Typography fontSize={14} sx={{ fontWeight: 600, mr: 2, ml: 1 }}>
+                Recall Time:
+              </Typography>
+              {callHistory?.recall_at?.length > 0 ? (
                 <BootstrapTooltip title={recallDateString} placement='top'>
                   <Typography fontSize={14} sx={{ color: recallColor + '.main' }}>
                     {recallDateText}
                   </Typography>
                 </BootstrapTooltip>
-              </Box>
-            )}
+              ) : (
+                <Typography fontSize={14} variant='body2'>
+                  Recall Time Not Set
+                </Typography>
+              )}
+            </Box>
           </CardContent>
         </StyledGrid1>
         <StyledGrid2 item xs={12} lg={3}>

@@ -120,7 +120,7 @@ const AuthProvider = ({ children }: Props) => {
   const getUserData = async () => {
     if (localStorage.getItem('accessToken')) {
       try {
-        const result = await ApiRequest.builder().auth().request('get', 'auth/get-me')
+        const result = await ApiRequest.builder().auth().request('get', 'profile/get-me')
 
         const userData = { ...result.data.data[0] }
 
@@ -133,6 +133,7 @@ const AuthProvider = ({ children }: Props) => {
         dispatch(getProvinces())
       } catch (err) {
         clearLogin()
+        toastError('There Is A Problem On Authentication')
       }
     } else {
       deleteFcmToken()

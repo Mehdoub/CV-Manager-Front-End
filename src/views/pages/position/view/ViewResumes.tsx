@@ -37,15 +37,17 @@ const ViewResumes = () => {
   const router = useRouter()
   const { positionId, resumeId } = router?.query as any
 
-  const handleClose = () => {
-    setOpen(false)
-    const baseResumesUrl = `/positions/view/${positionId}/resume/`
-    delete router?.query?.resumeId
-    router.replace(baseResumesUrl, undefined, { shallow: true })
-    setTimeout(() => {
-      router.replace(baseResumesUrl, undefined, { shallow: true })
-    }, 1)
-  }
+  const baseResumesUrl = `/positions/view/${positionId}/resume/`
+  const handleClose = () => setOpen(false)
+
+  useEffect(() => {
+    if (!open) {
+      setTimeout(() => {
+        delete router?.query?.resumeId
+        router.replace(baseResumesUrl, undefined, { shallow: true })
+      }, 1000)
+    }
+  }, [open])
 
   useEffect(() => {
     if (resumeId?.length > 0) {
@@ -111,6 +113,8 @@ const ViewResumes = () => {
     dispatch(getResume(resumeId))
     setOpen(true)
   }
+
+  console.log('open in view resumes: ', open)
 
   return (
     <>

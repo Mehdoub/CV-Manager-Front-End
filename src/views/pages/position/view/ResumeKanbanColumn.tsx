@@ -44,7 +44,7 @@ const ResumeKanbanColumn = ({ title, color, children, statusKey }: ResumeKanbanC
           zIndex: 100
         }}
       >
-        {uppercaseFirstLetters(title)}
+        {uppercaseFirstLetters(title, false, true)}
       </Card>
       <Droppable droppableId={`${statusKey}`}>
         {provided => (

@@ -624,7 +624,7 @@ const ResumeDetailsTab = () => {
                     )}
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} mt={5} md={4}>
+                <Grid item xs={12} mt={5} md={gender == 'men' ? 4 : 6}>
                   <FormControl fullWidth>
                     <Controller
                       name='education'
@@ -653,7 +653,7 @@ const ResumeDetailsTab = () => {
                     )}
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} mt={5} md={4}>
+                <Grid item xs={12} mt={5} md={gender == 'men' ? 4 : 6}>
                   <FormControl fullWidth>
                     <Controller
                       name='marital_status'

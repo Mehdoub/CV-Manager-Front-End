@@ -29,6 +29,7 @@ import CustomTextField from 'src/@core/components/custom-textfield'
 import { useRouter } from 'next/router'
 import { useAuth } from 'src/hooks/useAuth'
 import ApiRequest from 'src/helpers/ApiRequest'
+import { editProfile } from 'src/store/profile'
 
 interface UserEditDialogProps {
   open: boolean
@@ -70,7 +71,8 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
 
   const { data: userDataFromView } = useSelector((state: any) => state.user)
   const { isAvailable } = useSelector((state: any) => state.usernameCheck)
-  const { status: userEditStatus, loading: userEditLoading } = useSelector((state: any) => state.userEdit)
+  // const { status: userEditStatus, loading: userEditLoading } = useSelector((state: any) => state.userEdit)
+  const { status: userEditStatus, loading: userEditLoading } = useSelector((state: any) => state.profileEdit)
   const { data: roles } = useSelector((state: any) => state.roles)
 
   const {
@@ -110,7 +112,7 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
         const getMe = async () => {
           ApiRequest.builder()
             .auth()
-            .request('get', 'auth/get-me')
+            .request('get', 'profile/get-me')
             .then(res => {
               auth.setUser(res?.data?.data[0])
             })
@@ -164,8 +166,13 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
   }
 
   const submitHandler = (data: any) => {
-    if (avatar.length > 0) data = { ...data, avatar: avatar[0] }
-    if (!usernameErr) dispatch(editUser({ ...data, userId: user?.id }))
+    if (router.pathname == '/user-profile/[tab]') {
+      if (avatar.length > 0) data = { ...data, avatar: avatar[0] }
+      if (!usernameErr) dispatch(editProfile({ ...data }))
+    } else {
+      if (avatar.length > 0) data = { ...data, avatar: avatar[0] }
+      if (!usernameErr) dispatch(editUser({ ...data, userId: user?.id }))
+    }
   }
 
   return (

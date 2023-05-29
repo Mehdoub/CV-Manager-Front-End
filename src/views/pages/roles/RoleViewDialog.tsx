@@ -21,8 +21,9 @@ import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import Icon from 'src/@core/components/icon'
-import { getEntityIcon, uppercaseFirstLetters } from 'src/helpers/functions'
+import { getEntityIcon, getMaxTextLen, uppercaseFirstLetters } from 'src/helpers/functions'
 import { clearCreateRole, clearEditRole, createRole, editRole, getRoles } from 'src/store/role'
+import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 
 interface RoleViewDialogProps {
   open: boolean
@@ -81,7 +82,11 @@ const RoleViewDialog = ({ open, toggle, dialogTitle, editRoleData }: RoleViewDia
     return (
       <Grid md={4} item key={permission?._id}>
         <FormControlLabel
-          label={permission?.name}
+          label={
+            <BootstrapTooltip placement='top' title={permission?.name}>
+              <Typography>{getMaxTextLen(permission?.name, 25)}</Typography>
+            </BootstrapTooltip>
+          }
           control={
             <Checkbox
               size='small'

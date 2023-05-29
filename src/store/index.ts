@@ -45,6 +45,7 @@ import { permissionsGroupedReducer } from './permission'
 import { resumeAddCallHistoryReducer, resumeAddAssigneeReducer, resumeAddFilesReducer, resumeAddInterviewReducer, resumeAddTagReducer, resumeCreateReducer, resumeEditReducer, resumeEndWorkReducer, resumeHireReducer, resumeReducer, resumeRejectReducer, resumeRemoveAssigneeReducer, resumeRemoveTagReducer, resumeUpdateStatusReducer, resumeAddCommentReducer } from './resume'
 import { citiesByProvinceReducer, provincesReducer } from './province'
 import { tagCreateReducer, tagsReducer } from './tag'
+import { profileEditReducer } from './profile'
 
 export const store = configureStore({
   reducer: {
@@ -131,6 +132,8 @@ export const store = configureStore({
 
     tagCreate: tagCreateReducer,
     tags: tagsReducer,
+
+    profileEdit: profileEditReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

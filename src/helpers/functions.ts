@@ -127,21 +127,23 @@ export const showDate = (date: string, showTime: boolean = false) => {
   return returnVal
 }
 
-export const uppercaseFirstLetters = (text: any, removeUnderLines: boolean = false) => {
-  return text
-  // let returnVal = ''
-  // let modifiedText = text
-  // if (removeUnderLines && text?.includes('_')) {
-  //   modifiedText = ''
-  //   text?.split('_').map((word: string) => modifiedText += word + ' ')
-  // }
-  // const textArr = modifiedText?.split(' ')
-  // textArr?.map((item: string, index: number) => {
-  //   const extraSpace = textArr?.length - 1 == index ? '' : ' '
-  //   returnVal += item.substring(0, 1).toUpperCase() + item.substring(1) + extraSpace
-  // })
+export const uppercaseFirstLetters = (text: any, removeUnderLines: boolean = false, temporaryActive: boolean = false) => {
+  if (temporaryActive) {
+    let returnVal = ''
+    let modifiedText = text
+    if (removeUnderLines && text?.includes('_')) {
+      modifiedText = ''
+      text?.split('_').map((word: string) => modifiedText += word + ' ')
+    }
+    const textArr = modifiedText?.split(' ')
+    textArr?.map((item: string, index: number) => {
+      const extraSpace = textArr?.length - 1 == index ? '' : ' '
+      returnVal += item.substring(0, 1).toUpperCase() + item.substring(1) + extraSpace
+    })
 
-  // return returnVal.trimStart()
+    return returnVal.trimStart()
+  }
+  return text
 }
 
 export const shuffle = (array: any): any => {
@@ -224,7 +226,7 @@ export const getTimeText = (time: string, hasRange: boolean = false) => {
     dateText = diffDays + ' Day(s) Later'
     dateColor = 'success'
   } else if (diffDays < 0 && diffDays !== -1) {
-    dateText = Math.abs(diffDays) + ' Day(s) Ago'
+    dateText = (Math.abs(diffDays) - 1) + ' Day(s) Ago'
     dateColor = 'warning'
   } else {
     if (hasRange && dateObj.getTime() < now.getTime() && now.getTime() < halfHourLater.getTime()
