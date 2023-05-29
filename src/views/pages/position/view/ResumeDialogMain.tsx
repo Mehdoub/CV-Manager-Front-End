@@ -59,6 +59,8 @@ const ResumeDialogMain = ({ open, toggle, resumeData }: ResumeDialogMainProps) =
     toggle()
   }
 
+  console.log('open inside dialog: ', open)
+
   return (
     <>
       <Dialog
