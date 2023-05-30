@@ -45,6 +45,7 @@ export default class FirebaseCloudMessaging {
   }
 
   public onMessageListener = () => onMessage(this.messaging, (payload) => {
+    console.log('Notification Data From Firebase On Foreground: ', payload)
     showNotificationToast(payload?.notification?.title as string, payload?.notification?.body as string)
   })
 
