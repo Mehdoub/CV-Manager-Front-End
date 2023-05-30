@@ -89,7 +89,8 @@ const LayoutAppBar = (props: Props) => {
           ...(appBar === 'fixed' && scrollTrigger && { ...appBarFixedStyles() }),
           ...(contentWidth === 'boxed' && {
             '@media (min-width:1440px)': { maxWidth: `calc(1440px - ${theme.spacing(6)} * 2)` }
-          })
+          }),
+          position: 'fixed'
         }}
       >
         {(userAppBarContent && userAppBarContent(props)) || null}

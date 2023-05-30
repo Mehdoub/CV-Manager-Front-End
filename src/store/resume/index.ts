@@ -413,9 +413,10 @@ const resumeAddCommentSlice = createSlice({
 })
 
 
-export const getResumes: any = createAsyncThunk('getResumes', async (_, { rejectWithValue }) => {
+export const getResumes: any = createAsyncThunk('getResumes', async (query: string = '', { rejectWithValue }) => {
   try {
-    const response = await ApiRequest.builder().auth().request('get', `resumes`)
+    const searchQuery = query ? '?query=' + query : ''
+    const response = await ApiRequest.builder().auth().request('get', `resumes${searchQuery}`)
 
     return response
   } catch (err: any) {
@@ -428,7 +429,7 @@ const resumesListSlice = createSlice({
   initialState: sliceInitialStateWithData,
   reducers: {},
   extraReducers: (builder) => {
-    createExtraReducers(builder, getResumes, true, true)
+    createExtraReducers(builder, getResumes, true)
   }
 })
 

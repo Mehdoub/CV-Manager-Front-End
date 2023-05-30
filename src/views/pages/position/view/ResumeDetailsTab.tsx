@@ -46,7 +46,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useDropzone } from 'react-dropzone'
 import { useDispatch } from 'react-redux'
-import { clearCreateResume, clearEditResume, createResume, editResume, getResume } from 'src/store/resume'
+import { clearEditResume, editResume, getResume, getResumes } from 'src/store/resume'
 import { useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { getCitiesByProvince } from 'src/store/province'
@@ -245,7 +245,8 @@ const ResumeDetailsTab = () => {
   useEffect(() => {
     if (statusResumeEdit) {
       dispatch(clearEditResume())
-      dispatch(getPositionResumes(positionId))
+      if (positionId) dispatch(getPositionResumes(positionId))
+      else dispatch(getResumes())
       dispatch(getResume(resume?.id))
     }
   }, [statusResumeEdit])

@@ -29,23 +29,33 @@ interface ViewResumesProps {
 
 const ViewResumes = ({ allResumes = false }: ViewResumesProps) => {
   const [open, setOpen] = useState<boolean>(false)
+  const [boardResumes, setBoardResumes] = useState<any>([])
   // const scrollContainer = useScrollContainer()
 
   const dispatch = useDispatch()
 
   const { data: positionResumes, loading: positionResumesLoading } = useSelector((state: any) => state.positionResumes)
+  const { data: resumes, loading: resumesLoading } = useSelector((state: any) => state.resumesList)
   const { status: resumeStateUpdateStatus, loading: resumeStateUpdateLoading } = useSelector(
     (state: any) => state.resumeUpdateStatus
   )
 
+  useEffect(() => {
+    if (allResumes) {
+      setBoardResumes(resumes)
+    } else {
+      setBoardResumes(positionResumes)
+    }
+  }, [resumes, positionResumes])
+
   const router = useRouter()
   const { positionId, resumeId } = router?.query as any
 
-  const baseResumesUrl = `/positions/view/${positionId}/resume/`
   const handleClose = () => setOpen(false)
 
   useEffect(() => {
     if (!open) {
+      const baseResumesUrl = allResumes ? '/resumes/' : `/positions/view/${positionId}/resume/`
       setTimeout(() => {
         delete router?.query?.resumeId
         router.replace(baseResumesUrl, undefined, { shallow: true })
@@ -62,7 +72,8 @@ const ViewResumes = ({ allResumes = false }: ViewResumesProps) => {
 
   useEffect(() => {
     if (resumeStateUpdateStatus) {
-      dispatch(getPositionResumes(positionId))
+      if (!allResumes) dispatch(getPositionResumes(positionId))
+      else dispatch(getResumes())
       dispatch(clearResumeUpdateStatus())
     }
   }, [resumeStateUpdateStatus])
@@ -97,8 +108,8 @@ const ViewResumes = ({ allResumes = false }: ViewResumesProps) => {
     const sameColumnTowardDown =
       source.droppableId == destination.droppableId && source.index < destination.index ? 1 : 0
 
-    const upResume = positionResumes[destinationStateIndex][newStatus][destination.index - 1 + sameColumnTowardDown]
-    const downResume = positionResumes[destinationStateIndex][newStatus][destination.index + sameColumnTowardDown]
+    const upResume = boardResumes[destinationStateIndex][newStatus][destination.index - 1 + sameColumnTowardDown]
+    const downResume = boardResumes[destinationStateIndex][newStatus][destination.index + sameColumnTowardDown]
 
     if (upResume && downResume) {
       newIndex = (upResume.index + downResume.index) / 2
@@ -155,8 +166,8 @@ const ViewResumes = ({ allResumes = false }: ViewResumesProps) => {
         }}
       >
         <DragDropContext onDragEnd={dragEndHandler}>
-          {positionResumes.length > 0 &&
-            positionResumes.map((column: any, colIndex: number) => {
+          {boardResumes?.length > 0 &&
+            boardResumes?.map((column: any, colIndex: number) => {
               const status = Object.keys(column)[0]
               const colData = resumesStates[status]
               return (

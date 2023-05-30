@@ -52,7 +52,7 @@ const ResumeKanbanCard = ({ cardData: card, setOpen, index, handleClick }: Resum
           }}
           onClick={() => {
             setOpen(true)
-            handleClick(card.id)
+            handleClick(card._id)
           }}
         >
           <Typography

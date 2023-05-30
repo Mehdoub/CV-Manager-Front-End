@@ -48,7 +48,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useDropzone } from 'react-dropzone'
 import { useDispatch } from 'react-redux'
-import { clearCreateResume, createResume } from 'src/store/resume'
+import { clearCreateResume, createResume, getResumes } from 'src/store/resume'
 import { useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { getCitiesByProvince } from 'src/store/province'
@@ -279,7 +279,8 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
     if (statusResumeCreate) {
       reset()
       dispatch(clearCreateResume())
-      dispatch(getPositionResumes(positionId))
+      if (positionId) dispatch(getPositionResumes(positionId))
+      else dispatch(getResumes())
       handleClose()
       setAvatar([])
       setResumeFiles([])

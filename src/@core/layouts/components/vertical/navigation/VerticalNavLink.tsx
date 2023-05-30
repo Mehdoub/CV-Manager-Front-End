@@ -116,7 +116,11 @@ const VerticalNavLink = ({
   }
 
   const isNavLinkActive = () => {
-    if (router.pathname === item.path || handleURLQueries(router, item.path)) {
+    if (
+      router.pathname === item.path ||
+      handleURLQueries(router, item.path) ||
+      (router.pathname == '/resumes/[[...resumeId]]' && item.path == '/resumes')
+    ) {
       return true
     } else {
       return false
