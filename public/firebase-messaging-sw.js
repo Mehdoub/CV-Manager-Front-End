@@ -1,14 +1,8 @@
 importScripts('https://www.gstatic.com/firebasejs/9.13.0/firebase-app-compat.js')
 importScripts('https://www.gstatic.com/firebasejs/9.13.0/firebase-messaging-compat.js')
+import firebaseConfig from 'firebaseConfig.json'
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyAtUpRosHz_Bd7OFDThWLwfx4xohyk8oUM',
-  authDomain: 'testing-push-6bfd8.firebaseapp.com',
-  projectId: 'testing-push-6bfd8',
-  storageBucket: 'testing-push-6bfd8.appspot.com',
-  messagingSenderId: '823246048795',
-  appId: '1:823246048795:web:b0aadd98ea28776393b2be'
-}
+const firebaseConfig = firebaseConfig
 
 firebase.initializeApp(firebaseConfig)
 
@@ -17,10 +11,8 @@ const messaging = firebase.messaging()
 
 messaging.onBackgroundMessage(function (payload) {
   console.log('Notification Data From Firebase On Background: ', payload)
-  const notificationTitle = payload.notification.title
-  const notificationOptions = {
-    body: payload.notification.body
-  }
+  const { title, body } = payload?.data
+  const notificationOptions = { body }
 
-  self.registration.showNotification(notificationTitle, notificationOptions)
+  self.registration.showNotification(title, notificationOptions)
 })

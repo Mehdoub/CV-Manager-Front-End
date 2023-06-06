@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase/app'
 import { deleteToken, getMessaging, getToken, onMessage } from 'firebase/messaging'
 import { toastError } from 'src/helpers/functions';
 import showNotificationToast from './showNotificationToast';
+import firebaseConfig from 'firebaseConfig.json'
 
 export default class FirebaseCloudMessaging {
   private firebaseConfig: any
@@ -10,15 +11,8 @@ export default class FirebaseCloudMessaging {
   private vapidKey: string = ''
   public registrationToken: string = ''
   public constructor() {
-    this.firebaseConfig = {
-      apiKey: "AIzaSyAtUpRosHz_Bd7OFDThWLwfx4xohyk8oUM",
-      authDomain: "testing-push-6bfd8.firebaseapp.com",
-      projectId: "testing-push-6bfd8",
-      storageBucket: "testing-push-6bfd8.appspot.com",
-      messagingSenderId: "823246048795",
-      appId: "1:823246048795:web:b0aadd98ea28776393b2be"
-    };
-    this.vapidKey = 'BBythEP4Jfoo-s6D9pyiQ2xdEmOZtIyvWjQyJG5jv4av5Neb2IBXd31zMFPEIpiHh_vrUWEObYONu4WnscEK3Xs'
+    this.firebaseConfig = firebaseConfig;
+    this.vapidKey = process.env.NEXT_PUBLIC_VAPID_KEY as string
     this.firebaseApp = initializeApp(this.firebaseConfig)
     this.messaging = getMessaging(this.firebaseApp)
   }
@@ -44,9 +38,10 @@ export default class FirebaseCloudMessaging {
     });
   }
 
-  public onMessageListener = () => onMessage(this.messaging, (payload) => {
+  public onMessageListener = () => onMessage(this.messaging, (payload: any) => {
     console.log('Notification Data From Firebase On Foreground: ', payload)
-    showNotificationToast(payload?.notification?.title as string, payload?.notification?.body as string)
+    const { title, body } = payload?.data
+    showNotificationToast(title, body)
   })
 
   public deleteRegistrationToken = async (setClientToken: (token: string) => void) => {

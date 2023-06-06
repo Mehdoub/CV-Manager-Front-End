@@ -10,6 +10,7 @@ import { ApexOptions } from 'apexcharts'
 
 // ** Custom Components Imports
 import ReactApexcharts from 'src/@core/components/react-apexcharts'
+import { uppercaseFirstLetters } from 'src/helpers/functions'
 
 interface TotalGrothStatsProps {
   statsData?: any
@@ -19,21 +20,19 @@ const CrmTotalGrowth = ({ statsData }: TotalGrothStatsProps) => {
   // ** Hook
   const theme = useTheme()
 
-  let statsLabels : any = []
+  let statsLabels: any = []
   let statsNumbers: Array<number> = []
   let totalNumber = 0
 
   if (statsData?.length > 0) {
-    statsData.map((item:any, index:number) => {
+    statsData.map((item: any, index: number) => {
       totalNumber += item?.count as number
-      statsLabels.push(item?.state)
+      statsLabels.push(uppercaseFirstLetters(item?.state, true, true))
       statsNumbers.push(item?.count as number)
     })
-    statsNumbers = statsNumbers.map(item => item / (totalNumber > 0 ? totalNumber : 1) * 100)
+    statsNumbers = statsNumbers.map(item => Math.round((item / (totalNumber > 0 ? totalNumber : 1)) * 100))
   } else {
-    statsLabels = [
-      ''
-    ]
+    statsLabels = ['']
     statsNumbers = [0]
     totalNumber = 0
   }

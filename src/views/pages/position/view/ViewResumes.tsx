@@ -36,6 +36,7 @@ const ViewResumes = ({ allResumes = false }: ViewResumesProps) => {
 
   const { data: positionResumes, loading: positionResumesLoading } = useSelector((state: any) => state.positionResumes)
   const { data: resumes, loading: resumesLoading } = useSelector((state: any) => state.resumesList)
+  const { loading: resumeLoading } = useSelector((state: any) => state.resume)
   const { status: resumeStateUpdateStatus, loading: resumeStateUpdateLoading } = useSelector(
     (state: any) => state.resumeUpdateStatus
   )
@@ -51,24 +52,21 @@ const ViewResumes = ({ allResumes = false }: ViewResumesProps) => {
   const router = useRouter()
   const { positionId, resumeId } = router?.query as any
 
-  const handleClose = () => setOpen(false)
-
-  useEffect(() => {
-    if (!open) {
-      const baseResumesUrl = allResumes ? '/resumes/' : `/positions/view/${positionId}/resume/`
-      setTimeout(() => {
-        delete router?.query?.resumeId
-        router.replace(baseResumesUrl, undefined, { shallow: true })
-      }, 1000)
-    }
-  }, [open])
+  const handleClose = () => {
+    setOpen(false)
+    const baseResumesUrl = allResumes ? '/resumes/' : `/positions/view/${positionId}/resume/`
+    setTimeout(() => {
+      delete router?.query?.resumeId
+      router.replace(baseResumesUrl, undefined, { shallow: true })
+    }, 500)
+  }
 
   useEffect(() => {
     if (resumeId?.length > 0) {
       dispatch(getResume(resumeId[0]))
       setOpen(true)
     }
-  }, [])
+  }, [router])
 
   useEffect(() => {
     if (resumeStateUpdateStatus) {
@@ -122,7 +120,7 @@ const ViewResumes = ({ allResumes = false }: ViewResumesProps) => {
     dispatch(updateResumeStatus({ resumeId: draggableId, status: newStatus, index: newIndex }))
   }
 
-  const isLoading = resumeStateUpdateLoading || positionResumesLoading
+  const isLoading = resumeStateUpdateLoading || positionResumesLoading || resumeLoading
 
   const handleResumeCardClick = (resumeId: string) => {
     router.push({ query: { ...router.query, resumeId } })
