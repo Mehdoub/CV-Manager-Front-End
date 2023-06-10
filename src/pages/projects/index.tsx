@@ -65,12 +65,12 @@ const StyledLink = styled(Link)(({ theme }) => ({
 
 // ** renders client column
 export const renderClient = (row: any, field = 'logo') => {
-  if (row[field]?.length) {
+  if (row && row[field] && row[field]?.length) {
     return <CustomAvatar src={getImagePath(row[field])} sx={{ mr: 3, width: 34, height: 34 }} />
   } else {
     return (
       <CustomAvatar skin='light' color='primary' sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}>
-        {getInitials(row.name ? row.name : 'John Doe')}
+        {getInitials(row?.name ? row.name : 'John Doe')}
       </CustomAvatar>
     )
   }
