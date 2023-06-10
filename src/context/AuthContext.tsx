@@ -21,6 +21,7 @@ import { Avatar, Box, IconButton, Typography } from '@mui/material'
 import CustomAvatar from 'src/@core/components/mui/avatar'
 import { getProvinces } from 'src/store/province'
 import CloseIcon from '@mui/icons-material/Close'
+import { clearProfileNotificationsSeen, getNotifications } from 'src/store/profile'
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -50,12 +51,17 @@ const AuthProvider = ({ children }: Props) => {
   const router = useRouter()
   const dispatch = useDispatch()
 
+  const updateNotifications = () => {
+    dispatch(clearProfileNotificationsSeen())
+    dispatch(getNotifications({ size: 7, page: 1, state: 'unread' }))
+  }
+
   useEffect(() => {
     const initAuth = async (): Promise<void> => {
       setLoading(true)
       getUserData()
       const fcm = FirebaseCloudMessaging.builder()
-      fcm && fcm?.onMessageListener()
+      fcm && fcm?.onMessageListener(updateNotifications)
     }
     initAuth()
   }, [])

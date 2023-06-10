@@ -1,5 +1,5 @@
 // ** React Imports
-import { useState, SyntheticEvent, Fragment, ReactNode } from 'react'
+import { useState, SyntheticEvent, Fragment, ReactNode, useEffect } from 'react'
 
 // ** MUI Imports
 import Box from '@mui/material/Box'
@@ -33,6 +33,10 @@ import Link from 'next/link'
 
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
+import { useDispatch } from 'react-redux'
+import { clearProfileNotificationsSeen, getNotifications, seenNotifications } from 'src/store/profile'
+import { useSelector } from 'react-redux'
+import { CircularProgress } from '@mui/material'
 
 export type NotificationsType = {
   meta: string
@@ -126,43 +130,39 @@ const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: bool
 const NotificationDropdown = (props: Props) => {
   // ** Props
   const { settings } = props
-  const notifications: any = []
 
   // ** States
   const [anchorEl, setAnchorEl] = useState<(EventTarget & Element) | null>(null)
 
   // ** Hook
   const hidden = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'))
+  const dispatch = useDispatch()
+  const { data: latestNotifications, loading: loadingLatestNotifications } = useSelector(
+    (state: any) => state.profileNotifications
+  )
+
+  const { status: seenNotificationsStatus } = useSelector((state: any) => state.profileNotificationsSeen)
+
+  useEffect(() => {
+    dispatch(getNotifications({ page: 1, size: 7, state: 'unread' }))
+  }, [])
 
   // ** Vars
   const { direction } = settings
 
   const handleDropdownOpen = (event: SyntheticEvent) => {
+    dispatch(clearProfileNotificationsSeen())
+    dispatch(getNotifications({ page: 1, size: 7, state: 'unread' }))
     setAnchorEl(event.currentTarget)
   }
 
   const handleDropdownClose = () => {
+    dispatch(seenNotifications())
     setAnchorEl(null)
   }
 
-  const RenderAvatar = ({ notification }: { notification: NotificationsType }) => {
-    const { avatarAlt, avatarImg, avatarIcon, avatarText, avatarColor } = notification
-
-    if (avatarImg) {
-      return <Avatar alt={avatarAlt} src={avatarImg} />
-    } else if (avatarIcon) {
-      return (
-        <Avatar skin='light' color={avatarColor}>
-          {avatarIcon}
-        </Avatar>
-      )
-    } else {
-      return (
-        <Avatar skin='light' color={avatarColor}>
-          {getInitials(avatarText as string)}
-        </Avatar>
-      )
-    }
+  const handleClickViewAll = () => {
+    setAnchorEl(null)
   }
 
   return (
@@ -171,7 +171,7 @@ const NotificationDropdown = (props: Props) => {
         <Badge
           color='error'
           variant='dot'
-          invisible={!notifications.length}
+          invisible={!latestNotifications?.totalDocs || seenNotificationsStatus}
           sx={{
             '& .MuiBadge-badge': { top: 4, right: 4, boxShadow: theme => `0 0 0 2px ${theme.palette.background.paper}` }
           }}
@@ -193,20 +193,24 @@ const NotificationDropdown = (props: Props) => {
         >
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
             <Typography sx={{ cursor: 'text', fontWeight: 600 }}>Notifications</Typography>
-            {notifications?.length > 0 && (
+            {latestNotifications?.totalDocs > 0 && (
               <CustomChip
                 skin='light'
                 size='small'
                 color='primary'
-                label={`${notifications.length} New`}
+                label={`${latestNotifications?.totalDocs} New`}
                 sx={{ height: 20, fontSize: '0.75rem', fontWeight: 500, borderRadius: '10px' }}
               />
             )}
           </Box>
         </MenuItem>
         <ScrollWrapper hidden={hidden}>
-          {notifications?.length ? (
-            notifications.map((notification: NotificationsType, index: number) => (
+          {loadingLatestNotifications ? (
+            <MenuItem sx={{ display: 'flex', justifyContent: 'center' }}>
+              <CircularProgress />
+            </MenuItem>
+          ) : latestNotifications?.docs?.length ? (
+            latestNotifications?.docs?.map((notification: any, index: number) => (
               <MenuItem key={index} onClick={handleDropdownClose}>
                 <Box sx={{ width: '100%', display: 'flex', alignItems: 'center' }}>
                   {/* <RenderAvatar notification={notification} /> */}
@@ -219,12 +223,9 @@ const NotificationDropdown = (props: Props) => {
                     <NotificationsActiveIcon />
                   </CustomAvatar>
                   <Box sx={{ mx: 4, flex: '1 1', display: 'flex', overflow: 'hidden', flexDirection: 'column' }}>
-                    <MenuItemTitle>{notification.title}</MenuItemTitle>
-                    <MenuItemSubtitle variant='body2'>{notification.subtitle}</MenuItemSubtitle>
+                    <MenuItemTitle>{notification?.title}</MenuItemTitle>
+                    <MenuItemSubtitle variant='body2'>{notification?.body}</MenuItemSubtitle>
                   </Box>
-                  <Typography variant='caption' sx={{ color: 'text.disabled' }}>
-                    {notification.meta}
-                  </Typography>
                 </Box>
               </MenuItem>
             ))
@@ -246,7 +247,7 @@ const NotificationDropdown = (props: Props) => {
             borderTop: theme => `1px solid ${theme.palette.divider}`
           }}
         >
-          <Button fullWidth variant='contained' onClick={handleDropdownClose}>
+          <Button fullWidth variant='contained' onClick={handleClickViewAll}>
             <Link style={{ textDecoration: 'none', color: 'white' }} href='/user-profile/notifications/'>
               View All Notifications
             </Link>

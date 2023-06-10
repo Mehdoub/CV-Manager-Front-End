@@ -38,10 +38,11 @@ export default class FirebaseCloudMessaging {
     });
   }
 
-  public onMessageListener = () => onMessage(this.messaging, (payload: any) => {
+  public onMessageListener = (updateNotifications: any) => onMessage(this.messaging, (payload: any) => {
     console.log('Notification Data From Firebase On Foreground: ', payload)
     const { title, body } = payload?.data
     showNotificationToast(title, body)
+    updateNotifications()
   })
 
   public deleteRegistrationToken = async (setClientToken: (token: string) => void) => {

@@ -2,8 +2,6 @@
 import { configureStore } from '@reduxjs/toolkit'
 
 // ** Reducers
-import project from 'src/store/apps/project'
-import user from 'src/store/apps/user'
 import {
   companyDeactiveReducer,
   addCompanyManagerReducer,
@@ -45,13 +43,10 @@ import { permissionsGroupedReducer } from './permission'
 import { resumeAddCallHistoryReducer, resumeAddAssigneeReducer, resumeAddFilesReducer, resumeAddInterviewReducer, resumeAddTagReducer, resumeCreateReducer, resumeEditReducer, resumeEndWorkReducer, resumeHireReducer, resumeReducer, resumeRejectReducer, resumeRemoveAssigneeReducer, resumeRemoveTagReducer, resumeUpdateStatusReducer, resumeAddCommentReducer, resumesListReducer } from './resume'
 import { citiesByProvinceReducer, provincesReducer } from './province'
 import { tagCreateReducer, tagsReducer } from './tag'
-import { profileEditReducer } from './profile'
+import { profileEditReducer, profileNotificationsReducer, profileNotificationsSeenReducer } from './profile'
 
 export const store = configureStore({
   reducer: {
-    project,
-    userfind: user,
-
     companiesList: companiesListReducer,
     company: companyReducer,
     companyManagers: companyManagersReducer,
@@ -135,6 +130,8 @@ export const store = configureStore({
     tags: tagsReducer,
 
     profileEdit: profileEditReducer,
+    profileNotifications: profileNotificationsReducer,
+    profileNotificationsSeen: profileNotificationsSeenReducer,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
