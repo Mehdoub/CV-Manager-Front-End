@@ -416,7 +416,7 @@ const resumeAddCommentSlice = createSlice({
 export const getResumes: any = createAsyncThunk('getResumes', async (query: string = '', { rejectWithValue }) => {
   try {
     const searchQuery = query ? '?query=' + query : ''
-    const response = await ApiRequest.builder().auth().request('get', `resumes${searchQuery}`)
+    const response = await ApiRequest.builder().auth().request('get', `resumes/grouped/by-states${searchQuery}`)
 
     return response
   } catch (err: any) {

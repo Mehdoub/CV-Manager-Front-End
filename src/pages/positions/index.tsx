@@ -20,15 +20,11 @@ import { styled } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import CustomChip from 'src/@core/components/mui/chip'
 
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
-
 // ** Store Imports
 import { useDispatch, useSelector } from 'react-redux'
 
 // ** Custom Components Imports
 import CustomAvatar from 'src/@core/components/mui/avatar'
-import CardStatisticsHorizontal from 'src/@core/components/card-statistics/card-stats-horizontal'
 
 // ** Utils Import
 import { getInitials } from 'src/@core/utils/get-initials'
@@ -62,49 +58,15 @@ const statusColors: any = {
 
 // ** renders client column
 export const renderClient = (row: any, imgField = 'logo', nameField = 'name') => {
-  if (row[imgField]?.length) {
+  if (row && row[imgField]?.length) {
     return <CustomAvatar src={getImagePath(row[imgField])} sx={{ mr: 3, width: 34, height: 34 }} />
   } else {
     return (
       <CustomAvatar skin='light' color={'primary'} sx={{ mr: 3, width: 34, height: 34, fontSize: '1rem' }}>
-        {getInitials(row[nameField] ?? 'John Doe')}
+        {getInitials(row && row[nameField] ? row[nameField] : 'John Doe')}
       </CustomAvatar>
     )
   }
-}
-
-const apiData = {
-  statsHorizontal: [
-    {
-      stats: '8,458',
-      trend: 'negative',
-      trendNumber: '8.1%',
-      title: 'New Customers',
-      icon: 'mdi:account-outline'
-    },
-    {
-      icon: 'mdi:poll',
-      stats: '$28.5k',
-      color: 'warning',
-      trendNumber: '18.2%',
-      title: 'Total Profit'
-    },
-    {
-      color: 'info',
-      stats: '2,450k',
-      trend: 'negative',
-      icon: 'mdi:trending-up',
-      trendNumber: '24.6%',
-      title: 'New Transactions'
-    },
-    {
-      stats: '$48.2K',
-      color: 'success',
-      icon: 'mdi:currency-usd',
-      trendNumber: '22.5%',
-      title: 'Total Revenue'
-    }
-  ]
 }
 
 const PositionList = () => {

@@ -37,6 +37,7 @@ import { useDispatch } from 'react-redux'
 import { clearProfileNotificationsSeen, getNotifications, seenNotifications } from 'src/store/profile'
 import { useSelector } from 'react-redux'
 import { CircularProgress } from '@mui/material'
+import { useAuth } from 'src/hooks/useAuth'
 
 export type NotificationsType = {
   meta: string
@@ -140,12 +141,15 @@ const NotificationDropdown = (props: Props) => {
   const { data: latestNotifications, loading: loadingLatestNotifications } = useSelector(
     (state: any) => state.profileNotifications
   )
+  const auth = useAuth()
 
   const { status: seenNotificationsStatus } = useSelector((state: any) => state.profileNotificationsSeen)
 
   useEffect(() => {
-    dispatch(getNotifications({ page: 1, size: 7, state: 'unread' }))
-  }, [])
+    if (auth?.user?._id) {
+      dispatch(getNotifications({ page: 1, size: 7, state: 'unread' }))
+    }
+  }, [auth?.user])
 
   // ** Vars
   const { direction } = settings
