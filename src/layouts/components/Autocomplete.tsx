@@ -37,6 +37,12 @@ import Icon from 'src/@core/components/icon'
 // ** Configs Imports
 import themeConfig from 'src/configs/themeConfig'
 import { getEntityIcon, getImagePath } from 'src/helpers/functions'
+import { useDispatch } from 'react-redux'
+import { getCompanies } from 'src/store/company'
+import { getProjects } from 'src/store/project'
+import { getPositions } from 'src/store/position'
+import { getResumesIndex } from 'src/store/resume'
+import { useSelector } from 'react-redux'
 
 interface Props {
   hidden: boolean
@@ -253,33 +259,84 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
   const [isMounted, setIsMounted] = useState<boolean>(false)
   const [searchValue, setSearchValue] = useState<string>('')
   const [openDialog, setOpenDialog] = useState<boolean>(false)
-  const [options, setOptions] = useState<AppBarSearchType[]>([])
-
-  const handleChangeSearchValue = (value: string) => {
-    setSearchValue(value)
-  }
+  const [options, setOptions] = useState<any>([])
 
   // ** Hooks & Vars
   const theme = useTheme()
   const router = useRouter()
+  const dispatch = useDispatch()
   const { layout } = settings
   const wrapper = useRef<HTMLDivElement>(null)
   const fullScreenDialog = useMediaQuery(theme.breakpoints.down('sm'))
 
-  // Get all data using API
+  const { data: companies, loading: loadingCompanies } = useSelector((state: any) => state.companiesList)
+  const { data: projects, loading: loadingProjects } = useSelector((state: any) => state.projectsList)
+  const { data: positions, loading: loadingPositions } = useSelector((state: any) => state.positionsList)
+  const { data: resumes, loading: loadingResumes } = useSelector((state: any) => state.resumesIndex)
+
   useEffect(() => {
-    axios
-      .get('/app-bar/search', {
-        params: { q: searchValue }
-      })
-      .then(response => {
-        if (response.data && response.data.length) {
-          setOptions(response.data)
-        } else {
-          setOptions([])
-        }
-      })
-  }, [searchValue])
+    let companiesDocs: any = []
+    let projectsDocs: any = []
+    let positionsDocs: any = []
+    let resumesDocs: any = []
+    if (companies?.docs?.length)
+      companiesDocs = [
+        ...companies.docs.map((item: any) => {
+          return {
+            title: item?.name,
+            logo: item?.logo,
+            url: `/companies/view/${item?._id}/overview`,
+            category: 'companies'
+          }
+        })
+      ]
+    if (projects?.docs?.length)
+      projectsDocs = [
+        ...projects.docs.map((item: any) => {
+          return {
+            title: item?.name,
+            logo: item?.logo,
+            url: `/projects/view/${item?._id}/overview`,
+            category: 'projects'
+          }
+        })
+      ]
+    if (positions?.docs?.length)
+      positionsDocs = [
+        ...positions.docs.map((item: any) => {
+          return {
+            title: item?.title,
+            logo: item?.logo,
+            url: `/positions/view/${item?._id}/overview`,
+            category: 'positions'
+          }
+        })
+      ]
+    if (resumes?.docs?.length)
+      resumesDocs = [
+        ...resumes.docs.map((item: any) => {
+          return { title: item?.fullname, logo: item?.avatar, url: `/resumes/${item?._id}`, category: 'resumes' }
+        })
+      ]
+    setOptions([...companiesDocs, ...projectsDocs, ...positionsDocs, ...resumesDocs])
+  }, [companies, projects, positions, resumes])
+
+  console.log('options: ', options)
+
+  // Get all data using API
+  // useEffect(() => {
+  //   axios
+  //     .get('/app-bar/search', {
+  //       params: { q: searchValue }
+  //     })
+  //     .then(response => {
+  //       if (response.data && response.data.length) {
+  //         setOptions(response.data)
+  //       } else {
+  //         setOptions([])
+  //       }
+  //     })
+  // }, [searchValue])
 
   useEffect(() => {
     if (!openDialog) {
@@ -331,6 +388,24 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
     }
   }, [handleKeyUp, handleKeydown])
 
+  const clearTimerRef: any = useRef()
+  const handleSearchValueChange = useCallback((value: string) => {
+    setSearchValue(value)
+    clearTimeout(clearTimerRef.current)
+    const searchObj = { query: value, size: 5, page: 1 }
+    const serachTimeout = setTimeout(() => {
+      if (value?.length > 0) {
+        dispatch(getCompanies({ ...searchObj }))
+        dispatch(getProjects({ ...searchObj }))
+        dispatch(getPositions({ ...searchObj }))
+        dispatch(getResumesIndex({ ...searchObj }))
+      }
+    }, 1500)
+    clearTimerRef.current = serachTimeout
+  }, [])
+
+  const searchLoading = loadingCompanies && loadingProjects && loadingPositions && loadingResumes
+
   if (!isMounted) {
     return null
   } else {
@@ -354,14 +429,13 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
                 disablePortal
                 options={options}
                 id='appBar-search'
+                loading={searchLoading}
                 isOptionEqualToValue={() => true}
-                onInputChange={(event, value: string) => handleChangeSearchValue(value)}
+                onInputChange={(event, value: string) => handleSearchValueChange(value)}
                 onChange={(event, obj) => handleOptionClick(obj as AppBarSearchType)}
-                noOptionsText={<NoResult value={searchValue} setOpenDialog={setOpenDialog} />}
-                getOptionLabel={(option: AppBarSearchType | unknown) => (option as AppBarSearchType).title}
-                groupBy={(option: AppBarSearchType | unknown) =>
-                  searchValue.length ? categoryTitle[(option as AppBarSearchType).category] : ''
-                }
+                // noOptionsText={<NoResult value={searchValue} setOpenDialog={setOpenDialog} />}
+                getOptionLabel={(option: AppBarSearchType | unknown) => (option as any)?.title}
+                groupBy={(option: any) => (searchValue.length ? categoryTitle[option?.category] : '')}
                 sx={{
                   '& + .MuiAutocomplete-popper': {
                     ...(searchValue.length
@@ -382,7 +456,7 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
                     <TextField
                       {...params}
                       value={searchValue}
-                      onChange={(event: ChangeEvent<HTMLInputElement>) => handleChangeSearchValue(event.target.value)}
+                      onChange={(event: ChangeEvent<HTMLInputElement>) => handleSearchValueChange(event.target.value)}
                       inputRef={input => {
                         if (input) {
                           if (openDialog) {
@@ -420,7 +494,7 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
                   return searchValue.length ? (
                     <ListItem
                       {...props}
-                      key={(option as AppBarSearchType).title}
+                      key={option?.title}
                       className={`suggestion ${props.className}`}
                       onClick={() => handleOptionClick(option as AppBarSearchType)}
                       secondaryAction={<Icon icon='mdi:subdirectory-arrow-left' fontSize={20} />}
@@ -441,12 +515,12 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
                         }}
                       >
                         {option?.logo ? (
-                          <CustomAvatar src={getImagePath(option.logo)} sx={{ mr: 3, width: 34, height: 34 }} />
+                          <CustomAvatar src={getImagePath(option?.logo)} sx={{ mr: 3, width: 34, height: 34 }} />
                         ) : (
-                          <Icon fontSize={20} icon={(option as AppBarSearchType).icon || themeConfig.navSubItemIcon} />
+                          <Icon fontSize={20} icon={themeConfig.navSubItemIcon} />
                         )}
                         <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                          {(option as AppBarSearchType).title}
+                          {option?.title}
                         </Typography>
                       </ListItemButton>
                     </ListItem>
