@@ -13,7 +13,7 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 export const sliceInitialStateWithData = {
   loading: false,
   errors: [],
-  data: {}
+  data: []
 }
 
 export const sliceInitialStateWithStatus = {

@@ -45,6 +45,31 @@ const positionsListSlice = createSlice({
 })
 
 
+export const getPositionsForSearch: any = createAsyncThunk(
+  'getPositionsForSearch',
+  async (params:
+    { page: number, size: number, query: string } = { page: 1, size: 10, query: '' },
+    { rejectWithValue }) => {
+    try {
+      const { page, size, query } = params
+      const response = await ApiRequest.builder().auth().page(page).size(size).query(query).request('get', 'positions')
+
+      return response
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const positionsListForSearchSlice = createSlice({
+  name: 'positionsListForSearchForSearch',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    createExtraReducers(builder, getPositionsForSearch, true, true)
+  }
+})
+
+
 export const getPosition: any = createAsyncThunk(
   'getPosition',
   async (positionId: string,
@@ -440,6 +465,7 @@ export const { clearPositionManagerRemove } = positionManagerRemoveSlice.actions
 export const { clearPositionManagerAdd } = positionManagerAddSlice.actions
 export const { clearPositionEdit } = positionEditSlice.actions
 export const positionsListReducer = positionsListSlice.reducer
+export const positionsListForSearchReducer = positionsListForSearchSlice.reducer
 export const positionReducer = positionSlice.reducer
 export const positionCreateReducer = positionCreateSlice.reducer
 export const positionDeactiveReducer = positionDeactiveSlice.reducer

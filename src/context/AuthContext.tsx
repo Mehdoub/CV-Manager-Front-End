@@ -86,15 +86,10 @@ const AuthProvider = ({ children }: Props) => {
 
   const deleteFcmToken = async () => {
     try {
-      if (clientToken && Notification.permission == 'granted' && isClientTokenDuplicate(clientToken, user)) {
+      if (clientToken && Notification.permission == 'granted') {
         const fcm = FirebaseCloudMessaging.builder()
         fcm && (await fcm?.deleteRegistrationToken(setClientToken))
-        await ApiRequest.builder()
-          .auth()
-          .request('delete', `users/${user._id}/fcm-token`, { token: clientToken })
-          .catch(() => {
-            toastError('an error occurred while deleting client token!')
-          })
+        await ApiRequest.builder().auth().request('delete', `users/${user._id}/fcm-token`, { token: clientToken })
       }
     } catch (error) {
       toastError('An Error Occurred While Deleting FCM Token!')
@@ -166,11 +161,15 @@ const AuthProvider = ({ children }: Props) => {
   }
 
   const handleLogout = async () => {
-    deleteFcmToken()
-    await ApiRequest.builder().auth().request('post', 'auth/logout')
+    try {
+      await deleteFcmToken()
+      await ApiRequest.builder().auth().request('post', 'auth/logout')
 
-    clearLogin()
-    router.push('/login')
+      clearLogin()
+      window.location.href = '/login'
+    } catch (err: any) {
+      toastError('An Error Occurred While Logout')
+    }
   }
 
   const handleRegister = async (params: RegisterParams, errorCallback?: ErrCallbackType) => {
@@ -180,10 +179,7 @@ const AuthProvider = ({ children }: Props) => {
         localStorage.setItem(authConfig.storageTokenKeyName, response.data.data[0].access_token)
         localStorage.setItem(authConfig.refreshTokenKeyName, response.data.data[0].refresh_token)
 
-        const returnUrl = router.query.returnUrl
         getUserData()
-
-        // const redirectURL = returnUrl && returnUrl !== '/' ? returnUrl : '/'
 
         router.replace('/verification')
       }

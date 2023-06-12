@@ -13,6 +13,7 @@ import LanguageDropdown from 'src/@core/layouts/components/shared-components/Lan
 import ModeToggler from 'src/@core/layouts/components/shared-components/ModeToggler'
 import NotificationDropdown from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown'
+import AutocompleteComponent from '../Autocomplete'
 
 export const notifications: any = [
   {
@@ -78,6 +79,7 @@ const AppBarContent = (props: Props) => {
             <Icon icon='mdi:menu' />
           </IconButton>
         ) : null}
+        <AutocompleteComponent hidden={hidden} settings={settings} />
       </Box>
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
         {/* <LanguageDropdown settings={settings} saveSettings={saveSettings} /> */}
