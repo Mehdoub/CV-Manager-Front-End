@@ -38,11 +38,12 @@ import Icon from 'src/@core/components/icon'
 import themeConfig from 'src/configs/themeConfig'
 import { getEntityIcon, getImagePath } from 'src/helpers/functions'
 import { useDispatch } from 'react-redux'
-import { getCompanies } from 'src/store/company'
-import { getProjects } from 'src/store/project'
-import { getPositions } from 'src/store/position'
+import { getCompaniesForSearch } from 'src/store/company'
+import { getProjectsForSearch } from 'src/store/project'
+import { getPositionsForSearch } from 'src/store/position'
 import { getResumesIndex } from 'src/store/resume'
 import { useSelector } from 'react-redux'
+import { CircularProgress, ListSubheader } from '@mui/material'
 
 interface Props {
   hidden: boolean
@@ -257,9 +258,13 @@ const DefaultSuggestions = ({ setOpenDialog }: DefaultSuggestionsProps) => {
 const AutocompleteComponent = ({ hidden, settings }: Props) => {
   // ** States
   const [isMounted, setIsMounted] = useState<boolean>(false)
+  const [delayLoading, setDelayLoading] = useState<boolean>(false)
   const [searchValue, setSearchValue] = useState<string>('')
   const [openDialog, setOpenDialog] = useState<boolean>(false)
-  const [options, setOptions] = useState<any>([])
+  const [companyOptions, setCompanyOptions] = useState<any>([])
+  const [projectOptions, setProjectOptions] = useState<any>([])
+  const [positionOptions, setPositionOptions] = useState<any>([])
+  const [resumeOptions, setResumeOptions] = useState<any>([])
 
   // ** Hooks & Vars
   const theme = useTheme()
@@ -269,18 +274,14 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
   const wrapper = useRef<HTMLDivElement>(null)
   const fullScreenDialog = useMediaQuery(theme.breakpoints.down('sm'))
 
-  const { data: companies, loading: loadingCompanies } = useSelector((state: any) => state.companiesList)
-  const { data: projects, loading: loadingProjects } = useSelector((state: any) => state.projectsList)
-  const { data: positions, loading: loadingPositions } = useSelector((state: any) => state.positionsList)
+  const { data: companies, loading: loadingCompanies } = useSelector((state: any) => state.companiesListForSearch)
+  const { data: projects, loading: loadingProjects } = useSelector((state: any) => state.projectsListForSearch)
+  const { data: positions, loading: loadingPositions } = useSelector((state: any) => state.positionsListForSearch)
   const { data: resumes, loading: loadingResumes } = useSelector((state: any) => state.resumesIndex)
 
   useEffect(() => {
-    let companiesDocs: any = []
-    let projectsDocs: any = []
-    let positionsDocs: any = []
-    let resumesDocs: any = []
     if (companies?.docs?.length)
-      companiesDocs = [
+      setCompanyOptions([
         ...companies.docs.map((item: any) => {
           return {
             title: item?.name,
@@ -289,9 +290,13 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
             category: 'companies'
           }
         })
-      ]
+      ])
+    else setCompanyOptions([])
+  }, [companies])
+
+  useEffect(() => {
     if (projects?.docs?.length)
-      projectsDocs = [
+      setProjectOptions([
         ...projects.docs.map((item: any) => {
           return {
             title: item?.name,
@@ -300,9 +305,13 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
             category: 'projects'
           }
         })
-      ]
+      ])
+    else setProjectOptions([])
+  }, [projects])
+
+  useEffect(() => {
     if (positions?.docs?.length)
-      positionsDocs = [
+      setPositionOptions([
         ...positions.docs.map((item: any) => {
           return {
             title: item?.title,
@@ -311,32 +320,26 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
             category: 'positions'
           }
         })
-      ]
+      ])
+    else setPositionOptions([])
+  }, [positions])
+
+  useEffect(() => {
     if (resumes?.docs?.length)
-      resumesDocs = [
+      setResumeOptions([
         ...resumes.docs.map((item: any) => {
           return { title: item?.fullname, logo: item?.avatar, url: `/resumes/${item?._id}`, category: 'resumes' }
         })
-      ]
-    setOptions([...companiesDocs, ...projectsDocs, ...positionsDocs, ...resumesDocs])
-  }, [companies, projects, positions, resumes])
+      ])
+    else setResumeOptions([])
+  }, [resumes])
 
-  console.log('options: ', options)
-
-  // Get all data using API
-  // useEffect(() => {
-  //   axios
-  //     .get('/app-bar/search', {
-  //       params: { q: searchValue }
-  //     })
-  //     .then(response => {
-  //       if (response.data && response.data.length) {
-  //         setOptions(response.data)
-  //       } else {
-  //         setOptions([])
-  //       }
-  //     })
-  // }, [searchValue])
+  const options = [
+    { category: 'companies', title: 'Companies', data: [...companyOptions], loading: loadingCompanies },
+    { category: 'projects', title: 'Projects', data: [...projectOptions], loading: loadingProjects },
+    { category: 'positions', title: 'Positions', data: [...positionOptions], loading: loadingPositions },
+    { category: 'resumes', title: 'Resumes', data: [...resumeOptions], loading: loadingResumes }
+  ]
 
   useEffect(() => {
     if (!openDialog) {
@@ -393,18 +396,20 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
     setSearchValue(value)
     clearTimeout(clearTimerRef.current)
     const searchObj = { query: value, size: 5, page: 1 }
-    const serachTimeout = setTimeout(() => {
-      if (value?.length > 0) {
-        dispatch(getCompanies({ ...searchObj }))
-        dispatch(getProjects({ ...searchObj }))
-        dispatch(getPositions({ ...searchObj }))
+    if (value?.length > 0) {
+      setDelayLoading(true)
+      const serachTimeout = setTimeout(() => {
+        setDelayLoading(false)
+        dispatch(getCompaniesForSearch({ ...searchObj }))
+        dispatch(getProjectsForSearch({ ...searchObj }))
+        dispatch(getPositionsForSearch({ ...searchObj }))
         dispatch(getResumesIndex({ ...searchObj }))
-      }
-    }, 1500)
-    clearTimerRef.current = serachTimeout
+      }, 1500)
+      clearTimerRef.current = serachTimeout
+    } else {
+      setDelayLoading(false)
+    }
   }, [])
-
-  const searchLoading = loadingCompanies && loadingProjects && loadingPositions && loadingResumes
 
   if (!isMounted) {
     return null
@@ -419,114 +424,103 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
           <SearchIcon />
         </IconButton>
         {!hidden && layout === 'vertical' ? (
-          <Typography sx={{ userSelect: 'none', color: 'text.disabled' }}>Search (Ctrl+/)</Typography>
+          <Typography sx={{ userSelect: 'none', color: 'text.disabled' }}>Search (/)</Typography>
         ) : null}
         {openDialog && (
           <Dialog fullWidth open={openDialog} fullScreen={fullScreenDialog} onClose={() => setOpenDialog(false)}>
             <Box sx={{ top: 0, width: '100%', position: 'sticky' }}>
-              <Autocomplete
-                autoHighlight
-                disablePortal
-                options={options}
-                id='appBar-search'
-                loading={searchLoading}
-                isOptionEqualToValue={() => true}
-                onInputChange={(event, value: string) => handleSearchValueChange(value)}
-                onChange={(event, obj) => handleOptionClick(obj as AppBarSearchType)}
-                // noOptionsText={<NoResult value={searchValue} setOpenDialog={setOpenDialog} />}
-                getOptionLabel={(option: AppBarSearchType | unknown) => (option as any)?.title}
-                groupBy={(option: any) => (searchValue.length ? categoryTitle[option?.category] : '')}
-                sx={{
-                  '& + .MuiAutocomplete-popper': {
-                    ...(searchValue.length
-                      ? {
-                          overflow: 'auto',
-                          maxHeight: 'calc(100vh - 69px)',
-                          borderTop: `1px solid ${theme.palette.divider}`,
-                          height: fullScreenDialog ? 'calc(100vh - 69px)' : 481,
-                          '& .MuiListSubheader-root': { p: theme.spacing(3.75, 6, 0.75) }
-                        }
-                      : {
-                          '& .MuiAutocomplete-listbox': { pb: 0 }
-                        })
+              <TextField
+                value={searchValue}
+                variant='standard'
+                onChange={(event: ChangeEvent<HTMLInputElement>) => handleSearchValueChange(event.target.value)}
+                sx={{ minWidth: '100% !important' }}
+                inputRef={input => {
+                  if (input) {
+                    if (openDialog) {
+                      setTimeout(() => input.focus(), 1)
+                    } else {
+                      input.blur()
+                    }
                   }
                 }}
-                renderInput={(params: AutocompleteRenderInputParams) => {
-                  return (
-                    <TextField
-                      {...params}
-                      value={searchValue}
-                      onChange={(event: ChangeEvent<HTMLInputElement>) => handleSearchValueChange(event.target.value)}
-                      inputRef={input => {
-                        if (input) {
-                          if (openDialog) {
-                            setTimeout(() => input.focus(), 1)
-                          } else {
-                            input.blur()
-                          }
-                        }
-                      }}
-                      InputProps={{
-                        ...params.InputProps,
-                        sx: { p: `${theme.spacing(3.75, 6)} !important` },
-                        startAdornment: (
-                          <InputAdornment position='start' sx={{ color: 'text.primary' }}>
-                            <SearchIcon />
-                          </InputAdornment>
-                        ),
-                        endAdornment: (
-                          <InputAdornment
-                            position='end'
-                            onClick={() => setOpenDialog(false)}
-                            sx={{ display: 'flex', cursor: 'pointer', alignItems: 'center' }}
-                          >
-                            {!hidden ? <Typography sx={{ mr: 2.5, color: 'text.disabled' }}>[esc]</Typography> : null}
-                            <IconButton size='small' sx={{ p: 1 }}>
-                              <CloseIcon />
-                            </IconButton>
-                          </InputAdornment>
-                        )
-                      }}
-                    />
+                InputProps={{
+                  sx: { p: `${theme.spacing(3.75, 6)} !important` },
+                  startAdornment: (
+                    <InputAdornment position='start' sx={{ color: 'text.primary' }}>
+                      <SearchIcon />
+                    </InputAdornment>
+                  ),
+                  endAdornment: (
+                    <InputAdornment
+                      position='end'
+                      onClick={() => setOpenDialog(false)}
+                      sx={{ display: 'flex', cursor: 'pointer', alignItems: 'center' }}
+                    >
+                      {!hidden ? <Typography sx={{ mr: 2.5, color: 'text.disabled' }}>[esc]</Typography> : null}
+                      <IconButton size='small' sx={{ p: 1 }}>
+                        <CloseIcon />
+                      </IconButton>
+                    </InputAdornment>
                   )
                 }}
-                renderOption={(props, option: any) => {
-                  return searchValue.length ? (
-                    <ListItem
-                      {...props}
-                      key={option?.title}
-                      className={`suggestion ${props.className}`}
-                      onClick={() => handleOptionClick(option as AppBarSearchType)}
-                      secondaryAction={<Icon icon='mdi:subdirectory-arrow-left' fontSize={20} />}
-                      sx={{
-                        '& .MuiListItemSecondaryAction-root': {
-                          '& svg': {
-                            cursor: 'pointer',
-                            color: 'text.disabled'
-                          }
-                        }
-                      }}
-                    >
-                      <ListItemButton
-                        sx={{
-                          py: 2.5,
-                          px: `${theme.spacing(6)} !important`,
-                          '& svg': { mr: 2.5, color: 'text.primary' }
-                        }}
-                      >
-                        {option?.logo ? (
-                          <CustomAvatar src={getImagePath(option?.logo)} sx={{ mr: 3, width: 34, height: 34 }} />
-                        ) : (
-                          <Icon fontSize={20} icon={themeConfig.navSubItemIcon} />
-                        )}
-                        <Typography variant='body2' sx={{ color: 'text.primary' }}>
-                          {option?.title}
-                        </Typography>
-                      </ListItemButton>
-                    </ListItem>
-                  ) : null
-                }}
               />
+              <List subheader={<li />}>
+                {delayLoading ? (
+                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>
+                    <CircularProgress />
+                  </Box>
+                ) : (
+                  searchValue.length > 0 &&
+                  options.map((items: any) => (
+                    <>
+                      <ListSubheader>{items.title}</ListSubheader>
+                      {items.loading ? (
+                        <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+                          <CircularProgress />
+                        </Box>
+                      ) : items.data.length > 0 ? (
+                        items.data.map((option: any) => (
+                          <ListItem
+                            key={option?.title}
+                            onClick={() => handleOptionClick(option as AppBarSearchType)}
+                            // secondaryAction={<Icon icon='mdi:subdirectory-arrow-left' fontSize={20} />}
+                            sx={{
+                              '& .MuiListItemSecondaryAction-root': {
+                                '& svg': {
+                                  cursor: 'pointer',
+                                  color: 'text.disabled'
+                                }
+                              },
+                              padding: '0px !important'
+                            }}
+                          >
+                            <ListItemButton
+                              sx={{
+                                py: 2.5,
+                                px: `${theme.spacing(6)} !important`,
+                                '& svg': { mr: 2.5, color: 'text.primary' }
+                              }}
+                            >
+                              {option?.logo ? (
+                                <CustomAvatar src={getImagePath(option?.logo)} sx={{ mr: 3, width: 34, height: 34 }} />
+                              ) : (
+                                <Icon fontSize={20} icon={themeConfig.navSubItemIcon} />
+                              )}
+                              <Typography variant='body2' sx={{ color: 'text.primary' }}>
+                                {option?.title}
+                              </Typography>
+                            </ListItemButton>
+                          </ListItem>
+                        ))
+                      ) : (
+                        <Typography variant='body2' sx={{ textAlign: 'center' }}>
+                          No Options For {items.title}
+                        </Typography>
+                      )}
+                    </>
+                  ))
+                )}
+              </List>
             </Box>
             {searchValue.length === 0 ? (
               <Box
@@ -536,7 +530,7 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
                   overflow: 'auto',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  borderTop: `1px solid ${theme.palette.divider}`,
+                  // borderTop: `1px solid ${theme.palette.divider}`,
                   height: fullScreenDialog ? 'calc(100vh - 69px)' : '100%'
                 }}
               >

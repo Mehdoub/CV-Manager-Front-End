@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import ApiRequest from "src/helpers/ApiRequest";
-import { defaultFulfilledStatesValue, defaultPendingStatesValue, defaultRejectedStatesValue, popObjectItemByKey, sliceInitialStateWithData, sliceInitialStateWithStatus } from "src/helpers/functions";
+import { createExtraReducers, defaultFulfilledStatesValue, defaultPendingStatesValue, defaultRejectedStatesValue, popObjectItemByKey, sliceInitialStateWithData, sliceInitialStateWithStatus } from "src/helpers/functions";
 import { ProjectEditData } from "src/views/pages/project/view/ProjectEditDialog";
 
 export const getProjects: any = createAsyncThunk(
@@ -40,6 +40,30 @@ const projectsListSlice = createSlice({
       state.errors = action.payload
       state.data = {}
     })
+  }
+})
+
+export const getProjectsForSearch: any = createAsyncThunk(
+  'getProjectsForSearch',
+  async (params:
+    { page: number, size: number, query: string } = { page: 1, size: 10, query: '' },
+    { rejectWithValue }) => {
+    try {
+      const { page, size, query } = params
+      const response = await ApiRequest.builder().auth().page(page).size(size).query(query).request('get', 'projects')
+
+      return response
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const projectsListForSearchSlice = createSlice({
+  name: 'projectsListForSearchForSearch',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    createExtraReducers(builder, getProjectsForSearch, true, true)
   }
 })
 
@@ -510,6 +534,7 @@ export const { clearAddProjectManager } = addProjectManagerSlice.actions
 export const { clearProjectEdit } = projectEditSlice.actions
 export const projectDeactiveReducer = projectDeactiveSlice.reducer
 export const projectsListReducer = projectsListSlice.reducer
+export const projectsListForSearchReducer = projectsListForSearchSlice.reducer
 export const projectReducer = projectSlice.reducer
 export const createProjectReducer = createProjectSlice.reducer
 export const projectActiveReducer = projectActiveSlice.reducer

@@ -37,6 +37,30 @@ const companiesListSlice = createSlice({
   }
 })
 
+export const getCompaniesForSearch: any = createAsyncThunk(
+  'getCompaniesForSearch',
+  async (params:
+    { page: number, size: number, query: string } = { page: 1, size: 10, query: '' },
+    { rejectWithValue }) => {
+    try {
+      const { page, size, query } = params
+      const response = await ApiRequest.builder().auth().page(page).size(size).query(query).request('get', 'companies')
+
+      return response
+    } catch (err: any) {
+      return rejectWithValue(err?.response)
+    }
+  })
+
+const companiesListForSearchSlice = createSlice({
+  name: 'companiesListForSearch',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    createExtraReducers(builder, getCompaniesForSearch, true, true)
+  }
+})
+
 
 export const getCompany: any = createAsyncThunk(
   'getCompany',
@@ -503,6 +527,7 @@ export const { clearAddCompanyManager } = addCompanyManagerSlice.actions
 export const { clearDeactiveCompany } = companyDeactiveSlice.actions
 export const { clearActiveCompany } = companyActiveSlice.actions
 export const companiesListReducer = companiesListSlice.reducer
+export const companiesListForSearchReducer = companiesListForSearchSlice.reducer
 export const companyReducer = companySlice.reducer
 export const companyManagersReducer = companyManagersSlice.reducer
 export const companyProjectsReducer = companyProjectsSlice.reducer

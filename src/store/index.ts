@@ -17,7 +17,8 @@ import {
   companyStatisticsResumeByStatesReducer,
   companyStatisticsResumeStatesInLastMonthReducer,
   companyStatisticsResumeCountByProjectsReducer,
-  companyStatisticsResumeCountFromMonthReducer
+  companyStatisticsResumeCountFromMonthReducer,
+  companiesListForSearchReducer
 } from './company'
 import {
   addProjectManagerReducer,
@@ -29,6 +30,7 @@ import {
   projectPositionsReducer,
   projectReducer,
   projectResumesReducer,
+  projectsListForSearchReducer,
   projectsListReducer,
   removeProjectManagerReducer
 } from './project'
@@ -36,7 +38,7 @@ import { userBanReducer, userChangePasswordReducer, userEditReducer, userLoginHi
 import successHandler from 'src/middlewares/successHandler'
 import { usernameCheckReducer, verificationCodeCheckReducer, verificationCodeSendReducer } from './auth'
 import errorHandler from 'src/middlewares/errorHandler'
-import { positionActiveReducer, positionCreateReducer, positionDeactiveReducer, positionEditReducer, positionManagerAddReducer, positionManagerRemoveReducer, positionManagersReducer, positionReducer, positionResumesReducer, positionsListReducer } from './position'
+import { positionActiveReducer, positionCreateReducer, positionDeactiveReducer, positionEditReducer, positionManagerAddReducer, positionManagerRemoveReducer, positionManagersReducer, positionReducer, positionResumesReducer, positionsListForSearchReducer, positionsListReducer } from './position'
 import { constantsReducer } from './common'
 import { roleCreateReducer, roleEditReducer, rolesReducer } from './role'
 import { permissionsGroupedReducer } from './permission'
@@ -48,6 +50,7 @@ import { profileEditReducer, profileNotificationsReducer, profileNotificationsSe
 export const store = configureStore({
   reducer: {
     companiesList: companiesListReducer,
+    companiesListForSearch: companiesListForSearchReducer,
     company: companyReducer,
     companyManagers: companyManagersReducer,
     companyProjects: companyProjectsReducer,
@@ -64,6 +67,7 @@ export const store = configureStore({
     companyStatisticsResumeCountFromMonth: companyStatisticsResumeCountFromMonthReducer,
 
     projectsList: projectsListReducer,
+    projectsListForSearch: projectsListForSearchReducer,
     projectFind: projectReducer,
     createProject: createProjectReducer,
     projectDeactive: projectDeactiveReducer,
@@ -76,6 +80,7 @@ export const store = configureStore({
     projectEdit: projectEditReducer,
 
     positionsList: positionsListReducer,
+    positionsListForSearch: positionsListForSearchReducer,
     position: positionReducer,
     positionCreate: positionCreateReducer,
     positionDeactive: positionDeactiveReducer,
