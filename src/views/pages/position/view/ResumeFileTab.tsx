@@ -19,6 +19,29 @@ function ResumeFileTab() {
 
   const [pdfFile, setPdfFile] = useState<any>(resumeFiles?.length > 0 ? resumeFiles[resumeFiles?.length - 1] : '')
 
+  const downloadFile = (pdfUrl: string) => {
+    fetch(pdfUrl, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/pdf'
+      }
+    })
+      .then(response => response.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(new Blob([blob]))
+
+        const link: any = document.createElement('a')
+        link.href = url
+        link.download = resume?.fullname + '.pdf'
+
+        document.body.appendChild(link)
+
+        link.click()
+
+        link.parentNode.removeChild(link)
+      })
+  }
+
   return (
     <>
       <div style={{ width: '1000px' }}></div>
@@ -37,7 +60,10 @@ function ResumeFileTab() {
               {resumeFiles?.map((pdfUrl: string, index: number) => (
                 <Grid xs={12} item p={1} sx={{ flexBasis: '0% !important' }}>
                   <Card
-                    onClick={() => setPdfFile(pdfUrl)}
+                    onClick={() => {
+                      setPdfFile(pdfUrl)
+                      downloadFile(pdfUrl)
+                    }}
                     sx={{
                       py: 2,
                       px: 1,
@@ -48,12 +74,10 @@ function ResumeFileTab() {
                       }
                     }}
                   >
-                    <Link href={pdfUrl} target='_blank' style={{ textDecoration: 'none' }}>
-                      <img style={{ height: '50%', width: '45px' }} src='/images/pdf-file.avif' />
-                      <Typography textAlign='center' fontSize={12}>
-                        file{index + 1}.pdf
-                      </Typography>
-                    </Link>
+                    <img style={{ height: '50%', width: '45px' }} src='/images/pdf-file.avif' />
+                    <Typography textAlign='center' fontSize={12}>
+                      file{index + 1}.pdf
+                    </Typography>
                   </Card>
                 </Grid>
               ))}

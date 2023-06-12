@@ -55,12 +55,12 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
 
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 5,
-    maxSize: 9000000,
+    maxSize: 2000000,
     accept: {
       'application/pdf': getAllowedFormats('file', true)
     },
     onDropRejected: () => {
-      toastError('You Can Nnly Upload 5 .pdf Files With Maximum Size Of 9 MB.')
+      toastError('You Can Only Upload 5 .pdf Files With Maximum Size Of 2 MB.')
     },
     onDropAccepted(acceptedFiles) {
       dispatch(addResumeFiles({ resumeFiles: acceptedFiles, resumeId: resume?._id }))
