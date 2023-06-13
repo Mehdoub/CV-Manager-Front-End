@@ -94,7 +94,7 @@ const CompanyViewRight = ({ tab, companyId }: Props) => {
         >
           <Tab value='overview' label='Overview' icon={<BusinessIcon />} />
           <Tab value='project' label='Projects' icon={<FolderCopyIcon />} />
-          <Tab value='resume' label='Resumes' icon={<AssignmentIndIcon />} />
+          {/* <Tab value='resume' label='Resumes' icon={<AssignmentIndIcon />} /> */}
           <Tab value='manager' label='Managers' icon={<ManageAccountsIcon />} />
           {activeTab == 'project' ? (
             <Button
@@ -122,9 +122,9 @@ const CompanyViewRight = ({ tab, companyId }: Props) => {
               <TabPanel sx={{ p: 0 }} value='project'>
                 <CompanyViewProjects companyId={companyId} />
               </TabPanel>
-              <TabPanel sx={{ p: 0 }} value='resume'>
+              {/* <TabPanel sx={{ p: 0 }} value='resume'>
                 <CompanyViewResumes companyId={companyId} />
-              </TabPanel>
+              </TabPanel> */}
               <TabPanel sx={{ p: 0 }} value='manager'>
                 <CompanyViewManagers />
               </TabPanel>

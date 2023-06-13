@@ -624,7 +624,7 @@ const ResumeDialogHeader = ({
         </Grid>
       </Grid>
       <Grid lg={6} xs={12} item container sx={{ textAlign: 'left', p: 5 }}>
-        <Grid item container lg={7} xl={8} xs={12}>
+        <Grid item container lg={7} xs={12}>
           <Grid item container xs={12} sx={{ textAlign: 'left', alignItems: 'end' }} spacing={2}>
             <Grid item xs={12} mt={10} ml={1}>
               <Typography variant='body2'>Assignee(s):</Typography>
@@ -735,7 +735,6 @@ const ResumeDialogHeader = ({
           item
           container
           lg={5}
-          xl={4}
           xs={12}
           mt={3}
           sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'inherit', flexDirection: 'column' }}

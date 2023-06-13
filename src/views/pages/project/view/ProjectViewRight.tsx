@@ -100,7 +100,7 @@ const ProjectViewRight = ({ tab, projectId }: Props) => {
         >
           <Tab value='overview' label='Overview' icon={<FolderCopyIcon />} />
           <Tab value='position' label='Positions' icon={<WorkIcon />} />
-          <Tab value='resume' label='Resumes' icon={<AssignmentIndIcon />} />
+          {/* <Tab value='resume' label='Resumes' icon={<AssignmentIndIcon />} /> */}
           <Tab value='manager' label='Managers' icon={<ManageAccountsIcon />} />
           {activeTab == 'position' ? (
             <Button
@@ -128,13 +128,13 @@ const ProjectViewRight = ({ tab, projectId }: Props) => {
               <TabPanel sx={{ p: 0 }} value='position'>
                 <ProjectViewPositions />
               </TabPanel>
-              <TabPanel sx={{ p: 0 }} value='resume'>
+              {/* <TabPanel sx={{ p: 0 }} value='resume'>
                 <ResumesView
                   entityStore={projectStore}
                   entityResumesStore={projectResumesStore}
                   getEntityResumesAction={getProjectResumes}
                 />
-              </TabPanel>
+              </TabPanel> */}
               <TabPanel sx={{ p: 0 }} value='manager'>
                 <ProjectViewManagers />
               </TabPanel>

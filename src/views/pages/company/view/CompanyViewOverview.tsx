@@ -45,9 +45,13 @@ const CompanyViewOverview = () => {
         />
       </Grid>
       <Grid item xs={12} sm={6} md={6}>
-        <Skelet loading={loadingStatisticsResumeCountFromMonth} height={425} component={<AnalyticsWeeklySales />} />
+        <Skelet
+          loading={loadingStatisticsResumeCountFromMonth}
+          height={425}
+          component={<AnalyticsWeeklySales statisticsResumeCountFromMonth={statisticsResumeCountFromMonth} />}
+        />
       </Grid>
-      <Grid item xs={12} sm={6} md={6}>
+      {/* <Grid item xs={12} sm={6} md={6}>
         <Grid container spacing={6}>
           <Grid item xs={6}>
             {loadingStatisticsResumeCountByProjects ? (
@@ -88,7 +92,7 @@ const CompanyViewOverview = () => {
       </Grid>
       <Grid item xs={12} sm={6} md={6}>
         {loadingStatisticsResumeCountByProjects ? <Skeleton variant='rounded' height={425} /> : <CrmMonthlyBudget />}
-      </Grid>
+      </Grid> */}
     </Grid>
   )
 }

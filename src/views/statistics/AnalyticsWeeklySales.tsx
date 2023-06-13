@@ -22,17 +22,16 @@ import ReactApexcharts from 'src/@core/components/react-apexcharts'
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 import { useSelector } from 'react-redux'
 
-
-const AnalyticsWeeklySales = () => {
+const AnalyticsWeeklySales = ({ statisticsResumeCountFromMonth }: { statisticsResumeCountFromMonth?: any }) => {
   // ** Hook
   const theme = useTheme()
 
-  let series : any = [
+  let series: any = [
     {
       type: 'column',
       name: 'Received',
       data: []
-    },
+    }
     // {
     //   type: 'column',
     //   name: 'Rejected',
@@ -44,10 +43,10 @@ const AnalyticsWeeklySales = () => {
     //   data: [73, 20, 50, -20, 58, 15, 31]
     // }
   ]
-  
-  const { data: statisticsResumeCountFromMonth } = useSelector(
-    (state: any) => state.companyStatisticsResumeCountFromMonth
-  )
+
+  // const { data: statisticsResumeCountFromMonth } = useSelector(
+  //   (state: any) => state.companyStatisticsResumeCountFromMonth
+  // )
 
   let categories = []
   let totalResumesNumber = 0
@@ -62,7 +61,8 @@ const AnalyticsWeeklySales = () => {
     }
   }
 
-  const receivingRate = totalResumesNumber > 0 ? totalResumesNumber / (categories.length ?? 1) : 0
+  let receivingRate = totalResumesNumber > 0 ? totalResumesNumber / (categories.length ?? 1) : 0
+  receivingRate = Math.round(receivingRate)
 
   const options: ApexOptions = {
     chart: {
