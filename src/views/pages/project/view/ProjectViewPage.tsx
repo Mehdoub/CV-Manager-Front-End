@@ -10,45 +10,100 @@ import CrmTotalProfit from 'src/views/statistics/CrmTotalProfit'
 import Icon from 'src/@core/components/icon'
 import CrmAward from 'src/views/statistics/CrmAward'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
+import { useSelector } from 'react-redux'
+import { Skeleton } from '@mui/material'
+import PersonSearchIcon from '@mui/icons-material/PersonSearch'
+import PersonOffIcon from '@mui/icons-material/PersonOff'
+import TaskIcon from '@mui/icons-material/Task'
 
 type Props = {
   tab: string
   projectId: string
 }
 
+const fakeData = [
+  {
+    count: 20,
+    state: 'Hired'
+  },
+  {
+    count: 30,
+    state: 'Rejected'
+  },
+  {
+    count: 25,
+    state: 'Pending'
+  }
+]
+
 const ProjectView = ({ tab, projectId }: Props) => {
+  const { loading: statisticsResumeByStatesLoading, data: statisticsResumeByStates } = useSelector(
+    (state: any) => state.companyStatisticsResumeByStates
+  )
+  const { loading: statisticsResumeStatesInLastMonthLoading, data: statisticsResumeStatesInLastMonth }: any =
+    useSelector((state: any) => state.companyStatisticsResumeStatesInLastMonth)
+
   return (
     <ApexChartWrapper>
       <Grid container spacing={6}>
-        <Grid item container spacing={6}>
+        <Grid item container spacing={6} className='match-height'>
           <Grid item xs={6} sm={3} md={4}>
-            <CrmAward />
+            {statisticsResumeByStatesLoading ? <Skeleton variant='rounded' height={200} /> : <CrmAward />}
           </Grid>
           <Grid item xs={6} sm={3} md={2}>
-            <CardStatisticsVertical
-              stats='155k'
-              color='primary'
-              trendNumber='+22%'
-              title='Total Orders'
-              chipText='Last 4 Month'
-              icon={<Icon icon='mdi:cart-plus' />}
-            />
+            {statisticsResumeStatesInLastMonthLoading ? (
+              <Skeleton variant='rounded' height={200} />
+            ) : (
+              <CardStatisticsVertical
+                stats='20'
+                color='primary'
+                trendNumber='35%'
+                title='Total Received Resumes'
+                chipText='Last Month'
+                icon={<PersonSearchIcon />}
+                statsData={statisticsResumeStatesInLastMonth}
+                type='received'
+              />
+            )}
           </Grid>
           <Grid item xs={6} sm={3} md={2}>
-            <CardStatisticsVertical
-              stats='$13.4k'
-              color='success'
-              trendNumber='+38%'
-              title='Total Sales'
-              chipText='Last Six Month'
-              icon={<Icon icon='mdi:currency-usd' />}
-            />
+            {statisticsResumeStatesInLastMonthLoading ? (
+              <Skeleton variant='rounded' height={200} />
+            ) : (
+              <CardStatisticsVertical
+                stats='26'
+                color='error'
+                trendNumber='40%'
+                title='Rejected Resumes'
+                chipText='Last Month'
+                icon={<PersonOffIcon />}
+                statsData={statisticsResumeStatesInLastMonth}
+                type='rejected'
+              />
+            )}
           </Grid>
           <Grid item xs={6} sm={3} md={2}>
-            <CrmTotalProfit />
+            {statisticsResumeStatesInLastMonthLoading ? (
+              <Skeleton variant='rounded' height={200} />
+            ) : (
+              <CardStatisticsVertical
+                stats='12'
+                color='success'
+                trendNumber='18%'
+                title='Hired Resumes'
+                chipText='Last Month'
+                icon={<TaskIcon />}
+                statsData={statisticsResumeStatesInLastMonth}
+                type='hired'
+              />
+            )}
           </Grid>
           <Grid item xs={6} sm={3} md={2}>
-            <CrmTotalGrowth />
+            {statisticsResumeByStatesLoading ? (
+              <Skeleton variant='rounded' height={200} />
+            ) : (
+              <CrmTotalGrowth statsData={fakeData} />
+            )}
           </Grid>
         </Grid>
         <Grid item xs={12} md={5} lg={4}>

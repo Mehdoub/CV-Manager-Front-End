@@ -53,9 +53,11 @@ const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
 
 const ResponsiveBtn = styled(Button)<ButtonProps>(({ theme }) => ({
   mb: 2,
-  position: 'absolute',
-  right: '5px',
-  top: '5px',
+  position: 'fixed',
+  // right: '5px',
+  // top: '5px',
+  top: '90px',
+  right: '20px',
   [theme.breakpoints.down('md')]: {
     position: 'unset',
     minWidth: 'auto',
@@ -115,7 +117,11 @@ const PositionViewRight: any = ({ tab, positionId }: Props) => {
           scrollButtons='auto'
           onChange={handleChange}
           aria-label='forced scroll tabs example'
-          sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
+          sx={{
+            borderBottom: theme => `1px solid ${theme.palette.divider}`,
+            position: activeTab == 'resume' ? 'fixed' : undefined,
+            width: '100%'
+          }}
         >
           <Tab value='overview' label='Overview' icon={<WorkIcon />} />
           {/* <Tab value='interview' label='Interviews' icon={<Icon icon='mdi:virtual-meeting' />} /> */}
@@ -133,6 +139,7 @@ const PositionViewRight: any = ({ tab, positionId }: Props) => {
             ''
           )}
         </TabList>
+        {activeTab == 'resume' && <Box sx={{ display: 'flex', width: '100%', height: '100px' }}></Box>}
         <Box sx={{ mt: 6 }}>
           {isLoading ? (
             <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>

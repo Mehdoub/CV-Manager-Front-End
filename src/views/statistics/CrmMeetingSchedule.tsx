@@ -15,11 +15,13 @@ import { ThemeColor } from 'src/@core/layouts/types'
 // ** Custom Components
 import CustomChip from 'src/@core/components/mui/chip'
 import OptionsMenu from 'src/@core/components/option-menu'
+import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 
 interface DataType {
   src: string
   title: string
   subtitle: string
+  interviewer: string
   chipText: string
   chipColor: ThemeColor
 }
@@ -28,43 +30,49 @@ const data: DataType[] = [
   {
     chipText: 'Business',
     chipColor: 'primary',
-    title: 'Call with Woods',
-    src: '/images/avatars/4.png',
+    title: 'Call with Mahdi Amereh',
+    src: '/images/avatars/7.png',
+    interviewer: 'Aliakbar Rezaei',
     subtitle: '21 Jul | 08:20-10:30'
   },
   {
     chipText: 'Dinner',
     chipColor: 'warning',
-    title: 'Conference call',
+    title: 'Meeting with Ali Hamzei',
     src: '/images/avatars/5.png',
+    interviewer: 'Mahdi Mehrjoo',
     subtitle: '28 Jul | 05:00-6:45'
   },
   {
     chipText: 'Meetup',
     chipColor: 'secondary',
-    title: 'Meeting with Mark',
+    title: 'Meeting with Saeed Esfehani',
     src: '/images/avatars/3.png',
+    interviewer: 'Sajjad Firouzeh',
     subtitle: '03 Aug | 07:00-8:30'
   },
   {
     chipText: 'Dinner',
     chipColor: 'error',
-    title: 'Meeting in Oakland',
-    src: '/images/avatars/2.png',
+    title: 'Meeting With Amin Papi',
+    src: '/images/avatars/7.png',
+    interviewer: 'Aliakbar Rezaei',
     subtitle: '14 Feb | 04:15-05:30'
   },
   {
     chipColor: 'success',
     chipText: 'Meditation',
-    title: 'Call with Hilda',
-    src: '/images/avatars/8.png',
+    title: 'Call with Arash Safari',
+    src: '/images/avatars/5.png',
+    interviewer: 'Mahdi Mehrjoo',
     subtitle: '24 Jul | 11:30-12:00'
   },
   {
     chipText: 'Business',
     chipColor: 'primary',
-    title: 'Meeting with Carl',
-    src: '/images/avatars/7.png',
+    title: 'Meeting with Mani Mohammadi',
+    src: '/images/avatars/3.png',
+    interviewer: 'Sajjad Firouzeh',
     subtitle: '05 Oct | 10:00-12:45'
   }
 ]
@@ -92,7 +100,9 @@ const CrmMeetingSchedule = () => {
                 mb: index !== data.length - 1 ? 6.5 : undefined
               }}
             >
-              <Avatar src={item.src} variant='rounded' sx={{ mr: 3, width: 38, height: 38 }} />
+              <BootstrapTooltip placement='top' title={`Interviewer: ${item.interviewer}`}>
+                <Avatar src={item.src} variant='rounded' sx={{ mr: 3, width: 38, height: 38, cursor: 'pointer' }} />
+              </BootstrapTooltip>
               <Box
                 sx={{
                   width: '100%',
