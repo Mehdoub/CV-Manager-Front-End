@@ -30,7 +30,7 @@ import { AppDispatch } from 'src/store'
 
 // ** Custom Table Components Imports
 import TableHeader from 'src/views/pages/user/list/TableHeader'
-import AddUserDrawer from 'src/views/pages/user/list/AddUserDrawer'
+// import AddUserDrawer from 'src/views/pages/user/list/AddUserDrawer'
 import { Autocomplete, ListItem, Popover, Skeleton, Stack } from '@mui/material'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 import { getUsers } from 'src/store/user'
@@ -242,7 +242,7 @@ const UserList = () => {
     <Grid container spacing={6}>
       <Grid item xs={12}>
         <Card>
-          <TableHeader value={searchQuery} toggle={toggleAddUserDrawer} handleFilter={handleFilter} />
+          <TableHeader value={searchQuery} handleFilter={handleFilter} />
           {users?.docs && !loading ? (
             <DataGrid
               autoHeight
@@ -265,7 +265,7 @@ const UserList = () => {
         </Card>
       </Grid>
       <UserEditDialog open={editUserOpen} handleClose={closeEditUserDialog} data={user} />
-      <AddUserDrawer open={addUserOpen} toggle={toggleAddUserDrawer} />
+      {/* <AddUserDrawer open={addUserOpen} toggle={toggleAddUserDrawer} /> */}
     </Grid>
   )
 }

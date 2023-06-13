@@ -27,7 +27,7 @@ import Icon from 'src/@core/components/icon'
 import { useDispatch } from 'react-redux'
 
 // ** Actions Imports
-import { addUser } from 'src/store/apps/user'
+// import { addUser } from 'src/store/apps/user'
 
 // ** Types Imports
 import { AppDispatch } from 'src/store'
@@ -149,7 +149,7 @@ const SidebarAddUser = (props: SidebarAddUserType) => {
   })
 
   const onSubmit = (data: UserData) => {
-    dispatch(addUser({ ...data, role, currentPlan: plan }))
+    // dispatch(addUser({ ...data, role, currentPlan: plan }))
     toggle()
     reset()
   }

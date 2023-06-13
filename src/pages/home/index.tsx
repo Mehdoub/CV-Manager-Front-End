@@ -58,10 +58,10 @@ const Home = () => {
             <span className='sd-hamburger sd-hamburger-3'></span>
           </label>
         </BootstrapTooltip>
-        {actions.map(action => {
+        {actions.map((action: any, index: number) => {
           const IconComponent = action.icon
           return (
-            <BootstrapTooltip title={action.name} placement='top'>
+            <BootstrapTooltip key={`${action.name}-${index}`} title={action.name} placement='top'>
               <a
                 href='#'
                 className='sd-menu-item'
@@ -79,7 +79,7 @@ const Home = () => {
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
-            <Grid container md={12}>
+            <Grid container>
               <Grid sm={12} md={6} item>
                 <img src='/images/banners/welcome.webp' width={'100%'} />
               </Grid>
