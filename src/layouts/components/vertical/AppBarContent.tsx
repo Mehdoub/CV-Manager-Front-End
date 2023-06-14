@@ -14,6 +14,7 @@ import ModeToggler from 'src/@core/layouts/components/shared-components/ModeTogg
 import NotificationDropdown from 'src/@core/layouts/components/shared-components/NotificationDropdown'
 import UserDropdown from 'src/@core/layouts/components/shared-components/UserDropdown'
 import AutocompleteComponent from '../Autocomplete'
+import { useAuth } from 'src/hooks/useAuth'
 
 export const notifications: any = [
   {
@@ -71,6 +72,8 @@ const AppBarContent = (props: Props) => {
   // ** Props
   const { hidden, settings, saveSettings, toggleNavVisibility } = props
 
+  const { user } = useAuth()
+
   return (
     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
       <Box className='actions-left' sx={{ mr: 2, display: 'flex', alignItems: 'center' }}>
@@ -79,7 +82,7 @@ const AppBarContent = (props: Props) => {
             <Icon icon='mdi:menu' />
           </IconButton>
         ) : null}
-        <AutocompleteComponent hidden={hidden} settings={settings} />
+        {user?.mobile_verified_at && <AutocompleteComponent hidden={hidden} settings={settings} />}
       </Box>
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
         {/* <LanguageDropdown settings={settings} saveSettings={saveSettings} /> */}
