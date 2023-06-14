@@ -71,6 +71,13 @@ const defaultValues: { [key: string]: string } = {
   val5: ''
 }
 
+const timerConverter = (timer: number) => {
+  const minutes = Math.floor(timer / (60 * 1000))
+  const seconds = Math.ceil((timer - minutes * 60 * 1000) / 1000)
+
+  return { minutes, seconds }
+}
+
 const Verification = () => {
   // ** State
   const [isBackspace, setIsBackspace] = useState<boolean>(false)
@@ -267,6 +274,8 @@ const Verification = () => {
     checkVerificationCodeLoading ||
     sendVerificationCodeLoading
 
+  const { minutes, seconds } = timerConverter(showTimer)
+
   return (
     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
       {auth?.user?.mobile_verified_at ? (
@@ -392,7 +401,7 @@ const Verification = () => {
                   <Typography sx={{ display: 'inline' }}>
                     Resend Code In{' '}
                     <Typography sx={{ color: getColorCodes('primary'), display: 'inline', fontWeight: 600 }}>
-                      {Math.ceil(showTimer / 1000)}s
+                      {`${minutes ? minutes + 'm' : ''} ${seconds ? seconds + 's' : ''}`}
                     </Typography>
                   </Typography>
                 ) : !disableBtn ? (

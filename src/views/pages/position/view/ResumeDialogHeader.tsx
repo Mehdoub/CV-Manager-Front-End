@@ -83,6 +83,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline'
+import { useSettings } from 'src/@core/hooks/useSettings'
 
 const filter = createFilterOptions<any>()
 
@@ -116,6 +117,7 @@ const ResumeDialogHeader = ({
 
   const dispatch = useDispatch()
   const router = useRouter()
+  const { settings } = useSettings()
 
   const { data: resume } = useSelector((state: any) => state.resume)
   const { data: positionResumes } = useSelector((state: any) => state.positionResumes)
@@ -498,7 +500,7 @@ const ResumeDialogHeader = ({
                         sx={{
                           fontSize: 12,
                           height: 22,
-                          backgroundColor: hexToRGBA(tag?.color, 0.12),
+                          backgroundColor: hexToRGBA(tag?.color, settings.mode == 'dark' ? 0.4 : 0.12),
                           color: tag?.color,
                           borderBottomLeftRadius: 0,
                           borderTopLeftRadius: 0,
@@ -569,7 +571,10 @@ const ResumeDialogHeader = ({
                             size='small'
                             label={tag?.name}
                             skin='light'
-                            sx={{ backgroundColor: hexToRGBA(tag?.color, 0.12), color: tag?.color }}
+                            sx={{
+                              backgroundColor: hexToRGBA(tag?.color, settings.mode == 'dark' ? 0.4 : 0.12),
+                              color: tag?.color
+                            }}
                           />
                           <ListItemSecondaryAction>
                             <Typography>{tag?.count}</Typography>
@@ -648,7 +653,7 @@ const ResumeDialogHeader = ({
                       onDelete={() => removeAssigneeFromResumeHandler(contributorUser?._id)}
                       label={
                         <Link
-                          style={{ textDecoration: 'none', color: '#4c4e64de' }}
+                          style={{ textDecoration: 'none', color: settings.mode == 'dark' ? 'white' : '#4c4e64de' }}
                           href={`/users/view/${contributorUser?._id}/overview`}
                         >
                           {uppercaseFirstLetters(getMaxTextLen(getFullName(contributorUser)))}

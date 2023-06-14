@@ -69,18 +69,18 @@ const ProjectEditDialog = (props: Props) => {
   const [files, setFiles] = useState<File[]>([])
   const [project, setProject] = useState<any>({})
 
-  const [company, setCompany] = useState<any>({})
-  const [companyErr, setCompanyErr] = useState<string>('')
-  const { data: companies, loading: loadingSearchCompanies } = useSelector((state: any) => state.companiesList)
+  // const [company, setCompany] = useState<any>({})
+  // const [companyErr, setCompanyErr] = useState<string>('')
+  // const { data: companies, loading: loadingSearchCompanies } = useSelector((state: any) => state.companiesList)
 
   const dispatch = useDispatch()
 
-  const searchCompanies = (value: any) => {
-    const query = value?.target?.value
-    if (query?.length > 0) dispatch(getCompanies({ query }))
-  }
+  // const searchCompanies = (value: any) => {
+  //   const query = value?.target?.value
+  //   if (query?.length > 0) dispatch(getCompanies({ query }))
+  // }
 
-  const { status } = useSelector((state: any) => state.projectEdit)
+  const { status, loading: projectEditLoading } = useSelector((state: any) => state.projectEdit)
   const { data: projectDataFromView } = useSelector((state: any) => state.projectFind)
 
   useEffect(() => {
@@ -114,16 +114,16 @@ const ProjectEditDialog = (props: Props) => {
     if (project?.id) {
       setValue('name', project?.name)
       setValue('description', project?.description)
-      setCompany(project?.company_id)
+      // setCompany(project?.company_id)
     }
   }, [project])
 
-  const clearInputs = () => {
-    setValue('name', '')
-    setValue('description', '')
-    setCompany({})
-    setCompanyErr('')
-  }
+  // const clearInputs = () => {
+  //   setValue('name', '')
+  //   setValue('description', '')
+  //   setCompany({})
+  //   setCompanyErr('')
+  // }
 
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 1,
@@ -156,16 +156,16 @@ const ProjectEditDialog = (props: Props) => {
   }
 
   const onSubmit = (data: any) => {
-    if (!company?.id) {
-      setCompanyErr('Company cannot be empty!')
-    } else {
-      let projectEditData: ProjectEditData = { ...data, projectId: project?.id, company_id: company?.id }
-      if (files[0]) {
-        projectEditData = { ...projectEditData, logo: files[0] }
-      }
-      dispatch(editProject(projectEditData))
-      // reset()
+    // if (!company?.id) {
+    //   setCompanyErr('Company cannot be empty!')
+    // } else {
+    // }
+    let projectEditData: ProjectEditData = { ...data, projectId: project?.id }
+    if (files[0]) {
+      projectEditData = { ...projectEditData, logo: files[0] }
     }
+    dispatch(editProject(projectEditData))
+    // reset()
   }
 
   return (
@@ -252,7 +252,7 @@ const ProjectEditDialog = (props: Props) => {
                 {errors.name && <FormHelperText sx={{ color: 'error.main' }}>{errors.name.message}</FormHelperText>}
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            {/* <Grid item xs={12} sm={6}>
               <FormControl fullWidth sx={{ mb: 6 }}>
                 <Autocomplete
                   autoHighlight
@@ -292,7 +292,7 @@ const ProjectEditDialog = (props: Props) => {
                 />
                 {companyErr && <FormHelperText sx={{ color: 'error.main' }}>{companyErr}</FormHelperText>}
               </FormControl>
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} sm={12} md={12}>
               <FormControl fullWidth>
                 <Controller
@@ -318,10 +318,10 @@ const ProjectEditDialog = (props: Props) => {
             </Grid>
           </Grid>
           <DialogActions sx={{ justifyContent: 'center' }}>
-            <Button type='submit' variant='contained' sx={{ mr: 1 }}>
+            <Button type='submit' variant='contained' sx={{ mr: 1 }} disabled={projectEditLoading}>
               Submit
             </Button>
-            <Button variant='outlined' color='secondary' onClick={closeHandler}>
+            <Button variant='outlined' color='secondary' onClick={closeHandler} disabled={projectEditLoading}>
               Cancel
             </Button>
           </DialogActions>

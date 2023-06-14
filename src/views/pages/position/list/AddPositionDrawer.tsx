@@ -110,8 +110,11 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
 
   const dispatch = useDispatch()
 
-  const positionCreateStore = useSelector((state: any) => state.positionCreate)
-  const { status, errors: createErrors } = positionCreateStore
+  const {
+    status,
+    errors: createErrors,
+    loading: positionCreateLoading
+  } = useSelector((state: any) => state.positionCreate)
 
   const { data: project } = useSelector((state: any) => state.projectFind)
 
@@ -194,7 +197,7 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
     maxFiles: 1,
     maxSize: 2000000,
     accept: {
-      'image/*': getAllowedFormats('image', true)
+      'image/*': getAllowedFormats('image', true) as string[]
     },
     onDrop: (acceptedFiles: File[]) => {
       setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
@@ -389,10 +392,16 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
             )}
           </FormControl>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Button size='large' type='submit' variant='contained' sx={{ mr: 3 }}>
+            <Button size='large' type='submit' variant='contained' sx={{ mr: 3 }} disabled={positionCreateLoading}>
               Submit
             </Button>
-            <Button size='large' variant='outlined' color='secondary' onClick={handleClose}>
+            <Button
+              size='large'
+              variant='outlined'
+              color='secondary'
+              onClick={handleClose}
+              disabled={positionCreateLoading}
+            >
               Cancel
             </Button>
           </Box>

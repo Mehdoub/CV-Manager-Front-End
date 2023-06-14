@@ -1,8 +1,8 @@
 import {
-  Autocomplete,
-  Avatar,
+  // Autocomplete,
+  // Avatar,
   Button,
-  CircularProgress,
+  // CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
@@ -12,10 +12,10 @@ import {
   FormHelperText,
   Grid,
   InputLabel,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
+  // List,
+  // ListItem,
+  // ListItemAvatar,
+  // ListItemText,
   MenuItem,
   Select,
   Typography
@@ -33,8 +33,8 @@ import { toast } from 'react-hot-toast'
 import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useDispatch } from 'react-redux'
-import { getProjects } from 'src/store/project'
-import { getImagePath } from 'src/helpers/functions'
+// import { getProjects } from 'src/store/project'
+import { getAllowedFormats, getImagePath } from 'src/helpers/functions'
 import { clearPositionEdit, editPosition, getPosition, getPositions } from 'src/store/position'
 import { PositionFormData } from '../list/AddPositionDrawer'
 
@@ -60,18 +60,18 @@ const PositionEditDialog = (props: Props) => {
   const [files, setFiles] = useState<File[]>([])
   const [position, setPosition] = useState<any>({})
 
-  const [project, setProject] = useState<any>({})
-  const [projectErr, setProjectErr] = useState<string>('')
-  const { data: projects, loading: loadingSearchProjects } = useSelector((state: any) => state.projectsList)
+  // const [project, setProject] = useState<any>({})
+  // const [projectErr, setProjectErr] = useState<string>('')
+  // const { data: projects, loading: loadingSearchProjects } = useSelector((state: any) => state.projectsList)
 
   const dispatch = useDispatch()
 
-  const searchProjects = (value: any) => {
-    const query = value?.target?.value
-    if (query?.length > 0) dispatch(getProjects({ query }))
-  }
+  // const searchProjects = (value: any) => {
+  //   const query = value?.target?.value
+  //   if (query?.length > 0) dispatch(getProjects({ query }))
+  // }
 
-  const { status } = useSelector((state: any) => state.positionEdit)
+  const { status, loading: positionEditLoading } = useSelector((state: any) => state.positionEdit)
   const { data: positionDataFromView } = useSelector((state: any) => state.position)
   const {
     data: {
@@ -110,7 +110,6 @@ const PositionEditDialog = (props: Props) => {
   }, [status])
 
   const {
-    reset,
     setValue,
     control,
     handleSubmit,
@@ -126,24 +125,24 @@ const PositionEditDialog = (props: Props) => {
       setValue('title', position?.title)
       setValue('level', position?.level)
       setValue('description', position?.description)
-      setProject(position?.project_id)
+      // setProject(position?.project_id)
     }
   }, [position])
 
-  const clearInputs = () => {
-    setValue('title', '')
-    setValue('level', '')
-    setValue('description', '')
-    setProject({})
-    setProjectErr('')
-    setFiles([])
-  }
+  // const clearInputs = () => {
+  //   setValue('title', '')
+  //   setValue('level', '')
+  //   setValue('description', '')
+  //   setProject({})
+  //   setProjectErr('')
+  //   setFiles([])
+  // }
 
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 1,
     maxSize: 2000000,
     accept: {
-      'image/*': ['.png', '.jpg', '.jpeg', '.gif']
+      'image/*': getAllowedFormats('image', true) as string[]
     },
     onDrop: (acceptedFiles: File[]) => {
       setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
@@ -170,17 +169,16 @@ const PositionEditDialog = (props: Props) => {
   }
 
   const onSubmit = (data: PositionFormData) => {
-    setProjectErr('')
-    if (!project?.id) {
-      setProjectErr('Project cannot be empty!')
-    } else {
-      let projectEditData: PositionEditData = { ...data, positionId: position?.id, project_id: project?.id }
-      if (files[0]) {
-        projectEditData = { ...projectEditData, logo: files[0] }
-      }
-      dispatch(editPosition(projectEditData))
-      // reset()
+    // setProjectErr('')
+    // if (!project?.id) {
+    //   setProjectErr('Project cannot be empty!')
+    // } else {
+    // }
+    let projectEditData: PositionEditData = { ...data, positionId: position?.id }
+    if (files[0]) {
+      projectEditData = { ...projectEditData, logo: files[0] }
     }
+    dispatch(editPosition(projectEditData))
   }
 
   return (
@@ -267,7 +265,7 @@ const PositionEditDialog = (props: Props) => {
                 {errors.title && <FormHelperText sx={{ color: 'error.main' }}>{errors.title.message}</FormHelperText>}
               </FormControl>
             </Grid>
-            <Grid item xs={12} sm={6}>
+            {/* <Grid item xs={12} sm={6}>
               <FormControl fullWidth sx={{ mb: 6 }}>
                 <Autocomplete
                   autoHighlight
@@ -311,7 +309,7 @@ const PositionEditDialog = (props: Props) => {
                 />
                 {projectErr && <FormHelperText sx={{ color: 'error.main' }}>{projectErr}</FormHelperText>}
               </FormControl>
-            </Grid>
+            </Grid> */}
             <Grid item xs={12} sm={6}>
               <FormControl fullWidth sx={{ mb: 6 }}>
                 <Controller
@@ -367,10 +365,10 @@ const PositionEditDialog = (props: Props) => {
             </Grid>
           </Grid>
           <DialogActions sx={{ justifyContent: 'center' }}>
-            <Button type='submit' variant='contained' sx={{ mr: 1 }}>
+            <Button type='submit' variant='contained' sx={{ mr: 1 }} disabled={positionEditLoading}>
               Submit
             </Button>
-            <Button variant='outlined' color='secondary' onClick={closeHandler}>
+            <Button variant='outlined' color='secondary' onClick={closeHandler} disabled={positionEditLoading}>
               Cancel
             </Button>
           </DialogActions>

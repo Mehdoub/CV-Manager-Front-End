@@ -465,16 +465,11 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
                 }}
               />
               <List subheader={<li />}>
-                {delayLoading ? (
-                  <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100px' }}>
-                    <CircularProgress />
-                  </Box>
-                ) : (
-                  searchValue.length > 0 &&
+                {searchValue.length > 0 &&
                   options.map((items: any) => (
                     <>
                       <ListSubheader>{items.title}</ListSubheader>
-                      {items.loading ? (
+                      {items.loading || delayLoading ? (
                         <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                           <CircularProgress />
                         </Box>
@@ -518,8 +513,7 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
                         </Typography>
                       )}
                     </>
-                  ))
-                )}
+                  ))}
               </List>
             </Box>
             {searchValue.length === 0 ? (

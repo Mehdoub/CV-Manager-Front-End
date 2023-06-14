@@ -77,7 +77,7 @@ const NotificationsTab = () => {
         <CircularProgress />
       ) : latestNotifications?.docs?.length > 0 ? (
         latestNotifications?.docs?.map((notification: any, index: number) => (
-          <Grid key={`notification-${index}`} item sx={{ width: '80%' }}>
+          <Grid key={`notification-${index}`} item sx={{ width: '100%' }}>
             <Card
               sx={{
                 width: '100%',

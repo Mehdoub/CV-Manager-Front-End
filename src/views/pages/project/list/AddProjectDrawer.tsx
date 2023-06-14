@@ -87,7 +87,7 @@ const schema = yup.object().shape(
 
 export interface ProjectFormData {
   name: string
-  company_id: string
+  company_id?: string
   description: string
   logo?: any
 }
@@ -108,7 +108,11 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
   const [companyErr, setCompanyErr] = useState<string>('')
 
   const dispatch = useDispatch()
-  const { status, errors: createErrors } = useSelector((state: any) => state.createProject)
+  const {
+    status,
+    errors: createErrors,
+    loading: createProjectLoading
+  } = useSelector((state: any) => state.createProject)
 
   const { data: companies, loading: loadingSearchCompanies } = useSelector((state: any) => state.companiesList)
 
@@ -163,7 +167,7 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
     maxFiles: 1,
     maxSize: 2000000,
     accept: {
-      'image/*': getAllowedFormats('image', true)
+      'image/*': getAllowedFormats('image', true) as string[]
     },
     onDrop: (acceptedFiles: File[]) => {
       setFiles(acceptedFiles.map((file: File) => Object.assign(file)))
@@ -330,10 +334,16 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
             )}
           </FormControl>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Button size='large' type='submit' variant='contained' sx={{ mr: 3 }}>
+            <Button size='large' type='submit' variant='contained' sx={{ mr: 3 }} disabled={createProjectLoading}>
               Submit
             </Button>
-            <Button size='large' variant='outlined' color='secondary' onClick={handleClose}>
+            <Button
+              size='large'
+              variant='outlined'
+              color='secondary'
+              onClick={handleClose}
+              disabled={createProjectLoading}
+            >
               Cancel
             </Button>
           </Box>
