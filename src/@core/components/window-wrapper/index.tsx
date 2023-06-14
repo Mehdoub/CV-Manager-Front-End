@@ -26,13 +26,11 @@ const WindowWrapper = ({ children }: Props) => {
 
   useEffect(() => {
     setNotificationCount(notificationsSeenStatus ? 0 : notifications?.totalDocs)
-    console.log('notifications: ', notifications)
   }, [notifications, notificationsSeenStatus])
 
   useEffect(() => {
     const channel = new window.BroadcastChannel('sw-messages')
     channel.addEventListener('message', event => {
-      console.log('dispatched')
       dispatch(getNotifications({ state: 'unread', size: 7, page: 1 }))
     })
   }, [])
