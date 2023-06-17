@@ -14,7 +14,17 @@ import ReactApexcharts from 'src/@core/components/react-apexcharts'
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
 
-const ResumesPerProjectsStats = ({ title, projects }: { title: string; projects: any }) => {
+const ResumesPerItemsStats = ({
+  title,
+  items,
+  nameField,
+  entity
+}: {
+  title: string
+  items: any
+  nameField: string
+  entity: string
+}) => {
   // ** Hook
   const theme = useTheme()
 
@@ -27,10 +37,10 @@ const ResumesPerProjectsStats = ({ title, projects }: { title: string; projects:
   ]
   let totalResumesNumber = 0
 
-  if (projects && projects.length > 0) {
-    projects.map((item: any, index: number) => {
+  if (items && items?.length > 0) {
+    items.map((item: any, index: number) => {
       if (index < 5) {
-        categories.push(item?.project?.name)
+        categories.push(item?.[entity]?.[nameField])
         series[0].data.push(item?.count)
         totalResumesNumber += item?.count
       }
@@ -142,4 +152,4 @@ const ResumesPerProjectsStats = ({ title, projects }: { title: string; projects:
   )
 }
 
-export default ResumesPerProjectsStats
+export default ResumesPerItemsStats

@@ -30,7 +30,7 @@ const ProjectSuspendDialog = (props: Props) => {
 
   const dispatch = useDispatch()
 
-  const projectStore = useSelector((state: any) => state.projectFind)
+  const projectStore = useSelector((state: any) => state.project)
   const { data: project } = projectStore
 
   const projectDeactiveStore = useSelector((state: any) => state.projectDeactive)

@@ -457,6 +457,65 @@ const positionResumesSlice = createSlice({
 })
 
 
+export const getPositionStatisticsResumeByStates: any = createAsyncThunk('getPositionStatisticsResumeByStates', async (positionId: string, { rejectWithValue }) => {
+  try {
+    const response = await ApiRequest.builder().auth().request('get', `positions/${positionId}/statistics/resume-by-states`)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const positionStatisticsResumeByStatesSlice = createSlice({
+  name: 'positionStatisticsResumeByStates',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    createExtraReducers(builder, getPositionStatisticsResumeByStates, true)
+  }
+})
+
+
+export const getPositionStatisticsResumeStatesInLastMonth: any = createAsyncThunk('getPositionStatisticsResumeStatesInLastMonth', async (positionId: string, { rejectWithValue }) => {
+  try {
+    const response = await ApiRequest.builder().auth().request('get', `positions/${positionId}/statistics/resume-state-in-last-month`)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const positionStatisticsResumeStatesInLastMonthSlice = createSlice({
+  name: 'positionStatisticsResumeStatesInLastMonth',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    createExtraReducers(builder, getPositionStatisticsResumeStatesInLastMonth, true, true)
+  }
+})
+
+
+export const getPositionStatisticsResumeCountFromMonth: any = createAsyncThunk('getPositionStatisticsResumeCountFromMonth', async (positionId: string, { rejectWithValue }) => {
+  try {
+    const response = await ApiRequest.builder().auth().request('get', `positions/${positionId}/statistics/resume-count-from-month`)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const positionStatisticsResumeCountFromMonthSlice = createSlice({
+  name: 'positionStatisticsResumeCountFromMonth',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    createExtraReducers(builder, getPositionStatisticsResumeCountFromMonth, true, true)
+  }
+})
+
 
 export const { clearPositionCreate } = positionCreateSlice.actions
 export const { clearPositionDeactive } = positionDeactiveSlice.actions
@@ -475,3 +534,6 @@ export const positionManagerAddReducer = positionManagerAddSlice.reducer
 export const positionManagerRemoveReducer = positionManagerRemoveSlice.reducer
 export const positionEditReducer = positionEditSlice.reducer
 export const positionResumesReducer = positionResumesSlice.reducer
+export const positionStatisticsResumeByStatesReducer = positionStatisticsResumeByStatesSlice.reducer
+export const positionStatisticsResumeStatesInLastMonthReducer = positionStatisticsResumeStatesInLastMonthSlice.reducer
+export const positionStatisticsResumeCountFromMonthReducer = positionStatisticsResumeCountFromMonthSlice.reducer

@@ -36,7 +36,7 @@ const ProjectRemoveManagerDialog = (props: Props) => {
   const removeProjectManagerStore = useSelector((state: any) => state.removeProjectManager)
   const { status: projectManagerRemoveStatus } = removeProjectManagerStore
 
-  const projectStore = useSelector((state: any) => state.projectFind)
+  const projectStore = useSelector((state: any) => state.project)
   const { data: projectData } = projectStore
 
   const projectId = projectData?.id

@@ -116,7 +116,7 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
     loading: positionCreateLoading
   } = useSelector((state: any) => state.positionCreate)
 
-  const { data: project } = useSelector((state: any) => state.projectFind)
+  const { data: project } = useSelector((state: any) => state.project)
 
   const { data: projects, loading: loadingSearchProjects } = useSelector((state: any) => state.projectsList)
 

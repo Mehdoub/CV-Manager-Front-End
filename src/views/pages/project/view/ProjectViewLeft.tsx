@@ -65,7 +65,7 @@ const ProjectViewLeft = ({ projectId }: Props) => {
   const handleEditClose = () => setOpenEdit(false)
 
   const dispatch = useDispatch()
-  const store = useSelector((state: any) => state.projectFind)
+  const store = useSelector((state: any) => state.project)
   const { data: project, loading, errors } = store
 
   useEffect(() => {

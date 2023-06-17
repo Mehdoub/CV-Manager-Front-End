@@ -74,7 +74,7 @@ const ProjectViewManagers = () => {
 
   const dispatch = useDispatch()
 
-  const projectStore = useSelector((state: any) => state.projectFind)
+  const projectStore = useSelector((state: any) => state.project)
   const { data: project } = projectStore
 
   const projectManagersStore = useSelector((state: any) => state.projectManagers)

@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid'
-import ResumesPerProjectsStats from 'src/views/statistics/ResumesPerProjectsStats'
+import ResumesPerItemsStats from 'src/views/statistics/ResumesPerItemsStats'
 import Icon from 'src/@core/components/icon'
 import CardStatisticsVertical from 'src/@core/components/card-statistics/card-stats-vertical'
 import AnalyticsTotalRevenue from 'src/views/statistics/AnalyticsTotalRevenue'
@@ -40,7 +40,12 @@ const CompanyViewOverview = () => {
           loading={loadingStatisticsResumeCountByProjects}
           height={425}
           component={
-            <ResumesPerProjectsStats projects={statisticsResumeCountByProjects} title="Projects' Resumes Number" />
+            <ResumesPerItemsStats
+              items={statisticsResumeCountByProjects}
+              title="Projects' Resumes Number"
+              entity='project'
+              nameField='name'
+            />
           }
         />
       </Grid>

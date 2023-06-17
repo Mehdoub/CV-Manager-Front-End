@@ -15,6 +15,9 @@ import { Skeleton } from '@mui/material'
 import PersonSearchIcon from '@mui/icons-material/PersonSearch'
 import PersonOffIcon from '@mui/icons-material/PersonOff'
 import TaskIcon from '@mui/icons-material/Task'
+import { useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import { getProjectStatisticsResumeByStates, getProjectStatisticsResumeStatesInLastMonth } from 'src/store/project'
 
 type Props = {
   tab: string
@@ -37,11 +40,21 @@ const fakeData = [
 ]
 
 const ProjectView = ({ tab, projectId }: Props) => {
+  const dispatch = useDispatch()
+
+  const { data: project } = useSelector((state: any) => state.project)
   const { loading: statisticsResumeByStatesLoading, data: statisticsResumeByStates } = useSelector(
-    (state: any) => state.companyStatisticsResumeByStates
+    (state: any) => state.projectStatisticsResumeByStates
   )
   const { loading: statisticsResumeStatesInLastMonthLoading, data: statisticsResumeStatesInLastMonth }: any =
-    useSelector((state: any) => state.companyStatisticsResumeStatesInLastMonth)
+    useSelector((state: any) => state.projectStatisticsResumeStatesInLastMonth)
+
+  useEffect(() => {
+    if (project?.id) {
+      dispatch(getProjectStatisticsResumeByStates(project.id))
+      dispatch(getProjectStatisticsResumeStatesInLastMonth(project.id))
+    }
+  }, [project?.id])
 
   return (
     <ApexChartWrapper>
@@ -55,9 +68,9 @@ const ProjectView = ({ tab, projectId }: Props) => {
               <Skeleton variant='rounded' height={200} />
             ) : (
               <CardStatisticsVertical
-                stats='20'
+                stats='0'
                 color='primary'
-                trendNumber='35%'
+                trendNumber='0%'
                 title='Total Received Resumes'
                 chipText='Last Month'
                 icon={<PersonSearchIcon />}
@@ -71,9 +84,9 @@ const ProjectView = ({ tab, projectId }: Props) => {
               <Skeleton variant='rounded' height={200} />
             ) : (
               <CardStatisticsVertical
-                stats='26'
+                stats='0'
                 color='error'
-                trendNumber='40%'
+                trendNumber='0%'
                 title='Rejected Resumes'
                 chipText='Last Month'
                 icon={<PersonOffIcon />}
@@ -87,9 +100,9 @@ const ProjectView = ({ tab, projectId }: Props) => {
               <Skeleton variant='rounded' height={200} />
             ) : (
               <CardStatisticsVertical
-                stats='12'
+                stats='0'
                 color='success'
-                trendNumber='18%'
+                trendNumber='0%'
                 title='Hired Resumes'
                 chipText='Last Month'
                 icon={<TaskIcon />}
@@ -102,7 +115,7 @@ const ProjectView = ({ tab, projectId }: Props) => {
             {statisticsResumeByStatesLoading ? (
               <Skeleton variant='rounded' height={200} />
             ) : (
-              <CrmTotalGrowth statsData={fakeData} />
+              <CrmTotalGrowth statsData={statisticsResumeByStates} />
             )}
           </Grid>
         </Grid>

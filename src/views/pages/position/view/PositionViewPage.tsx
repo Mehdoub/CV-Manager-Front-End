@@ -14,6 +14,9 @@ import { useSelector } from 'react-redux'
 import PersonSearchIcon from '@mui/icons-material/PersonSearch'
 import PersonOffIcon from '@mui/icons-material/PersonOff'
 import TaskIcon from '@mui/icons-material/Task'
+import { useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import { getPositionStatisticsResumeByStates, getPositionStatisticsResumeStatesInLastMonth } from 'src/store/position'
 
 const fakeData = [
   {
@@ -36,11 +39,21 @@ type Props = {
 }
 
 const PositionViewPage = ({ tab, positionId }: Props) => {
+  const dispatch = useDispatch()
+
+  const { data: position } = useSelector((state: any) => state.position)
   const { loading: statisticsResumeByStatesLoading, data: statisticsResumeByStates } = useSelector(
-    (state: any) => state.companyStatisticsResumeByStates
+    (state: any) => state.positionStatisticsResumeByStates
   )
   const { loading: statisticsResumeStatesInLastMonthLoading, data: statisticsResumeStatesInLastMonth }: any =
-    useSelector((state: any) => state.companyStatisticsResumeStatesInLastMonth)
+    useSelector((state: any) => state.positionStatisticsResumeStatesInLastMonth)
+
+  useEffect(() => {
+    if (position?.id) {
+      dispatch(getPositionStatisticsResumeByStates(position.id))
+      dispatch(getPositionStatisticsResumeStatesInLastMonth(position.id))
+    }
+  }, [position?.id])
 
   return (
     <ApexChartWrapper>
@@ -55,9 +68,9 @@ const PositionViewPage = ({ tab, positionId }: Props) => {
                 <Skeleton variant='rounded' height={200} />
               ) : (
                 <CardStatisticsVertical
-                  stats='20'
+                  stats='0'
                   color='primary'
-                  trendNumber='35%'
+                  trendNumber='0%'
                   title='Total Received Resumes'
                   chipText='Last Month'
                   icon={<PersonSearchIcon />}
@@ -71,9 +84,9 @@ const PositionViewPage = ({ tab, positionId }: Props) => {
                 <Skeleton variant='rounded' height={200} />
               ) : (
                 <CardStatisticsVertical
-                  stats='26'
+                  stats='0'
                   color='error'
-                  trendNumber='40%'
+                  trendNumber='0%'
                   title='Rejected Resumes'
                   chipText='Last Month'
                   icon={<PersonOffIcon />}
@@ -87,9 +100,9 @@ const PositionViewPage = ({ tab, positionId }: Props) => {
                 <Skeleton variant='rounded' height={200} />
               ) : (
                 <CardStatisticsVertical
-                  stats='12'
+                  stats='0'
                   color='success'
-                  trendNumber='18%'
+                  trendNumber='0%'
                   title='Hired Resumes'
                   chipText='Last Month'
                   icon={<TaskIcon />}
@@ -102,7 +115,7 @@ const PositionViewPage = ({ tab, positionId }: Props) => {
               {statisticsResumeByStatesLoading ? (
                 <Skeleton variant='rounded' height={200} />
               ) : (
-                <CrmTotalGrowth statsData={fakeData} />
+                <CrmTotalGrowth statsData={statisticsResumeByStates} />
               )}
             </Grid>
           </Grid>

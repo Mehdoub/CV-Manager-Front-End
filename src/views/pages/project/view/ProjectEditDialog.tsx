@@ -81,7 +81,7 @@ const ProjectEditDialog = (props: Props) => {
   // }
 
   const { status, loading: projectEditLoading } = useSelector((state: any) => state.projectEdit)
-  const { data: projectDataFromView } = useSelector((state: any) => state.projectFind)
+  const { data: projectDataFromView } = useSelector((state: any) => state.project)
 
   useEffect(() => {
     if (projectDataFromList?.id?.length > 0) setProject(projectDataFromList)

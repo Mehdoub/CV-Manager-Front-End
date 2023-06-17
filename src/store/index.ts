@@ -30,19 +30,68 @@ import {
   projectPositionsReducer,
   projectReducer,
   projectResumesReducer,
+  projectStatisticsResumeByStatesReducer,
+  projectStatisticsResumeCountByPositionsReducer,
+  projectStatisticsResumeCountFromMonthReducer,
+  projectStatisticsResumeStatesInLastMonthReducer,
   projectsListForSearchReducer,
   projectsListReducer,
   removeProjectManagerReducer
 } from './project'
-import { userBanReducer, userChangePasswordReducer, userEditReducer, userLoginHistoryReducer, userPermitReducer, userReducer, usersListReducer } from './user'
+import {
+  userBanReducer,
+  userChangePasswordReducer,
+  userEditReducer,
+  userLoginHistoryReducer,
+  userPermitReducer,
+  userReducer,
+  usersListReducer
+} from './user'
 import successHandler from 'src/middlewares/successHandler'
-import { usernameCheckReducer, verificationCodeCheckReducer, verificationCodeSendReducer } from './auth'
+import {
+  usernameCheckReducer,
+  verificationCodeCheckReducer,
+  verificationCodeSendReducer
+} from './auth'
 import errorHandler from 'src/middlewares/errorHandler'
-import { positionActiveReducer, positionCreateReducer, positionDeactiveReducer, positionEditReducer, positionManagerAddReducer, positionManagerRemoveReducer, positionManagersReducer, positionReducer, positionResumesReducer, positionsListForSearchReducer, positionsListReducer } from './position'
+import {
+  positionActiveReducer,
+  positionCreateReducer,
+  positionDeactiveReducer,
+  positionEditReducer,
+  positionManagerAddReducer,
+  positionManagerRemoveReducer,
+  positionManagersReducer,
+  positionReducer,
+  positionResumesReducer,
+  positionStatisticsResumeByStatesReducer,
+  positionStatisticsResumeCountFromMonthReducer,
+  positionStatisticsResumeStatesInLastMonthReducer,
+  positionsListForSearchReducer,
+  positionsListReducer
+} from './position'
 import { constantsReducer } from './common'
 import { roleCreateReducer, roleEditReducer, rolesReducer } from './role'
 import { permissionsGroupedReducer } from './permission'
-import { resumeAddCallHistoryReducer, resumeAddAssigneeReducer, resumeAddFilesReducer, resumeAddInterviewReducer, resumeAddTagReducer, resumeCreateReducer, resumeEditReducer, resumeEndWorkReducer, resumeHireReducer, resumeReducer, resumeRejectReducer, resumeRemoveAssigneeReducer, resumeRemoveTagReducer, resumeUpdateStatusReducer, resumeAddCommentReducer, resumesListReducer, resumesIndexReducer } from './resume'
+import {
+  resumeAddCallHistoryReducer,
+  resumeAddAssigneeReducer,
+  resumeAddFilesReducer,
+  resumeAddInterviewReducer,
+  resumeAddTagReducer,
+  resumeCreateReducer,
+  resumeEditReducer,
+  resumeEndWorkReducer,
+  resumeHireReducer,
+  resumeReducer,
+  resumeRejectReducer,
+  resumeRemoveAssigneeReducer,
+  resumeRemoveTagReducer,
+  resumeUpdateStatusReducer,
+  resumeAddCommentReducer,
+  resumesListReducer,
+  resumesIndexReducer
+} from './resume'
 import { citiesByProvinceReducer, provincesReducer } from './province'
 import { tagCreateReducer, tagsReducer } from './tag'
 import { profileEditReducer, profileNotificationsReducer, profileNotificationsSeenReducer } from './profile'
@@ -68,7 +117,7 @@ export const store = configureStore({
 
     projectsList: projectsListReducer,
     projectsListForSearch: projectsListForSearchReducer,
-    projectFind: projectReducer,
+    project: projectReducer,
     createProject: createProjectReducer,
     projectDeactive: projectDeactiveReducer,
     projectActive: projectActiveReducer,
@@ -78,6 +127,10 @@ export const store = configureStore({
     projectPositions: projectPositionsReducer,
     projectResumes: projectResumesReducer,
     projectEdit: projectEditReducer,
+    projectStatisticsResumeByStates: projectStatisticsResumeByStatesReducer,
+    projectStatisticsResumeStatesInLastMonth: projectStatisticsResumeStatesInLastMonthReducer,
+    projectStatisticsResumeCountByPositions: projectStatisticsResumeCountByPositionsReducer,
+    projectStatisticsResumeCountFromMonth: projectStatisticsResumeCountFromMonthReducer,
 
     positionsList: positionsListReducer,
     positionsListForSearch: positionsListForSearchReducer,
@@ -90,6 +143,9 @@ export const store = configureStore({
     positionManagerRemove: positionManagerRemoveReducer,
     positionEdit: positionEditReducer,
     positionResumes: positionResumesReducer,
+    positionStatisticsResumeByStates: positionStatisticsResumeByStatesReducer,
+    positionStatisticsResumeStatesInLastMonth: positionStatisticsResumeStatesInLastMonthReducer,
+    positionStatisticsResumeCountFromMonth: positionStatisticsResumeCountFromMonthReducer,
 
     usersList: usersListReducer,
     user: userReducer,

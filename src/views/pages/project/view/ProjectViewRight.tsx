@@ -60,7 +60,7 @@ const ProjectViewRight = ({ tab, projectId }: Props) => {
   // ** Hooks
   const router = useRouter()
 
-  const projectStore = useSelector((state: any) => state.projectFind)
+  const projectStore = useSelector((state: any) => state.project)
   const projectResumesStore = useSelector((state: any) => state.projectResumes)
   const { data: constants } = useSelector((state: any) => state.constants)
 

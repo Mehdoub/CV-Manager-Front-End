@@ -49,7 +49,7 @@ const ProjectPositionListTable = () => {
   const [pageSize, setPageSize] = useState<number>(7)
 
   const dispatch = useDispatch<any>()
-  const { data: project } = useSelector((state: any) => state.projectFind)
+  const { data: project } = useSelector((state: any) => state.project)
 
   const { data: positions, loading: loadingPositions } = useSelector((state: any) => state.projectPositions)
 

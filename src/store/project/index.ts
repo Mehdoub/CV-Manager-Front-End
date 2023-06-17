@@ -81,7 +81,7 @@ export const getProject: any = createAsyncThunk(
     }
   })
 
-const projectSlice = createSlice({
+const projectSlice: any = createSlice({
   name: 'project',
   initialState: {
     loading: false,
@@ -410,7 +410,7 @@ export const getProjectPositions: any = createAsyncThunk(
   'getProjectPositions',
   async (projectId: string | undefined = undefined, { rejectWithValue, getState }) => {
     try {
-      const { projectFind: { data } } = getState() as any
+      const { project: { data } } = getState() as any
       const project = projectId ?? data?.id
       const response = await ApiRequest.builder().auth().request('get', `projects/${project}/positions`)
 
@@ -452,7 +452,7 @@ export const getProjectResumes: any = createAsyncThunk(
   async (_,
     { rejectWithValue, getState }) => {
     try {
-      const { projectFind: { data } } = getState() as any
+      const { project: { data } } = getState() as any
       const response = await ApiRequest.builder().auth().request('get', `projects/${data?.id}/resumes`)
 
       return response
@@ -526,6 +526,86 @@ const projectEditSlice = createSlice({
 })
 
 
+export const getProjectStatisticsResumeByStates: any = createAsyncThunk('getProjectStatisticsResumeByStates', async (projectId: string, { rejectWithValue }) => {
+  try {
+    const response = await ApiRequest.builder().auth().request('get', `projects/${projectId}/statistics/resume-by-states`)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const projectStatisticsResumeByStatesSlice = createSlice({
+  name: 'projectStatisticsResumeByStates',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    createExtraReducers(builder, getProjectStatisticsResumeByStates, true)
+  }
+})
+
+
+export const getProjectStatisticsResumeStatesInLastMonth: any = createAsyncThunk('getProjectStatisticsResumeStatesInLastMonth', async (projectId: string, { rejectWithValue }) => {
+  try {
+    const response = await ApiRequest.builder().auth().request('get', `projects/${projectId}/statistics/resume-state-in-last-month`)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const projectStatisticsResumeStatesInLastMonthSlice = createSlice({
+  name: 'projectStatisticsResumeStatesInLastMonth',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    createExtraReducers(builder, getProjectStatisticsResumeStatesInLastMonth, true, true)
+  }
+})
+
+
+export const getProjectStatisticsResumeCountByPositions: any = createAsyncThunk('getProjectStatisticsResumeCountByPositions', async (projectId: string, { rejectWithValue }) => {
+  try {
+    const response = await ApiRequest.builder().auth().request('get', `projects/${projectId}/statistics/resume-count-by-positions`)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const projectStatisticsResumeCountByPositionsSlice = createSlice({
+  name: 'projectStatisticsResumeCountByPositions',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    createExtraReducers(builder, getProjectStatisticsResumeCountByPositions, true)
+  }
+})
+
+
+export const getProjectStatisticsResumeCountFromMonth: any = createAsyncThunk('getProjectStatisticsResumeCountFromMonth', async (projectId: string, { rejectWithValue }) => {
+  try {
+    const response = await ApiRequest.builder().auth().request('get', `projects/${projectId}/statistics/resume-count-from-month`)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const projectStatisticsResumeCountFromMonthSlice = createSlice({
+  name: 'projectStatisticsResumeCountFromMonth',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    createExtraReducers(builder, getProjectStatisticsResumeCountFromMonth, true, true)
+  }
+})
+
+
 export const { clearCreateProject } = createProjectSlice.actions
 export const { clearDeactiveProject } = projectDeactiveSlice.actions
 export const { clearActiveProject } = projectActiveSlice.actions
@@ -544,3 +624,7 @@ export const removeProjectManagerReducer = removeProjectManagerSlice.reducer
 export const projectPositionsReducer = projectPositionsSlice.reducer
 export const projectResumesReducer = projectResumesSlice.reducer
 export const projectEditReducer = projectEditSlice.reducer
+export const projectStatisticsResumeByStatesReducer = projectStatisticsResumeByStatesSlice.reducer
+export const projectStatisticsResumeStatesInLastMonthReducer = projectStatisticsResumeStatesInLastMonthSlice.reducer
+export const projectStatisticsResumeCountByPositionsReducer = projectStatisticsResumeCountByPositionsSlice.reducer
+export const projectStatisticsResumeCountFromMonthReducer = projectStatisticsResumeCountFromMonthSlice.reducer

@@ -5,6 +5,9 @@ import PositionViewLeft from 'src/views/pages/position/view/PositionViewLeft'
 import Skelet from 'src/@core/components/loading/Skelet'
 import AnalyticsWeeklySales from 'src/views/statistics/AnalyticsWeeklySales'
 import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { useEffect } from 'react'
+import { getPositionStatisticsResumeCountFromMonth } from 'src/store/position'
 
 const fakeMonthlyData = {
   data: {
@@ -19,9 +22,19 @@ const fakeMonthlyData = {
 }
 
 const ViewOverview = ({ positionId }: { positionId: string }) => {
+  const { data: position } = useSelector((state: any) => state.position)
+
   const { data: statisticsResumeCountFromMonth, loading: loadingStatisticsResumeCountFromMonth } = useSelector(
-    (state: any) => state.companyStatisticsResumeCountFromMonth
+    (state: any) => state.positionStatisticsResumeCountFromMonth
   )
+
+  const dispatch = useDispatch()
+
+  useEffect(() => {
+    if (position?.id) {
+      dispatch(getPositionStatisticsResumeCountFromMonth(position?.id))
+    }
+  }, [position?.id])
   return (
     <>
       <Grid container spacing={6}>
@@ -36,7 +49,7 @@ const ViewOverview = ({ positionId }: { positionId: string }) => {
             <Skelet
               loading={loadingStatisticsResumeCountFromMonth}
               height={425}
-              component={<AnalyticsWeeklySales statisticsResumeCountFromMonth={fakeMonthlyData} />}
+              component={<AnalyticsWeeklySales statisticsResumeCountFromMonth={statisticsResumeCountFromMonth} />}
             />
           </Grid>
         </Grid>
