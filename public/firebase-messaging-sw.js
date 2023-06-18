@@ -2,12 +2,13 @@ importScripts('https://www.gstatic.com/firebasejs/9.13.0/firebase-app-compat.js'
 importScripts('https://www.gstatic.com/firebasejs/9.13.0/firebase-messaging-compat.js')
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyAtUpRosHz_Bd7OFDThWLwfx4xohyk8oUM',
-  authDomain: 'testing-push-6bfd8.firebaseapp.com',
-  projectId: 'testing-push-6bfd8',
-  storageBucket: 'testing-push-6bfd8.appspot.com',
-  messagingSenderId: '823246048795',
-  appId: '1:823246048795:web:b0aadd98ea28776393b2be'
+  apiKey: 'AIzaSyAcvORxjeb9j9Mu6GMEe6NAFP2E5Lm4XhI',
+  authDomain: 'cvmanager---notification.firebaseapp.com',
+  projectId: 'cvmanager---notification',
+  storageBucket: 'cvmanager---notification.appspot.com',
+  messagingSenderId: '435313483009',
+  appId: '1:435313483009:web:bf77162dc071d3aff78f00',
+  measurementId: 'G-1D3MG859Y7'
 }
 
 firebase.initializeApp(firebaseConfig)
