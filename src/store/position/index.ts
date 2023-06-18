@@ -517,6 +517,26 @@ const positionStatisticsResumeCountFromMonthSlice = createSlice({
 })
 
 
+export const getPositionLatestInterviews: any = createAsyncThunk('getPositionLatestInterviews', async (positionId: string, { rejectWithValue }) => {
+  try {
+    const response = await ApiRequest.builder().auth().request('get', `positions/${positionId}/latest-interviews`)
+
+    return response
+  } catch (err: any) {
+    return rejectWithValue(err?.response)
+  }
+})
+
+const positionLatestInterviewsSlice = createSlice({
+  name: 'positionLatestInterviews',
+  initialState: sliceInitialStateWithData,
+  reducers: {},
+  extraReducers: (builder) => {
+    createExtraReducers(builder, getPositionLatestInterviews, true)
+  }
+})
+
+
 export const { clearPositionCreate } = positionCreateSlice.actions
 export const { clearPositionDeactive } = positionDeactiveSlice.actions
 export const { clearPositionActive } = positionActiveSlice.actions
@@ -537,3 +557,4 @@ export const positionResumesReducer = positionResumesSlice.reducer
 export const positionStatisticsResumeByStatesReducer = positionStatisticsResumeByStatesSlice.reducer
 export const positionStatisticsResumeStatesInLastMonthReducer = positionStatisticsResumeStatesInLastMonthSlice.reducer
 export const positionStatisticsResumeCountFromMonthReducer = positionStatisticsResumeCountFromMonthSlice.reducer
+export const positionLatestInterviewsReducer = positionLatestInterviewsSlice.reducer

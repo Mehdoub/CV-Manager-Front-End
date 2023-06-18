@@ -56,7 +56,8 @@ export const getImagePath = (imgAddress: string): string => {
 }
 
 export const getFullName = (item: any): string => {
-  return uppercaseFirstLetters(item?.firstname + ' ' + item?.lastname)
+  const fullname = item?.fullname ?? item?.firstname + ' ' + item?.lastname
+  return uppercaseFirstLetters(fullname)
 }
 
 export const showIsActiveColor = (isActive: boolean) => {

@@ -6,8 +6,6 @@ import ProjectViewLeft from 'src/views/pages/project/view/ProjectViewLeft'
 import ProjectViewRight from 'src/views/pages/project/view/ProjectViewRight'
 import CardStatisticsVertical from 'src/@core/components/card-statistics/card-stats-vertical'
 import CrmTotalGrowth from 'src/views/statistics/CrmTotalGrowth'
-import CrmTotalProfit from 'src/views/statistics/CrmTotalProfit'
-import Icon from 'src/@core/components/icon'
 import CrmAward from 'src/views/statistics/CrmAward'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 import { useSelector } from 'react-redux'
@@ -19,27 +17,7 @@ import { useDispatch } from 'react-redux'
 import { useEffect } from 'react'
 import { getProjectStatisticsResumeByStates, getProjectStatisticsResumeStatesInLastMonth } from 'src/store/project'
 
-type Props = {
-  tab: string
-  projectId: string
-}
-
-const fakeData = [
-  {
-    count: 20,
-    state: 'Hired'
-  },
-  {
-    count: 30,
-    state: 'Rejected'
-  },
-  {
-    count: 25,
-    state: 'Pending'
-  }
-]
-
-const ProjectView = ({ tab, projectId }: Props) => {
+const ProjectView = () => {
   const dispatch = useDispatch()
 
   const { data: project } = useSelector((state: any) => state.project)
@@ -120,10 +98,10 @@ const ProjectView = ({ tab, projectId }: Props) => {
           </Grid>
         </Grid>
         <Grid item xs={12} md={5} lg={4}>
-          <ProjectViewLeft projectId={projectId} />
+          <ProjectViewLeft />
         </Grid>
         <Grid item xs={12} md={7} lg={8}>
-          <ProjectViewRight tab={tab} projectId={projectId} />
+          <ProjectViewRight />
         </Grid>
       </Grid>
     </ApexChartWrapper>

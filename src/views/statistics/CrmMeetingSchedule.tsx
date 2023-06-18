@@ -5,143 +5,93 @@ import Avatar from '@mui/material/Avatar'
 import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
-
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
-
-// ** Types
-import { ThemeColor } from 'src/@core/layouts/types'
+import EventIcon from '@mui/icons-material/Event'
 
 // ** Custom Components
 import CustomChip from 'src/@core/components/mui/chip'
-import OptionsMenu from 'src/@core/components/option-menu'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
-
-interface DataType {
-  src: string
-  title: string
-  subtitle: string
-  interviewer: string
-  chipText: string
-  chipColor: ThemeColor
-}
-
-const data: DataType[] = [
-  {
-    chipText: 'Business',
-    chipColor: 'primary',
-    title: 'Call with Mahdi Amereh',
-    src: '/images/avatars/7.png',
-    interviewer: 'Aliakbar Rezaei',
-    subtitle: '21 Jul | 08:20-10:30'
-  },
-  {
-    chipText: 'Dinner',
-    chipColor: 'warning',
-    title: 'Meeting with Ali Hamzei',
-    src: '/images/avatars/5.png',
-    interviewer: 'Mahdi Mehrjoo',
-    subtitle: '28 Jul | 05:00-6:45'
-  },
-  {
-    chipText: 'Meetup',
-    chipColor: 'secondary',
-    title: 'Meeting with Saeed Esfehani',
-    src: '/images/avatars/3.png',
-    interviewer: 'Sajjad Firouzeh',
-    subtitle: '03 Aug | 07:00-8:30'
-  },
-  {
-    chipText: 'Dinner',
-    chipColor: 'error',
-    title: 'Meeting With Amin Papi',
-    src: '/images/avatars/7.png',
-    interviewer: 'Aliakbar Rezaei',
-    subtitle: '14 Feb | 04:15-05:30'
-  },
-  {
-    chipColor: 'success',
-    chipText: 'Meditation',
-    title: 'Call with Arash Safari',
-    src: '/images/avatars/5.png',
-    interviewer: 'Mahdi Mehrjoo',
-    subtitle: '24 Jul | 11:30-12:00'
-  },
-  {
-    chipText: 'Business',
-    chipColor: 'primary',
-    title: 'Meeting with Mani Mohammadi',
-    src: '/images/avatars/3.png',
-    interviewer: 'Sajjad Firouzeh',
-    subtitle: '05 Oct | 10:00-12:45'
-  }
-]
+import { useSelector } from 'react-redux'
+import { getFullName, getImagePath, getTimeText } from 'src/helpers/functions'
+import { Grid, Skeleton } from '@mui/material'
 
 const CrmMeetingSchedule = () => {
-  return (
+  const { loading: latestInterviewsLoading, data: latestInterviews }: any = useSelector(
+    (state: any) => state.positionLatestInterviews
+  )
+  return latestInterviewsLoading ? (
+    <Skeleton variant='rounded' height={425} />
+  ) : (
     <Card>
-      <CardHeader
-        title='Latest Interview Meetings'
-        action={
-          <OptionsMenu
-            options={['Refresh', 'Edit', 'Share']}
-            iconButtonProps={{ size: 'small', className: 'card-more-options' }}
-          />
-        }
-      />
-      <CardContent>
-        {data.map((item: DataType, index: number) => {
-          return (
-            <Box
-              key={item.title}
-              sx={{
-                display: 'flex',
-                alignItems: 'center',
-                mb: index !== data.length - 1 ? 6.5 : undefined
-              }}
-            >
-              <BootstrapTooltip placement='top' title={`Interviewer: ${item.interviewer}`}>
-                <Avatar src={item.src} variant='rounded' sx={{ mr: 3, width: 38, height: 38, cursor: 'pointer' }} />
-              </BootstrapTooltip>
+      <CardHeader title='Latest Interviews' />
+      <CardContent sx={{ mt: 3 }}>
+        {latestInterviews?.length > 0 ? (
+          latestInterviews.map((item: any) => {
+            const resume = item?.resume[0]
+            const [dateText, dateColor, dateString] = getTimeText(item?.event_time)
+            let interviewers = ''
+            item?.contribution?.map((contributor: any) => (interviewers += getFullName(contributor) + ', '))
+            interviewers = interviewers.substring(0, interviewers.length - 2)
+
+            return (
               <Box
+                key={item?._id}
                 sx={{
-                  width: '100%',
                   display: 'flex',
-                  flexWrap: 'wrap',
                   alignItems: 'center',
-                  justifyContent: 'space-between'
+                  mb: 6.5
                 }}
               >
-                <Box sx={{ mr: 2, display: 'flex', mb: 0.4, flexDirection: 'column' }}>
-                  <Typography variant='body2' sx={{ mb: 0.5, fontWeight: 600, color: 'text.primary' }}>
-                    {item.title}
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      '& svg': {
-                        mr: 1.5,
-                        color: 'text.secondary',
-                        verticalAlign: 'middle'
-                      }
-                    }}
-                  >
-                    <Icon icon='mdi:calendar-blank-outline' fontSize='1rem' />
-                    <Typography variant='caption'>{item.subtitle}</Typography>
+                <BootstrapTooltip placement='top' title={`Interviewers: ${interviewers}`}>
+                  <Avatar
+                    src={getImagePath(resume?.avatar)}
+                    variant='rounded'
+                    sx={{ mr: 3, width: 38, height: 38, cursor: 'pointer' }}
+                  />
+                </BootstrapTooltip>
+                <Box
+                  sx={{
+                    width: '100%',
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}
+                >
+                  <Box sx={{ mr: 2, display: 'flex', mb: 0.4, flexDirection: 'column' }}>
+                    <Typography variant='body2' sx={{ mb: 0.5, fontWeight: 600, color: 'text.primary' }}>
+                      {resume?.fullname}
+                    </Typography>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        '& svg': {
+                          mr: 1.5,
+                          color: 'text.secondary',
+                          verticalAlign: 'middle'
+                        }
+                      }}
+                    >
+                      <EventIcon sx={{ fontSize: '1rem' }} />
+                      <Typography variant='caption'>{dateString}</Typography>
+                    </Box>
                   </Box>
+                  <CustomChip
+                    skin='light'
+                    size='small'
+                    label={dateText}
+                    color={dateColor as any}
+                    sx={{ height: 20, fontSize: '0.75rem', fontWeight: 500 }}
+                  />
                 </Box>
-                <CustomChip
-                  skin='light'
-                  size='small'
-                  label={item.chipText}
-                  color={item.chipColor}
-                  sx={{ height: 20, fontSize: '0.75rem', fontWeight: 500 }}
-                />
               </Box>
-            </Box>
-          )
-        })}
+            )
+          })
+        ) : (
+          <Grid container sx={{ justifyContent: 'center', p: 3 }}>
+            <Typography variant='body2'>There Is No Item To Show!</Typography>
+          </Grid>
+        )}
       </CardContent>
     </Card>
   )

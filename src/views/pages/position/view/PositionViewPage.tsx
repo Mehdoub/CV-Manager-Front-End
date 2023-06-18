@@ -5,8 +5,6 @@ import Grid from '@mui/material/Grid'
 import PositionViewRight from 'src/views/pages/position/view/PositionViewRight'
 import CardStatisticsVertical from 'src/@core/components/card-statistics/card-stats-vertical'
 import CrmTotalGrowth from 'src/views/statistics/CrmTotalGrowth'
-import CrmTotalProfit from 'src/views/statistics/CrmTotalProfit'
-import Icon from 'src/@core/components/icon'
 import CrmAward from 'src/views/statistics/CrmAward'
 import ApexChartWrapper from 'src/@core/styles/libs/react-apexcharts'
 import { Skeleton } from '@mui/material'
@@ -16,30 +14,19 @@ import PersonOffIcon from '@mui/icons-material/PersonOff'
 import TaskIcon from '@mui/icons-material/Task'
 import { useDispatch } from 'react-redux'
 import { useEffect } from 'react'
-import { getPositionStatisticsResumeByStates, getPositionStatisticsResumeStatesInLastMonth } from 'src/store/position'
+import {
+  getPositionLatestInterviews,
+  getPositionStatisticsResumeByStates,
+  getPositionStatisticsResumeStatesInLastMonth
+} from 'src/store/position'
+import { useRouter } from 'next/router'
 
-const fakeData = [
-  {
-    count: 20,
-    state: 'Hired'
-  },
-  {
-    count: 30,
-    state: 'Rejected'
-  },
-  {
-    count: 25,
-    state: 'Pending'
-  }
-]
-
-type Props = {
-  tab: string
-  positionId: string
-}
-
-const PositionViewPage = ({ tab, positionId }: Props) => {
+const PositionViewPage = () => {
   const dispatch = useDispatch()
+
+  const {
+    query: { tab }
+  } = useRouter()
 
   const { data: position } = useSelector((state: any) => state.position)
   const { loading: statisticsResumeByStatesLoading, data: statisticsResumeByStates } = useSelector(
@@ -52,6 +39,7 @@ const PositionViewPage = ({ tab, positionId }: Props) => {
     if (position?.id) {
       dispatch(getPositionStatisticsResumeByStates(position.id))
       dispatch(getPositionStatisticsResumeStatesInLastMonth(position.id))
+      dispatch(getPositionLatestInterviews(position.id))
     }
   }, [position?.id])
 
@@ -122,7 +110,7 @@ const PositionViewPage = ({ tab, positionId }: Props) => {
         )}
 
         <Grid item xs={12} md={12} lg={12}>
-          <PositionViewRight tab={tab} positionId={positionId} />
+          <PositionViewRight />
         </Grid>
       </Grid>
     </ApexChartWrapper>

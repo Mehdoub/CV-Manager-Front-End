@@ -20,7 +20,6 @@ import Icon from 'src/@core/components/icon'
 // ** Demo Components Imports
 import ViewOverview from 'src/views/pages/position/view/ViewOverview'
 import ViewResumes from 'src/views/pages/position/view/ViewResumes'
-import ViewInterviews from 'src/views/pages/position/view/ViewInterviews'
 import { Button, ButtonProps } from '@mui/material'
 import ManagersView from 'src/views/common/ManagersView'
 import { useSelector } from 'react-redux'
@@ -36,11 +35,6 @@ import AssignmentIndIcon from '@mui/icons-material/AssignmentInd'
 import WorkIcon from '@mui/icons-material/Work'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 
-interface Props {
-  tab: string
-  positionId: string
-}
-
 // ** Styled Tab component
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   minHeight: 48,
@@ -54,8 +48,6 @@ const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
 const ResponsiveBtn = styled(Button)<ButtonProps>(({ theme }) => ({
   mb: 2,
   position: 'fixed',
-  // right: '5px',
-  // top: '5px',
   top: '90px',
   right: '20px',
   [theme.breakpoints.down('md')]: {
@@ -66,16 +58,19 @@ const ResponsiveBtn = styled(Button)<ButtonProps>(({ theme }) => ({
   }
 }))
 
-const PositionViewRight: any = ({ tab, positionId }: Props) => {
+const PositionViewRight: any = () => {
+  const router = useRouter()
+
+  const {
+    query: { positionId, tab }
+  } = router as any
+
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [openAddResumeDialog, setOpenAddResumeDialog] = useState<boolean>(false)
 
   const handleCloseAddResumeDialog = () => setOpenAddResumeDialog(false)
-
-  // ** Hooks
-  const router = useRouter()
 
   const positionStore = useSelector((state: any) => state.position)
   const { data: position, loading } = positionStore
@@ -149,7 +144,7 @@ const PositionViewRight: any = ({ tab, positionId }: Props) => {
           ) : (
             <>
               <TabPanel sx={{ p: 0 }} value='overview'>
-                <ViewOverview positionId={positionId} />
+                <ViewOverview />
               </TabPanel>
               {/* <TabPanel sx={{ p: 0 }} value='interview'>
                 <ViewInterviews />

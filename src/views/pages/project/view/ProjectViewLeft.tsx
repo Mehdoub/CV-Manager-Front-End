@@ -30,6 +30,7 @@ import Translations from 'src/layouts/components/Translations'
 import Link from 'next/link'
 import ProjectEditDialog from './ProjectEditDialog'
 import { getImagePath, uppercaseFirstLetters } from 'src/helpers/functions'
+import { useRouter } from 'next/router'
 
 interface ColorsType {
   [key: string]: ThemeColor
@@ -51,11 +52,7 @@ const StyledLink = styled(Link)(({ theme }) => ({
   }
 }))
 
-interface Props {
-  projectId: string
-}
-
-const ProjectViewLeft = ({ projectId }: Props) => {
+const ProjectViewLeft = () => {
   // ** States
   const [openEdit, setOpenEdit] = useState<boolean>(false)
   const [suspendDialogOpen, setSuspendDialogOpen] = useState<boolean>(false)
@@ -65,8 +62,10 @@ const ProjectViewLeft = ({ projectId }: Props) => {
   const handleEditClose = () => setOpenEdit(false)
 
   const dispatch = useDispatch()
-  const store = useSelector((state: any) => state.project)
-  const { data: project, loading, errors } = store
+  const {
+    query: { projectId }
+  } = useRouter()
+  const { data: project, loading, errors } = useSelector((state: any) => state.project)
 
   useEffect(() => {
     if ([404, 400].includes(errors?.status)) location.href = '/404'

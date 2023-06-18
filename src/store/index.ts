@@ -59,6 +59,7 @@ import {
   positionCreateReducer,
   positionDeactiveReducer,
   positionEditReducer,
+  positionLatestInterviewsReducer,
   positionManagerAddReducer,
   positionManagerRemoveReducer,
   positionManagersReducer,
@@ -146,6 +147,7 @@ export const store = configureStore({
     positionStatisticsResumeByStates: positionStatisticsResumeByStatesReducer,
     positionStatisticsResumeStatesInLastMonth: positionStatisticsResumeStatesInLastMonthReducer,
     positionStatisticsResumeCountFromMonth: positionStatisticsResumeCountFromMonthReducer,
+    positionLatestInterviews: positionLatestInterviewsReducer,
 
     usersList: usersListReducer,
     user: userReducer,

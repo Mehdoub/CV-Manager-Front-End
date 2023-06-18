@@ -14,30 +14,16 @@ import Typography from '@mui/material/Typography'
 import MuiTab, { TabProps } from '@mui/material/Tab'
 import CircularProgress from '@mui/material/CircularProgress'
 
-// ** Icon Imports
-import Icon from 'src/@core/components/icon'
-
 // ** Demo Components Imports
 import ProjectViewManagers from 'src/views/pages/project/view/ProjectViewManagers'
 import ProjectViewOverview from 'src/views/pages/project/view/ProjectViewOverview'
 import ProjectViewPositions from 'src/views/pages/project/view/ProjectViewPositions'
 import { Button } from '@mui/material'
 import AddPositionDrawer from '../../position/list/AddPositionDrawer'
-import ResumesView from 'src/views/common/ResumesView'
 import { useSelector } from 'react-redux'
-import { getProjectResumes } from 'src/store/project'
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd'
 import WorkIcon from '@mui/icons-material/Work'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import FolderCopyIcon from '@mui/icons-material/FolderCopy'
-
-// ** Types
-// import { InvoiceType } from 'src/types/apps/invoiceTypes'
-
-interface Props {
-  tab: string
-  projectId: any
-}
 
 // ** Styled Tab component
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
@@ -49,7 +35,12 @@ const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
   }
 }))
 
-const ProjectViewRight = ({ tab, projectId }: Props) => {
+const ProjectViewRight = () => {
+  const router = useRouter()
+  const {
+    query: { projectId, tab }
+  } = router as any
+
   // ** State
   const [activeTab, setActiveTab] = useState<string>(tab)
   const [isLoading, setIsLoading] = useState<boolean>(true)
@@ -57,11 +48,6 @@ const ProjectViewRight = ({ tab, projectId }: Props) => {
 
   const toggleAddPositionDrawer = () => setaddPositionOpen(!addPositionOpen)
 
-  // ** Hooks
-  const router = useRouter()
-
-  const projectStore = useSelector((state: any) => state.project)
-  const projectResumesStore = useSelector((state: any) => state.projectResumes)
   const { data: constants } = useSelector((state: any) => state.constants)
 
   const handleChange = (event: SyntheticEvent, value: string) => {
