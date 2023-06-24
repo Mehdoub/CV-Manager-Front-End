@@ -84,11 +84,9 @@ const CompanyEditDialog = (props: Props) => {
 
   const dispatch = useDispatch()
 
-  const editCompanyStore = useSelector((state: any) => state.editCompany)
-  const { status } = editCompanyStore
+  const { status, loading: loadingEditCompany } = useSelector((state: any) => state.editCompany)
 
-  const companyStore = useSelector((state: any) => state.company)
-  const { data: companyDataFromView } = companyStore
+  const { data: companyDataFromView } = useSelector((state: any) => state.company)
 
   useEffect(() => {
     if (companyDataFromList?.id?.length > 0) setCompany(companyDataFromList)
@@ -321,10 +319,10 @@ const CompanyEditDialog = (props: Props) => {
             </Grid>
           </Grid>
           <DialogActions sx={{ justifyContent: 'center' }}>
-            <Button type='submit' variant='contained' sx={{ mr: 1 }}>
+            <Button type='submit' variant='contained' sx={{ mr: 1 }} disabled={loadingEditCompany}>
               Submit
             </Button>
-            <Button variant='outlined' color='secondary' onClick={closeHandler}>
+            <Button variant='outlined' color='secondary' onClick={closeHandler} disabled={loadingEditCompany}>
               Cancel
             </Button>
           </DialogActions>

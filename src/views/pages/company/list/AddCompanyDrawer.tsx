@@ -120,8 +120,7 @@ const AddCompanyDrawer = (props: Props) => {
   const { open, toggle } = props
 
   const dispatch = useDispatch()
-  const store = useSelector((state: any) => state.createCompany)
-  const { status, errors: createErrors } = store
+  const { status, errors: createErrors, loading: loadingCreateCompany } = useSelector((state: any) => state.createCompany)
 
   const {
     reset,
@@ -331,10 +330,10 @@ const AddCompanyDrawer = (props: Props) => {
             )}
           </FormControl>
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
-            <Button size='large' type='submit' variant='contained' sx={{ mr: 3 }}>
+            <Button size='large' type='submit' variant='contained' sx={{ mr: 3 }} disabled={loadingCreateCompany}>
               Submit
             </Button>
-            <Button size='large' variant='outlined' color='secondary' onClick={handleClose}>
+            <Button size='large' variant='outlined' color='secondary' onClick={handleClose} disabled={loadingCreateCompany}>
               Cancel
             </Button>
           </Box>

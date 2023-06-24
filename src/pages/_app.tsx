@@ -68,6 +68,7 @@ import Language from 'src/helpers/Language'
 import CustomToast from 'src/views/common/CustomToast'
 import ErrorBoundary from './ErrorBoundary'
 import Error500 from './500'
+import BetaTag from 'src/@core/layouts/components/shared-components/footer/BetaTag'
 
 // ** Extend App Props with Emotion
 type ExtendedAppProps = AppProps & {
@@ -226,6 +227,7 @@ const App = (props: ExtendedAppProps) => {
                         <Guard authGuard={authGuard} guestGuard={guestGuard}>
                           <AclGuard aclAbilities={aclAbilities} guestGuard={guestGuard}>
                             {getLayout(<Component {...pageProps} />)}
+                            <BetaTag />
                           </AclGuard>
                         </Guard>
                       </ErrorBoundary>
