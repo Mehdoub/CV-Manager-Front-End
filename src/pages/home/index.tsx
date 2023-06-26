@@ -81,7 +81,7 @@ const Home = () => {
           <Card>
             <Grid container>
               <Grid sm={12} md={6} item>
-                <img src='/images/banners/welcome.webp' width={'100%'} />
+                <img src='/images/banners/welcome-banner.jpg' width={'100%'} />
               </Grid>
               <Grid sm={12} md={6} item>
                 <CardHeader title={<Translations text='home.title' />}></CardHeader>
