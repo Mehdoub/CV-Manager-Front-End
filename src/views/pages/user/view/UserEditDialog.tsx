@@ -93,7 +93,7 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
   // }, [])
 
   useEffect(() => {
-    if (router.pathname == '/user-profile/[tab]') setUser(auth.user)
+    if (router.pathname == '/profile/[tab]') setUser(auth.user)
     else if (userDataFromList?.id?.length > 0) setUser(userDataFromList)
     else if (userDataFromView?.id?.length > 0) setUser(userDataFromView)
   }, [userDataFromList, userDataFromView])
@@ -108,7 +108,7 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
 
   useEffect(() => {
     if (userEditStatus) {
-      if (router.pathname == '/user-profile/[tab]') {
+      if (router.pathname == '/profile/[tab]') {
         const getMe = async () => {
           ApiRequest.builder()
             .auth()
@@ -166,7 +166,7 @@ const UserEditDialog = ({ open, handleClose, data: userDataFromList }: UserEditD
   }
 
   const submitHandler = (data: any) => {
-    if (router.pathname == '/user-profile/[tab]') {
+    if (router.pathname == '/profile/[tab]') {
       if (avatar.length > 0) data = { ...data, avatar: avatar[0] }
       if (!usernameErr) dispatch(editProfile({ ...data }))
     } else {

@@ -59,7 +59,7 @@ const UserProfile = ({ data }: { data: any }) => {
     setActiveTab(value)
     router
       .push({
-        pathname: `/user-profile/${value.toLowerCase()}`
+        pathname: `/profile/${value.toLowerCase()}`
       })
       .then(() => setIsLoading(false))
   }
@@ -77,7 +77,7 @@ const UserProfile = ({ data }: { data: any }) => {
   }, [tab])
 
   const tabContentList: { [key: string]: ReactElement } = {
-    profile: <Profile data={data as any} />,
+    view: <Profile data={data as any} />,
     notifications: <NotificationsTab />
   }
   const [about, setAbout] = useState<any>([])
@@ -116,7 +116,7 @@ const UserProfile = ({ data }: { data: any }) => {
                   sx={{ borderBottom: theme => `1px solid ${theme.palette.divider}` }}
                 >
                   <Tab
-                    value='profile'
+                    value='view'
                     label={
                       <Box sx={{ display: 'flex', alignItems: 'center', ...(!hideText && { '& svg': { mr: 2 } }) }}>
                         <PersonIcon />

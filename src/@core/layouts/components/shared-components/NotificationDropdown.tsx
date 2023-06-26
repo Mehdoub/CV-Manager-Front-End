@@ -252,7 +252,7 @@ const NotificationDropdown = (props: Props) => {
           }}
         >
           <Button fullWidth variant='contained' onClick={handleClickViewAll}>
-            <Link style={{ textDecoration: 'none', color: 'white' }} href='/user-profile/notifications/'>
+            <Link style={{ textDecoration: 'none', color: 'white' }} href='/profile/notifications/'>
               View All Notifications
             </Link>
           </Button>
