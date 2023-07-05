@@ -35,7 +35,7 @@ import AddPositionDrawer from 'src/views/pages/position/list/AddPositionDrawer'
 import { AvatarGroup, Skeleton, Stack } from '@mui/material'
 import { getPositions } from 'src/store/position'
 import PositionEditDialog from 'src/views/pages/position/view/PositionEditDialog'
-import { getFullName, getImagePath, getMaxTextLen, showDate } from 'src/helpers/functions'
+import { getFullName, getImagePath, getMaxTextLen, getObjectKeys, showDate } from 'src/helpers/functions'
 import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
 import EditIcon from '@mui/icons-material/Edit'
 import VisibilityIcon from '@mui/icons-material/Visibility'
@@ -314,7 +314,7 @@ const PositionList = () => {
           )}
         </Card>
       </Grid>
-      {constants?.position ? (
+      {getObjectKeys(constants?.position)?.length > 0 ? (
         <>
           <AddPositionDrawer open={addPositionOpen} toggle={toggleAddPositionDrawer} />
           <PositionEditDialog open={editPositionOpen} closeHandler={toggleEditPositionDialog} position={position} />

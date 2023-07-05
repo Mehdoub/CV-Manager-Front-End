@@ -34,7 +34,7 @@ import { Controller, useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useDispatch } from 'react-redux'
 // import { getProjects } from 'src/store/project'
-import { getAllowedFormats, getImagePath } from 'src/helpers/functions'
+import { constantReader, getAllowedFormats, getImagePath, getObjectKeys } from 'src/helpers/functions'
 import { clearPositionEdit, editPosition, getPosition, getPositions } from 'src/store/position'
 import { PositionFormData } from '../list/AddPositionDrawer'
 
@@ -82,7 +82,7 @@ const PositionEditDialog = (props: Props) => {
   const schema = yup.object().shape(
     {
       title: yup.string().label('Title').required().min(3),
-      level: yup.string().label('Level').oneOf(levelOptions),
+      level: yup.string().label('Level').oneOf(getObjectKeys(levelOptions)),
       description: yup.string().when('description', (val, schema) => {
         if (val?.length > 0) {
           return yup.string().label('Description').min(10).max(100).required()
@@ -328,9 +328,9 @@ const PositionEditDialog = (props: Props) => {
                         onChange={onChange}
                         error={Boolean(errors.level)}
                       >
-                        {levelOptions.map((item: string) => (
-                          <MenuItem value={item}>
-                            <Typography sx={{ textTransform: 'capitalize' }}>{item}</Typography>
+                        {constantReader(levelOptions)?.map(([key, value]: [string, string], index:number) => (
+                          <MenuItem key={`level-${index}`} value={key}>
+                            <Typography sx={{ textTransform: 'capitalize' }}>{value}</Typography>
                           </MenuItem>
                         ))}
                       </Select>

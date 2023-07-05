@@ -23,7 +23,7 @@ import { Fragment, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { addResumeFiles, clearResumeAddFiles, getResume } from 'src/store/resume'
-import { getAllowedFormats, toastError } from 'src/helpers/functions'
+import { getAllowedFormats, getObjectKeys, toastError } from 'src/helpers/functions'
 import { getPositionResumes } from 'src/store/position'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 
@@ -107,7 +107,7 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
             <Box sx={{ height: '65vh', overflowY: 'scroll', position: 'relative' }}>
               <>
                 <TabPanel sx={{ p: 0, mt: 6 }} value='details'>
-                  {constants?.system && <ResumeDetailsTab />}
+                  {getObjectKeys(constants?.system)?.length > 0 && <ResumeDetailsTab />}
                 </TabPanel>
                 <TabPanel sx={{ p: 0 }} value='file'>
                   <ResumeFileTab />

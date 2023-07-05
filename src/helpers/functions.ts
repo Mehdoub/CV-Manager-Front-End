@@ -312,3 +312,11 @@ export const convertPersianNumsToEnglish = (str: string) => {
 export const passwordVisibilityIcon = (showPassword: boolean) => {
   return !showPassword ? VisibilityIcon : VisibilityOffIcon
 }
+
+export const constantReader = (constantItem:any = {}) : Array<any> => {
+  return Object.entries(constantItem)
+}
+
+export const getObjectKeys = (obj:any = {}) : Array<any> => {
+  return Object.keys(obj)
+}

@@ -35,8 +35,10 @@ import {
 } from '@mui/material'
 import * as yup from 'yup'
 import {
+  constantReader,
   getAllowedFormats,
   getImagePath,
+  getObjectKeys,
   mobileHandler,
   popObjectItemByKey,
   toastError,
@@ -178,12 +180,12 @@ const ResumeDetailsTab = () => {
     {
       firstname: yup.string().label('First name').min(3).required(),
       lastname: yup.string().label('Last name').min(3).required(),
-      gender: yup.string().label('Gender').oneOf(genderOptions).required(),
-      education: yup.string().label('Education').oneOf(educationOptions).required(),
-      marital_status: yup.string().label('Marital Status').oneOf(maritalOptions).required(),
+      gender: yup.string().label('Gender').oneOf(getObjectKeys(genderOptions)).required(),
+      education: yup.string().label('Education').oneOf(getObjectKeys(educationOptions)).required(),
+      marital_status: yup.string().label('Marital Status').oneOf(getObjectKeys(maritalOptions)).required(),
       military_status: yup.string().when('gender', (val: any) => {
         if (val == 'men') {
-          return yup.string().label('Military Status').oneOf(militaryOptions).required()
+          return yup.string().label('Military Status').oneOf(getObjectKeys(militaryOptions)).required()
         } else {
           return yup.string().notRequired()
         }
@@ -471,9 +473,9 @@ const ResumeDetailsTab = () => {
                             onBlur={onBlur}
                             error={Boolean(errors.gender)}
                           >
-                            {genderOptions.map((item: any, index: number) => (
-                              <MenuItem key={`gender-${index}`} value={item}>
-                                {uppercaseFirstLetters(item)}
+                            {constantReader(genderOptions)?.map(([key, value]:[string, string], index: number) => (
+                              <MenuItem key={`gender-${index}`} value={key}>
+                                {uppercaseFirstLetters(value)}
                               </MenuItem>
                             ))}
                           </Select>
@@ -640,7 +642,7 @@ const ResumeDetailsTab = () => {
                             onBlur={onBlur}
                             error={Boolean(errors.education)}
                           >
-                            {educationOptions.map((item: any, index: number) => (
+                            {constantReader(educationOptions)?.map(([key, value]:[string, string], index: number) => (
                               <MenuItem key={`education-${index}`} value={item}>
                                 {uppercaseFirstLetters(item)}
                               </MenuItem>
@@ -669,7 +671,7 @@ const ResumeDetailsTab = () => {
                             onBlur={onBlur}
                             error={Boolean(errors.marital_status)}
                           >
-                            {maritalOptions.map((item: any, index: number) => (
+                            {constantReader(maritalOptions)?.map(([key, value]:[string, string], index: number) => (
                               <MenuItem key={`marital-${index}`} value={item}>
                                 {uppercaseFirstLetters(item)}
                               </MenuItem>
@@ -699,9 +701,9 @@ const ResumeDetailsTab = () => {
                               onBlur={onBlur}
                               error={Boolean(errors.military_status)}
                             >
-                              {militaryOptions.map((item: any, index: number) => (
-                                <MenuItem key={`military-${index}`} value={item}>
-                                  {uppercaseFirstLetters(item)}
+                              {constantReader(militaryOptions)?.map(([key, value]:[string, string], index: number) => (
+                                <MenuItem key={`military-${index}`} value={key}>
+                                  {uppercaseFirstLetters(value)}
                                 </MenuItem>
                               ))}
                             </Select>

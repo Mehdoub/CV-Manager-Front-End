@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import CustomTextField from 'src/@core/components/custom-textfield'
+import { getObjectKeys } from 'src/helpers/functions'
 import { getResumes } from 'src/store/resume'
 import AddResumeDialog from 'src/views/pages/position/view/AddResumeDialog'
 import ViewResumes from 'src/views/pages/position/view/ViewResumes'
@@ -57,7 +58,7 @@ const Resumes = () => {
           <ViewResumes allResumes={true} />
         </Grid>
       </Grid>
-      {constants?.system && provinces?.length ? (
+      {getObjectKeys(constants?.system)?.length > 0 && provinces?.length ? (
         <AddResumeDialog open={openAddResumeDialog} handleClose={handleCloseAddResumeDialog} />
       ) : null}
     </>

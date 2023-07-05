@@ -29,7 +29,7 @@ import {
   useMediaQuery,
   useTheme
 } from '@mui/material'
-import { getIsoTime, uppercaseFirstLetters } from 'src/helpers/functions'
+import { constantReader, getIsoTime, getObjectKeys, uppercaseFirstLetters } from 'src/helpers/functions'
 import Language from 'src/helpers/Language'
 import { useSelector } from 'react-redux'
 import * as yup from 'yup'
@@ -67,7 +67,7 @@ const ResumeEndWorkDialog = ({ open, handleClose }: ResumeEndWorkDialogProps) =>
     end_cooperation_reason: yup
       .string()
       .label('End Work Reason')
-      .oneOf(constants?.resume?.end_cooperation_reason)
+      .oneOf(getObjectKeys(constants?.resume?.end_cooperation_reason))
       .required(),
     end_cooperation_description: yup.string().label('End Work Description').max(1000).optional()
   })
@@ -168,9 +168,9 @@ const ResumeEndWorkDialog = ({ open, handleClose }: ResumeEndWorkDialogProps) =>
                           onBlur={onBlur}
                           error={Boolean(errors?.end_cooperation_reason)}
                         >
-                          {constants?.resume?.end_cooperation_reason.map((item: string, index: number) => (
-                            <MenuItem key={`${item}-${index}`} value={item}>
-                              {uppercaseFirstLetters(item, true)}
+                          {constantReader(constants?.resume?.end_cooperation_reason)?.map(([key, value]:[string, string], index: number) => (
+                            <MenuItem key={`${key}-${index}`} value={key}>
+                              {uppercaseFirstLetters(value, true)}
                             </MenuItem>
                           ))}
                         </Select>

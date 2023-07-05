@@ -29,7 +29,7 @@ import {
   useMediaQuery,
   useTheme
 } from '@mui/material'
-import { getIsoTime, ratingTextsObj, uppercaseFirstLetters } from 'src/helpers/functions'
+import { constantReader, getIsoTime, ratingTextsObj, uppercaseFirstLetters } from 'src/helpers/functions'
 import Language from 'src/helpers/Language'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
@@ -231,9 +231,9 @@ const AddCallHistoryDialog = ({ open, handleClose }: AddCallHistoryDialogProps) 
                     onChange={(e: any) => setCallResult(e.target.value)}
                     error={Boolean(callResultErr)}
                   >
-                    {callHistoryStatusOptions.map((item: string, index: number) => (
-                      <MenuItem key={`${item}-${index}`} value={item}>
-                        {uppercaseFirstLetters(item)}
+                    {constantReader(callHistoryStatusOptions)?.map(([key, value]: any, index: number) => (
+                      <MenuItem key={`${key}-${index}`} value={key}>
+                        {uppercaseFirstLetters(value)}
                       </MenuItem>
                     ))}
                   </Select>

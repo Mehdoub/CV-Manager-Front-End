@@ -30,6 +30,7 @@ import {
   getFullName,
   getImagePath,
   getMaxTextLen,
+  getObjectKeys,
   handleCopyClick,
   isForbiddenState,
   ratingTextsObj,
@@ -842,7 +843,7 @@ const ResumeDialogHeader = ({
           </ButtonGroup>
         </Grid>
       </Grid>
-      {constants?.resume && (
+      {getObjectKeys(constants?.resume)?.length > 0 && (
         <>
           <ResumeHiringDialog open={openResumeHiringDialog} handleClose={handleCloseResumeHiringDialog} />
           <ResumeRejectingDialog open={openResumeRejectingDialog} handleClose={handleCloseResumeRejectingDialog} />

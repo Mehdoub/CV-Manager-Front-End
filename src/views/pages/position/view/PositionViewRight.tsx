@@ -34,6 +34,7 @@ import AddResumeDialog from './AddResumeDialog'
 import AssignmentIndIcon from '@mui/icons-material/AssignmentInd'
 import WorkIcon from '@mui/icons-material/Work'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
+import { getObjectKeys } from 'src/helpers/functions'
 
 // ** Styled Tab component
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
@@ -169,7 +170,7 @@ const PositionViewRight: any = () => {
           )}
         </Box>
       </TabContext>
-      {constants?.system && provinces?.length ? (
+      {getObjectKeys(constants?.system)?.length > 0 && provinces?.length ? (
         <AddResumeDialog open={openAddResumeDialog} handleClose={handleCloseAddResumeDialog} />
       ) : null}
     </>
