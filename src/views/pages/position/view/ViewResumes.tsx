@@ -13,6 +13,7 @@ import { useSelector } from 'react-redux'
 import { clearResumeUpdateStatus, getResume, getResumes, updateResumeStatus } from 'src/store/resume'
 
 export const resumesStates: any = {
+  draft: { title: 'draft', color: 'error' },
   pending: { title: 'pending', color: 'warning' },
   call_review: { title: 'call review', color: 'info' },
   tech_review: { title: 'tech review', color: 'primary' },

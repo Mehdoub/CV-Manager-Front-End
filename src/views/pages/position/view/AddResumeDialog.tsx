@@ -64,8 +64,8 @@ interface FileProp {
   size: number
 }
 
-let years: Array<number> = []
-for (let year = 1970; year <= new Date().getFullYear(); year++) years.push(year)
+let years: Array<any> = []
+for (let year = 1970; year <= new Date().getFullYear(); year++) years.push(String(year))
 
 export interface ResumeFormData {
   firstname: string
@@ -78,8 +78,8 @@ export interface ResumeFormData {
   work_city: string
   residence_province: string
   residence_city: string
-  birth_year: number
-  work_experience?: number
+  birth_year: any
+  // work_experience?: number
   min_salary?: number
   max_salary?: number
   mobile: string
@@ -102,7 +102,7 @@ const defaultValues = {
   residence_province: '',
   residence_city: '',
   birth_year: undefined,
-  work_experience: undefined,
+  // work_experience: undefined,
   mobile: '',
   phone: '',
   email: ''
@@ -197,28 +197,28 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
     {
       firstname: yup.string().label('First name').min(3).required(),
       lastname: yup.string().label('Last name').min(3).required(),
-      gender: yup.string().label('Gender').oneOf(getObjectKeys(genderOptions)).required(),
-      education: yup.string().label('Education').oneOf(getObjectKeys(educationOptions)).required(),
-      marital_status: yup.string().label('Marital Status').oneOf(getObjectKeys(maritalOptions)).required(),
+      gender: yup.string().label('Gender').oneOf(['', ...getObjectKeys(genderOptions)]).required(),
+      education: yup.string().label('Education').oneOf(['', ...getObjectKeys(educationOptions)]).optional(),
+      marital_status: yup.string().label('Marital Status').oneOf(['', ...getObjectKeys(maritalOptions)]).optional(),
       military_status: yup.string().when('gender', (val: any) => {
-        if (val == 'men') {
-          return yup.string().label('Military Status').oneOf(getObjectKeys(militaryOptions)).required()
+        if (val == 'man') {
+          return yup.string().label('Military Status').oneOf(['', ...getObjectKeys(militaryOptions)]).optional()
         } else {
           return yup.string().notRequired()
         }
       }),
       // work_province: yup.string().label('Work Province').oneOf(provincesValues).required(),
       // work_city: yup.string().label('Work City').oneOf(workCitiesValues).required(),
-      residence_province: yup.string().label('Residence Province').oneOf(provincesValues).required(),
-      residence_city: yup.string().label('Residence City').oneOf(residanceCitiesValues).required(),
-      birth_year: yup.number().label('Birth Year').oneOf(years).required(),
-      work_experience: yup.number().when('work_experience', (val: any) => {
-        if (val) {
-          return yup.number().label('Work Started Year').oneOf(years).required()
-        } else {
-          return yup.number().notRequired()
-        }
-      }),
+      residence_province: yup.string().label('Residence Province').oneOf(['', ...provincesValues]).required(),
+      residence_city: yup.string().label('Residence City').oneOf(['', ...residanceCitiesValues]).required(),
+      birth_year: yup.string().label('Birth Year').oneOf(['', ...years]).optional(),
+      // work_experience: yup.number().when('work_experience', (val: any) => {
+      //   if (val) {
+      //     return yup.number().label('Work Started Year').oneOf(years).optional()
+      //   } else {
+      //     return yup.number().notRequired()
+      //   }
+      // }),
       mobile: yup
         .string()
         .label('Mobile')
@@ -235,11 +235,11 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
           return yup.string().notRequired()
         }
       }),
-      email: yup.string().label('Email').email('Email Is Not Valid!').required()
+      email: yup.string().label('Email').email('Email Is Not Valid!').optional()
     },
     [
       ['military_status', 'military_status'],
-      ['work_experience', 'work_experience'],
+      // ['work_experience', 'work_experience'],
       ['phone', 'phone']
     ]
   )
@@ -711,7 +711,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                                 onBlur={onBlur}
                                 error={Boolean(errors.birth_year)}
                               >
-                                <MenuItem>---</MenuItem>
+                                <MenuItem value=''>---</MenuItem>
                                 {years.map((item: number, index: number) => (
                                   <MenuItem key={index} value={item}>
                                     {item}
@@ -726,7 +726,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} mt={5} md={6}>
+                    {/* <Grid item xs={12} mt={5} md={6}>
                       <FormControl fullWidth>
                         <Controller
                           name='work_experience'
@@ -758,8 +758,8 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                           <FormHelperText sx={{ color: 'error.main' }}>{errors.work_experience.message}</FormHelperText>
                         )}
                       </FormControl>
-                    </Grid>
-                    <Grid item xs={12} mt={5} md={gender != 'women' ? 4 : 6}>
+                    </Grid> */}
+                    <Grid item xs={12} mt={5} md={6}>
                       <FormControl fullWidth>
                         <Controller
                           name='education'
@@ -788,7 +788,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} mt={5} md={gender != 'women' ? 4 : 6}>
+                    <Grid item xs={12} mt={5} md={6}>
                       <FormControl fullWidth>
                         <Controller
                           name='marital_status'
@@ -817,8 +817,8 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                    {gender != 'women' && (
-                      <Grid item xs={12} mt={5} md={4}>
+                    {gender != 'woman' && (
+                      <Grid item xs={12} mt={5} md={6}>
                         <FormControl fullWidth>
                           <Controller
                             name='military_status'

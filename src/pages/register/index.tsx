@@ -129,14 +129,14 @@ const Register = () => {
   const schema = yup.object().shape({
     firstname: yup.string().label('First name').min(3).required(),
     lastname: yup.string().label('Last name').min(3).required(),
-    username: yup.string().label('Username').min(3).max(10).required(),
+    username: yup.string().label('Username').min(3).max(30).required(),
     mobile: yup
       .string()
       .label('Mobile')
       .matches(/^9[\d]{9}$/, 'Mobile Is Not Valid (example: 9123456789)')
       .required(),
-    password: yup.string().label('Password').min(8).max(12).required(),
-    repeatpassword: yup.string().label('Repeat Password').min(8).max(12).required()
+    password: yup.string().label('Password').min(8).required(),
+    repeatpassword: yup.string().label('Repeat Password').min(8).required()
   })
 
   const {

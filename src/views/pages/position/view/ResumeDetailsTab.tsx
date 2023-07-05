@@ -643,8 +643,8 @@ const ResumeDetailsTab = () => {
                             error={Boolean(errors.education)}
                           >
                             {constantReader(educationOptions)?.map(([key, value]:[string, string], index: number) => (
-                              <MenuItem key={`education-${index}`} value={item}>
-                                {uppercaseFirstLetters(item)}
+                              <MenuItem key={`education-${index}`} value={key}>
+                                {uppercaseFirstLetters(value)}
                               </MenuItem>
                             ))}
                           </Select>
@@ -672,8 +672,8 @@ const ResumeDetailsTab = () => {
                             error={Boolean(errors.marital_status)}
                           >
                             {constantReader(maritalOptions)?.map(([key, value]:[string, string], index: number) => (
-                              <MenuItem key={`marital-${index}`} value={item}>
-                                {uppercaseFirstLetters(item)}
+                              <MenuItem key={`marital-${index}`} value={key}>
+                                {uppercaseFirstLetters(value)}
                               </MenuItem>
                             ))}
                           </Select>

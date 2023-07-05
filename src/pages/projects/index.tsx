@@ -264,7 +264,7 @@ const ProjectList = () => {
       renderCell: ({ row }: any) => (
         <Stack direction='row' spacing={2}>
           <BootstrapTooltip title='view' placement='top'>
-            <StyledLink href={`/projects/view/${row.id}/overview`} onClick={e => e.preventDefault()}>
+            <StyledLink href={`/projects/view/${row.id}/overview`}>
               <VisibilityIcon />
             </StyledLink>
           </BootstrapTooltip>

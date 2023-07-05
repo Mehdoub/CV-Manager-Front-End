@@ -17,7 +17,7 @@ const TableHeader = (props: TableHeaderProps) => {
   const { handleFilter, toggle, searchQuery } = props
 
   return (
-    <Box sx={{ p: 5, pb: 3, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'end' }}>
+    <Box sx={{ p: 5, pb: 3, display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'start' }}>
       {/* <Button
         sx={{ mr: 4, mb: 2 }}
         color='secondary'
@@ -27,17 +27,17 @@ const TableHeader = (props: TableHeaderProps) => {
         Export
       </Button> */}
       <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center' }}>
+        <Button sx={{ mb: 2, mr: 6 }} onClick={toggle} variant='contained'>
+          Add Project
+        </Button>
         <CustomTextField
           size='small'
           value={searchQuery}
-          sx={{ mr: 6, mb: 2 }}
+          sx={{ mb: 2 }}
           placeholder='Search Project'
           onChange={e => handleFilter(e.target.value)}
         />
 
-        <Button sx={{ mb: 2 }} onClick={toggle} variant='contained'>
-          Add Project
-        </Button>
       </Box>
     </Box>
   )
