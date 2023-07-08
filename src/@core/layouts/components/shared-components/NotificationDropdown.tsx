@@ -235,7 +235,7 @@ const NotificationDropdown = (props: Props) => {
             ))
           ) : (
             <MenuItem onClick={handleDropdownClose} sx={{ display: 'flex', justifyContent: 'center' }}>
-              <Typography variant='body2'>There Is No Any New Notification To Show :)</Typography>
+              <Typography variant='body2'>You don't have any message</Typography>
             </MenuItem>
           )}
         </ScrollWrapper>
