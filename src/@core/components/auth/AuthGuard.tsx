@@ -23,18 +23,11 @@ const AuthGuard = (props: AuthGuardProps) => {
       //   return
       // }
 
-      if (auth.user === null) {
-        if (router.asPath !== '/') {
-          router.replace({
-            pathname: '/login',
-            query: { returnUrl: router.asPath }
-          })
-        } else {
-          router.replace('/login')
-        }
-        // } else if (auth?.user?._id && auth?.user?.is_banned && router.pathname !== '/verification') {
-        //   router.replace('/verification')
-      } else if (['/login', '/register', '/forgot-password'].includes(router.pathname)) router.replace('/home')
+      if (
+        auth.user !== null
+        && ['/login', '/register', '/forgot-password'].includes(router.pathname)
+        && !router?.query?.returnUrl
+      ) router.replace('/home')
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [auth.user]

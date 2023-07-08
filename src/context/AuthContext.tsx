@@ -111,10 +111,9 @@ const AuthProvider = ({ children }: Props) => {
     const completePath = window.location.href
     const originPath = window.location.origin
     const returnUrl = completePath.split(originPath)[1]
+    const returnUrlQuery = returnUrl ? '?returnUrl=' + returnUrl : ''
     if (!['/login', '/register', '/forgot-password'].includes(router.pathname)) {
-      let routerObj: any = { pathname: '/login' }
-      routerObj.query = { returnUrl }
-      router.replace(routerObj)
+      router.replace('/login'  + returnUrlQuery)
     }
   }
 
