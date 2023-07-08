@@ -103,7 +103,7 @@ const NotificationsTab = () => {
         ))
       ) : (
         <Typography variant='body2' mt={5}>
-          There Is No Any Notification To Show Here :)
+          You don't have any message
         </Typography>
       )}
     </Grid>

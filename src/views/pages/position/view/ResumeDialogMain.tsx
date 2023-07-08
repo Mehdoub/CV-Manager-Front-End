@@ -7,6 +7,7 @@ import cahtExample from 'src/data/chatData.json'
 import ResumeDialogHeader from './ResumeDialogHeader'
 import AddInterviewDialog from './AddInterviewDialog'
 import { useSelector } from 'react-redux'
+import { getObjectKeys } from 'src/helpers/functions'
 
 interface ResumeDialogMainProps {
   open: boolean
@@ -111,7 +112,7 @@ const ResumeDialogMain = ({ open, toggle, resumeData }: ResumeDialogMainProps) =
           )}
         </Grid>
       </Dialog>
-      {constants?.resume && (
+      {getObjectKeys(constants?.resume)?.length > 0 && (
         <>
           <AddCallHistoryDialog open={openAddCallDialog} handleClose={handleCloseAddCallDialog} />
           <AddInterviewDialog open={openAddInterviewDialog} handleClose={handleCloseAddInterviewDialog} />

@@ -35,8 +35,10 @@ import {
 } from '@mui/material'
 import * as yup from 'yup'
 import {
+  constantReader,
   getAllowedFormats,
   getImagePath,
+  getObjectKeys,
   mobileHandler,
   popObjectItemByKey,
   toastError,
@@ -59,8 +61,8 @@ interface FileProp {
   size: number
 }
 
-let years: Array<number> = []
-for (let year = 1970; year <= new Date().getFullYear(); year++) years.push(year)
+let years: Array<any> = []
+for (let year = 1970; year <= new Date().getFullYear(); year++) years.push(String(year))
 
 export interface ResumeFormData {
   firstname: string
@@ -73,8 +75,8 @@ export interface ResumeFormData {
   work_city: string
   residence_province: string
   residence_city: string
-  birth_year: number
-  work_experience?: number
+  birth_year: any
+  // work_experience?: number
   min_salary?: number
   max_salary?: number
   mobile: string
@@ -96,8 +98,8 @@ const defaultValues = {
   // work_city: '',
   // residence_province: '',
   // residence_city: '',
-  birth_year: years.at(-1) as number,
-  work_experience: years.at(-1) as number,
+  birth_year: undefined,
+  // work_experience: years.at(-1) as number,
   mobile: '',
   phone: '',
   email: ''
@@ -178,12 +180,12 @@ const ResumeDetailsTab = () => {
     {
       firstname: yup.string().label('First name').min(3).required(),
       lastname: yup.string().label('Last name').min(3).required(),
-      gender: yup.string().label('Gender').oneOf(genderOptions).required(),
-      education: yup.string().label('Education').oneOf(educationOptions).required(),
-      marital_status: yup.string().label('Marital Status').oneOf(maritalOptions).required(),
+      gender: yup.string().label('Gender').oneOf(getObjectKeys(genderOptions)).required(),
+      education: yup.string().label('Education').oneOf(getObjectKeys(educationOptions)).optional(),
+      marital_status: yup.string().label('Marital Status').oneOf(getObjectKeys(maritalOptions)).optional(),
       military_status: yup.string().when('gender', (val: any) => {
-        if (val == 'men') {
-          return yup.string().label('Military Status').oneOf(militaryOptions).required()
+        if (val == 'man') {
+          return yup.string().label('Military Status').oneOf(getObjectKeys(militaryOptions)).optional()
         } else {
           return yup.string().notRequired()
         }
@@ -192,14 +194,14 @@ const ResumeDetailsTab = () => {
       // work_city: yup.string().label('Work City').oneOf(workCitiesValues).required(),
       // residence_province: yup.string().label('Residence Province').oneOf(provincesValues).required(),
       // residence_city: yup.string().label('Residence City').oneOf(residanceCitiesValues).required(),
-      birth_year: yup.number().label('Birth Year').oneOf(years).required(),
-      work_experience: yup.number().when('work_experience', (val: any) => {
-        if (val) {
-          return yup.number().label('Work Started Year').oneOf(years).required()
-        } else {
-          return yup.number().notRequired()
-        }
-      }),
+      birth_year: yup.string().label('Birth Year').oneOf(['', ...years]).optional(),
+      // work_experience: yup.number().when('work_experience', (val: any) => {
+      //   if (val) {
+      //     return yup.number().label('Work Started Year').oneOf(years).required()
+      //   } else {
+      //     return yup.number().notRequired()
+      //   }
+      // }),
       mobile: yup
         .string()
         .label('Mobile')
@@ -216,11 +218,11 @@ const ResumeDetailsTab = () => {
           return yup.string().notRequired()
         }
       }),
-      email: yup.string().label('Email').email('Email Is Not Valid!').required()
+      email: yup.string().label('Email').email('Email Is Not Valid!').optional()
     },
     [
       ['military_status', 'military_status'],
-      ['work_experience', 'work_experience'],
+      // ['work_experience', 'work_experience'],
       ['phone', 'phone']
     ]
   )
@@ -313,7 +315,7 @@ const ResumeDetailsTab = () => {
     setValue('email', resume?.email)
     setValue('phone', resume?.phone)
     setValue('birth_year', resume?.birth_year)
-    setValue('work_experience', resume?.work_experience)
+    // setValue('work_experience', resume?.work_experience)
     setValue('marital_status', resume?.marital_status)
     setValue('education', resume?.education)
     setValue('military_status', resume?.military_status)
@@ -471,9 +473,9 @@ const ResumeDetailsTab = () => {
                             onBlur={onBlur}
                             error={Boolean(errors.gender)}
                           >
-                            {genderOptions.map((item: any, index: number) => (
-                              <MenuItem key={`gender-${index}`} value={item}>
-                                {uppercaseFirstLetters(item)}
+                            {constantReader(genderOptions)?.map(([key, value]:[string, string], index: number) => (
+                              <MenuItem key={`gender-${index}`} value={key}>
+                                {uppercaseFirstLetters(value)}
                               </MenuItem>
                             ))}
                           </Select>
@@ -593,7 +595,7 @@ const ResumeDetailsTab = () => {
                     )}
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} mt={5} md={6}>
+                {/* <Grid item xs={12} mt={5} md={6}>
                   <FormControl fullWidth>
                     <Controller
                       name='work_experience'
@@ -624,7 +626,7 @@ const ResumeDetailsTab = () => {
                       <FormHelperText sx={{ color: 'error.main' }}>{errors.work_experience.message}</FormHelperText>
                     )}
                   </FormControl>
-                </Grid>
+                </Grid> */}
                 <Grid item xs={12} mt={5} md={gender == 'men' ? 4 : 6}>
                   <FormControl fullWidth>
                     <Controller
@@ -640,9 +642,9 @@ const ResumeDetailsTab = () => {
                             onBlur={onBlur}
                             error={Boolean(errors.education)}
                           >
-                            {educationOptions.map((item: any, index: number) => (
-                              <MenuItem key={`education-${index}`} value={item}>
-                                {uppercaseFirstLetters(item)}
+                            {constantReader(educationOptions)?.map(([key, value]:[string, string], index: number) => (
+                              <MenuItem key={`education-${index}`} value={key}>
+                                {uppercaseFirstLetters(value)}
                               </MenuItem>
                             ))}
                           </Select>
@@ -669,9 +671,9 @@ const ResumeDetailsTab = () => {
                             onBlur={onBlur}
                             error={Boolean(errors.marital_status)}
                           >
-                            {maritalOptions.map((item: any, index: number) => (
-                              <MenuItem key={`marital-${index}`} value={item}>
-                                {uppercaseFirstLetters(item)}
+                            {constantReader(maritalOptions)?.map(([key, value]:[string, string], index: number) => (
+                              <MenuItem key={`marital-${index}`} value={key}>
+                                {uppercaseFirstLetters(value)}
                               </MenuItem>
                             ))}
                           </Select>
@@ -683,8 +685,8 @@ const ResumeDetailsTab = () => {
                     )}
                   </FormControl>
                 </Grid>
-                <Grid item xs={12} mt={5} md={4}>
-                  {gender != 'women' && (
+                <Grid item xs={12} mt={5} md={6}>
+                  {gender != 'woman' && (
                     <FormControl fullWidth>
                       <Controller
                         name='military_status'
@@ -699,9 +701,9 @@ const ResumeDetailsTab = () => {
                               onBlur={onBlur}
                               error={Boolean(errors.military_status)}
                             >
-                              {militaryOptions.map((item: any, index: number) => (
-                                <MenuItem key={`military-${index}`} value={item}>
-                                  {uppercaseFirstLetters(item)}
+                              {constantReader(militaryOptions)?.map(([key, value]:[string, string], index: number) => (
+                                <MenuItem key={`military-${index}`} value={key}>
+                                  {uppercaseFirstLetters(value)}
                                 </MenuItem>
                               ))}
                             </Select>

@@ -428,7 +428,7 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
         ) : null}
         {openDialog && (
           <Dialog fullWidth open={openDialog} fullScreen={fullScreenDialog} onClose={() => setOpenDialog(false)}>
-            <Box sx={{ top: 0, width: '100%', position: 'sticky' }}>
+            <Box sx={{ top: 0, width: '100%', position: 'sticky', overflowY: 'scroll' }}>
               <TextField
                 value={searchValue}
                 variant='standard'

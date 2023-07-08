@@ -33,7 +33,7 @@ import {
   Typography,
   useTheme
 } from '@mui/material'
-import { getFullName, getImagePath, getIsoTime, uppercaseFirstLetters } from 'src/helpers/functions'
+import { constantReader, getFullName, getImagePath, getIsoTime, getObjectKeys, uppercaseFirstLetters } from 'src/helpers/functions'
 import Language from 'src/helpers/Language'
 import { useSelector } from 'react-redux'
 import * as yup from 'yup'
@@ -82,9 +82,9 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
   }, [resumeAddInterviewStatus])
 
   const schema = yup.object().shape({
-    event_type: yup.string().label('Event Type').oneOf(constants?.interview?.event_type).required(),
+    event_type: yup.string().label('Event Type').oneOf(getObjectKeys(constants?.interview?.event_type)).required(),
     // status: yup.string().label('Status').oneOf(constants?.interview?.status).required(),
-    type: yup.string().label('Interview Type').oneOf(constants?.interview?.type).required(),
+    type: yup.string().label('Interview Type').oneOf(getObjectKeys(constants?.interview?.type)).required(),
     // result: yup.string().label('Result').oneOf(constants?.interview?.result).optional(),
     description: yup.string().label('Description').optional()
   })
@@ -203,9 +203,9 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                           onBlur={onBlur}
                           error={Boolean(errors?.event_type)}
                         >
-                          {constants?.interview?.event_type.map((item: string, index: number) => (
-                            <MenuItem key={`${item}-${index}`} value={item}>
-                              {uppercaseFirstLetters(item)}
+                          {constantReader(constants?.interview?.event_type)?.map(([key, value]: [string, string], index: number) => (
+                            <MenuItem key={`${key}-${index}`} value={key}>
+                              {uppercaseFirstLetters(value)}
                             </MenuItem>
                           ))}
                         </Select>
@@ -288,9 +288,9 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
                           onBlur={onBlur}
                           error={Boolean(errors?.type)}
                         >
-                          {constants?.interview?.type.map((item: string, index: number) => (
-                            <MenuItem key={`${item}-${index}`} value={item}>
-                              {uppercaseFirstLetters(item)}
+                          {constantReader(constants?.interview?.type)?.map(([key, value]: [string, string], index: number) => (
+                            <MenuItem key={`${key}-${index}`} value={key}>
+                              {uppercaseFirstLetters(value)}
                             </MenuItem>
                           ))}
                         </Select>

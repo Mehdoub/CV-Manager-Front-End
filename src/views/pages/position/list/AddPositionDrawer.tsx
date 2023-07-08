@@ -39,8 +39,10 @@ import {
 import { useDispatch } from 'react-redux'
 import { clearPositionCreate, createPosition, getPositions } from 'src/store/position'
 import {
+  constantReader,
   getAllowedFormats,
   getImagePath,
+  getObjectKeys,
   setServerValidationErrors,
   uppercaseFirstLetters
 } from 'src/helpers/functions'
@@ -132,7 +134,7 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
     {
       title: yup.string().label('Title').min(3).max(50).required(),
       // project: yup.string().label('Project').optional(),
-      level: yup.string().label('Level').oneOf(levelOptions),
+      level: yup.string().label('Level').oneOf(getObjectKeys(levelOptions)),
       description: yup.string().when('description', (val, schema) => {
         if (val?.length > 0) {
           return yup.string().label('Description').min(10).max(100).required()
@@ -359,9 +361,9 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
                     onChange={onChange}
                     error={Boolean(errors.level)}
                   >
-                    {levelOptions.map((item: string, index: number) => (
-                      <MenuItem key={index} value={item}>
-                        <Typography sx={{ textTransform: 'capitalize' }}>{item}</Typography>
+                    {constantReader(levelOptions)?.map(([key, value]: any, index: number) => (
+                      <MenuItem key={index} value={key}>
+                        <Typography sx={{ textTransform: 'capitalize' }}>{value}</Typography>
                       </MenuItem>
                     ))}
                   </Select>

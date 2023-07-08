@@ -12,7 +12,7 @@ import AddCompanyDrawer from 'src/views/pages/company/list/AddCompanyDrawer'
 import SidebarAddProject from 'src/views/pages/project/list/AddProjectDrawer'
 import AddResumeDialog from 'src/views/pages/position/view/AddResumeDialog'
 import { useSelector } from 'react-redux'
-import { getEntityIcon } from 'src/helpers/functions'
+import { getEntityIcon, getObjectKeys } from 'src/helpers/functions'
 
 const Home = () => {
   const [isSpeedDialChecked, setIsSpeedDialChecked] = useState<boolean | undefined>(undefined)
@@ -103,7 +103,7 @@ const Home = () => {
           </Card>
         </Grid>
       </Grid>
-      {constants?.system && (
+      {getObjectKeys(constants?.system)?.length > 0 && (
         <>
           <AddCompanyDrawer open={addCompanyOpen} toggle={toggleAddCompanyDrawer} />
           <SidebarAddProject open={addProjectOpen} toggle={toggleAddProjectDrawer} />

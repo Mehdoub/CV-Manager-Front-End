@@ -31,7 +31,7 @@ import {
   deactivePosition,
   getPosition
 } from 'src/store/position'
-import { getImagePath, uppercaseFirstLetters } from 'src/helpers/functions'
+import { getImagePath, getObjectKeys, uppercaseFirstLetters } from 'src/helpers/functions'
 import { Skeleton } from '@mui/material'
 import Link from 'next/link'
 import Translations from 'src/layouts/components/Translations'
@@ -167,7 +167,7 @@ const PositionViewLeft = () => {
               </Button>
             )}
           </CardActions>
-          {constants?.position && <PositionEditDialog open={openEdit} closeHandler={handleEditClose} />}
+          {getObjectKeys(constants?.position)?.length > 0 && <PositionEditDialog open={openEdit} closeHandler={handleEditClose} />}
 
           <SuspendDialog
             open={suspendDialogOpen}

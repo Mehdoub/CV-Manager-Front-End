@@ -73,7 +73,7 @@ const schema = yup.object().shape(
     name: yup.string().label('Name').min(3).required(),
     phone: yup.string().when('phone', (val, schema) => {
       if (val?.length > 0) {
-        return yup.string().label('Phone').min(8).max(11).required()
+        return yup.string().label('Phone').min(7).max(11).required()
       } else {
         return yup.string().notRequired()
       }

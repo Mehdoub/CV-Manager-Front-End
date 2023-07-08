@@ -24,6 +24,7 @@ import { useSelector } from 'react-redux'
 import WorkIcon from '@mui/icons-material/Work'
 import ManageAccountsIcon from '@mui/icons-material/ManageAccounts'
 import FolderCopyIcon from '@mui/icons-material/FolderCopy'
+import { getObjectKeys } from 'src/helpers/functions'
 
 // ** Styled Tab component
 const Tab = styled(MuiTab)<TabProps>(({ theme }) => ({
@@ -128,7 +129,7 @@ const ProjectViewRight = () => {
           )}
         </Box>
       </TabContext>
-      {constants?.position ? (
+      {getObjectKeys(constants?.position)?.length > 0 ? (
         <AddPositionDrawer
           open={addPositionOpen}
           toggle={toggleAddPositionDrawer}
