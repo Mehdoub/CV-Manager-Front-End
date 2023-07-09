@@ -287,6 +287,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
       setAvatar([])
       setResumeFiles([])
       setGender('')
+      setIsSalaryActive(false)
       setSalaryRange([9000000, 20000000])
     }
   }, [statusResumeCreate])
@@ -366,6 +367,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
 
   const handleCities = (provinceId: string, field: string) => {
     setFillCities(field)
+    setValue('residence_city', '')
     dispatch(getCitiesByProvince(provinceId))
   }
 
