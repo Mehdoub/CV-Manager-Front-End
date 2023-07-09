@@ -58,7 +58,7 @@
     "next-transpile-modules": "9.1.0",
     "nprogress": "0.2.0",
     "payment": "2.4.6",
-    "pdfjs-dist": "^2.12.313",
+    "pdfjs-dist": "^2.16.105",
     "prismjs": "1.29.0",
     "react": "18.2.0",
     "react-apexcharts": "1.4.0",
