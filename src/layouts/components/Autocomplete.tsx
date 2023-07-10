@@ -363,7 +363,13 @@ const AutocompleteComponent = ({ hidden, settings }: Props) => {
 
   const handleKeydown = useCallback(
     (event: KeyboardEvent) => {
-      if (!openDialog && event.which === 191) {
+      const acvtiveElement = document.activeElement
+      if (
+        !openDialog
+        && event.which === 191
+        && !event.shiftKey
+        && !['INPUT', 'TEXTAREA'].includes(acvtiveElement?.tagName as string)
+      ) {
         setOpenDialog(true)
       }
     },
