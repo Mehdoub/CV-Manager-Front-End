@@ -17,7 +17,23 @@ const UserThemeOptions = (): ThemeOptions => {
   // ** To use core palette, uncomment the below line
   // const palette = corePalette(mode, skin)
 
+  let isResumesPage = false
+
+  if (typeof window != 'undefined') {
+    const href = window.location.href
+    if (href.indexOf('resume') != -1) isResumesPage = true
+  }
+
   return {
+    components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          body: {
+            overflowY: isResumesPage ? 'hidden' : undefined
+          },
+        }
+      }
+    }
     /*
     palette:{
       primary: {

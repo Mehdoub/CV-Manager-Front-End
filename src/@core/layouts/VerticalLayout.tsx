@@ -98,7 +98,7 @@ const VerticalLayout = (props: LayoutProps) => {
             appBarProps={verticalLayoutProps.appBar?.componentProps}
             {...props}
           />
-
+          <div style={{height: '65px'}}></div>
           {/* Content */}
           <ContentWrapper
             className='layout-page-content'
