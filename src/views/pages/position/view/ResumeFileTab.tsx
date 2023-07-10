@@ -19,28 +19,28 @@ function ResumeFileTab() {
 
   const [pdfFile, setPdfFile] = useState<any>(resumeFiles?.length > 0 ? resumeFiles[resumeFiles?.length - 1] : '')
 
-  const downloadFile = (pdfUrl: string) => {
-    fetch(pdfUrl, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/pdf'
-      }
-    })
-      .then(response => response.blob())
-      .then(blob => {
-        const url = window.URL.createObjectURL(new Blob([blob]))
+  // const downloadFile = (pdfUrl: string) => {
+  //   fetch(pdfUrl, {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'application/pdf'
+  //     }
+  //   })
+  //     .then(response => response.blob())
+  //     .then(blob => {
+  //       const url = window.URL.createObjectURL(new Blob([blob]))
 
-        const link: any = document.createElement('a')
-        link.href = url
-        link.download = resume?.fullname + '.pdf'
+  //       const link: any = document.createElement('a')
+  //       link.href = url
+  //       link.download = resume?.fullname + '.pdf'
 
-        document.body.appendChild(link)
+  //       document.body.appendChild(link)
 
-        link.click()
+  //       link.click()
 
-        link.parentNode.removeChild(link)
-      })
-  }
+  //       link.parentNode.removeChild(link)
+  //     })
+  // }
 
   return (
     <>
@@ -62,7 +62,7 @@ function ResumeFileTab() {
                   <Card
                     onClick={() => {
                       setPdfFile(pdfUrl)
-                      downloadFile(pdfUrl)
+                      // downloadFile(pdfUrl)
                     }}
                     sx={{
                       py: 2,
