@@ -13,15 +13,10 @@ import ApiRequest from 'src/helpers/ApiRequest'
 import { useDispatch } from 'react-redux'
 import { getConstants } from 'src/store/common'
 import FirebaseCloudMessaging from 'src/helpers/FirebaseCloudMessaging'
-import { toast } from 'react-hot-toast'
 import { toastError } from 'src/helpers/functions'
-
-import { Icon } from '@iconify/react'
-import { Avatar, Box, IconButton, Typography } from '@mui/material'
-import CustomAvatar from 'src/@core/components/mui/avatar'
 import { getProvinces } from 'src/store/province'
-import CloseIcon from '@mui/icons-material/Close'
 import { clearProfileNotificationsSeen, getNotifications } from 'src/store/profile'
+import * as Sentry from '@sentry/nextjs';
 
 // ** Defaults
 const defaultProvider: AuthValuesType = {
@@ -108,13 +103,13 @@ const AuthProvider = ({ children }: Props) => {
     window.localStorage.removeItem(authConfig.refreshTokenKeyName)
 
     setUser(null)
+    Sentry.setUser(null)
     const completePath = window.location.href
     const originPath = window.location.origin
     const returnUrl = completePath.split(originPath)[1]
+    const returnUrlQuery = returnUrl ? '?returnUrl=' + returnUrl : ''
     if (!['/login', '/register', '/forgot-password'].includes(router.pathname)) {
-      let routerObj: any = { pathname: '/login' }
-      routerObj.query = { returnUrl }
-      router.replace(routerObj)
+      router.replace('/login' + returnUrlQuery)
     }
   }
 
@@ -126,6 +121,11 @@ const AuthProvider = ({ children }: Props) => {
         const userData = { ...result.data.data[0] }
 
         setUser(userData)
+        Sentry.setUser({
+          id: userData?._id,
+          username: userData?.username,
+          email: userData?.email ?? null
+        })
         const fcm = FirebaseCloudMessaging.builder()
         fcm && fcm?.fetchToken(setClientToken)
         setLoading(false)

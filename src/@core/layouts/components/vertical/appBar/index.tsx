@@ -79,15 +79,25 @@ const LayoutAppBar = (props: Props) => {
       elevation={0}
       color='default'
       className='layout-navbar'
-      sx={{ ...userAppBarStyle }}
-      position={appBar === 'fixed' ? 'sticky' : 'static'}
+      sx={{
+        ...userAppBarStyle,
+        ...{
+          '@media (max-width:1200px)': {width: '100%'}
+        },
+        width: settings.navCollapsed ? '95%' : '85%',
+        transition: '1s'
+      }}
+      position={appBar === 'fixed' ? 'fixed' : 'static'}
       {...userAppBarProps}
     >
       <Toolbar
         className='navbar-content-container'
         sx={{
           ...(appBar === 'fixed' && scrollTrigger && { ...appBarFixedStyles() }),
-          maxWidth: '95%'
+          ...{
+            '@media (min-width:1400px)': { maxWidth: '95%' },
+            '@media (min-width:1200px)': { maxWidth: '85%'  }
+          },
         }}
       >
         {(userAppBarContent && userAppBarContent(props)) || null}

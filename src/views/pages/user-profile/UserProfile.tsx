@@ -91,7 +91,7 @@ const UserProfile = ({ data }: { data: any }) => {
         { property: 'Username', value: user?.username, icon: AccountCircleIcon },
         { property: 'Language', value: Language.builder().lang, icon: TranslateIcon },
         { property: 'Mobile', value: `+98 ${user?.mobile?.substring(2)}`, icon: CallIcon },
-        { property: 'Email', value: user?.email ?? 'john.doe@example.com', icon: EmailIcon }
+        { property: 'Email', value: user?.email ?? '---', icon: EmailIcon }
       ])
     }
   }, [user])

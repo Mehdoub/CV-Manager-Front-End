@@ -136,7 +136,7 @@ const PositionViewRight: any = () => {
           )}
         </TabList>
         {activeTab == 'resume' && <Box sx={{ display: 'flex', width: '100%', height: '100px' }}></Box>}
-        <Box sx={{ mt: 6 }}>
+        <Box sx={{ mt: activeTab != 'resume' ? 6 : 0 }}>
           {isLoading ? (
             <Box sx={{ mt: 6, display: 'flex', alignItems: 'center', flexDirection: 'column' }}>
               <CircularProgress sx={{ mb: 4 }} />

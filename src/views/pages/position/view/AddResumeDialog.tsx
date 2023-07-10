@@ -101,7 +101,7 @@ const defaultValues = {
   work_city: '',
   residence_province: '',
   residence_city: '',
-  birth_year: undefined,
+  birth_year: '',
   // work_experience: undefined,
   mobile: '',
   phone: '',
@@ -287,6 +287,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
       setAvatar([])
       setResumeFiles([])
       setGender('')
+      setIsSalaryActive(false)
       setSalaryRange([9000000, 20000000])
     }
   }, [statusResumeCreate])
@@ -339,6 +340,10 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
     resolver: yupResolver(schema)
   })
 
+  useEffect(() => {
+    setValue('birth_year', '')
+  }, [setValue])
+
   const submitHandler = (data: ResumeFormData) => {
     const newPosition = positionId ?? resumePosition?.id
     if (!newPosition) setPositionErr('Position Cannot Be Empty!')
@@ -352,6 +357,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
       }
       // popObjectItemByKey(data, 'work_province')
       popObjectItemByKey(data, 'residence_province')
+      if (gender == 'woman') data.military_status = undefined
       if (isSalaryActive) {
         ;[data.min_salary, data.max_salary] = salaryRange
       }
@@ -361,6 +367,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
 
   const handleCities = (provinceId: string, field: string) => {
     setFillCities(field)
+    setValue('residence_city', '')
     dispatch(getCitiesByProvince(provinceId))
   }
 
@@ -774,6 +781,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                                 onBlur={onBlur}
                                 error={Boolean(errors.education)}
                               >
+                                <MenuItem value=''>---</MenuItem>
                                 {constantReader(educationOptions)?.map(([key, value]:[string, string], index: number) => (
                                   <MenuItem key={`education-${index}`} value={key}>
                                     {uppercaseFirstLetters(value)}
@@ -803,6 +811,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                                 onBlur={onBlur}
                                 error={Boolean(errors.marital_status)}
                               >
+                                <MenuItem value=''>---</MenuItem>
                                 {constantReader(maritalOptions)?.map(([key, value]:[string, string], index: number) => (
                                   <MenuItem key={`marital-${index}`} value={key}>
                                     {uppercaseFirstLetters(value)}
@@ -817,7 +826,6 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                    {gender != 'woman' && (
                       <Grid item xs={12} mt={5} md={6}>
                         <FormControl fullWidth>
                           <Controller
@@ -832,7 +840,9 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                                   onChange={onChange}
                                   onBlur={onBlur}
                                   error={Boolean(errors.military_status)}
+                                  disabled={gender == 'woman'}
                                 >
+                                  <MenuItem value=''>---</MenuItem>
                                   {constantReader(militaryOptions).map(([key, value]:[string, string], index: number) => (
                                     <MenuItem key={`military-${index}`} value={key}>
                                       {uppercaseFirstLetters(value)}
@@ -849,7 +859,6 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                           )}
                         </FormControl>
                       </Grid>
-                    )}
                     {/* <Grid item xs={12} mt={5} md={6}>
                       <FormControl fullWidth>
                         <Controller
@@ -959,6 +968,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                                 onChange={onChange}
                                 onBlur={onBlur}
                                 error={Boolean(errors.residence_city)}
+                                disabled={!residanceCities?.length}
                               >
                                 {residanceCities.map((item: any, index: number) => (
                                   <MenuItem key={`residence-city-${index}`} value={item._id}>

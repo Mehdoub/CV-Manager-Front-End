@@ -39,7 +39,8 @@ const renderList = (arr: ProfileTabCommonType[]) => {
             {`${item?.property?.charAt(0).toUpperCase() + item?.property?.slice(1)}:`}
           </Typography>
           <Typography sx={{ color: 'text.secondary' }}>
-            {item?.value?.charAt(0).toUpperCase() + item?.value?.slice(1)}
+            {/* {item?.value?.charAt(0).toUpperCase() + item?.value?.slice(1)} */}
+            {item?.value}
           </Typography>
         </Box>
       )

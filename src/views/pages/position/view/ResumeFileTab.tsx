@@ -87,7 +87,7 @@ function ResumeFileTab() {
                 file{resumeFiles?.indexOf(pdfFile) + 1}.pdf View:
               </Typography>
               {pdfFile && (
-                <Worker workerUrl='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.12.313/pdf.worker.min.js'>
+                <Worker workerUrl='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js'>
                   <Viewer fileUrl={pdfFile} plugins={[defaultLayoutPluginInstance]}></Viewer>
                 </Worker>
               )}

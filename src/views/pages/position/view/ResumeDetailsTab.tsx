@@ -98,7 +98,7 @@ const defaultValues = {
   // work_city: '',
   // residence_province: '',
   // residence_city: '',
-  birth_year: undefined,
+  birth_year: '',
   // work_experience: years.at(-1) as number,
   mobile: '',
   phone: '',
@@ -181,11 +181,11 @@ const ResumeDetailsTab = () => {
       firstname: yup.string().label('First name').min(3).required(),
       lastname: yup.string().label('Last name').min(3).required(),
       gender: yup.string().label('Gender').oneOf(getObjectKeys(genderOptions)).required(),
-      education: yup.string().label('Education').oneOf(getObjectKeys(educationOptions)).optional(),
-      marital_status: yup.string().label('Marital Status').oneOf(getObjectKeys(maritalOptions)).optional(),
+      education: yup.string().label('Education').oneOf(['', ...getObjectKeys(educationOptions)]).optional(),
+      marital_status: yup.string().label('Marital Status').oneOf(['', ...getObjectKeys(maritalOptions)]).optional(),
       military_status: yup.string().when('gender', (val: any) => {
         if (val == 'man') {
-          return yup.string().label('Military Status').oneOf(getObjectKeys(militaryOptions)).optional()
+          return yup.string().label('Military Status').oneOf(['', ...getObjectKeys(militaryOptions)]).optional()
         } else {
           return yup.string().notRequired()
         }
@@ -261,36 +261,7 @@ const ResumeDetailsTab = () => {
     }
   }
 
-  const handleRemoveFile = (file: FileProp) => {
-    const uploadedFiles = resumeFiles
-    const filtered = uploadedFiles.filter((i: FileProp) => i.name !== file.name)
-    setResumeFiles([...filtered])
-  }
-
-  const fileList = resumeFiles.map((file: FileProp) => (
-    <ListItem key={file.name} style={{ border: '1px solid #e2e2e2', borderRadius: '16px', marginTop: '8px' }}>
-      <Grid item xs={4} sm={1} className='file-preview'>
-        {renderFilePreview(file)}
-      </Grid>
-      <Grid item xs={12}>
-        <Typography className='file-name'>{file.name}</Typography>
-        <Typography className='file-size' variant='body2'>
-          {Math.round(file.size / 100) / 10 > 1000
-            ? (Math.round(file.size / 100) / 10000).toFixed(1) + ' MB'
-            : (Math.round(file.size / 100) / 10).toFixed(1)}{' '}
-          KB
-        </Typography>
-      </Grid>
-      <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'right' }}>
-        <IconButton onClick={() => handleRemoveFile(file)}>
-          <CloseIcon />
-        </IconButton>
-      </Grid>
-    </ListItem>
-  ))
-
   const {
-    reset,
     control,
     handleSubmit,
     formState: { errors },
@@ -312,13 +283,13 @@ const ResumeDetailsTab = () => {
     setValue('lastname', resume?.lastname)
     setValue('gender', resume?.gender)
     setValue('mobile', resume?.mobile.substring(2))
-    setValue('email', resume?.email)
-    setValue('phone', resume?.phone)
-    setValue('birth_year', resume?.birth_year)
+    setValue('email', resume?.email ?? '')
+    setValue('phone', resume?.phone ?? '')
+    setValue('birth_year', resume?.birth_year ?? '')
     // setValue('work_experience', resume?.work_experience)
-    setValue('marital_status', resume?.marital_status)
-    setValue('education', resume?.education)
-    setValue('military_status', resume?.military_status)
+    setValue('marital_status', resume?.marital_status ?? '')
+    setValue('education', resume?.education ?? '')
+    setValue('military_status', resume?.military_status ?? '')
     // setValue('work_city', resume?.work_city)
     // setValue('residence_city', resume?.residence_city)
     setSalaryRange([resume?.min_salary, resume?.max_salary])
@@ -333,7 +304,11 @@ const ResumeDetailsTab = () => {
     }
     popObjectItemByKey(data, 'work_province')
     popObjectItemByKey(data, 'residence_province')
-    if (isSalaryActive) {
+    if (gender == 'woman') data.military_status = null
+    if (!isSalaryActive) {
+      data.min_salary = null
+      data.max_salary = null
+    } else {
       ;[data.min_salary, data.max_salary] = salaryRange
     }
     dispatch(editResume({ ...data, resumeId: resume?._id }))
@@ -581,6 +556,7 @@ const ResumeDetailsTab = () => {
                             onBlur={onBlur}
                             error={Boolean(errors.birth_year)}
                           >
+                            <MenuItem value=''>---</MenuItem>
                             {years.map((item: number, index: number) => (
                               <MenuItem key={index} value={item}>
                                 {item}
@@ -642,6 +618,7 @@ const ResumeDetailsTab = () => {
                             onBlur={onBlur}
                             error={Boolean(errors.education)}
                           >
+                            <MenuItem value=''>---</MenuItem>
                             {constantReader(educationOptions)?.map(([key, value]:[string, string], index: number) => (
                               <MenuItem key={`education-${index}`} value={key}>
                                 {uppercaseFirstLetters(value)}
@@ -671,6 +648,7 @@ const ResumeDetailsTab = () => {
                             onBlur={onBlur}
                             error={Boolean(errors.marital_status)}
                           >
+                            <MenuItem value=''>---</MenuItem>
                             {constantReader(maritalOptions)?.map(([key, value]:[string, string], index: number) => (
                               <MenuItem key={`marital-${index}`} value={key}>
                                 {uppercaseFirstLetters(value)}
@@ -686,7 +664,6 @@ const ResumeDetailsTab = () => {
                   </FormControl>
                 </Grid>
                 <Grid item xs={12} mt={5} md={6}>
-                  {gender != 'woman' && (
                     <FormControl fullWidth>
                       <Controller
                         name='military_status'
@@ -700,7 +677,9 @@ const ResumeDetailsTab = () => {
                               onChange={onChange}
                               onBlur={onBlur}
                               error={Boolean(errors.military_status)}
+                              disabled={gender == 'woman'}
                             >
+                              <MenuItem value=''>---</MenuItem>
                               {constantReader(militaryOptions)?.map(([key, value]:[string, string], index: number) => (
                                 <MenuItem key={`military-${index}`} value={key}>
                                   {uppercaseFirstLetters(value)}
@@ -714,7 +693,6 @@ const ResumeDetailsTab = () => {
                         <FormHelperText sx={{ color: 'error.main' }}>{errors.military_status.message}</FormHelperText>
                       )}
                     </FormControl>
-                  )}
                 </Grid>
                 {/* <Grid item xs={12} mt={5} md={6}>
                   <FormControl fullWidth>

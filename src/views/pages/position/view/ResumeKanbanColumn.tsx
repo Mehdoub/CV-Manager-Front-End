@@ -13,7 +13,7 @@ const ResumeKanbanColumn = ({ title, color, children, statusKey }: ResumeKanbanC
   const theme = useTheme()
   return (
     <Card
-      className='hide-scrollbar'
+      // className='hide-scrollbar'
       sx={{
         minWidth: 300,
         maxHeight: 720,
