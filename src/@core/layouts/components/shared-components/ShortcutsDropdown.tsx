@@ -27,17 +27,18 @@ import { Settings } from 'src/@core/context/settingsContext'
 
 // ** Custom Components Imports
 import CustomAvatar from 'src/@core/components/mui/avatar'
+import { useSelector } from 'react-redux'
+import { getEntityIcon, getObjectKeys } from 'src/helpers/functions'
+import AddCompanyDrawer from 'src/views/pages/company/list/AddCompanyDrawer'
+import SidebarAddProject from 'src/views/pages/project/list/AddProjectDrawer'
+import AddPositionDrawer from 'src/views/pages/position/list/AddPositionDrawer'
+import { useSettings } from 'src/@core/hooks/useSettings'
+import AddResumeDialog from 'src/views/pages/position/view/AddResumeDialog'
 
 export type ShortcutsType = {
-  url: string
+  onclick: () => void
   icon: string
   title: string
-  subtitle: string
-}
-
-interface Props {
-  settings: Settings
-  shortcuts: ShortcutsType[]
 }
 
 // ** Styled Menu component
@@ -77,17 +78,33 @@ const ScrollWrapper = ({ children, hidden }: { children: ReactNode; hidden: bool
   }
 }
 
-const ShortcutsDropdown = (props: Props) => {
-  // ** Props
-  const { shortcuts, settings } = props
-
+const ShortcutsDropdown = () => {
   // ** States
   const [anchorEl, setAnchorEl] = useState<(EventTarget & Element) | null>(null)
+  const [addCompanyOpen, setAddCompanyOpen] = useState<boolean>(false)
+  const [addProjectOpen, setAddProjectOpen] = useState<boolean>(false)
+  const [addPositionOpen, setAddPositionOpen] = useState<boolean>(false)
+  const [addResumeOpen, setAddResumeOpen] = useState<boolean>(false)
+
+  const toggleAddCompanyDrawer = () => setAddCompanyOpen(!addCompanyOpen)
+  const toggleAddProjectDrawer = () => setAddProjectOpen(!addProjectOpen)
+  const toggleAddPositionDrawer = () => setAddPositionOpen(!addPositionOpen)
+  const toggleAddResumeDialog = () => setAddResumeOpen(!addResumeOpen)
+
+  const shortcuts = [
+    { icon: getEntityIcon('companies'), title: 'Create New Company', onclick: toggleAddCompanyDrawer },
+    { icon: getEntityIcon('projects'), title: 'Create New Project', onclick: toggleAddProjectDrawer },
+    { icon: getEntityIcon('positions'), title: 'Create New Position', onclick: toggleAddPositionDrawer },
+    { icon: getEntityIcon('resumes'), title: 'Create New Resume', onclick: toggleAddResumeDialog }
+  ]
 
   // ** Hook
   const hidden = useMediaQuery((theme: Theme) => theme.breakpoints.down('lg'))
+  const { data: constants } = useSelector((state: any) => state.constants)
+  const { data: provinces } = useSelector((state: any) => state.provinces)
 
   // ** Vars
+  const settings: any = useSettings()
   const { direction } = settings
 
   const handleDropdownOpen = (event: SyntheticEvent) => {
@@ -117,15 +134,15 @@ const ShortcutsDropdown = (props: Props) => {
         >
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
             <Typography sx={{ fontSize: '1.125rem', color: 'text.secondary', fontWeight: 600 }}>Shortcuts</Typography>
-            <Tooltip title='Add Shortcut' placement='top'>
+            {/* <Tooltip title='Add Shortcut' placement='top'>
               <IconButton disableRipple>
                 <Icon icon='mdi:plus-circle-outline' />
               </IconButton>
-            </Tooltip>
+            </Tooltip> */}
           </Box>
         </MenuItem>
         <Divider sx={{ my: '0 !important' }} />
-        <ScrollWrapper hidden={hidden}>
+        {/* <ScrollWrapper hidden={hidden}> */}
           <Grid
             container
             spacing={0}
@@ -136,40 +153,52 @@ const ShortcutsDropdown = (props: Props) => {
               }
             }}
           >
-            {shortcuts.map(shortcut => (
-              <Grid
-                item
-                xs={6}
-                key={shortcut.title}
-                onClick={handleDropdownClose}
-                sx={{ cursor: 'pointer', '&:hover': { backgroundColor: 'action.hover' } }}
-              >
-                <Box
-                  component={Link}
-                  href={shortcut.url}
-                  sx={{
-                    p: 6,
-                    display: 'flex',
-                    textAlign: 'center',
-                    alignItems: 'center',
-                    textDecoration: 'none',
-                    flexDirection: 'column',
-                    justifyContent: 'center'
-                  }}
+            {shortcuts.map((shortcut: any) => {
+              const IconComponent = shortcut.icon
+              return (
+                <Grid
+                  item
+                  xs={6}
+                  key={shortcut.title}
+                  onClick={handleDropdownClose}
+                  sx={{ cursor: 'pointer', '&:hover': { backgroundColor: 'action.hover' } }}
                 >
-                  <CustomAvatar skin='light' color='secondary' sx={{ mb: 2, width: 50, height: 50 }}>
-                    <Icon icon={shortcut.icon} />
-                  </CustomAvatar>
-                  <Typography sx={{ fontWeight: 600, color: 'text.secondary' }}>{shortcut.title}</Typography>
-                  <Typography variant='body2' sx={{ color: 'text.disabled' }}>
-                    {shortcut.subtitle}
-                  </Typography>
-                </Box>
-              </Grid>
-            ))}
+                  <Box
+                    // component={Link}
+                    // href={shortcut.url}
+                    onClick={() => shortcut.onclick()}
+                    sx={{
+                      p: 6,
+                      display: 'flex',
+                      textAlign: 'center',
+                      alignItems: 'center',
+                      textDecoration: 'none',
+                      flexDirection: 'column',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <CustomAvatar skin='light' color='secondary' sx={{ mb: 2, width: 50, height: 50 }}>
+                      <IconComponent />
+                    </CustomAvatar>
+                    <Typography sx={{ fontWeight: 600, color: 'text.secondary' }}>{shortcut.title}</Typography>
+                    {/* <Typography variant='body2' sx={{ color: 'text.disabled' }}>
+                      {shortcut.subtitle}
+                    </Typography> */}
+                  </Box>
+                </Grid>
+              )
+            })}
           </Grid>
-        </ScrollWrapper>
+        {/* </ScrollWrapper> */}
       </Menu>
+      {getObjectKeys(constants?.system)?.length > 0 && (
+        <>
+          <AddCompanyDrawer open={addCompanyOpen} toggle={toggleAddCompanyDrawer} />
+          <SidebarAddProject open={addProjectOpen} toggle={toggleAddProjectDrawer} />
+          <AddPositionDrawer open={addPositionOpen} toggle={toggleAddPositionDrawer} />
+          {provinces?.length && <AddResumeDialog open={addResumeOpen} handleClose={toggleAddResumeDialog} />}
+        </>
+      )}
     </Fragment>
   )
 }

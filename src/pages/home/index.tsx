@@ -5,45 +5,45 @@ import Typography from '@mui/material/Typography'
 import CardHeader from '@mui/material/CardHeader'
 import CardContent from '@mui/material/CardContent'
 import Translations from 'src/layouts/components/Translations'
-import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
-import AddPositionDrawer from 'src/views/pages/position/list/AddPositionDrawer'
-import { useEffect, useState } from 'react'
-import AddCompanyDrawer from 'src/views/pages/company/list/AddCompanyDrawer'
-import SidebarAddProject from 'src/views/pages/project/list/AddProjectDrawer'
-import AddResumeDialog from 'src/views/pages/position/view/AddResumeDialog'
-import { useSelector } from 'react-redux'
-import { getEntityIcon, getObjectKeys } from 'src/helpers/functions'
+// import BootstrapTooltip from 'src/@core/components/bootstrap-tooltip'
+// import AddPositionDrawer from 'src/views/pages/position/list/AddPositionDrawer'
+// import { useEffect, useState } from 'react'
+// import AddCompanyDrawer from 'src/views/pages/company/list/AddCompanyDrawer'
+// import SidebarAddProject from 'src/views/pages/project/list/AddProjectDrawer'
+// import AddResumeDialog from 'src/views/pages/position/view/AddResumeDialog'
+// import { useSelector } from 'react-redux'
+// import { getEntityIcon, getObjectKeys } from 'src/helpers/functions'
 
 const Home = () => {
-  const [isSpeedDialChecked, setIsSpeedDialChecked] = useState<boolean | undefined>(undefined)
-  const [addCompanyOpen, setAddCompanyOpen] = useState<boolean>(false)
-  const [addProjectOpen, setAddProjectOpen] = useState<boolean>(false)
-  const [addPositionOpen, setAddPositionOpen] = useState<boolean>(false)
-  const [addResumeOpen, setAddResumeOpen] = useState<boolean>(false)
-  const toggleAddCompanyDrawer = () => setAddCompanyOpen(!addCompanyOpen)
-  const toggleAddProjectDrawer = () => setAddProjectOpen(!addProjectOpen)
-  const toggleAddPositionDrawer = () => setAddPositionOpen(!addPositionOpen)
-  const toggleAddResumeDialog = () => setAddResumeOpen(!addResumeOpen)
+  // const [isSpeedDialChecked, setIsSpeedDialChecked] = useState<boolean | undefined>(undefined)
+  // const [addCompanyOpen, setAddCompanyOpen] = useState<boolean>(false)
+  // const [addProjectOpen, setAddProjectOpen] = useState<boolean>(false)
+  // const [addPositionOpen, setAddPositionOpen] = useState<boolean>(false)
+  // const [addResumeOpen, setAddResumeOpen] = useState<boolean>(false)
+  // const toggleAddCompanyDrawer = () => setAddCompanyOpen(!addCompanyOpen)
+  // const toggleAddProjectDrawer = () => setAddProjectOpen(!addProjectOpen)
+  // const toggleAddPositionDrawer = () => setAddPositionOpen(!addPositionOpen)
+  // const toggleAddResumeDialog = () => setAddResumeOpen(!addResumeOpen)
 
-  const { data: constants } = useSelector((state: any) => state.constants)
-  const { data: provinces } = useSelector((state: any) => state.provinces)
+  // const { data: constants } = useSelector((state: any) => state.constants)
+  // const { data: provinces } = useSelector((state: any) => state.provinces)
 
-  useEffect(() => {
-    if (isSpeedDialChecked === false) {
-      setIsSpeedDialChecked(undefined)
-    }
-  }, [isSpeedDialChecked])
+  // useEffect(() => {
+  //   if (isSpeedDialChecked === false) {
+  //     setIsSpeedDialChecked(undefined)
+  //   }
+  // }, [isSpeedDialChecked])
 
-  const actions = [
-    { icon: getEntityIcon('companies'), name: 'Create New Company', onclick: toggleAddCompanyDrawer },
-    { icon: getEntityIcon('projects'), name: 'Create New Project', onclick: toggleAddProjectDrawer },
-    { icon: getEntityIcon('positions'), name: 'Create New Position', onclick: toggleAddPositionDrawer },
-    { icon: getEntityIcon('resumes'), name: 'Create New Resume', onclick: toggleAddResumeDialog }
-  ]
+  // const actions = [
+  //   { icon: getEntityIcon('companies'), name: 'Create New Company', onclick: toggleAddCompanyDrawer },
+  //   { icon: getEntityIcon('projects'), name: 'Create New Project', onclick: toggleAddProjectDrawer },
+  //   { icon: getEntityIcon('positions'), name: 'Create New Position', onclick: toggleAddPositionDrawer },
+  //   { icon: getEntityIcon('resumes'), name: 'Create New Resume', onclick: toggleAddResumeDialog }
+  // ]
 
   return (
     <>
-      <nav className='sd-menu'>
+      {/* <nav className='sd-menu'>
         <input
           type='checkbox'
           className='sd-menu-open'
@@ -75,7 +75,7 @@ const Home = () => {
             </BootstrapTooltip>
           )
         })}
-      </nav>
+      </nav> */}
       <Grid container spacing={6}>
         <Grid item xs={12}>
           <Card>
@@ -103,14 +103,14 @@ const Home = () => {
           </Card>
         </Grid>
       </Grid>
-      {getObjectKeys(constants?.system)?.length > 0 && (
+      {/* {getObjectKeys(constants?.system)?.length > 0 && (
         <>
           <AddCompanyDrawer open={addCompanyOpen} toggle={toggleAddCompanyDrawer} />
           <SidebarAddProject open={addProjectOpen} toggle={toggleAddProjectDrawer} />
           <AddPositionDrawer open={addPositionOpen} toggle={toggleAddPositionDrawer} />
           {provinces?.length && <AddResumeDialog open={addResumeOpen} handleClose={toggleAddResumeDialog} />}
         </>
-      )}
+      )} */}
     </>
   )
 }
