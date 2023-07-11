@@ -60,6 +60,7 @@ import {
   clearResumeRemoveAssignee,
   clearResumeRemoveTag,
   getResume,
+  getResumes,
   removeAssigneeFromResume,
   removeTagFromResume,
   updateResumeStatus
@@ -105,7 +106,8 @@ const ResumeDialogHeader = ({
   closeToggle,
   smActiveTab,
   handleSmTabChange,
-  isSmallScreen
+  isSmallScreen,
+  allResumes = false
 }: any) => {
   const [anchorElAddTag, setAnchorElAddTag] = useState<HTMLButtonElement | null>(null)
   const [anchorElAddContributor, setAnchorElAddContributor] = useState<HTMLButtonElement | null>(null)
@@ -115,6 +117,7 @@ const ResumeDialogHeader = ({
   const [openResumeEndWorkDialog, setOpenResumeEndWorkDialog] = useState<boolean>(false)
   const [anchorElStatesMenu, setAnchorElStatesMenu] = useState<null | HTMLElement>(null)
   const [copyText, setCopyText] = useState<string>('Copy Link')
+  const [boardResumes, setBoardResumes] = useState<any>([])
 
   const dispatch = useDispatch()
   const router = useRouter()
@@ -122,6 +125,7 @@ const ResumeDialogHeader = ({
 
   const { data: resume } = useSelector((state: any) => state.resume)
   const { data: positionResumes } = useSelector((state: any) => state.positionResumes)
+  const { data: resumes, loading: resumesLoading } = useSelector((state: any) => state.resumesList)
   const { status: resumeStateUpdateStatus, loading: resumeStateUpdateLoading } = useSelector(
     (state: any) => state.resumeUpdateStatus
   )
@@ -139,6 +143,14 @@ const ResumeDialogHeader = ({
   }, [])
 
   useEffect(() => {
+    if (allResumes) {
+      setBoardResumes(resumes)
+    } else {
+      setBoardResumes(positionResumes)
+    }
+  }, [resumes, positionResumes])
+
+  useEffect(() => {
     if (resumeStateUpdateStatus) {
       dispatch(getResume(resume.id))
     }
@@ -147,7 +159,8 @@ const ResumeDialogHeader = ({
   useEffect(() => {
     if (resumeAddTagStatus) {
       dispatch(getResume(resume.id))
-      dispatch(getPositionResumes(resume?.position_id?._id))
+      if (!allResumes) dispatch(getPositionResumes(resume?.position_id?._id))
+      else dispatch(getResumes())
       dispatch(clearResumeAddTag())
       handleCloseAddTag()
     }
@@ -156,7 +169,8 @@ const ResumeDialogHeader = ({
   useEffect(() => {
     if (resumeRemoveTagStatus) {
       dispatch(getResume(resume.id))
-      dispatch(getPositionResumes(resume?.position_id?._id))
+      if (!allResumes) dispatch(getPositionResumes(resume?.position_id?._id))
+      else dispatch(getResumes())
       dispatch(clearResumeRemoveTag())
     }
   }, [resumeRemoveTagStatus])
@@ -164,7 +178,8 @@ const ResumeDialogHeader = ({
   useEffect(() => {
     if (resumeAddAssigneeStatus) {
       dispatch(getResume(resume.id))
-      dispatch(getPositionResumes(resume?.position_id?._id))
+      if (!allResumes) dispatch(getPositionResumes(resume?.position_id?._id))
+      else dispatch(getResumes())
       dispatch(clearResumeAddAssignee())
       handleCloseAddContributor()
     }
@@ -173,7 +188,8 @@ const ResumeDialogHeader = ({
   useEffect(() => {
     if (resumeRemoveAssigneeStatus) {
       dispatch(getResume(resume.id))
-      dispatch(getPositionResumes(resume?.position_id?._id))
+      if (!allResumes) dispatch(getPositionResumes(resume?.position_id?._id))
+      else dispatch(getResumes())
       dispatch(clearResumeRemoveAssignee())
     }
   }, [resumeRemoveAssigneeStatus])
@@ -239,7 +255,7 @@ const ResumeDialogHeader = ({
 
   const updateStateHandler = (newState: string) => {
     if (resume?.id) {
-      const firstResumeOfNewState = positionResumes[stateKeys.indexOf(newState)][newState][0]
+      const firstResumeOfNewState = boardResumes[stateKeys.indexOf(newState)][newState][0]
       const newIndex = firstResumeOfNewState ? firstResumeOfNewState.index / 2 : 1
 
       dispatch(updateResumeStatus({ resumeId: resume?.id, status: newState, index: newIndex }))

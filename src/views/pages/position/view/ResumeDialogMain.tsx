@@ -12,7 +12,7 @@ import { getObjectKeys } from 'src/helpers/functions'
 interface ResumeDialogMainProps {
   open: boolean
   toggle: () => void
-  resumeData: any
+  allResumes: boolean
 }
 
 const tags = [
@@ -30,7 +30,7 @@ const tags = [
   }
 ]
 
-const ResumeDialogMain = ({ open, toggle, resumeData }: ResumeDialogMainProps) => {
+const ResumeDialogMain = ({ open, toggle, allResumes }: ResumeDialogMainProps) => {
   const [activeTab, setActiveTab] = useState<string>('details')
   const [smActiveTab, setSmActiveTab] = useState<string>('resumedata')
   const [openAddCallDialog, setOpenAddCallDialog] = useState<boolean>(false)
@@ -81,6 +81,7 @@ const ResumeDialogMain = ({ open, toggle, resumeData }: ResumeDialogMainProps) =
               smActiveTab={smActiveTab}
               handleSmTabChange={handleSmTabChange}
               isSmallScreen={isSmallScreen}
+              allResumes={allResumes}
             />
           </Grid>
           {(!isSmallScreen || (isSmallScreen && smActiveTab == 'resumedata')) && (

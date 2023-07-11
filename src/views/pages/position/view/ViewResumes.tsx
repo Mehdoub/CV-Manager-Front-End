@@ -189,7 +189,7 @@ const ViewResumes = ({ allResumes = false }: ViewResumesProps) => {
             })}
         </DragDropContext>
       </Stack>
-      <ResumeDialogMain open={open} toggle={handleClose} resumeData={{}} />
+      <ResumeDialogMain open={open} toggle={handleClose} allResumes={allResumes} />
     </>
   )
 }

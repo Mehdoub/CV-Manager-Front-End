@@ -16,7 +16,7 @@ const ResumeKanbanColumn = ({ title, color, children, statusKey }: ResumeKanbanC
       // className='hide-scrollbar'
       sx={{
         minWidth: 300,
-        maxHeight: 720,
+        maxHeight: '100vh',
         backgroundColor: theme.palette.mode == 'dark' ? '#282A42' : '#F7F7F9',
         overflowY: 'scroll',
         boxShadow: 'none',
@@ -48,7 +48,7 @@ const ResumeKanbanColumn = ({ title, color, children, statusKey }: ResumeKanbanC
       </Card>
       <Droppable droppableId={`${statusKey}`}>
         {provided => (
-          <List {...provided.droppableProps} ref={provided.innerRef}>
+          <List {...provided.droppableProps} ref={provided.innerRef} sx={{ marginBottom: 40 }}>
             {children}
             {provided.placeholder}
           </List>

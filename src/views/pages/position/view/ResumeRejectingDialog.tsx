@@ -87,7 +87,7 @@ const ResumeRejectingDialog = ({ open, handleClose }: ResumeRejectingDialogProps
         open={open}
         onClose={handleClose}
         aria-labelledby='form-dialog-title'
-        PaperProps={{ style: { overflowY: overflowVisibility, maxHeight: '100% !important' } }}
+        PaperProps={{ style: { overflowY: overflowVisibility} }}
       >
         <IconButton size='small' onClick={handleClose} sx={{ position: 'absolute', right: '1rem', top: '1rem' }}>
           <CloseIcon />
