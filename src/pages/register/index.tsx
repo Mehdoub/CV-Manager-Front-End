@@ -114,6 +114,7 @@ const Register = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [showRepeatPassword, setShowRepeatPassword] = useState<boolean>(false)
   const [usernameErr, setUsernameErr] = useState<string>('')
+  const [disabled, setDisabled] = useState<boolean>(false)
 
   // ** Hooks
   const theme = useTheme()
@@ -160,10 +161,12 @@ const Register = () => {
       })
     } else if (isAvailable) {
       mobile = '98' + mobile
+      setDisabled(true)
       register({ firstname, lastname, mobile, password, repeatpassword, username }, (err: any) => {
         const errors = err?.response?.data?.errors[0]
         if (errors) setServerValidationErrors(errors, setError)
         toastError(err?.response?.data?.message)
+        setDisabled(false)
       })
     }
   }
@@ -518,7 +521,7 @@ const Register = () => {
                   <FormHelperText sx={{ mb: 3, mt: 0, color: 'error.main' }}>{errors.terms.message}</FormHelperText>
                 )}
               </FormControl> */}
-              <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }}>
+              <Button fullWidth size='large' type='submit' variant='contained' sx={{ mb: 7 }} disabled={disabled}>
                 Sign up
               </Button>
               <Box sx={{ display: 'flex', alignItems: 'center', flexWrap: 'wrap', justifyContent: 'center' }}>
