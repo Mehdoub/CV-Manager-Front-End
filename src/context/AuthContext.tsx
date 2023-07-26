@@ -165,11 +165,11 @@ const AuthProvider = ({ children }: Props) => {
       await deleteFcmToken()
       await ApiRequest.builder().auth().request('post', 'auth/logout')
 
-      clearLogin()
-      window.location.href = '/login'
     } catch (err: any) {
-      toastError('An Error Occurred While Logout')
+      // toastError('An Error Occurred While Logout')
     }
+    clearLogin()
+    window.location.href = '/login'
   }
 
   const handleRegister = async (params: RegisterParams, errorCallback?: ErrCallbackType) => {

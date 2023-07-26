@@ -86,16 +86,11 @@ const ShortcutsDropdown = () => {
   const [addPositionOpen, setAddPositionOpen] = useState<boolean>(false)
   const [addResumeOpen, setAddResumeOpen] = useState<boolean>(false)
 
-  const toggleAddCompanyDrawer = () => setAddCompanyOpen(!addCompanyOpen)
-  const toggleAddProjectDrawer = () => setAddProjectOpen(!addProjectOpen)
-  const toggleAddPositionDrawer = () => setAddPositionOpen(!addPositionOpen)
-  const toggleAddResumeDialog = () => setAddResumeOpen(!addResumeOpen)
-
   const shortcuts = [
-    { icon: getEntityIcon('companies'), title: 'Create New Company', onclick: toggleAddCompanyDrawer },
-    { icon: getEntityIcon('projects'), title: 'Create New Project', onclick: toggleAddProjectDrawer },
-    { icon: getEntityIcon('positions'), title: 'Create New Position', onclick: toggleAddPositionDrawer },
-    { icon: getEntityIcon('resumes'), title: 'Create New Resume', onclick: toggleAddResumeDialog }
+    { icon: getEntityIcon('companies'), title: 'Create New Company', onclick: () => setAddCompanyOpen(true) },
+    { icon: getEntityIcon('projects'), title: 'Create New Project', onclick: () => setAddProjectOpen(true) },
+    { icon: getEntityIcon('positions'), title: 'Create New Position', onclick: () => setAddPositionOpen(true) },
+    { icon: getEntityIcon('resumes'), title: 'Create New Resume', onclick: () => setAddResumeOpen(true) }
   ]
 
   // ** Hook
@@ -134,69 +129,62 @@ const ShortcutsDropdown = () => {
         >
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
             <Typography sx={{ fontSize: '1.125rem', color: 'text.secondary', fontWeight: 600 }}>Shortcuts</Typography>
-            {/* <Tooltip title='Add Shortcut' placement='top'>
-              <IconButton disableRipple>
-                <Icon icon='mdi:plus-circle-outline' />
-              </IconButton>
-            </Tooltip> */}
           </Box>
         </MenuItem>
         <Divider sx={{ my: '0 !important' }} />
         {/* <ScrollWrapper hidden={hidden}> */}
-          <Grid
-            container
-            spacing={0}
-            sx={{
-              '& .MuiGrid-root': {
-                borderBottom: theme => `1px solid ${theme.palette.divider}`,
-                '&:nth-of-type(odd)': { borderRight: theme => `1px solid ${theme.palette.divider}` }
-              }
-            }}
-          >
-            {shortcuts.map((shortcut: any) => {
-              const IconComponent = shortcut.icon
-              return (
-                <Grid
-                  item
-                  xs={6}
-                  key={shortcut.title}
-                  onClick={handleDropdownClose}
-                  sx={{ cursor: 'pointer', '&:hover': { backgroundColor: 'action.hover' } }}
+        <Grid
+          container
+          spacing={0}
+          sx={{
+            '& .MuiGrid-root': {
+              borderBottom: theme => `1px solid ${theme.palette.divider}`,
+              '&:nth-of-type(odd)': { borderRight: theme => `1px solid ${theme.palette.divider}` }
+            }
+          }}
+        >
+          {shortcuts.map((shortcut: any) => {
+            const IconComponent = shortcut.icon
+            return (
+              <Grid
+                item
+                xs={6}
+                key={shortcut.title}
+                onClick={handleDropdownClose}
+                sx={{ cursor: 'pointer', '&:hover': { backgroundColor: 'action.hover' } }}
+              >
+                <Box
+                  onClick={() => shortcut.onclick()}
+                  sx={{
+                    p: 6,
+                    display: 'flex',
+                    textAlign: 'center',
+                    alignItems: 'center',
+                    textDecoration: 'none',
+                    flexDirection: 'column',
+                    justifyContent: 'center'
+                  }}
                 >
-                  <Box
-                    // component={Link}
-                    // href={shortcut.url}
-                    onClick={() => shortcut.onclick()}
-                    sx={{
-                      p: 6,
-                      display: 'flex',
-                      textAlign: 'center',
-                      alignItems: 'center',
-                      textDecoration: 'none',
-                      flexDirection: 'column',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    <CustomAvatar skin='light' color='secondary' sx={{ mb: 2, width: 50, height: 50 }}>
-                      <IconComponent />
-                    </CustomAvatar>
-                    <Typography sx={{ fontWeight: 600, color: 'text.secondary' }}>{shortcut.title}</Typography>
-                    {/* <Typography variant='body2' sx={{ color: 'text.disabled' }}>
+                  <CustomAvatar skin='light' color='secondary' sx={{ mb: 2, width: 50, height: 50 }}>
+                    <IconComponent />
+                  </CustomAvatar>
+                  <Typography sx={{ fontWeight: 600, color: 'text.secondary' }}>{shortcut.title}</Typography>
+                  {/* <Typography variant='body2' sx={{ color: 'text.disabled' }}>
                       {shortcut.subtitle}
                     </Typography> */}
-                  </Box>
-                </Grid>
-              )
-            })}
-          </Grid>
+                </Box>
+              </Grid>
+            )
+          })}
+        </Grid>
         {/* </ScrollWrapper> */}
       </Menu>
-      {getObjectKeys(constants?.system)?.length > 0 && Boolean(anchorEl) && (
+      {getObjectKeys(constants?.system)?.length > 0 && (
         <>
-          <AddCompanyDrawer open={addCompanyOpen} toggle={toggleAddCompanyDrawer} />
-          <SidebarAddProject open={addProjectOpen} toggle={toggleAddProjectDrawer} />
-          <AddPositionDrawer open={addPositionOpen} toggle={toggleAddPositionDrawer} />
-          {provinces?.length && <AddResumeDialog open={addResumeOpen} handleClose={toggleAddResumeDialog} />}
+          <AddCompanyDrawer open={addCompanyOpen} toggle={() => setAddCompanyOpen(false)} />
+          <SidebarAddProject open={addProjectOpen} toggle={() => setAddProjectOpen(false)} />
+          <AddPositionDrawer open={addPositionOpen} toggle={() => setAddPositionOpen(false)} />
+          {provinces?.length > 0 && <AddResumeDialog open={addResumeOpen} handleClose={() => setAddResumeOpen(false)} />}
         </>
       )}
     </Fragment>

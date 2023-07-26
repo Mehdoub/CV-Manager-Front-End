@@ -8,28 +8,18 @@ import Divider from '@mui/material/Divider'
 import { styled } from '@mui/material/styles'
 import MenuItem from '@mui/material/MenuItem'
 import CustomTextField from 'src/@core/components/custom-textfield'
-import Typography, { TypographyProps } from '@mui/material/Typography'
+import Typography from '@mui/material/Typography'
 import InputLabel from '@mui/material/InputLabel'
-import CardHeader from '@mui/material/CardHeader'
 import FormControl from '@mui/material/FormControl'
 import CardContent from '@mui/material/CardContent'
 import InputAdornment from '@mui/material/InputAdornment'
 import Button from '@mui/material/Button'
 import Icon from 'src/@core/components/icon'
 import {
-  Autocomplete,
-  Avatar,
   Box,
-  CircularProgress,
   FormControlLabel,
   FormHelperText,
   Grow,
-  IconButton,
-  Link,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
   Slider,
   Switch
 } from '@mui/material'
@@ -53,13 +43,7 @@ import { useSelector } from 'react-redux'
 import { useRouter } from 'next/router'
 import { getCitiesByProvince } from 'src/store/province'
 import { getPositionResumes } from 'src/store/position'
-import CloseIcon from '@mui/icons-material/Close'
 
-interface FileProp {
-  name: string
-  type: string
-  size: number
-}
 
 let years: Array<any> = []
 for (let year = 1970; year <= new Date().getFullYear(); year++) years.push(String(year))
@@ -76,7 +60,6 @@ export interface ResumeFormData {
   residence_province: string
   residence_city: string
   birth_year: any
-  // work_experience?: number
   min_salary?: number
   max_salary?: number
   mobile: string
@@ -94,12 +77,9 @@ const defaultValues = {
   education: '',
   marital_status: '',
   military_status: '',
-  // work_province: '',
-  // work_city: '',
-  // residence_province: '',
-  // residence_city: '',
+  residence_province: '',
+  residence_city: '',
   birth_year: '',
-  // work_experience: years.at(-1) as number,
   mobile: '',
   phone: '',
   email: ''
@@ -112,30 +92,18 @@ const ImgStyled = styled('img')(({ theme }) => ({
   borderRadius: theme.shape.borderRadius
 }))
 
-const HeadingTypography = styled(Typography)<TypographyProps>(({ theme }) => ({
-  marginBottom: theme.spacing(5),
-  [theme.breakpoints.down('sm')]: {
-    marginBottom: theme.spacing(4)
-  }
-}))
-
 const ResumeDetailsTab = () => {
   const [avatar, setAvatar] = useState<File[]>([])
-  const [resumeFiles, setResumeFiles] = useState<File[]>([])
   const [gender, setGender] = useState<string>('')
   const [salaryRange, setSalaryRange] = useState<any>([9000000, 20000000])
-  // const [workCities, setWorkCities] = useState([])
-  // const [residanceCities, setResidanceCities] = useState([])
-  // const [fillCities, setFillCities] = useState('')
-  // const [resumePosition, setResumePosition] = useState<any>({})
-  // const [positionErr, setPositionErr] = useState<string>('')
+  const [residenceCities, setResidenceCities] = useState([])
+  const [fillCities, setFillCities] = useState('')
+  const [fillResidenceCity, setFillResidenceCity] = useState<boolean>(true)
 
   const { data: resume } = useSelector((state: any) => state.resume)
-  // const { data: provinceCities } = useSelector((state: any) => state.citiesByProvince)
-  // const { data: provinces } = useSelector((state: any) => state.provinces)
-  // const { data: positions, loading: loadingSearchPositions } = useSelector((state: any) => state.projectPositions)
+  const { data: provinceCities } = useSelector((state: any) => state.citiesByProvince)
+  const { data: provinces } = useSelector((state: any) => state.provinces)
   const { status: statusResumeEdit, loading: loadingResumeEdit } = useSelector((state: any) => state.resumeEdit)
-  // const { data: projects, loading: loadingSearchProjects } = useSelector((state: any) => state.projectsList)
   const {
     data: {
       system: {
@@ -157,22 +125,26 @@ const ResumeDetailsTab = () => {
     query: { positionId }
   } = useRouter()
 
-  // const provincesValues = provinces.length > 0 ? provinces.map((province: any) => province._id) : []
-  // const workCitiesValues = workCities.length > 0 ? workCities.map((workCity: any) => workCity._id) : []
-  // const residanceCitiesValues =
-  //   residanceCities.length > 0 ? residanceCities.map((residanceCity: any) => residanceCity._id) : []
+  useEffect(() => {
+    if (provinceCities) {
+      // if (fillCities == 'work') {
+      //   setWorkCities(provinceCities)
+      //   setFillCities('')
+      // } else
+      if (fillCities == 'residence') {
+        setResidenceCities(provinceCities)
+        if (fillResidenceCity) {
+          setValue('residence_city', resume?.residence_city?._id)
+          setFillResidenceCity(false)
+        }
+        setFillCities('')
+      }
+    }
+  }, [provinceCities])
 
-  // useEffect(() => {
-  //   if (provinceCities) {
-  //     if (fillCities == 'work') {
-  //       setWorkCities(provinceCities)
-  //       setFillCities('')
-  //     } else if (fillCities == 'residance') {
-  //       setResidanceCities(provinceCities)
-  //       setFillCities('')
-  //     }
-  //   }
-  // }, [provinceCities])
+  const provincesValues = provinces.length > 0 ? provinces.map((province: any) => province._id) : []
+  const residenceCitiesValues =
+    residenceCities.length > 0 ? residenceCities.map((residenceCity: any) => residenceCity._id) : []
 
   const dispatch = useDispatch()
 
@@ -190,18 +162,15 @@ const ResumeDetailsTab = () => {
           return yup.string().notRequired()
         }
       }),
-      // work_province: yup.string().label('Work Province').oneOf(provincesValues).required(),
-      // work_city: yup.string().label('Work City').oneOf(workCitiesValues).required(),
-      // residence_province: yup.string().label('Residence Province').oneOf(provincesValues).required(),
-      // residence_city: yup.string().label('Residence City').oneOf(residanceCitiesValues).required(),
+      residence_province: yup.string().label('Residence Province').oneOf(['', ...provincesValues]).optional(),
+      residence_city: yup.string().when('residence_province', (val: any) => {
+        if (val?.length) {
+          return yup.string().label('Residence City').oneOf(['', ...residenceCitiesValues]).required()
+        } else {
+          return yup.string().label('Residence City').oneOf(['', ...residenceCitiesValues]).optional()
+        }
+      }),
       birth_year: yup.string().label('Birth Year').oneOf(['', ...years]).optional(),
-      // work_experience: yup.number().when('work_experience', (val: any) => {
-      //   if (val) {
-      //     return yup.number().label('Work Started Year').oneOf(years).required()
-      //   } else {
-      //     return yup.number().notRequired()
-      //   }
-      // }),
       mobile: yup
         .string()
         .label('Mobile')
@@ -222,12 +191,10 @@ const ResumeDetailsTab = () => {
     },
     [
       ['military_status', 'military_status'],
-      // ['work_experience', 'work_experience'],
       ['phone', 'phone']
     ]
   )
 
-  // ** Hooks
   // Upload Avatar
   const { getRootProps, getInputProps } = useDropzone({
     maxFiles: 1,
@@ -265,7 +232,8 @@ const ResumeDetailsTab = () => {
     control,
     handleSubmit,
     formState: { errors },
-    setValue
+    setValue,
+    setError
   } = useForm({
     defaultValues,
     mode: 'onBlur',
@@ -279,6 +247,8 @@ const ResumeDetailsTab = () => {
   }, [resume])
 
   const setInitialValues = () => {
+    const provinceId = resume?.residence_city?.province_id?._id
+
     setValue('firstname', resume?.firstname)
     setValue('lastname', resume?.lastname)
     setValue('gender', resume?.gender)
@@ -286,15 +256,15 @@ const ResumeDetailsTab = () => {
     setValue('email', resume?.email ?? '')
     setValue('phone', resume?.phone ?? '')
     setValue('birth_year', resume?.birth_year ?? '')
-    // setValue('work_experience', resume?.work_experience)
     setValue('marital_status', resume?.marital_status ?? '')
     setValue('education', resume?.education ?? '')
     setValue('military_status', resume?.military_status ?? '')
-    // setValue('work_city', resume?.work_city)
-    // setValue('residence_city', resume?.residence_city)
+    setValue('residence_province', provinceId)
     setSalaryRange([resume?.min_salary, resume?.max_salary])
     setGender(resume?.gender)
     setIsSalaryActive(resume?.min_salary ? true : false)
+    setFillResidenceCity(true)
+    handleCities(provinceId, 'residence')
   }
 
   const submitHandler = (data: any) => {
@@ -304,6 +274,9 @@ const ResumeDetailsTab = () => {
     }
     popObjectItemByKey(data, 'work_province')
     popObjectItemByKey(data, 'residence_province')
+    if (!data?.residence_city) {
+      popObjectItemByKey(data, 'residence_city')
+    }
     if (gender == 'woman') data.military_status = null
     if (!isSalaryActive) {
       data.min_salary = null
@@ -314,10 +287,16 @@ const ResumeDetailsTab = () => {
     dispatch(editResume({ ...data, resumeId: resume?._id }))
   }
 
-  // const handleCities = (provinceId: string, field: string) => {
-  //   setFillCities(field)
-  //   dispatch(getCitiesByProvince(provinceId))
-  // }
+  const handleCities = (provinceId: string, field: string) => {
+    setFillCities(field)
+    setValue('residence_city', '')
+    if (provinceId) {
+      dispatch(getCitiesByProvince(provinceId))
+    } else {
+      setResidenceCities([])
+      setError('residence_city', { message: '' })
+    }
+  }
 
   const salaryRangeComponent = (
     <Grid item xs={12} px={7}>
@@ -333,7 +312,6 @@ const ResumeDetailsTab = () => {
         max={80000000}
         step={1000000}
         valueLabelFormat={(value: any) => value.format()}
-        // disabled={!isSalaryActive}
       />
       <Typography>{`${salaryRange[0]?.format() ?? 0} - ${salaryRange[1]?.format() ?? 0} Toman`}</Typography>
     </Grid>
@@ -448,7 +426,7 @@ const ResumeDetailsTab = () => {
                             onBlur={onBlur}
                             error={Boolean(errors.gender)}
                           >
-                            {constantReader(genderOptions)?.map(([key, value]:[string, string], index: number) => (
+                            {constantReader(genderOptions)?.map(([key, value]: [string, string], index: number) => (
                               <MenuItem key={`gender-${index}`} value={key}>
                                 {uppercaseFirstLetters(value)}
                               </MenuItem>
@@ -571,38 +549,6 @@ const ResumeDetailsTab = () => {
                     )}
                   </FormControl>
                 </Grid>
-                {/* <Grid item xs={12} mt={5} md={6}>
-                  <FormControl fullWidth>
-                    <Controller
-                      name='work_experience'
-                      control={control}
-                      render={({ field: { value, onChange, onBlur } }) => (
-                        <>
-                          <InputLabel>Work Started Year</InputLabel>
-                          <Select
-                            label='Work Started Year'
-                            value={value}
-                            onChange={onChange}
-                            onBlur={onBlur}
-                            error={Boolean(errors.work_experience)}
-                          >
-                            {years.map(
-                              (item: number, index: number) =>
-                                item >= 1980 && (
-                                  <MenuItem key={index} value={item}>
-                                    {item}
-                                  </MenuItem>
-                                )
-                            )}
-                          </Select>
-                        </>
-                      )}
-                    />
-                    {errors.work_experience && (
-                      <FormHelperText sx={{ color: 'error.main' }}>{errors.work_experience.message}</FormHelperText>
-                    )}
-                  </FormControl>
-                </Grid> */}
                 <Grid item xs={12} mt={5} md={gender == 'men' ? 4 : 6}>
                   <FormControl fullWidth>
                     <Controller
@@ -619,7 +565,7 @@ const ResumeDetailsTab = () => {
                             error={Boolean(errors.education)}
                           >
                             <MenuItem value=''>---</MenuItem>
-                            {constantReader(educationOptions)?.map(([key, value]:[string, string], index: number) => (
+                            {constantReader(educationOptions)?.map(([key, value]: [string, string], index: number) => (
                               <MenuItem key={`education-${index}`} value={key}>
                                 {uppercaseFirstLetters(value)}
                               </MenuItem>
@@ -649,7 +595,7 @@ const ResumeDetailsTab = () => {
                             error={Boolean(errors.marital_status)}
                           >
                             <MenuItem value=''>---</MenuItem>
-                            {constantReader(maritalOptions)?.map(([key, value]:[string, string], index: number) => (
+                            {constantReader(maritalOptions)?.map(([key, value]: [string, string], index: number) => (
                               <MenuItem key={`marital-${index}`} value={key}>
                                 {uppercaseFirstLetters(value)}
                               </MenuItem>
@@ -664,94 +610,33 @@ const ResumeDetailsTab = () => {
                   </FormControl>
                 </Grid>
                 <Grid item xs={12} mt={5} md={6}>
-                    <FormControl fullWidth>
-                      <Controller
-                        name='military_status'
-                        control={control}
-                        render={({ field: { value, onChange, onBlur } }) => (
-                          <>
-                            <InputLabel>Military Status</InputLabel>
-                            <Select
-                              label='Military Status'
-                              value={value}
-                              onChange={onChange}
-                              onBlur={onBlur}
-                              error={Boolean(errors.military_status)}
-                              disabled={gender == 'woman'}
-                            >
-                              <MenuItem value=''>---</MenuItem>
-                              {constantReader(militaryOptions)?.map(([key, value]:[string, string], index: number) => (
-                                <MenuItem key={`military-${index}`} value={key}>
-                                  {uppercaseFirstLetters(value)}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          </>
-                        )}
-                      />
-                      {errors.military_status && (
-                        <FormHelperText sx={{ color: 'error.main' }}>{errors.military_status.message}</FormHelperText>
-                      )}
-                    </FormControl>
-                </Grid>
-                {/* <Grid item xs={12} mt={5} md={6}>
                   <FormControl fullWidth>
                     <Controller
-                      name='work_province'
+                      name='military_status'
                       control={control}
                       render={({ field: { value, onChange, onBlur } }) => (
                         <>
-                          <InputLabel>Work Province</InputLabel>
+                          <InputLabel>Military Status</InputLabel>
                           <Select
-                            label='Work Province'
-                            value={value}
-                            onChange={e => {
-                              onChange(e)
-                              handleCities(e.target.value, 'work')
-                            }}
-                            onBlur={onBlur}
-                            error={Boolean(errors.work_province)}
-                          >
-                            {provinces.map((item: any, index: number) => (
-                              <MenuItem key={`work-province-${index}`} value={item._id}>
-                                {item.name}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </>
-                      )}
-                    />
-                    {errors.work_province && (
-                      <FormHelperText sx={{ color: 'error.main' }}>{errors.work_province.message}</FormHelperText>
-                    )}
-                  </FormControl>
-                </Grid>
-                <Grid item xs={12} mt={5} md={6}>
-                  <FormControl fullWidth>
-                    <Controller
-                      name='work_city'
-                      control={control}
-                      render={({ field: { value, onChange, onBlur } }) => (
-                        <>
-                          <InputLabel>Work City</InputLabel>
-                          <Select
-                            label='Work City'
+                            label='Military Status'
                             value={value}
                             onChange={onChange}
                             onBlur={onBlur}
-                            error={Boolean(errors.work_city)}
+                            error={Boolean(errors.military_status)}
+                            disabled={gender == 'woman'}
                           >
-                            {workCities.map((item: any, index: number) => (
-                              <MenuItem key={`work-city-${index}`} value={item._id}>
-                                {item.name}
+                            <MenuItem value=''>---</MenuItem>
+                            {constantReader(militaryOptions)?.map(([key, value]: [string, string], index: number) => (
+                              <MenuItem key={`military-${index}`} value={key}>
+                                {uppercaseFirstLetters(value)}
                               </MenuItem>
                             ))}
                           </Select>
                         </>
                       )}
                     />
-                    {errors.work_city && (
-                      <FormHelperText sx={{ color: 'error.main' }}>{errors.work_city.message}</FormHelperText>
+                    {errors.military_status && (
+                      <FormHelperText sx={{ color: 'error.main' }}>{errors.military_status.message}</FormHelperText>
                     )}
                   </FormControl>
                 </Grid>
@@ -768,11 +653,12 @@ const ResumeDetailsTab = () => {
                             value={value}
                             onChange={e => {
                               onChange(e)
-                              handleCities(e.target.value, 'residance')
+                              handleCities(e.target.value, 'residence')
                             }}
                             onBlur={onBlur}
                             error={Boolean(errors.residence_province)}
                           >
+                            <MenuItem value=''>---</MenuItem>
                             {provinces.map((item: any, index: number) => (
                               <MenuItem key={`residence-province-${index}`} value={item._id}>
                                 {item.name}
@@ -783,7 +669,9 @@ const ResumeDetailsTab = () => {
                       )}
                     />
                     {errors.residence_province && (
-                      <FormHelperText sx={{ color: 'error.main' }}>{errors.residence_province.message}</FormHelperText>
+                      <FormHelperText sx={{ color: 'error.main' }}>
+                        {errors.residence_province.message}
+                      </FormHelperText>
                     )}
                   </FormControl>
                 </Grid>
@@ -794,15 +682,16 @@ const ResumeDetailsTab = () => {
                       control={control}
                       render={({ field: { value, onChange, onBlur } }) => (
                         <>
-                          <InputLabel>Residence City</InputLabel>
+                          <InputLabel sx={{ color: !residenceCities?.length ? 'rgba(197, 197, 197, 0.87)' : undefined }}>Residence City</InputLabel>
                           <Select
                             label='Residence City'
                             value={value}
                             onChange={onChange}
                             onBlur={onBlur}
                             error={Boolean(errors.residence_city)}
+                            disabled={!residenceCities?.length}
                           >
-                            {residanceCities.map((item: any, index: number) => (
+                            {residenceCities?.map((item: any, index: number) => (
                               <MenuItem key={`residence-city-${index}`} value={item._id}>
                                 {item.name}
                               </MenuItem>
@@ -815,7 +704,7 @@ const ResumeDetailsTab = () => {
                       <FormHelperText sx={{ color: 'error.main' }}>{errors.residence_city.message}</FormHelperText>
                     )}
                   </FormControl>
-                </Grid> */}
+                </Grid>
                 <Grid item xs={12} mt={2} px={7}>
                   <FormControlLabel
                     label='Declare Requested Salary Range'
@@ -823,29 +712,6 @@ const ResumeDetailsTab = () => {
                   />
                 </Grid>
                 {isSalaryActive && <Grow in={isSalaryActive}>{salaryRangeComponent}</Grow>}
-                {/* <Grid item xs={12} mt={5} px={7}>
-                  <FormControlLabel
-                    label='Active'
-                    control={<Switch checked={isSalaryActive} onChange={handleChangeisSalaryActive} />}
-                  />
-                  <InputLabel>Requested Salary Range (Toman)</InputLabel>
-                  <Slider
-                    sx={{ mt: 4 }}
-                    defaultValue={[9000000, 20000000]}
-                    value={salaryRange}
-                    onChange={(e, value) => setSalaryRange(value)}
-                    valueLabelDisplay='auto'
-                    aria-labelledby='range-slider'
-                    min={8000000}
-                    max={80000000}
-                    step={1000000}
-                    valueLabelFormat={(value: any) => value.format()}
-                    disabled={!isSalaryActive}
-                  />
-                  <Typography>{`${salaryRange[0] && salaryRange[0]?.format()} - ${
-                    salaryRange[0] && salaryRange[1]?.format()
-                  } Toman`}</Typography>
-                </Grid> */}
                 <Grid item xs={12} mt={3}>
                   <Button type='submit' variant='contained' sx={{ mr: 3, mt: 2 }} disabled={loadingResumeEdit}>
                     Save Changes

@@ -161,7 +161,9 @@ const NotificationDropdown = (props: Props) => {
   }
 
   const handleDropdownClose = () => {
-    dispatch(seenNotifications())
+    if (latestNotifications?.docs?.length > 0) {
+      dispatch(seenNotifications())
+    }
     setAnchorEl(null)
   }
 

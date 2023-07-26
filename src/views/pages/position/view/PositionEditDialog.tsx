@@ -253,7 +253,7 @@ const PositionEditDialog = (props: Props) => {
                   control={control}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <CustomTextField
-                      label='Title'
+                      label='Title *'
                       placeholder='Example: BPM'
                       value={value}
                       onChange={onChange}
@@ -318,10 +318,10 @@ const PositionEditDialog = (props: Props) => {
                   rules={{ required: true }}
                   render={({ field: { value, onChange } }) => (
                     <>
-                      <InputLabel id='level-select'>Select Level</InputLabel>
+                      <InputLabel id='level-select'>Select Level *</InputLabel>
                       <Select
                         fullWidth
-                        label='Select Level'
+                        label='Select Level *'
                         labelId='level-select'
                         inputProps={{ placeholder: 'Select Level' }}
                         value={value}

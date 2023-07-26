@@ -71,20 +71,17 @@ export interface ResumeFormData {
   firstname: string
   lastname: string
   gender: string
-  education: string
-  marital_status: string
+  education?: string
+  marital_status?: string
   military_status?: string
-  work_province: string
-  work_city: string
-  residence_province: string
-  residence_city: string
-  birth_year: any
-  // work_experience?: number
+  residence_province?: string
+  residence_city?: string
+  birth_year?: any
   min_salary?: number
   max_salary?: number
   mobile: string
   phone?: string
-  email: string
+  email?: string
   avatar?: any
   resumeFiles?: any
   position_id?: any
@@ -97,12 +94,9 @@ const defaultValues = {
   education: '',
   marital_status: '',
   military_status: '',
-  work_province: '',
-  work_city: '',
   residence_province: '',
   residence_city: '',
   birth_year: '',
-  // work_experience: undefined,
   mobile: '',
   phone: '',
   email: ''
@@ -145,7 +139,6 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   const [resumeFiles, setResumeFiles] = useState<File[]>([])
   const [gender, setGender] = useState<string>('')
   const [salaryRange, setSalaryRange] = useState<any>([9000000, 20000000] || '')
-  // const [workCities, setWorkCities] = useState([])
   const [residanceCities, setResidanceCities] = useState([])
   const [fillCities, setFillCities] = useState('')
   const [resumePosition, setResumePosition] = useState<any>({})
@@ -174,7 +167,6 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   } = useRouter()
 
   const provincesValues = provinces.length > 0 ? provinces.map((province: any) => province._id) : []
-  // const workCitiesValues = workCities.length > 0 ? workCities.map((workCity: any) => workCity._id) : []
   const residanceCitiesValues =
     residanceCities.length > 0 ? residanceCities.map((residanceCity: any) => residanceCity._id) : []
 
@@ -193,6 +185,10 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
 
   const dispatch = useDispatch()
 
+  useEffect(() => {
+    if (!projects?.page && open) dispatch(getProjects())
+  }, [open])
+
   const schema = yup.object().shape(
     {
       firstname: yup.string().label('First name').min(3).required(),
@@ -207,18 +203,15 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
           return yup.string().notRequired()
         }
       }),
-      // work_province: yup.string().label('Work Province').oneOf(provincesValues).required(),
-      // work_city: yup.string().label('Work City').oneOf(workCitiesValues).required(),
-      residence_province: yup.string().label('Residence Province').oneOf(['', ...provincesValues]).required(),
-      residence_city: yup.string().label('Residence City').oneOf(['', ...residanceCitiesValues]).required(),
+      residence_province: yup.string().label('Residence Province').oneOf(['', ...provincesValues]).optional(),
+      residence_city: yup.string().when('residence_province', (val: any) => {
+        if (val?.length) {
+          return yup.string().label('Residence City').oneOf(['', ...residanceCitiesValues]).required()
+        } else {
+          return yup.string().label('Residence City').oneOf(['', ...residanceCitiesValues]).optional()
+        }
+      }),
       birth_year: yup.string().label('Birth Year').oneOf(['', ...years]).optional(),
-      // work_experience: yup.number().when('work_experience', (val: any) => {
-      //   if (val) {
-      //     return yup.number().label('Work Started Year').oneOf(years).optional()
-      //   } else {
-      //     return yup.number().notRequired()
-      //   }
-      // }),
       mobile: yup
         .string()
         .label('Mobile')
@@ -239,7 +232,6 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
     },
     [
       ['military_status', 'military_status'],
-      // ['work_experience', 'work_experience'],
       ['phone', 'phone']
     ]
   )
@@ -333,7 +325,8 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
     control,
     handleSubmit,
     formState: { errors },
-    setValue
+    setValue,
+    setError
   } = useForm({
     defaultValues,
     mode: 'onBlur',
@@ -355,8 +348,11 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
       if (resumeFiles.length) {
         data = { ...data, resumeFiles }
       }
-      // popObjectItemByKey(data, 'work_province')
+
       popObjectItemByKey(data, 'residence_province')
+      if (!data?.residence_city) {
+        popObjectItemByKey(data, 'residence_city')
+      }
       if (gender == 'woman') data.military_status = undefined
       if (isSalaryActive) {
         ;[data.min_salary, data.max_salary] = salaryRange
@@ -368,7 +364,11 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
   const handleCities = (provinceId: string, field: string) => {
     setFillCities(field)
     setValue('residence_city', '')
-    dispatch(getCitiesByProvince(provinceId))
+    if (provinceId) dispatch(getCitiesByProvince(provinceId))
+    else {
+      setResidanceCities([])
+      setError('residence_city', { message: '' })
+    }
   }
 
   const getPositionsHandler = (projectId: string) => {
@@ -377,7 +377,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
 
   const searchProjects = (value: any) => {
     const query = value?.target?.value
-    if (query?.length > 0) dispatch(getProjects({ query }))
+    dispatch(getProjects({ query }))
   }
 
   const handleChangeisSalaryActive = () => {
@@ -398,7 +398,6 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
         max={80000000}
         step={1000000}
         valueLabelFormat={(value: any) => value.format()}
-        // disabled={!isSalaryActive}
       />
       <Typography>{`${salaryRange[0].format()} - ${salaryRange[1].format()} Toman`}</Typography>
     </Grid>
@@ -475,6 +474,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                                   onChange={searchProjects}
                                   size='medium'
                                   placeholder='Search For Projects ...'
+                                  required
                                   InputProps={{
                                     ...params.InputProps,
                                     endAdornment: (
@@ -516,10 +516,10 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                               renderInput={params => (
                                 <CustomTextField
                                   {...params}
-                                  label='Position'
+                                  label='Position *'
                                   // onChange={searchPositions}
                                   size='medium'
-                                  placeholder='Search For Positions ...'
+                                  placeholder='Select Project Positions ...'
                                   error={!!positionErr}
                                   InputProps={{
                                     ...params.InputProps,
@@ -561,7 +561,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                             <CustomTextField
                               value={value}
                               fullWidth
-                              label='First Name'
+                              label='First Name *'
                               placeholder='John'
                               onChange={onChange}
                               onBlur={onBlur}
@@ -583,7 +583,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                             <CustomTextField
                               value={value}
                               fullWidth
-                              label='Last Name'
+                              label='Last Name *'
                               placeholder='Doe'
                               onChange={onChange}
                               onBlur={onBlur}
@@ -603,9 +603,9 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                           control={control}
                           render={({ field: { value, onChange, onBlur } }) => (
                             <>
-                              <InputLabel>Gender</InputLabel>
+                              <InputLabel>Gender *</InputLabel>
                               <Select
-                                label='Gender'
+                                label='Gender *'
                                 value={value}
                                 onChange={e => {
                                   onChange(e)
@@ -614,7 +614,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                                 onBlur={onBlur}
                                 error={Boolean(errors.gender)}
                               >
-                                {constantReader(genderOptions)?.map(([key, value]:[string, string], index: number) => (
+                                {constantReader(genderOptions)?.map(([key, value]: [string, string], index: number) => (
                                   <MenuItem key={`gender-${index}`} value={key}>
                                     {uppercaseFirstLetters(value)}
                                   </MenuItem>
@@ -637,7 +637,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                             <CustomTextField
                               value={value?.substring(0, 10)}
                               fullWidth
-                              label='Mobile'
+                              label='Mobile *'
                               placeholder='919 123 4567'
                               InputProps={{
                                 startAdornment: <InputAdornment position='start'>IR (+98)</InputAdornment>
@@ -782,7 +782,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                                 error={Boolean(errors.education)}
                               >
                                 <MenuItem value=''>---</MenuItem>
-                                {constantReader(educationOptions)?.map(([key, value]:[string, string], index: number) => (
+                                {constantReader(educationOptions)?.map(([key, value]: [string, string], index: number) => (
                                   <MenuItem key={`education-${index}`} value={key}>
                                     {uppercaseFirstLetters(value)}
                                   </MenuItem>
@@ -812,7 +812,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                                 error={Boolean(errors.marital_status)}
                               >
                                 <MenuItem value=''>---</MenuItem>
-                                {constantReader(maritalOptions)?.map(([key, value]:[string, string], index: number) => (
+                                {constantReader(maritalOptions)?.map(([key, value]: [string, string], index: number) => (
                                   <MenuItem key={`marital-${index}`} value={key}>
                                     {uppercaseFirstLetters(value)}
                                   </MenuItem>
@@ -826,39 +826,39 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                         )}
                       </FormControl>
                     </Grid>
-                      <Grid item xs={12} mt={5} md={6}>
-                        <FormControl fullWidth>
-                          <Controller
-                            name='military_status'
-                            control={control}
-                            render={({ field: { value, onChange, onBlur } }) => (
-                              <>
-                                <InputLabel>Military Status</InputLabel>
-                                <Select
-                                  label='Military Status'
-                                  value={value}
-                                  onChange={onChange}
-                                  onBlur={onBlur}
-                                  error={Boolean(errors.military_status)}
-                                  disabled={gender == 'woman'}
-                                >
-                                  <MenuItem value=''>---</MenuItem>
-                                  {constantReader(militaryOptions).map(([key, value]:[string, string], index: number) => (
-                                    <MenuItem key={`military-${index}`} value={key}>
-                                      {uppercaseFirstLetters(value)}
-                                    </MenuItem>
-                                  ))}
-                                </Select>
-                              </>
-                            )}
-                          />
-                          {errors.military_status && (
-                            <FormHelperText sx={{ color: 'error.main' }}>
-                              {errors.military_status.message}
-                            </FormHelperText>
+                    <Grid item xs={12} mt={5} md={6}>
+                      <FormControl fullWidth>
+                        <Controller
+                          name='military_status'
+                          control={control}
+                          render={({ field: { value, onChange, onBlur } }) => (
+                            <>
+                              <InputLabel sx={{ color: gender == 'woman' ? 'rgba(197, 197, 197, 0.87)' : undefined }}>Military Status</InputLabel>
+                              <Select
+                                label='Military Status'
+                                value={value}
+                                onChange={onChange}
+                                onBlur={onBlur}
+                                error={Boolean(errors.military_status)}
+                                disabled={gender == 'woman'}
+                              >
+                                <MenuItem value=''>---</MenuItem>
+                                {constantReader(militaryOptions).map(([key, value]: [string, string], index: number) => (
+                                  <MenuItem key={`military-${index}`} value={key}>
+                                    {uppercaseFirstLetters(value)}
+                                  </MenuItem>
+                                ))}
+                              </Select>
+                            </>
                           )}
-                        </FormControl>
-                      </Grid>
+                        />
+                        {errors.military_status && (
+                          <FormHelperText sx={{ color: 'error.main' }}>
+                            {errors.military_status.message}
+                          </FormHelperText>
+                        )}
+                      </FormControl>
+                    </Grid>
                     {/* <Grid item xs={12} mt={5} md={6}>
                       <FormControl fullWidth>
                         <Controller
@@ -938,6 +938,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                                 onBlur={onBlur}
                                 error={Boolean(errors.residence_province)}
                               >
+                                <MenuItem value=''>---</MenuItem>
                                 {provinces.map((item: any, index: number) => (
                                   <MenuItem key={`residence-province-${index}`} value={item._id}>
                                     {item.name}
@@ -961,7 +962,7 @@ const AddResumeDialog = ({ open, handleClose }: AddResumeDialogProps) => {
                           control={control}
                           render={({ field: { value, onChange, onBlur } }) => (
                             <>
-                              <InputLabel>Residence City</InputLabel>
+                              <InputLabel sx={{ color: !residanceCities?.length ? 'rgba(197, 197, 197, 0.87)' : undefined }}>Residence City</InputLabel>
                               <Select
                                 label='Residence City'
                                 value={value}

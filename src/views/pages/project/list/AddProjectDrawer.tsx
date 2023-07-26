@@ -117,8 +117,8 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
   const { data: companies, loading: loadingSearchCompanies } = useSelector((state: any) => state.companiesList)
 
   useEffect(() => {
-    if (!companies?.page) dispatch(getCompanies())
-  }, [])
+    if (!companies?.page && open) dispatch(getCompanies())
+  }, [open])
 
   const {
     reset,
@@ -195,7 +195,7 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
 
   const searchCompanies = (value: any) => {
     const query = value?.target?.value
-    if (query?.length > 0) dispatch(getCompanies({ query }))
+    dispatch(getCompanies({ query }))
   }
 
   return (
@@ -265,7 +265,7 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
                 renderInput={params => (
                   <CustomTextField
                     {...params}
-                    label='Company'
+                    label='Company *'
                     onChange={searchCompanies}
                     size='medium'
                     placeholder='Search For Companies ...'
@@ -301,7 +301,7 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
               render={({ field: { value, onChange, onBlur } }) => (
                 <CustomTextField
                   value={value}
-                  label='Name'
+                  label='Name *'
                   onChange={onChange}
                   onBlur={onBlur}
                   placeholder='Example: BPM'
@@ -315,7 +315,6 @@ const SidebarAddProject = (props: SidebarAddProjectType) => {
             <Controller
               name='description'
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange, onBlur } }) => (
                 <CustomTextField
                   value={value}

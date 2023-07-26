@@ -233,14 +233,14 @@ const ProjectEditDialog = (props: Props) => {
             </div>
           </Fragment>
           <Grid container spacing={6}>
-            <Grid item xs={12} sm={6}>
-              <FormControl>
+            <Grid item xs={12}>
+              <FormControl fullWidth>
                 <Controller
                   name='name'
                   control={control}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <CustomTextField
-                      label='Name'
+                      label='Name *'
                       placeholder='Example: BPM'
                       value={value}
                       onChange={onChange}
@@ -293,7 +293,7 @@ const ProjectEditDialog = (props: Props) => {
                 {companyErr && <FormHelperText sx={{ color: 'error.main' }}>{companyErr}</FormHelperText>}
               </FormControl>
             </Grid> */}
-            <Grid item xs={12} sm={12} md={12}>
+            <Grid item xs={12}>
               <FormControl fullWidth>
                 <Controller
                   name='description'
