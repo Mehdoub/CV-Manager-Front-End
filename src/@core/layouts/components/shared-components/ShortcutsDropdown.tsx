@@ -191,7 +191,7 @@ const ShortcutsDropdown = () => {
           </Grid>
         {/* </ScrollWrapper> */}
       </Menu>
-      {getObjectKeys(constants?.system)?.length > 0 && (
+      {getObjectKeys(constants?.system)?.length > 0 && Boolean(anchorEl) && (
         <>
           <AddCompanyDrawer open={addCompanyOpen} toggle={toggleAddCompanyDrawer} />
           <SidebarAddProject open={addProjectOpen} toggle={toggleAddProjectDrawer} />

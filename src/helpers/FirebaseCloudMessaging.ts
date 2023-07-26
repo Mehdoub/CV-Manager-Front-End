@@ -28,7 +28,6 @@ export default class FirebaseCloudMessaging {
         if (setClientToken) {
           setClientToken(currentToken)
         }
-        console.log('currentToken: ', currentToken)
         return currentToken
       } else {
         toastError('No registration token available. Request permission to generate one.');
