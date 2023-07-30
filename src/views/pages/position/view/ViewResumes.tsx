@@ -125,7 +125,6 @@ const ViewResumes = ({ allResumes = false }: ViewResumesProps) => {
 
   const handleResumeCardClick = (resumeId: string) => {
     router.push({ query: { ...router.query, resumeId } })
-    dispatch(getResume(resumeId))
     setOpen(true)
   }
 

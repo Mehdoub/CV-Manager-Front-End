@@ -68,7 +68,7 @@ const PositionEditDialog = (props: Props) => {
 
   // const searchProjects = (value: any) => {
   //   const query = value?.target?.value
-  //   if (query?.length > 0) dispatch(getProjects({ query }))
+  //   dispatch(getProjects({ query }))
   // }
 
   const { status, loading: positionEditLoading } = useSelector((state: any) => state.positionEdit)

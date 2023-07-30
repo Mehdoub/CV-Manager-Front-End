@@ -77,7 +77,7 @@ const ProjectEditDialog = (props: Props) => {
 
   // const searchCompanies = (value: any) => {
   //   const query = value?.target?.value
-  //   if (query?.length > 0) dispatch(getCompanies({ query }))
+  //   dispatch(getCompanies({ query }))
   // }
 
   const { status, loading: projectEditLoading } = useSelector((state: any) => state.projectEdit)
