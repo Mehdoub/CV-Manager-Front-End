@@ -13,7 +13,7 @@ import ApiRequest from 'src/helpers/ApiRequest'
 import { useDispatch } from 'react-redux'
 import { getConstants } from 'src/store/common'
 import FirebaseCloudMessaging from 'src/helpers/FirebaseCloudMessaging'
-import { toastError } from 'src/helpers/functions'
+import { notificationIsGranted, toastError } from 'src/helpers/functions'
 import { getProvinces } from 'src/store/province'
 import { clearProfileNotificationsSeen, getNotifications } from 'src/store/profile'
 import * as Sentry from '@sentry/nextjs';
@@ -55,7 +55,7 @@ const AuthProvider = ({ children }: Props) => {
     const initAuth = async (): Promise<void> => {
       setLoading(true)
       getUserData()
-      const fcm = FirebaseCloudMessaging.builder()
+      const fcm = await FirebaseCloudMessaging.builder()
       fcm && fcm?.onMessageListener(updateNotifications)
     }
     initAuth()
@@ -69,7 +69,7 @@ const AuthProvider = ({ children }: Props) => {
 
   const patchClientToken = async () => {
     if (user?._id) {
-      if (clientToken && !isClientTokenDuplicate(clientToken, user) && Notification.permission == 'granted') {
+      if (clientToken && !isClientTokenDuplicate(clientToken, user) && notificationIsGranted()) {
         try {
           await ApiRequest.builder().auth().request('patch', `users/${user?._id}/fcm-token`, { token: clientToken })
         } catch (err: any) {
@@ -81,8 +81,8 @@ const AuthProvider = ({ children }: Props) => {
 
   const deleteFcmToken = async () => {
     try {
-      if (clientToken && Notification.permission == 'granted') {
-        const fcm = FirebaseCloudMessaging.builder()
+      if (clientToken && notificationIsGranted()) {
+        const fcm = await FirebaseCloudMessaging.builder()
         fcm && (await fcm?.deleteRegistrationToken(setClientToken))
         await ApiRequest.builder().auth().request('delete', `users/${user._id}/fcm-token`, { token: clientToken })
       }
@@ -97,8 +97,6 @@ const AuthProvider = ({ children }: Props) => {
 
   const clearLogin = () => {
     setLoading(false)
-
-    localStorage.removeItem('userData')
     window.localStorage.removeItem(authConfig.storageTokenKeyName)
     window.localStorage.removeItem(authConfig.refreshTokenKeyName)
 
@@ -126,16 +124,15 @@ const AuthProvider = ({ children }: Props) => {
           username: userData?.username,
           email: userData?.email ?? null
         })
-        const fcm = FirebaseCloudMessaging.builder()
-        fcm && fcm?.fetchToken(setClientToken)
-        setLoading(false)
-        localStorage.setItem('userData', JSON.stringify(userData))
-        dispatch(getConstants())
-        dispatch(getProvinces())
       } catch (err) {
         clearLogin()
         toastError('There Is A Problem On Authentication')
       }
+      const fcm = await FirebaseCloudMessaging.builder()
+      fcm && fcm?.fetchToken(setClientToken)
+      setLoading(false)
+      dispatch(getConstants())
+      dispatch(getProvinces())
     } else {
       deleteFcmToken()
       clearLogin()

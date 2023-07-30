@@ -96,6 +96,11 @@ interface FormData {
   password: string
 }
 
+const defaultValues = {
+  mobile: '',
+  password: ''
+}
+
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState<boolean>(false)
   const [disabled, setDisabled] = useState<boolean>(false)
@@ -121,7 +126,8 @@ const LoginPage = () => {
     formState: { errors },
     setValue
   } = useForm({
-    mode: 'onBlur'
+    mode: 'onBlur',
+    defaultValues
   })
 
   const onSubmit = (data: FormData) => {
