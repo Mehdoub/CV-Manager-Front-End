@@ -68,10 +68,6 @@ const AddInterviewDialog = ({ open, handleClose }: AddInterviewDialogProps) => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    dispatch(getUsers())
-  }, [])
-
-  useEffect(() => {
     if (resumeAddInterviewStatus) {
       dispatch(getResume(resume?.id))
       dispatch(getPositionResumes(resume?.position_id?._id))

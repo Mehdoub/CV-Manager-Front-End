@@ -288,7 +288,7 @@ const ResumeDialogHeader = ({
 
   const searchUsers = (value: any) => {
     const query = value?.target?.value
-    if (query?.length > 0) dispatch(getUsers({ query }))
+    dispatch(getUsers({ query }))
   }
 
   return (
