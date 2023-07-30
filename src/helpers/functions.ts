@@ -321,10 +321,11 @@ export const getObjectKeys = (obj: any = {}): Array<any> => {
   return Object.keys(obj)
 }
 
-export const notificationIsSupported = () : boolean => {
+export const notificationIsGranted = (): boolean => {
   if (
     typeof window != 'undefined'
     && 'Notification' in window
+    && Notification.permission == 'granted'
   ) return true
 
   return false

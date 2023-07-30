@@ -13,11 +13,9 @@ const firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig)
 
-// Retrieve firebase messaging
 const messaging = firebase.messaging()
 
 messaging.onBackgroundMessage(function (payload) {
-  console.log('Notification Data From Firebase On Background: ', payload)
   const { title, body } = payload?.data
   const notificationOptions = { body }
 
