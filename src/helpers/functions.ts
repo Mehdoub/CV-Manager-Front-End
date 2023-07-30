@@ -313,10 +313,19 @@ export const passwordVisibilityIcon = (showPassword: boolean) => {
   return !showPassword ? VisibilityIcon : VisibilityOffIcon
 }
 
-export const constantReader = (constantItem:any = {}) : Array<any> => {
+export const constantReader = (constantItem: any = {}): Array<any> => {
   return Object.entries(constantItem)
 }
 
-export const getObjectKeys = (obj:any = {}) : Array<any> => {
+export const getObjectKeys = (obj: any = {}): Array<any> => {
   return Object.keys(obj)
+}
+
+export const notificationIsSupported = () : boolean => {
+  if (
+    typeof window != 'undefined'
+    && 'Notification' in window
+  ) return true
+
+  return false
 }

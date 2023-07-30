@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app'
-import { deleteToken, getMessaging, getToken, onMessage } from 'firebase/messaging'
-import { toastError } from 'src/helpers/functions';
+import { deleteToken, getMessaging, getToken, onMessage, isSupported } from 'firebase/messaging'
+import { notificationIsSupported, toastError } from 'src/helpers/functions';
 import showNotificationToast from './showNotificationToast';
 import firebaseConfig from 'firebaseConfig.json'
 
@@ -17,8 +17,17 @@ export default class FirebaseCloudMessaging {
     this.messaging = getMessaging(this.firebaseApp)
   }
 
-  static builder() {
-    if (typeof navigator.serviceWorker !== 'undefined') return new FirebaseCloudMessaging()
+  static async builder() {
+    const messagingIsSupported = await this.fcmIsSupported()
+    if (
+      typeof navigator.serviceWorker !== 'undefined'
+      && messagingIsSupported
+    ) return new FirebaseCloudMessaging()
+  }
+
+  static async fcmIsSupported() {
+    const res = await isSupported().then((result) => result).catch(() => false)
+    return res
   }
 
   public fetchToken = async (setClientToken?: (token: string) => void) => {
@@ -33,7 +42,7 @@ export default class FirebaseCloudMessaging {
         toastError('No registration token available. Request permission to generate one.');
       }
     }).catch(() => {
-      if (Notification.permission == 'granted') toastError('An error occurred while retrieving FCM Registration Token.');
+      if (notificationIsSupported() && Notification.permission == 'granted') toastError('An error occurred while retrieving FCM Registration Token.');
     });
   }
 
@@ -46,7 +55,7 @@ export default class FirebaseCloudMessaging {
 
   public deleteRegistrationToken = async (setClientToken: (token: string) => void) => {
     deleteToken(this.messaging).then(() => setClientToken('')).catch(() => {
-      if (Notification.permission == 'granted') toastError('An error occurred while Deleting FCM Registration Token.');
+      if (notificationIsSupported() && Notification.permission == 'granted') toastError('An error occurred while Deleting FCM Registration Token.');
     })
   }
 }
