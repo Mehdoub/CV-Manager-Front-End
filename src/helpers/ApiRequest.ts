@@ -61,18 +61,43 @@ export default class ApiRequest {
     return this.baseUrl + url + paramsString
   }
 
+  private responseError = (err: any) => {
+    const msg = err?.response?.data?.message
+
+    if (msg) toastError(msg)
+    else if (!msg && !['CanceledError'].includes(err?.name)) toastError('Something Went Wrong!')
+
+    throw err
+  }
+
   private async responseHandler(requestMethod: any): Promise<AxiosResponse> {
     try {
       return await requestMethod()
+
     } catch (err: any) {
       if (err?.response?.status == 401) {
-        const response = await this.refreshJwtToken()
 
-        return await requestMethod(response.data.data[0].access_token)
+        try {
+          const response = await this.refreshJwtToken()
+          return await requestMethod(response.data.data[0].access_token)
+
+        } catch (err: any) {
+          if (err?.response?.status == 400) {
+
+            try {
+              return await requestMethod(localStorage.getItem(authConfig.storageTokenKeyName))
+
+            } catch (err: any) {
+              return this.responseError(err)
+
+            }
+          }
+          return this.responseError(err)
+
+        }
       }
-      if (!err?.response?.data?.message && !['CanceledError'].includes(err?.name)) toastError('Something Went Wrong!')
+      return this.responseError(err)
 
-      throw err
     }
   }
 
