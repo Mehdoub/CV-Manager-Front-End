@@ -358,7 +358,7 @@ const ResumeDialogHeader = ({
               {!resume?.avatar && getInitials(getFullName(resume))}
             </CustomAvatar>
             <Box sx={{ display: 'flex', alignItems: 'flex-start', flexDirection: 'column' }}>
-              <Typography fontSize={18} fontWeight={500}>
+              <Typography variant='body2' fontSize={18} fontWeight={500}>
                 {getFullName(resume)}
                 <BootstrapTooltip title={copyText} placement='top'>
                   <Button

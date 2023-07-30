@@ -262,7 +262,7 @@ const AddCompanyDrawer = (props: Props) => {
               render={({ field: { value, onChange, onBlur } }) => (
                 <CustomTextField
                   value={value}
-                  label='Name'
+                  label='Name *'
                   onBlur={onBlur}
                   onChange={onChange}
                   placeholder='PSP'

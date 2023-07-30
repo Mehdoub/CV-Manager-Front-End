@@ -240,7 +240,7 @@ const CompanyEditDialog = (props: Props) => {
                   control={control}
                   render={({ field: { value, onChange, onBlur } }) => (
                     <CustomTextField
-                      label='Name'
+                      label='Name *'
                       placeholder='Example: PSP'
                       value={value}
                       onChange={onChange}

@@ -7,9 +7,15 @@ const errorHandler = ({ }) => (next: any) => async (action: any) => {
     'checkUsername/rejected',
   ]
 
-  if (isRejected(action) && !showTypesArr.includes(action.type)) {
+  const excludeMessages = [
+    'jwt expired'
+  ]
+
+  const message = action?.payload?.data?.message
+
+  if (isRejected(action) && !showTypesArr.includes(action.type) && !excludeMessages.includes(message)) {
     // if (action?.payload?.status == 404) location.href = '/404'
-    toastError(action?.payload?.data?.message)
+    toastError(message)
   }
 
   return next(action)

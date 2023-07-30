@@ -134,7 +134,7 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
     {
       title: yup.string().label('Title').min(3).max(50).required(),
       // project: yup.string().label('Project').optional(),
-      level: yup.string().label('Level').oneOf(getObjectKeys(levelOptions)),
+      level: yup.string().label('Level').oneOf(getObjectKeys(levelOptions)).required(),
       description: yup.string().when('description', (val, schema) => {
         if (val?.length > 0) {
           return yup.string().label('Description').min(10).max(100).required()
@@ -159,8 +159,8 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
   })
 
   useEffect(() => {
-    if (!projects?.page) dispatch(getProjects())
-  }, [])
+    if (!projects?.page && open) dispatch(getProjects())
+  }, [open])
 
   useEffect(() => {
     if (status) {
@@ -227,7 +227,7 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
 
   const searchProjects = (value: any) => {
     const query = value?.target?.value
-    if (query?.length > 0) dispatch(getProjects({ query }))
+    dispatch(getProjects({ query }))
   }
 
   return (
@@ -285,7 +285,7 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
               render={({ field: { value, onChange } }) => (
                 <CustomTextField
                   value={value}
-                  label='Title'
+                  label='Title *'
                   onChange={onChange}
                   placeholder='Example: Front-end'
                   error={Boolean(errors.title)}
@@ -309,7 +309,7 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
                 renderInput={params => (
                   <CustomTextField
                     {...params}
-                    label='Project'
+                    label='Project *'
                     onChange={searchProjects}
                     size='medium'
                     placeholder='Search For Projects ...'
@@ -351,10 +351,10 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
               rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <>
-                  <InputLabel id='level-select'>Select Level</InputLabel>
+                  <InputLabel id='level-select'>Select Level *</InputLabel>
                   <Select
                     fullWidth
-                    label='Select Level'
+                    label='Select Level *'
                     labelId='level-select'
                     inputProps={{ placeholder: 'Select Level' }}
                     value={value}
@@ -376,7 +376,6 @@ const AddPositionDrawer = (props: AddPositionDrawerType) => {
             <Controller
               name='description'
               control={control}
-              rules={{ required: true }}
               render={({ field: { value, onChange } }) => (
                 <CustomTextField
                   value={value}

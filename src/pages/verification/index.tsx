@@ -398,7 +398,7 @@ const Verification = () => {
               </Button> */}
               <Box sx={{ mt: 4, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                 {showTimer > 0 ? (
-                  <Typography sx={{ display: 'inline' }}>
+                  <Typography variant="body2" sx={{ display: 'inline' }}>
                     Resend Code In{' '}
                     <Typography sx={{ color: getColorCodes('primary'), display: 'inline', fontWeight: 600 }}>
                       {`${minutes ? minutes + 'm' : ''} ${seconds ? seconds + 's' : ''}`}
