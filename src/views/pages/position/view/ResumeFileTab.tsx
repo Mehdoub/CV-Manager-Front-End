@@ -44,7 +44,7 @@ function ResumeFileTab() {
 
   return (
     <>
-      <div style={{ width: '1000px' }}></div>
+      {/* <div style={{ width: '1000px' }}></div> */}
       <Grid container style={{ backgroundColor: '#4c4e640d' }}>
         {resumeFiles?.length > 0 ? (
           <>
@@ -94,8 +94,8 @@ function ResumeFileTab() {
             </Grid>
           </>
         ) : (
-          <Grid container p={'10px 40px'}>
-            <Typography>There Is Nothing To Show Here!</Typography>
+          <Grid container p={'100px 40px'} sx={{ justifyContent: 'center' }}>
+            <Typography>No Resume File Has Been Uploaded Yet!</Typography>
           </Grid>
         )}
       </Grid>

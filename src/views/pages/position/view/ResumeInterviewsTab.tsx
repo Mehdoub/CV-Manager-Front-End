@@ -72,7 +72,9 @@ const ResumeInterviewsTab = () => {
               )
             })
           ) : (
-            <Typography>There Is Nothing To Show Here!</Typography>
+            <Grid container p={'90px 40px'} sx={{ justifyContent: 'center' }}>
+              <Typography>No Interview Has Been Scheduled Yet!</Typography>
+            </Grid>
           )}
         </Timeline>
       </Grid>

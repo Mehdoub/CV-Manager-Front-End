@@ -73,7 +73,9 @@ const ResumeCallsTab = () => {
               )
             })
           ) : (
-            <Typography>There Is Nothing To Show Here!</Typography>
+            <Grid container p={'90px 40px'} sx={{ justifyContent: 'center' }}>
+              <Typography>No Call History Has Been Entered Yet!</Typography>
+            </Grid>
           )}
         </Timeline>
       </Grid>

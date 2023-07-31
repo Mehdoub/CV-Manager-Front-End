@@ -100,7 +100,7 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
               />
               <Tab
                 value='call'
-                label='Call'
+                label='Call History'
                 className={`${activeTab == 'call' ? 'resume-active-tab' : ''} resume-tab`}
               />
             </TabList>
