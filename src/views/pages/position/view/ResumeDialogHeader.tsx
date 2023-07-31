@@ -565,7 +565,7 @@ const ResumeDialogHeader = ({
                 }
               }}
             >
-              <Grid container xs={12} p={3}>
+              <Grid container p={3}>
                 <Grid item xs={12}>
                   <Autocomplete
                     options={tags?.docs ?? []}
@@ -719,7 +719,7 @@ const ResumeDialogHeader = ({
                 }
               }}
             >
-              <Grid container xs={12} p={3}>
+              <Grid container p={3}>
                 <Grid item xs={12}>
                   <Autocomplete
                     size='small'
@@ -798,7 +798,7 @@ const ResumeDialogHeader = ({
                 }
               }}
             >
-              <Grid container xs={12}>
+              <Grid container>
                 <Grid item xs={12} p={0.5}>
                   <List dense subheader={<ListSubheader>Views</ListSubheader>}>
                     <Divider />

@@ -105,10 +105,7 @@ const ResumeDialogMain = ({ open, toggle, allResumes }: ResumeDialogMainProps) =
           )}
           {(!isSmallScreen || (isSmallScreen && smActiveTab == 'comment')) && (
             <Grid lg={6} item sx={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
-              <ResumeViewRightDialog
-                handleClickOpenAddCallDialog={handleClickOpenAddCallDialog}
-                cahtExample={cahtExample}
-              />
+              <ResumeViewRightDialog />
             </Grid>
           )}
         </Grid>

@@ -17,7 +17,7 @@ const ViewBreadcrumb = () => {
   if (pathArr.length > 0 && !['', 'home'].includes(pathArr[0])) {
     middlePage = pathArr[0]
     breadcrumbs.push(
-      <Link style={{ textDecoration: 'none', color: 'inherit' }} href="/home/">
+      <Link key='home' style={{ textDecoration: 'none', color: 'inherit' }} href="/home/">
         Home
       </Link>
     )
@@ -27,16 +27,17 @@ const ViewBreadcrumb = () => {
         <Link
           style={{ textDecoration: 'none', color: 'inherit' }}
           href={`/${middlePage}/`}
+          key='middle'
         >
           {uppercaseFirstLetters(middlePage, false, true)}
         </Link>,
-        <Typography color="text.primary">
+        <Typography key='home' color="text.primary">
           View
         </Typography>
       ])
     } else {
       breadcrumbs.push(
-        <Typography color="text.primary">
+        <Typography key='middle' color="text.primary">
           {uppercaseFirstLetters(middlePage, false, true)}
         </Typography>
       )
@@ -44,10 +45,10 @@ const ViewBreadcrumb = () => {
 
   } else {
     breadcrumbs.push([
-      <Typography color="text.primary">
+      <Typography key='home' color="text.primary">
         Home
       </Typography>,
-      <Typography color="text.primary"></Typography>
+      <Typography key='empty' color="text.primary"></Typography>
     ])
   }
 

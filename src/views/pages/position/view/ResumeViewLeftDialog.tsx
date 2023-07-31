@@ -17,15 +17,15 @@ import ResumeCallsTab from './ResumeCallsTab'
 import ResumeFileTab from './ResumeFileTab'
 
 import ResumeInterviewsTab from './ResumeInterviewsTab'
-import Icon from 'src/@core/components/icon'
 import { useDropzone } from 'react-dropzone'
 import { Fragment, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
-import { addResumeFiles, clearResumeAddFiles, getResume } from 'src/store/resume'
+import { addResumeFiles, clearResumeAddFiles, getResume, getResumes } from 'src/store/resume'
 import { getAllowedFormats, getObjectKeys, toastError } from 'src/helpers/functions'
 import { getPositionResumes } from 'src/store/position'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
+import { useRouter } from 'next/router'
 
 const UploadFileWrapper = styled(Grid)<BoxProps>(({ theme }) => ({
   display: 'flex',
@@ -39,6 +39,9 @@ const UploadFileWrapper = styled(Grid)<BoxProps>(({ theme }) => ({
 
 const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
   const dispatch = useDispatch()
+  const router = useRouter()
+
+  const positionId = router?.query?.positionId
 
   const { status: uploadResumeFilesStatus, loading: uploadResumeFilesLoading } = useSelector(
     (state: any) => state.resumeAddFiles
@@ -48,8 +51,10 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
   useEffect(() => {
     if (uploadResumeFilesStatus) {
       dispatch(getResume(resume?._id))
-      dispatch(getPositionResumes(resume?.position_id?._id))
       dispatch(clearResumeAddFiles())
+
+      if (positionId?.length) dispatch(getPositionResumes(resume?.position_id?._id))
+      else dispatch(getResumes())
     }
   }, [uploadResumeFilesStatus])
 

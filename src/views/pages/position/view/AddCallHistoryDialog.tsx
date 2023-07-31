@@ -33,12 +33,10 @@ import { constantReader, getIsoTime, ratingTextsObj, uppercaseFirstLetters } fro
 import Language from 'src/helpers/Language'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
-import { addCallHistoryToResume, clearResumeAddCallHistory, getResume } from 'src/store/resume'
-import * as yup from 'yup'
-import { Controller, useForm } from 'react-hook-form'
-import { yupResolver } from '@hookform/resolvers/yup'
+import { addCallHistoryToResume, clearResumeAddCallHistory, getResume, getResumes } from 'src/store/resume'
 import { getPositionResumes } from 'src/store/position'
 import CloseIcon from '@mui/icons-material/Close'
+import { useRouter } from 'next/router'
 
 interface AddCallHistoryDialogProps {
   open: boolean
@@ -58,6 +56,9 @@ const AddCallHistoryDialog = ({ open, handleClose }: AddCallHistoryDialogProps) 
   const [recallDateErr, setRecallDateErr] = useState<string>('')
 
   const dispatch = useDispatch()
+  const router = useRouter()
+
+  const positionId = router?.query?.positionId
 
   const {
     data: {
@@ -73,7 +74,10 @@ const AddCallHistoryDialog = ({ open, handleClose }: AddCallHistoryDialogProps) 
   useEffect(() => {
     if (addCallHistoryStatus) {
       dispatch(getResume(resume.id))
-      dispatch(getPositionResumes(resume?.position_id?._id))
+
+      if (positionId?.length) dispatch(getPositionResumes(resume?.position_id?._id))
+      else dispatch(getResumes())
+
       dispatch(clearResumeAddCallHistory())
       resetErrors(true)
       handleClose()
