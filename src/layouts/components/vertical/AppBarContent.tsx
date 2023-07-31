@@ -16,12 +16,7 @@ import UserDropdown from 'src/@core/layouts/components/shared-components/UserDro
 import AutocompleteComponent from '../Autocomplete'
 import { useAuth } from 'src/hooks/useAuth'
 import ShortcutsDropdown from 'src/@core/layouts/components/shared-components/ShortcutsDropdown'
-import { Breadcrumbs } from '@mui/material'
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import { Typography } from '@mui/material'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { uppercaseFirstLetters } from 'src/helpers/functions'
+import ViewBreadcrumb from './ViewBreadcrumb'
 
 interface Props {
   hidden: boolean
@@ -35,51 +30,6 @@ const AppBarContent = (props: Props) => {
   const { hidden, settings, saveSettings, toggleNavVisibility } = props
 
   const { user } = useAuth()
-  const router = useRouter()
-
-  const breadcrumbs = [];
-
-  const pathArr = router.pathname.split('/')
-  if (pathArr.length > 0 && pathArr[0] == '') pathArr.shift()
-
-  let middlePage = ''
-  if (pathArr.length > 0 && !['', 'home'].includes(pathArr[0])) {
-    middlePage = pathArr[0]
-    breadcrumbs.push(
-      <Link style={{ textDecoration: 'none', color: 'inherit' }} href="/home/">
-        Home
-      </Link>
-    )
-
-    if (pathArr.includes('view')) {
-      breadcrumbs.push([
-        <Link
-          style={{ textDecoration: 'none', color: 'inherit' }}
-          href={`/${middlePage}/`}
-        >
-          {uppercaseFirstLetters(middlePage, false, true)}
-        </Link>,
-        <Typography color="text.primary">
-          View
-        </Typography>
-      ])
-    } else {
-      breadcrumbs.push(
-        <Typography color="text.primary">
-          {uppercaseFirstLetters(middlePage, false, true)}
-        </Typography>
-      )
-    }
-
-  } else {
-    breadcrumbs.push([
-      <Typography color="text.primary">
-        Home
-      </Typography>,
-      <Typography color="text.primary"></Typography>
-    ])
-  }
-
 
   return (
     <Box sx={{ width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
@@ -90,12 +40,7 @@ const AppBarContent = (props: Props) => {
           </IconButton>
         ) : null}
         {/* {user?.mobile_verified_at && <AutocompleteComponent hidden={hidden} settings={settings} />} */}
-        <Breadcrumbs
-          separator={<NavigateNextIcon fontSize="small" />}
-          aria-label="breadcrumb"
-        >
-          {breadcrumbs}
-        </Breadcrumbs>
+        <ViewBreadcrumb />
       </Box>
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
         {/* <LanguageDropdown settings={settings} saveSettings={saveSettings} /> */}
