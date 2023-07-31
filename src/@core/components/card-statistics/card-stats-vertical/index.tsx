@@ -24,7 +24,7 @@ const CardStatsVertical = (props: CardStatsVerticalProps) => {
     stats = recentMonth + lastMonth as number
     const growthDiff = recentMonth - lastMonth
     trend = growthDiff < 0 ? 'negative' : 'positive'
-    trendNumber = (growthDiff / (stats > 0 ? stats : 1)) * 100
+    trendNumber = Math.ceil((growthDiff / (stats > 0 ? stats : 1)) * 100)
     trendNumber = String(trendNumber) + '%'
   }
 

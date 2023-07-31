@@ -62,6 +62,7 @@ const ResumeKanbanCard = ({ cardData: card, setOpen, index, handleClick }: Resum
               textAlign: 'left',
               p: 3
             }}
+            variant='body2'
           >
             <Box
               sx={{
@@ -114,7 +115,7 @@ const ResumeKanbanCard = ({ cardData: card, setOpen, index, handleClick }: Resum
                     selectedTags?.map(
                       (tag: any, index: number) =>
                         index < 2 && (
-                          <BootstrapTooltip placement='top' title={tag?.name}>
+                          <BootstrapTooltip key={index} placement='top' title={tag?.name}>
                             <div>
                               <CustomChip
                                 size='small'

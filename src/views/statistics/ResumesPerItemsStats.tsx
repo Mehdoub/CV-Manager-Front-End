@@ -13,6 +13,7 @@ import ReactApexcharts from 'src/@core/components/react-apexcharts'
 
 // ** Util Import
 import { hexToRGBA } from 'src/@core/utils/hex-to-rgba'
+import { getMaxTextLen } from 'src/helpers/functions'
 
 const ResumesPerItemsStats = ({
   title,
@@ -40,7 +41,7 @@ const ResumesPerItemsStats = ({
   if (items && items?.length > 0) {
     items.map((item: any, index: number) => {
       if (index < 5) {
-        categories.push(item?.[entity]?.[nameField])
+        categories.push(getMaxTextLen(item?.[entity]?.[nameField], 12))
         series[0].data.push(item?.count)
         totalResumesNumber += item?.count
       }

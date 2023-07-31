@@ -177,6 +177,7 @@ const ViewResumes = ({ allResumes = false }: ViewResumesProps) => {
                 >
                   {column[status].map((resumeData: any, index: number) => (
                     <ResumeKanbanCard
+                      key={`unique-${index}-${status}`}
                       cardData={resumeData}
                       setOpen={setOpen}
                       index={index}

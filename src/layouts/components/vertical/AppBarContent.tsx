@@ -16,6 +16,7 @@ import UserDropdown from 'src/@core/layouts/components/shared-components/UserDro
 import AutocompleteComponent from '../Autocomplete'
 import { useAuth } from 'src/hooks/useAuth'
 import ShortcutsDropdown from 'src/@core/layouts/components/shared-components/ShortcutsDropdown'
+import ViewBreadcrumb from './ViewBreadcrumb'
 
 interface Props {
   hidden: boolean
@@ -38,7 +39,8 @@ const AppBarContent = (props: Props) => {
             <Icon icon='mdi:menu' />
           </IconButton>
         ) : null}
-        {user?.mobile_verified_at && <AutocompleteComponent hidden={hidden} settings={settings} />}
+        {/* {user?.mobile_verified_at && <AutocompleteComponent hidden={hidden} settings={settings} />} */}
+        <ViewBreadcrumb />
       </Box>
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
         {/* <LanguageDropdown settings={settings} saveSettings={saveSettings} /> */}

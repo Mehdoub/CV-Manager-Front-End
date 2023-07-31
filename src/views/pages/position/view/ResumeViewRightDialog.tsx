@@ -10,6 +10,7 @@ import {
   addCommentToResume,
   clearResumeAddComment,
   getResume,
+  getResumes,
   selectResume,
   selectResumeAddComment
 } from 'src/store/resume'
@@ -17,6 +18,8 @@ import { useDispatch } from 'react-redux'
 import { getFullName, getImagePath, getTimeText, toastError } from 'src/helpers/functions'
 import ChatBubbleIcon from '@mui/icons-material/ChatBubble'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
+import { getPositionResumes } from 'src/store/position'
 
 const useOutsideBox = (ref: any, setState: any, setMsgRow: any) => {
   useEffect(() => {
@@ -44,9 +47,8 @@ const ChatFormWrapper = styled(Grid)<BoxProps>(({ theme }) => ({
   backgroundColor: theme.palette.background.paper
 }))
 
-const ResumeViewRightDialog = ({ cahtExample }: any) => {
+const ResumeViewRightDialog = () => {
   const isSender = false
-  let avatarId = 3
 
   const [msg, setMsg] = useState<string>('')
   const [msgRow, setMsgRow] = useState<number>(1)
@@ -56,6 +58,9 @@ const ResumeViewRightDialog = ({ cahtExample }: any) => {
   const { status: resumeAddCommentStatus, loading: resumeAddCommentLoading } = useSelector(selectResumeAddComment)
 
   const dispatch = useDispatch()
+  const router = useRouter()
+
+  const positionId = router?.query?.positionId
 
   const resumeId = resume?._id
 
@@ -69,6 +74,9 @@ const ResumeViewRightDialog = ({ cahtExample }: any) => {
       setMsgRow(1)
       dispatch(clearResumeAddComment())
       dispatch(getResume(resumeId))
+
+      if (positionId?.length) dispatch(getPositionResumes(resume?.position_id?._id))
+      else dispatch(getResumes())
     }
   }, [resumeAddCommentStatus])
 
