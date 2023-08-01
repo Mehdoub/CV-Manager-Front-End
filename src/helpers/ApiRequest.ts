@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse, CancelTokenSource } from 'axios'
 import authConfig from 'src/configs/auth'
-import { toastError } from './functions'
+import { clearLoginLocalStorage, createReturnUrl, toastError } from './functions'
 
 interface RequestConfig {
   header: {
@@ -15,6 +15,7 @@ interface PendingRequest {
 }
 
 let pendingRequestsStack: Array<PendingRequest> = []
+let expireMessage: string = ''
 
 export default class ApiRequest {
   private accessToken: string
@@ -89,8 +90,18 @@ export default class ApiRequest {
 
             } catch (err: any) {
               return this.responseError(err)
-
             }
+          } else if (err?.response?.status == 401 && expireMessage.length == 0) {
+            expireMessage = 'Your Authentication Token Has Been Expired!'
+            clearLoginLocalStorage()
+            toastError(expireMessage)
+            pendingRequestsStack.map((request: any) => {
+              request.cancelToken.cancel('Previous Request Was Canceled Due To Authentication Token Expiration!')
+            })
+            setTimeout(() => {
+              const returnUrlQuery = createReturnUrl()
+              window.location.href = '/login' + returnUrlQuery
+            }, 1500)
           }
           return this.responseError(err)
 

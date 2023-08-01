@@ -13,7 +13,7 @@ import ApiRequest from 'src/helpers/ApiRequest'
 import { useDispatch } from 'react-redux'
 import { getConstants } from 'src/store/common'
 import FirebaseCloudMessaging from 'src/helpers/FirebaseCloudMessaging'
-import { notificationIsGranted, toastError } from 'src/helpers/functions'
+import { clearLoginLocalStorage, createReturnUrl, notificationIsGranted, toastError } from 'src/helpers/functions'
 import { getProvinces } from 'src/store/province'
 import { clearProfileNotificationsSeen, getNotifications } from 'src/store/profile'
 import * as Sentry from '@sentry/nextjs';
@@ -97,15 +97,13 @@ const AuthProvider = ({ children }: Props) => {
 
   const clearLogin = () => {
     setLoading(false)
-    window.localStorage.removeItem(authConfig.storageTokenKeyName)
-    window.localStorage.removeItem(authConfig.refreshTokenKeyName)
+
+    clearLoginLocalStorage()
 
     setUser(null)
     Sentry.setUser(null)
-    const completePath = window.location.href
-    const originPath = window.location.origin
-    const returnUrl = completePath.split(originPath)[1]
-    const returnUrlQuery = returnUrl ? '?returnUrl=' + returnUrl : ''
+
+    const returnUrlQuery = createReturnUrl()
     if (!['/login', '/register', '/forgot-password'].includes(router.pathname)) {
       router.replace('/login' + returnUrlQuery)
     }
