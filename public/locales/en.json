@@ -23,7 +23,19 @@
     }
   },
   "home": {
-    "title": "Welcome To The CVManager App! 🚀",
-    "description": " Here you can manage the resumes you received by creating companies, related projects, add and open positions, set meeting and etc. Please make sure to read our Please make sure to read our Template Documentation to understand where to go from here and how to use our template."
+    "head_title": "Welcome To The CVManager App! 🚀",
+    "head_description": "Welcome to CV Manager, the ultimate web application for efficient resume management. Designed specifically for companies, CV Manager allows you to effortlessly create and organize projects, positions, and resumes, all in one centralized platform.",
+    "title_1": "Simplify Project Management",
+    "description_1": "With CV Manager, creating a company and adding projects has never been easier. Seamlessly manage multiple projects simultaneously, keeping track of their progress, deadlines, and team members involved. Stay organized and ensure efficient collaboration within your organization.",
+    "title_2": "Streamline Position Tracking",
+    "description_2": "Within each project, CV Manager enables you to define and track positions available. Easily add job titles, descriptions, and desired qualifications for each position. Monitor applications received and streamline the hiring process with ease.",
+    "title_3": "Effortless Resume Organization",
+    "description_3": "Never lose track of resumes again! CV Manager provides a systematic approach to organizing received resumes. Associate each resume with its respective position, making it simple to review and shortlist candidates based on their qualifications. Say goodbye to manual sorting and sifting through piles of documents.",
+    "title_4": "Enhanced Collaboration",
+    "description_4": "CV Manager promotes seamless collaboration among team members. Assign roles and permissions to different users, allowing them to contribute, review, and provide feedback on resumes. Multiple stakeholders can work together to make informed hiring decisions.",
+    "title_5": "Data-driven Insights",
+    "description_5": "CV Manager generates comprehensive analytics and reports to help you gain valuable insights into your hiring processes. Track metrics such as candidate response rate, time-to-hire, and source of quality candidates. Leverage this data to optimize your recruitment strategies and make data-driven decisions.",
+    "title_6": "User-friendly Interface",
+    "description_6": "CV Manager boasts an intuitive and user-friendly interface, making it accessible to users of all technical backgrounds. Navigate effortlessly through the platform and perform tasks with ease, reducing the learning curve for your team members."
   }
 }
