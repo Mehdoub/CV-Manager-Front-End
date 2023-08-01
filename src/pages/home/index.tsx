@@ -80,22 +80,45 @@ const Home = () => {
         <Grid item xs={12}>
           <Card>
             <Grid container>
-              <Grid sm={12} md={6} item>
-                <img src='/images/banners/welcome-banner.jpg' width={'100%'} />
+              <Grid xs={12} container sx={{ justifyContent: 'center' }}>
+                <Grid item md={6} xs={12}>
+                  <CardHeader sx={{ textAlign: 'center', pb: 0 }} title={<Translations text='home.head_title' />}></CardHeader>
+                </Grid>
               </Grid>
-              <Grid sm={12} md={6} item>
-                <CardHeader title={<Translations text='home.title' />}></CardHeader>
-                <CardContent>
+
+              <Grid xs={12} container sx={{ justifyContent: 'center' }}>
+                <Grid item md={7} xs={12}>
+                  <img src='/images/banners/welcome-banner.jpg' width={'100%'} />
+                </Grid>
+              </Grid>
+              <Grid xs={12} item>
+                <CardContent sx={{ pt: 0 }}>
                   <Typography>
-                    <Translations text='home.description' />
+                    <Translations text='home.head_description' />
                   </Typography>
-                  <Typography sx={{ fontSize: '20px', fontWeight: '600', pt: '15px' }}>Features</Typography>
+                  <Typography sx={{ fontSize: '20px', fontWeight: '600', pt: '15px' }}><Translations text='home.title_1' /></Typography>
                   <Typography>
-                    <Translations text='home.description' />
+                    <Translations text='home.description_1' />
                   </Typography>
-                  <Typography sx={{ fontSize: '20px', fontWeight: '600', pt: '15px' }}>Benefits</Typography>
+                  <Typography sx={{ fontSize: '20px', fontWeight: '600', pt: '15px' }}><Translations text='home.title_2' /></Typography>
                   <Typography>
-                    <Translations text='home.description' />
+                    <Translations text='home.description_2' />
+                  </Typography>
+                  <Typography sx={{ fontSize: '20px', fontWeight: '600', pt: '15px' }}><Translations text='home.title_3' /></Typography>
+                  <Typography>
+                    <Translations text='home.description_3' />
+                  </Typography>
+                  <Typography sx={{ fontSize: '20px', fontWeight: '600', pt: '15px' }}><Translations text='home.title_4' /></Typography>
+                  <Typography>
+                    <Translations text='home.description_4' />
+                  </Typography>
+                  <Typography sx={{ fontSize: '20px', fontWeight: '600', pt: '15px' }}><Translations text='home.title_5' /></Typography>
+                  <Typography>
+                    <Translations text='home.description_5' />
+                  </Typography>
+                  <Typography sx={{ fontSize: '20px', fontWeight: '600', pt: '15px' }}><Translations text='home.title_6' /></Typography>
+                  <Typography>
+                    <Translations text='home.description_6' />
                   </Typography>
                 </CardContent>
               </Grid>

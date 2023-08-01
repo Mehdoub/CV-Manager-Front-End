@@ -301,7 +301,7 @@ const Register = () => {
             </Box>
             <Box sx={{ mb: 6 }}>
               <TypographyStyled variant='h5'>Adventure starts here 🚀</TypographyStyled>
-              <Typography variant='body2'>Make your CV management easy and fun!</Typography>
+              <Typography variant='body2'>Take control of your resume management process with CVManager. Sign up today and revolutionize the way your company manages resumes!</Typography>
             </Box>
             <form onSubmit={handleSubmit(onSubmit)}>
               <FormControl fullWidth sx={{ mb: 4 }}>

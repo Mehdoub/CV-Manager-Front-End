@@ -9,6 +9,7 @@ import WorkIcon from '@mui/icons-material/Work';
 import ShieldIcon from '@mui/icons-material/Shield';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import authConfig from 'src/configs/auth'
 
 export const sliceInitialStateWithData = {
   loading: false,
@@ -42,7 +43,11 @@ export const allowedFormats = {
 }
 
 export const toastError = (msg: string, duration: number = 7000, position: ToastPosition = 'bottom-left') => {
-  if (msg?.length > 0) toast.error(uppercaseFirstLetters(msg), { duration, position, style: { maxWidth: '650px' } })
+  const excludeMessages = [
+    'jwt expired',
+    'An error occurred, the authentication token was not sent'
+  ]
+  if (msg?.length > 0 && !excludeMessages.includes(msg)) toast.error(uppercaseFirstLetters(msg), { duration, position, style: { maxWidth: '650px' } })
 }
 
 export const toastSuccess = (msg: string, duration: number = 7000, position: ToastPosition = 'bottom-left') => {
@@ -329,4 +334,18 @@ export const notificationIsGranted = (): boolean => {
   ) return true
 
   return false
+}
+
+export const createReturnUrl = (): string => {
+  const completePath = window.location.href
+  const originPath = window.location.origin
+  const returnUrl = completePath.split(originPath)[1]
+  return (returnUrl?.length > 0 && returnUrl !== '/') ? '?returnUrl=' + returnUrl : ''
+}
+
+export const clearLoginLocalStorage = () => {
+  if (typeof window != 'undefined') {
+    window.localStorage.removeItem(authConfig.storageTokenKeyName)
+    window.localStorage.removeItem(authConfig.refreshTokenKeyName)
+  }
 }

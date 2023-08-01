@@ -100,6 +100,7 @@ const ResumeDialogMain = ({ open, toggle, allResumes }: ResumeDialogMainProps) =
                 activeTab={activeTab}
                 tags={tags}
                 handleTabChange={handleTabChange}
+                closeToggle={handleCloseResumeDialog}
               />
             </Grid>
           )}
