@@ -81,13 +81,13 @@ const Home = () => {
           <Card>
             <Grid container>
               <Grid xs={12} container sx={{ justifyContent: 'center' }}>
-                <Grid item xs={6}>
+                <Grid item md={6} xs={12}>
                   <CardHeader sx={{ textAlign: 'center', pb: 0 }} title={<Translations text='home.head_title' />}></CardHeader>
                 </Grid>
               </Grid>
 
               <Grid xs={12} container sx={{ justifyContent: 'center' }}>
-                <Grid item xs={7}>
+                <Grid item md={7} xs={12}>
                   <img src='/images/banners/welcome-banner.jpg' width={'100%'} />
                 </Grid>
               </Grid>

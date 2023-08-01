@@ -92,13 +92,14 @@ const ImgStyled = styled('img')(({ theme }) => ({
   borderRadius: theme.shape.borderRadius
 }))
 
-const ResumeDetailsTab = () => {
+const ResumeDetailsTab = ({closeToggle}:any) => {
   const [avatar, setAvatar] = useState<File[]>([])
   const [gender, setGender] = useState<string>('')
   const [salaryRange, setSalaryRange] = useState<any>([9000000, 20000000])
   const [residenceCities, setResidenceCities] = useState([])
   const [fillCities, setFillCities] = useState('')
   const [fillResidenceCity, setFillResidenceCity] = useState<boolean>(true)
+  const [closeAfterSave, setCloseAfterSave] = useState<boolean>(false)
 
   const { data: resume } = useSelector((state: any) => state.resume)
   const { data: provinceCities } = useSelector((state: any) => state.citiesByProvince)
@@ -217,6 +218,10 @@ const ResumeDetailsTab = () => {
       if (positionId) dispatch(getPositionResumes(positionId))
       else dispatch(getResumes())
       dispatch(getResume(resume?.id))
+      if (closeAfterSave) {
+        closeToggle()
+        setCloseAfterSave(false)
+      }
     }
   }, [statusResumeEdit])
 
@@ -721,9 +726,10 @@ const ResumeDetailsTab = () => {
                     color='secondary'
                     sx={{ mt: 2 }}
                     disabled={loadingResumeEdit}
-                    onClick={() => setInitialValues()}
+                    type='submit'
+                    onClick={() => setCloseAfterSave(true)}
                   >
-                    Reset
+                    Save And Close
                   </Button>
                 </Grid>
               </Grid>

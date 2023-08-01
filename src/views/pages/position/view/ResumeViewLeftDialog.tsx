@@ -37,7 +37,7 @@ const UploadFileWrapper = styled(Grid)<BoxProps>(({ theme }) => ({
   backgroundColor: theme.palette.background.paper
 }))
 
-const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
+const ResumeViewLeftDialog = ({ activeTab, handleTabChange, closeToggle }: any) => {
   const dispatch = useDispatch()
   const router = useRouter()
 
@@ -112,7 +112,7 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange }: any) => {
             <Box sx={{ height: '65vh', overflowY: 'scroll', position: 'relative' }}>
               <>
                 <TabPanel sx={{ p: 0, mt: 6 }} value='details'>
-                  {getObjectKeys(constants?.system)?.length > 0 && <ResumeDetailsTab />}
+                  {getObjectKeys(constants?.system)?.length > 0 && <ResumeDetailsTab closeToggle={closeToggle} />}
                 </TabPanel>
                 <TabPanel sx={{ p: 0 }} value='file'>
                   <ResumeFileTab />
