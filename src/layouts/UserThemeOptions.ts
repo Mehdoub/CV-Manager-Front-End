@@ -33,7 +33,11 @@ const UserThemeOptions = (): ThemeOptions => {
           },
         }
       }
-    }
+    },
+    typography: {
+      fontFamily:
+        'Vazir,sans-serif!important',
+    },
     /*
     palette:{
       primary: {
@@ -130,10 +134,6 @@ const UserThemeOptions = (): ThemeOptions => {
     },
     shape: {
       borderRadius: 8
-    },
-    typography: {
-      fontFamily:
-        '"Montserrat", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
     },
     shadows: mode === 'light' ? [
       'none',

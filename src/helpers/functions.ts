@@ -340,8 +340,8 @@ export const createReturnUrl = (): string => {
   const completePath = window.location.href
   const originPath = window.location.origin
   const returnUrl = completePath.split(originPath)[1]
-  const excludePaths = ['/login/', '/']
-  return (returnUrl?.length > 0 && !excludePaths.includes(returnUrl)) ? '?returnUrl=' + returnUrl : ''
+  const excludePaths = ['/']
+  return (returnUrl?.length > 0 && !(excludePaths.includes(returnUrl) || returnUrl.indexOf('login') !== -1)) ? '?returnUrl=' + returnUrl : ''
 }
 
 export const clearLoginLocalStorage = () => {
