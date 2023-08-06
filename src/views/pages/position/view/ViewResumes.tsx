@@ -10,7 +10,7 @@ import { getPositionResumes } from 'src/store/position'
 import { useDispatch } from 'react-redux'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
-import { clearResumeUpdateStatus, getResume, getResumes, updateResumeStatus } from 'src/store/resume'
+import { avtivateResumeLoading, clearResumeUpdateStatus, getResume, getResumes, updateResumeStatus } from 'src/store/resume'
 
 export const resumesStates: any = {
   draft: { title: 'draft', color: 'secondary' },
@@ -42,6 +42,9 @@ const ViewResumes = ({ allResumes = false }: ViewResumesProps) => {
     (state: any) => state.resumeUpdateStatus
   )
 
+  const router = useRouter()
+  const { positionId, resumeId } = router?.query as any
+
   useEffect(() => {
     if (allResumes) {
       setBoardResumes(resumes)
@@ -50,16 +53,15 @@ const ViewResumes = ({ allResumes = false }: ViewResumesProps) => {
     }
   }, [resumes, positionResumes])
 
-  const router = useRouter()
-  const { positionId, resumeId } = router?.query as any
+  const handleExit = () => {
+    const baseResumesUrl = allResumes ? '/resumes/' : `/positions/view/${positionId}/resume/`
+    delete router?.query?.resumeId
+    router.replace(baseResumesUrl, undefined, { shallow: true })
+  }
+
 
   const handleClose = () => {
     setOpen(false)
-    const baseResumesUrl = allResumes ? '/resumes/' : `/positions/view/${positionId}/resume/`
-    setTimeout(() => {
-      delete router?.query?.resumeId
-      router.replace(baseResumesUrl, undefined, { shallow: true })
-    }, 500)
   }
 
   useEffect(() => {
@@ -125,6 +127,7 @@ const ViewResumes = ({ allResumes = false }: ViewResumesProps) => {
 
   const handleResumeCardClick = (resumeId: string) => {
     router.push({ query: { ...router.query, resumeId } })
+    dispatch(avtivateResumeLoading())
     setOpen(true)
   }
 
@@ -189,7 +192,7 @@ const ViewResumes = ({ allResumes = false }: ViewResumesProps) => {
             })}
         </DragDropContext>
       </Stack>
-      <ResumeDialogMain open={open} toggle={handleClose} allResumes={allResumes} />
+      <ResumeDialogMain open={open} handleClose={handleClose} handleExit={handleExit} allResumes={allResumes} />
     </>
   )
 }

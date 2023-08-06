@@ -1,9 +1,8 @@
-import { Dialog, Grid, Skeleton, useMediaQuery } from '@mui/material'
+import { Box, CircularProgress, Dialog, Grid, Skeleton, useMediaQuery } from '@mui/material'
 import { useState } from 'react'
 import AddCallHistoryDialog from './AddCallHistoryDialog'
 import ResumeViewLeftDialog from './ResumeViewLeftDialog'
 import ResumeViewRightDialog from './ResumeViewRightDialog'
-import cahtExample from 'src/data/chatData.json'
 import ResumeDialogHeader from './ResumeDialogHeader'
 import AddInterviewDialog from './AddInterviewDialog'
 import { useSelector } from 'react-redux'
@@ -11,7 +10,8 @@ import { getObjectKeys } from 'src/helpers/functions'
 
 interface ResumeDialogMainProps {
   open: boolean
-  toggle: () => void
+  handleClose: () => void
+  handleExit: () => void
   allResumes: boolean
 }
 
@@ -30,7 +30,7 @@ const tags = [
   }
 ]
 
-const ResumeDialogMain = ({ open, toggle, allResumes }: ResumeDialogMainProps) => {
+const ResumeDialogMain = ({ open, handleClose, allResumes, handleExit }: ResumeDialogMainProps) => {
   const [activeTab, setActiveTab] = useState<string>('details')
   const [smActiveTab, setSmActiveTab] = useState<string>('resumedata')
   const [openAddCallDialog, setOpenAddCallDialog] = useState<boolean>(false)
@@ -57,7 +57,7 @@ const ResumeDialogMain = ({ open, toggle, allResumes }: ResumeDialogMainProps) =
 
   const handleCloseResumeDialog = () => {
     handleTabChange({}, 'details')
-    toggle()
+    handleClose()
   }
 
   return (
@@ -67,6 +67,9 @@ const ResumeDialogMain = ({ open, toggle, allResumes }: ResumeDialogMainProps) =
         fullWidth
         scroll='body'
         onClose={handleCloseResumeDialog}
+        TransitionProps={{
+          onExited: handleExit,
+        }}
         open={open}
         // sx={{ height: '100vh' }}
         PaperProps={{ style: { margin: '1.5rem 0' } }}
@@ -106,7 +109,21 @@ const ResumeDialogMain = ({ open, toggle, allResumes }: ResumeDialogMainProps) =
           )}
           {(!isSmallScreen || (isSmallScreen && smActiveTab == 'comment')) && (
             <Grid lg={6} item sx={{ display: 'flex', flexDirection: 'column', position: 'relative' }}>
-              <ResumeViewRightDialog />
+              {resumeLoading ? (
+                <Box
+                  sx={{
+                    mt: 6,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%'
+                  }}
+                >
+                  <CircularProgress sx={{ mb: 4 }} />
+                </Box>
+              ) : (
+                <ResumeViewRightDialog />
+              )}
             </Grid>
           )}
         </Grid>
