@@ -132,7 +132,11 @@ export const getResume: any = createAsyncThunk('getResume', async (resumeId: str
 const resumeSlice = createSlice({
   name: 'resume',
   initialState: sliceInitialStateWithData,
-  reducers: {},
+  reducers: {
+    avtivateResumeLoading: (state) => {
+      state.loading = true
+    }
+  },
   extraReducers: (builder) => {
     createExtraReducers(builder, getResume, true, true)
   }
@@ -456,6 +460,7 @@ const resumesIndexSlice = createSlice({
 
 
 export const { clearCreateResume } = resumeCreateSlice.actions
+export const { avtivateResumeLoading } = resumeSlice.actions
 export const { clearEditResume } = resumeEditSlice.actions
 export const { clearResumeAddFiles } = resumeAddFilesSlice.actions
 export const { clearResumeUpdateStatus } = resumeUpdateStatusSlice.actions

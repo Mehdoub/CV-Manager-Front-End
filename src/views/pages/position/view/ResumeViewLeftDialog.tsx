@@ -26,6 +26,7 @@ import { getAllowedFormats, getObjectKeys, toastError } from 'src/helpers/functi
 import { getPositionResumes } from 'src/store/position'
 import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 import { useRouter } from 'next/router'
+import Skelet from 'src/@core/components/loading/Skelet'
 
 const UploadFileWrapper = styled(Grid)<BoxProps>(({ theme }) => ({
   display: 'flex',
@@ -46,7 +47,7 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange, closeToggle }: any) 
   const { status: uploadResumeFilesStatus, loading: uploadResumeFilesLoading } = useSelector(
     (state: any) => state.resumeAddFiles
   )
-  const { data: resume } = useSelector((state: any) => state.resume)
+  const { data: resume, loading: resumeLoading } = useSelector((state: any) => state.resume)
 
   useEffect(() => {
     if (uploadResumeFilesStatus) {
@@ -74,6 +75,25 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange, closeToggle }: any) 
 
   const { data: constants } = useSelector((state: any) => state.constants)
 
+  const tabs = [
+    {
+      label: 'Details',
+      value: 'details'
+    },
+    {
+      label: 'File',
+      value: 'file'
+    },
+    {
+      label: 'Interview',
+      value: 'interview'
+    },
+    {
+      label: 'Call History',
+      value: 'call'
+    },
+  ]
+
   return (
     <>
       <Grid xs={12} item>
@@ -88,69 +108,81 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange, closeToggle }: any) 
                 borderBottom: theme => `1px solid ${theme.palette.divider}`
               }}
             >
-              <Tab
-                value='details'
-                label='Details'
-                className={`${activeTab == 'details' ? 'resume-active-tab' : ''} resume-tab`}
-              />
-              <Tab
-                value='file'
-                label='File'
-                className={`${activeTab == 'file' ? 'resume-active-tab' : ''} resume-tab`}
-              />
-              <Tab
-                value='interview'
-                label='Interview'
-                className={`${activeTab == 'interview' ? 'resume-active-tab' : ''} resume-tab`}
-              />
-              <Tab
-                value='call'
-                label='Call History'
-                className={`${activeTab == 'call' ? 'resume-active-tab' : ''} resume-tab`}
-              />
+              {tabs.map((tabItem: any, index: number) => (
+                <Skelet
+                  key={`tab-${index}`}
+                  loading={resumeLoading}
+                  width={80}
+                  height={25}
+                  sx={{ mt: 3, ml: 2 }}
+                  component={
+                    <Tab
+                      value={tabItem.value}
+                      label={tabItem.label}
+                      className={`${activeTab == tabItem.value ? 'resume-active-tab' : ''} resume-tab`}
+                    />
+                  }
+                />
+              ))}
             </TabList>
             <Box sx={{ height: '65vh', overflowY: 'scroll', position: 'relative' }}>
-              <>
-                <TabPanel sx={{ p: 0, mt: 6 }} value='details'>
-                  {getObjectKeys(constants?.system)?.length > 0 && <ResumeDetailsTab closeToggle={closeToggle} />}
-                </TabPanel>
-                <TabPanel sx={{ p: 0 }} value='file'>
-                  <ResumeFileTab />
-                </TabPanel>
-                <TabPanel sx={{ p: 0 }} value='interview'>
-                  <Grid xs={12} container>
-                    <ResumeInterviewsTab />
-                  </Grid>
-                </TabPanel>
-                <TabPanel sx={{ p: 0 }} value='call'>
-                  <ResumeCallsTab />
-                </TabPanel>
-                <Grid item xs={12} sx={{ height: '64px' }}></Grid>
-              </>
+              {resumeLoading ? (
+                <Box
+                  sx={{
+                    mt: 6,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    width: '100%'
+                  }}
+                >
+                  <CircularProgress sx={{ mb: 4 }} />
+                </Box>
+              ) : (
+                <>
+                  <TabPanel sx={{ p: 0, mt: 6 }} value='details'>
+                    {getObjectKeys(constants?.system)?.length > 0 && <ResumeDetailsTab closeToggle={closeToggle} />}
+                  </TabPanel>
+                  <TabPanel sx={{ p: 0 }} value='file'>
+                    <ResumeFileTab />
+                  </TabPanel>
+                  <TabPanel sx={{ p: 0 }} value='interview'>
+                    <Grid xs={12} container>
+                      <ResumeInterviewsTab />
+                    </Grid>
+                  </TabPanel>
+                  <TabPanel sx={{ p: 0 }} value='call'>
+                    <ResumeCallsTab />
+                  </TabPanel>
+                  <Grid item xs={12} sx={{ height: '64px' }}></Grid>
+                </>
+              )}
             </Box>
           </div>
         </TabContext>
         <Box sx={{ width: '100%', position: 'absolute', bottom: 0, zIndex: 10000, cursor: 'pointer' }}>
           {uploadResumeFilesLoading && <LinearProgress />}
-          <Fragment>
-            <div {...getRootProps({ className: 'dropzone' })}>
-              <input {...getInputProps()} />
-              <UploadFileWrapper tabIndex={1} container>
-                <Box sx={{ display: 'flex', alignItems: 'center', mt: 3, mr: 3 }}>
-                  {!uploadResumeFilesLoading ? (
-                    <>
-                      <IconButton size='small' sx={{ mr: 1.5, color: 'rgb(76 78 100 / 14%)' }}>
-                        <CloudUploadIcon fontSize='large' />
-                      </IconButton>
-                      <Typography sx={{ color: 'text.secondary' }}>Drop Resume File Or Click To Upload</Typography>
-                    </>
-                  ) : (
-                    <CircularProgress />
-                  )}
-                </Box>
-              </UploadFileWrapper>
-            </div>
-          </Fragment>
+          {resumeLoading ? null : (
+            <Fragment>
+              <div {...getRootProps({ className: 'dropzone' })}>
+                <input {...getInputProps()} />
+                <UploadFileWrapper tabIndex={1} container>
+                  <Box sx={{ display: 'flex', alignItems: 'center', mt: 3, mr: 3 }}>
+                    {!uploadResumeFilesLoading ? (
+                      <>
+                        <IconButton size='small' sx={{ mr: 1.5, color: 'rgb(76 78 100 / 14%)' }}>
+                          <CloudUploadIcon fontSize='large' />
+                        </IconButton>
+                        <Typography sx={{ color: 'text.secondary' }}>Drop Resume File Or Click To Upload</Typography>
+                      </>
+                    ) : (
+                      <CircularProgress />
+                    )}
+                  </Box>
+                </UploadFileWrapper>
+              </div>
+            </Fragment>
+          )}
         </Box>
       </Grid>
     </>
