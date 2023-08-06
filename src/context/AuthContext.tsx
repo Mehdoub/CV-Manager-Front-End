@@ -124,7 +124,7 @@ const AuthProvider = ({ children }: Props) => {
         })
       } catch (err) {
         clearLogin()
-        toastError('There Is A Problem On Authentication')
+        // toastError('There Is A Problem On Authentication')
       }
       const fcm = await FirebaseCloudMessaging.builder()
       fcm && fcm?.fetchToken(setClientToken)
