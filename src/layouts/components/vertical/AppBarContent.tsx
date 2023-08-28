@@ -43,7 +43,7 @@ const AppBarContent = (props: Props) => {
         <ViewBreadcrumb />
       </Box>
       <Box className='actions-right' sx={{ display: 'flex', alignItems: 'center' }}>
-        {/* <LanguageDropdown settings={settings} saveSettings={saveSettings} /> */}
+        <LanguageDropdown settings={settings} saveSettings={saveSettings} />
         <ModeToggler settings={settings} saveSettings={saveSettings} />
         {user?.mobile_verified_at && (
           <>
