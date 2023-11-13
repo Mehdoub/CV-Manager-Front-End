@@ -7,7 +7,7 @@ body {
   user-select: none;
 }
 
-body:after{
+/* body:after{
   content: "beta";
   position: fixed;
   width: 80px;
@@ -17,13 +17,12 @@ body:after{
   right: -20px;
   text-align: center;
   font-size: 13px;
-  /* font-family: sans-serif; */
   text-transform: uppercase;
   font-weight: bold;
   color: #fff;
   line-height: 27px;
   transform:rotate(45deg);
-}
+} */
 
 #__next {
   height: 100%;
