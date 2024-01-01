@@ -109,19 +109,11 @@ const ResumeViewLeftDialog = ({ activeTab, handleTabChange, closeToggle }: any) 
               }}
             >
               {tabs.map((tabItem: any, index: number) => (
-                <Skelet
+                <Tab
                   key={`tab-${index}`}
-                  loading={resumeLoading}
-                  width={80}
-                  height={25}
-                  sx={{ mt: 3, ml: 2 }}
-                  component={
-                    <Tab
-                      value={tabItem.value}
-                      label={tabItem.label}
-                      className={`${activeTab == tabItem.value ? 'resume-active-tab' : ''} resume-tab`}
-                    />
-                  }
+                  value={tabItem.value}
+                  label={tabItem.label}
+                  className={`${activeTab == tabItem.value ? 'resume-active-tab' : ''} resume-tab`}
                 />
               ))}
             </TabList>
